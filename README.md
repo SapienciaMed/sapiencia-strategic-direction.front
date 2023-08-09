@@ -1,0 +1,1 @@
+# sapiencia-strategic-direction.front
