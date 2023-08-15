@@ -8,7 +8,8 @@ import ApplicationProvider from "./application-provider";
 import useAppCominicator from "./common/hooks/app-communicator.hook";
 
 function App() {
-  const HomePage = lazy(() => import("./common/components/home.page"));
+  const HomePage = lazy(() => import("./features/home/home.page"));
+  const ProjectsCrud = lazy(() => import("./features/projects/pages/projects-crud.page"));
   const { publish } = useAppCominicator();
 
   // Effect que cominica la aplicacion actual
@@ -27,9 +28,8 @@ function App() {
         <Router>
           <Suspense fallback={<p>Loading...</p>}>
             <Routes>
-              <Route path={"/direccion-estrategica/"} element={<HomePage />} />;
-              {/* <Route path={"/direccion-estrategica/razon-social/*"} element={<BussinesRoutes />} />
-            <Route path={"/direccion-estrategica/contratos/*"} element={<ContractRoutes />} /> */}
+              <Route path={"/direccion-estrategica/*"} element={<HomePage />} />;
+              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsCrud />} />;
             </Routes>
           </Suspense>
         </Router>

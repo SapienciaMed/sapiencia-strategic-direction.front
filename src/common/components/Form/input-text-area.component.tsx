@@ -7,7 +7,6 @@ import { MdOutlineError } from "react-icons/md";
 
 interface IInputProps<T> {
   idInput: string;
-  typeInput: string;
   register?: UseFormRegister<T>;
   className?: string;
   placeholder?: string;
@@ -22,6 +21,8 @@ interface IInputProps<T> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   id?: string;
   fieldArray?: boolean;
+  rows?: number;
+  cols?: number;
   optionsRegister?: {};
 }
 
@@ -36,8 +37,7 @@ function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
   );
 }
 
-function InputElement({
-  typeInput,
+function TextAreaElement({
   idInput,
   className,
   placeholder,
@@ -47,23 +47,29 @@ function InputElement({
   onChange,
   defaultValue,
   id,
-  optionsRegister,
+  rows,
+  cols,
+  optionsRegister = {},
 }): React.JSX.Element {
   return (
-    <input
-      {...register(idInput)}
+    <textarea
+      {...(register ? register(idInput, optionsRegister) : {})}
+      id={id}
       name={idInput}
-      type={typeInput}
       className={className}
       placeholder={placeholder}
-      defaultValue={value}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      onChange={onChange}
+      value={value}
+      rows={rows}
+      cols={cols}
     />
   );
 }
 
-export function InputComponent({
+export function TextAreaComponent({
   idInput,
-  typeInput,
   register,
   className = "input-basic",
   placeholder,
@@ -78,13 +84,31 @@ export function InputComponent({
   defaultValue,
   id,
   fieldArray,
+  rows,
+  cols,
   optionsRegister = {},
 }: IInputProps<any>): React.JSX.Element {
+  const messageError = () => {
+    const keysError = idInput.split(".");
+    let errs = errors;
+    if (fieldArray) {
+      const errorKey = `${keysError[0]}[${keysError[1]}].${keysError[2]}`;
+      return errors[errorKey]?.message;
+    } else {
+      for (let key of keysError) {
+        errs = errs?.[key];
+        if (!errs) {
+          break;
+        }
+      }
+      return errs?.message ?? null;
+    }
+  };
 
   return (
     <div
       className={
-        errors[idInput]?.message  ? `${direction} container-icon_error` : direction
+        messageError() ? `${direction} container-icon_error` : direction
       }
     >
       <LabelElement
@@ -93,10 +117,9 @@ export function InputComponent({
         classNameLabel={classNameLabel}
       />
       <div className="flex-container-input">
-        <InputElement
-          typeInput={typeInput}
+        <TextAreaElement
           idInput={idInput}
-          className={errors[idInput]?.message  ? `${className} error` : className}
+          className={messageError() ? `${className} error` : className}
           placeholder={placeholder}
           register={register}
           value={value}
@@ -104,9 +127,11 @@ export function InputComponent({
           onChange={onChange}
           defaultValue={defaultValue}
           id={id}
+          rows={rows}
+          cols={cols}
           optionsRegister={optionsRegister}
         />
-        {errors[idInput]?.message && (
+        {messageError() && (
           <MdOutlineError
             className="icon-error"
             fontSize={"22px"}
@@ -114,9 +139,9 @@ export function InputComponent({
           />
         )}
       </div>
-      {errors[idInput]?.message  && (
+      {messageError() && (
         <p className="error-message bold not-margin-padding">
-          {errors[idInput]?.message }
+          {messageError()}
         </p>
       )}
       {children}
