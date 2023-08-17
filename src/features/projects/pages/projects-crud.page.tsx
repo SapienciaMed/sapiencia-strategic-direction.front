@@ -16,6 +16,14 @@ function ProjectsCrudPage(): React.JSX.Element {
                 </div>
             </div>
             <div className="container-button-bot">
+            <div>
+                    <ButtonComponent
+                        className="button-main huge hover-three button-save "
+                        value="Guardar Temporalmente"
+                        type="submit"
+                        form=""
+                    />
+            </div>
                 <div className="buttons-bot">
                     <span className="bold text-center button" onClick={() => { }}>
                         Cancelar
