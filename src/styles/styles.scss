@@ -27,7 +27,9 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
-.projects-form {}
+.container-button-bot.space-between {
+    justify-content: space-between;
+}
 
 .project-container {
     display: grid;

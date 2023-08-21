@@ -26,9 +26,21 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
     const {
         control,
         register,
+        getValues,
+        setValue,
         formState: { errors, isValid },
         watch
-    } = useForm<IProblemDescriptionForm>({ resolver });
+    } = useForm<IProblemDescriptionForm>({ resolver, defaultValues: {
+        problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
+        magnitude: projectData?.identification?.problemDescription?.magnitude ? projectData.identification.problemDescription.magnitude : "",
+        centerProblem: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
+        causes: projectData?.identification?.problemDescription?.causes ? projectData.identification.problemDescription.causes : [],
+        effects: projectData?.identification?.problemDescription?.effects ? projectData.identification.problemDescription.effects : [],
+    }});
+
+    useEffect(() => {
+        if(projectData) setProblemDescriptionData(projectData.identification?.problemDescription)
+    }, []);
 
     useEffect(() => {
         const subscription = watch((value: IProblemDescriptionForm) => setProblemDescriptionData(prev => {return {...prev, ...value}}));
@@ -67,7 +79,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         {
             icon: "Detail",
             onClick: (row) => {
-
+                console.log(row)
             },
         },
     ];
@@ -164,7 +176,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar causas",
-                                description: <CausesFormComponent ref={causesEffectsComponentRef} />,
+                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData.causes.length+1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -172,7 +184,11 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onOk: () => {
                                     if (causesEffectsComponentRef.current) {
                                         causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
-                                            console.log(data)
+                                            setProblemDescriptionData(prev => {
+                                                const causes = prev?.causes ? prev.causes.concat(data) : [data];
+                                                return {...prev, causes: causes};
+                                            })
+                                            setValue('causes', getValues('causes').concat(data));
                                             setMessage({});
                                         })();
                                     }
@@ -185,7 +201,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             Añadir causa <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={[{ id: 1, consecutive: "1", description: "prueba descripcion", childrens: [{ id: 3, consecutive: "1.1", description: "chiquito1" }, { id: 4, consecutive: "1.2", description: "chiquito2" }] }, { id: 2, consecutive: "2", description: "prueba2 descripcion2", childrens: [{ id: 5, consecutive: "2.1", description: "chiquito3" }, { id: 6, consecutive: "2.2", description: "chiquito4" }] }]} />
+                    <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />
                 </div>
                 <div>
                     <div className="title-area">
@@ -196,7 +212,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar efectos",
-                                description: <EffectsFormComponent ref={causesEffectsComponentRef} />,
+                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData.causes.length+1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -217,7 +233,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             Añadir efecto <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={[{ id: 1, consecutive: "1", description: "prueba descripcion", childrens: [{ id: 3, consecutive: "1.1", description: "chiquito1" }, { id: 4, consecutive: "1.2", description: "chiquito2" }] }, { id: 2, consecutive: "2", description: "prueba2 descripcion2", childrens: [{ id: 5, consecutive: "2.1", description: "chiquito3" }, { id: 6, consecutive: "2.2", description: "chiquito4" }] }]} />
+                    <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />
                 </div>
             </FormComponent>
         </div>
@@ -229,14 +245,19 @@ interface IRef {
     handleSubmit: UseFormHandleSubmit<ICause | IEffect, undefined>;
 }
 
-const CausesFormComponent = forwardRef<IRef>((_props, ref) => {
+interface IPropsCausesEffectsForm {
+    counter: number;
+}
+
+const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
+    const { counter } = props;
     const resolver = useYupValidationResolver(causesEffectsValidator);
     const {
         handleSubmit,
         register,
         formState: { errors },
         control
-    } = useForm<ICause>({ mode: "all", resolver, defaultValues: { consecutive: "1" } });
+    } = useForm<ICause>({ mode: "all", resolver, defaultValues: { consecutive: counter.toString() } });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "childrens",
@@ -275,7 +296,7 @@ const CausesFormComponent = forwardRef<IRef>((_props, ref) => {
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
                     append({
-                        consecutive: `1.${fields.length + 1}`,
+                        consecutive: `${counter.toString()}.${fields.length + 1}`,
                         description: ""
                     })
                 }}>
@@ -320,14 +341,15 @@ const CausesFormComponent = forwardRef<IRef>((_props, ref) => {
     )
 });
 
-const EffectsFormComponent = forwardRef<IRef>((_props, ref) => {
+const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
+    const { counter } = props;
     const resolver = useYupValidationResolver(causesEffectsValidator);
     const {
         handleSubmit,
         register,
         formState: { errors },
         control
-    } = useForm<IEffect>({ mode: "all", resolver, defaultValues: { consecutive: "1" } });
+    } = useForm<IEffect>({ mode: "all", resolver, defaultValues: { consecutive: counter.toString() } });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "childrens",
@@ -366,7 +388,7 @@ const EffectsFormComponent = forwardRef<IRef>((_props, ref) => {
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
                     append({
-                        consecutive: `1.${fields.length + 1}`,
+                        consecutive: `${counter.toString()}.${fields.length + 1}`,
                         description: ""
                     })
                 }}>

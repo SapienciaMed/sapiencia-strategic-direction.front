@@ -6,7 +6,7 @@ import { ProjectsContext } from "../contexts/projects.context";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue } = useContext(ProjectsContext);
+    const { step, disableContinue, actionContinue, projectData, setProjectData } = useContext(ProjectsContext);
     const tabs: ITabsMenuTemplate[] = [
         { id: "register", title: "1. Registro", content: <RegisterPage /> },
         { id: "identification", title: "2. Identificación", content: <IdentificationPage /> },
@@ -15,6 +15,8 @@ export function useProjectsCrudData() {
         { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</> }
     ];
     useEffect(() => {
+        const projectDataLocal = JSON.parse(localStorage.getItem("create_project_data"));
+        if(projectDataLocal) setProjectData({...projectDataLocal});
         if (tabsComponentRef.current) {
             tabsComponentRef.current.disableTabs(["identification","programming", "preparation", "transfer"]);
         }
@@ -27,6 +29,11 @@ export function useProjectsCrudData() {
             }
         }
     }, [step]);
+    
+    const onSaveTemp = () => {
+        localStorage.removeItem('create_project_data');
+        localStorage.setItem('create_project_data', JSON.stringify(projectData));
+    }
 
-    return { tabs, tabsComponentRef, disableContinue, actionContinue }
+    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp }
 }

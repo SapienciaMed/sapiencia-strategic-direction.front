@@ -53,11 +53,11 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
         );
     };
     const getExpansible = (item) => {
-        if (expandedRowsMobile[`${item.id}`]) {
+        if (expandedRowsMobile[`${item.consecutive}`]) {
             return (
                 <div onClick={() => {
                     let _expandedRowsMobile = {};
-                    (_expandedRowsMobile[`${item.id}`] = false);
+                    (_expandedRowsMobile[`${item.consecutive}`] = false);
                     setExpandedRowsMobile({ ...expandedRowsMobile, ..._expandedRowsMobile });
                 }}>
                     <Icons.FaChevronDown />
@@ -67,7 +67,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
         return (
             <div onClick={() => {
                 let _expandedRowsMobile = {};
-                (_expandedRowsMobile[`${item.id}`] = true);
+                (_expandedRowsMobile[`${item.consecutive}`] = true);
                 setExpandedRowsMobile({ ...expandedRowsMobile, ..._expandedRowsMobile });
             }}>
                 <Icons.FaChevronRight />
@@ -107,7 +107,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                         ))}
                     </div>
                 </div>
-                {expandedRowsMobile[`${item.id}`] && childrens ? childrens.map((children) => {
+                {expandedRowsMobile[`${item.consecutive}`] && childrens ? childrens.map((children) => {
                     return (
                         <div className="card-grid-item" key={children}>
                             <div className="card-header">

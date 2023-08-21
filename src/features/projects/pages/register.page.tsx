@@ -1,71 +1,104 @@
-import React, { useState } from "react";
+import React from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useRegisterData } from "../hooks/register.hook";
 import { EDirection } from "../../../common/constants/input.enum";
+import { Controller } from "react-hook-form";
 
 
 
 function RegisterPage(): React.JSX.Element {
-
-    const [textInput, setTextInput] = useState('');
-
-    const handleInputChange = (event) => {
-        const newText = event.target.value;
-        setTextInput(newText);
-    };
-
-
     const { register, errors, controlRegister, onSubmit, localitationData, DependecyData, processData } = useRegisterData();
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
                 <div className="card-form">
                     <div className="project-container">
-                        <InputComponent
-                            idInput="bpin"
-                            className="input-basic"
-                            typeInput="text"
-                            register={register}
-                            label="Código BPIN"
-                            classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
-                            errors={errors}
+                        <Controller
+                            control={controlRegister}
+                            name={"bpin"}
+                            defaultValue={0}
+                            render={({ field }) => {
+                                return (
+                                    <InputComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Código BPIN"
+                                        className="input-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        direction={EDirection.row}
+                                        typeInput={"text"}
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors} />
+                                );
+                            }}
                         />
-                        <InputComponent
-                            idInput="project"
-                            className="input-basic"
-                            typeInput="text"
-                            register={register}
-                            label="Nombre Proyecto"
-                            classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
-                            errors={errors}
-
+                        <Controller
+                            control={controlRegister}
+                            name={"project"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <InputComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Nombre Proyecto"
+                                        className="input-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        direction={EDirection.row}
+                                        typeInput={"text"}
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors} />
+                                );
+                            }}
                         />
                     </div>
                     <div className="project-dates-container">
-                        <InputComponent
-                            idInput="dateFrom"
-                            className="input-basic"
-                            typeInput="text"
-                            register={register}
-                            label={"Periodo inicial"}
-                            errors={errors}
-                            classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
-                            onChange={handleInputChange}
-                            value={textInput}
+                        <Controller
+                            control={controlRegister}
+                            name={"dateFrom"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <InputComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Periodo inicial"
+                                        className="input-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        direction={EDirection.row}
+                                        typeInput={"text"}
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors} />
+                                );
+                            }}
                         />
-                        <InputComponent
-                            idInput="dateTo"
-                            className="input-basic"
-                            typeInput="text"
-                            register={register}
-                            label={"Periodo final"}
-                            errors={errors}
-                            classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
-                            disabled={textInput.trim() == ''}
+                        <Controller
+                            control={controlRegister}
+                            name={"dateTo"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <InputComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Periodo final"
+                                        className="input-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        direction={EDirection.row}
+                                        typeInput={"text"}
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                    />
+                                );
+                            }}
                         />
                     </div>
 
@@ -103,14 +136,26 @@ function RegisterPage(): React.JSX.Element {
                         />
                     </div>
                     <div>
-                        <TextAreaComponent
-                            idInput="object"
-                            register={register}
-                            errors={errors}
-                            label="Objeto"
-                            classNameLabel="text-black biggest bold text-required"
-                            className="text-area-basic"
-                            rows={4}
+                        <Controller
+                            control={controlRegister}
+                            name={"object"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Objeto"
+                                        className="text-area-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        rows={4}
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                    />
+                                );
+                            }}
                         />
                     </div>
                 </div>
