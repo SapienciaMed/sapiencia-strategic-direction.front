@@ -8,7 +8,37 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 
 
 export function useProjectCreateData() {
+
+
     const [entitiesData, setEntitiesData] = useState<IDropdownProps[]>(null);
+
+    const processData:IDropdownProps[] =[ {
+        name: "proceso 1",
+        value : "1",
+    },
+    {   
+        name: "proceso 2",
+        value : "2",
+    }]
+    
+    const localitationData:IDropdownProps[] =[ {
+        name: "Localizacion 1",
+        value : "1",
+    
+    },
+    {
+        name: " Localizacion 2",
+        value : "2",
+    }]
+
+    const DependecyData:IDropdownProps[] = [{
+        name: "Dependencia 1",
+        value : "1",
+    },
+    {
+        name: "Dependencia 2",
+        value : "2",
+    }]
     const resolver = useYupValidationResolver(ProjectsCreateValidator);
     
     const {
@@ -26,6 +56,8 @@ export function useProjectCreateData() {
         console.log(data);
     });
 
-
-    return { register, errors, controlRegister,  onSubmit ,entitiesData };
+    useEffect(() => {
+       setValueRegister("localitation",localitationData[1].value?.toString())
+  }, []);
+    return { register, errors, controlRegister,  onSubmit ,entitiesData,processData,DependecyData,localitationData };
 }

@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { ButtonComponent, DatePickerComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectCreateData } from "../hooks/project-create.hook";
-
 import { EDirection } from "../../../common/constants/input.enum";
 
+
+
 function ProjectCreatePage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, entitiesData } = useProjectCreateData();
+
+    const [textInput, setTextInput] = useState('');
+
+    const handleInputChange = (event) => {
+        const newText = event.target.value;
+        setTextInput(newText);
+      };
+    
+
+    const { register, errors, controlRegister, onSubmit, entitiesData,localitationData,DependecyData,processData } = useProjectCreateData();
     return (
         <div className="crud-page full-height">
                 <FormComponent action={onSubmit}>
@@ -44,6 +54,8 @@ function ProjectCreatePage(): React.JSX.Element {
                                         errors={errors}
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
+                                        onChange={handleInputChange}
+                                        value={textInput}
                                     />
                                     <InputComponent
                                         idInput="dateTo"
@@ -54,6 +66,7 @@ function ProjectCreatePage(): React.JSX.Element {
                                         errors={errors}
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
+                                        disabled={textInput.trim() == '' ? true : false}
                                     />
                                 </div>
                            
@@ -66,7 +79,7 @@ function ProjectCreatePage(): React.JSX.Element {
                                         label="Proceso"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
-                                        data={entitiesData}
+                                        data={processData}
                                     />
                                     <SelectComponent
                                         idInput="localitation"
@@ -76,7 +89,8 @@ function ProjectCreatePage(): React.JSX.Element {
                                         label="Localización"
                                         classNameLabel="text-black biggest bold"
                                         direction={EDirection.row}
-                                        data={entitiesData}
+                                        data={localitationData}
+                                        disabled={true}
                                     />
                                     <SelectComponent
                                         idInput="dependency"
@@ -86,7 +100,7 @@ function ProjectCreatePage(): React.JSX.Element {
                                         label="Dependencia"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
-                                        data={entitiesData}
+                                        data={DependecyData}
                                     />
                                 </div>
                             <div>
@@ -109,12 +123,14 @@ function ProjectCreatePage(): React.JSX.Element {
                         />
                     </div>
 
+
                     <div className="mobile-actions mobile">
                         <span className="bold text-center button" onClick={() => {
                             
                         }}>
                             Cancelar
                         </span>
+                       
                         <ButtonComponent
                             value="Guardar"
                             type="submit"

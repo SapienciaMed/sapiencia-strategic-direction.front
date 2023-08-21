@@ -14,12 +14,12 @@ export const ProjectsCreateValidator = yup.object({
         .max(80, "Solo se permiten 80 caracteres"),
     dateFrom: yup
         .string()
-        .matches(/^[0-9]+$/, "Solo se permiten números")
+        .matches(/^[0-9]+$/, "Ingrese un año válido")
         .required("El campo es obligatorio")
         .max(4, "Solo se permiten 4 caracteres"),
     dateTo: yup
         .string()
-        .matches(/^[0-9]+$/, "Solo se permiten números")
+        .matches(/^[0-9]+$/, "Ingrese un año válido")
         .required("El campo es obligatorio")
         .max(4, "Solo se permiten 4 caracteres"),
     process: yup
