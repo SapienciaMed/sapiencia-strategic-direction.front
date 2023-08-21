@@ -1,10 +1,5 @@
-@mixin generate-grid(
-  $columns,
-  $column-width,
-  $gap: null,
-  $column-gap: null,
-  $row-gap: null
-) {
+/*mixins root*/
+@mixin generate-grid($columns, $column-width, $gap: null, $column-gap: null, $row-gap: null) {
   $grid-template-columns: "";
 
   @for $i from 1 through $columns {
@@ -94,38 +89,69 @@
   }
 }
 
-@mixin multiple-card-component(
-  $columns,
-  $margin-horizontal,
-  $margin-vertical,
-  $card-height,
-  $card-width,
-  $padding,
-  $cursor: null
-) {
+@mixin multiple-card-component($columns, $margin-horizontal, $margin-vertical, $card-height, $card-width, $padding, $cursor: null) {
   .card-body {
-    @include card-component($card-height, $card-width, $padding);
+    height:  $card-height;
+    width: $card-width;
+    padding: $padding;
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: $cursor;
+    justify-content: center;
 
     .card-header {
       height: 60%;
       width: 100%;
       display: flex;
       justify-content: center;
-    }
 
+      img{
+        object-fit: cover;
+        transition: transform 0.6s ease;
+        &:hover{
+          transform: scale(1.1);
+        }
+      }
+    }
+    
     .card-footer {
       height: 40%;
-      width: 80%;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
   }
 }
+
+@mixin card-component-title-area( $display: flex, $justify-content: space-between, $flex-direction: row, $margin-bottom: 14px, $gap: 8px, $margin-top: 0px ){
+  display: $display;
+  justify-content: $justify-content;
+  flex-direction: $flex-direction;
+  margin-bottom: $margin-bottom;
+  position: relative;
+  
+  .title-button {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: $gap;
+    font: normal normal 600 1rem/120% "RubikMedium", sans-serif;
+    color: var(--highlight-bg);
+    margin-top: $margin-top;
+    text-align: end;
+
+    svg {
+      width: 16px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 @mixin generate-text-area(
   $width,
   $border-radius,

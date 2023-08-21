@@ -1,10 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import ProblemDescriptionComponent from "../components/problem-description.component";
+import { ProjectsContext } from "../contexts/projects.context";
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
+    const { projectData } = useContext(ProjectsContext);
+    const disableAccordions = (ids: number[] | string[]) => {
+        if (accordionsComponentRef.current) {
+            accordionsComponentRef.current.disableAccordions(ids);
+        }
+    }
+    const enableAccordions = (ids: number[] | string[]) => {
+        if (accordionsComponentRef.current) {
+            accordionsComponentRef.current.enableAccordions(ids);
+        }
+    }
     const accordionsData: IAccordionTemplate[] = [
         {
             id: 1, 
@@ -14,12 +26,12 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 2, 
             name: "Descripción del problema", 
-            content: <ProblemDescriptionComponent />
+            content: <ProblemDescriptionComponent disableNext={() => {disableAccordions([3])}} enableNext={() => {enableAccordions([3])}}/>
         },
         {
             id: 3, 
             name: "Objetivos", 
-            content: <p>LoremIpsumTest3</p>
+            content: <p>{projectData && JSON.stringify(projectData)}</p>
         },
         {
             id: 4, 
@@ -28,14 +40,10 @@ function IdentificationPage(): React.JSX.Element {
         },
     ]
     useEffect(() => {
-        if (accordionsComponentRef.current) {
-            accordionsComponentRef.current.disableAccordions([3,4]);
-        }
+        disableAccordions([3,4])
     }, []);
     return (
-        <div>
-            <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
-        </div>
+        <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
     )
 }
 

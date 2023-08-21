@@ -1,9 +1,11 @@
+import React from "react";
+
 export interface ITableElement<T> {
   header: string;
   fieldName: string;
   required?: boolean;
   dataList?: IListTableElement[];
-  renderCell?: (row: T) => JSX.Element;
+  renderCell?: (row: T) => React.JSX.Element;
   width?: string | number;
   sortable?: boolean;
 }

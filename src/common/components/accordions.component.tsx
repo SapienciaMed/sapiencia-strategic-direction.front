@@ -23,14 +23,14 @@ const AccordionsComponent = forwardRef<IRef, IProps>((props, ref) => {
     }));
 
     function disableAccordions(ids: []) {
-        setDisables(ids);
+        setDisables(disables.concat(ids));
     }
     
     function enableAccordions(ids: any[]) {
         const newDisables = disables.filter((item: any) => !ids.includes(item))
         setDisables(newDisables);
     }
-
+    
     return (
         <Accordion multiple={multiple} activeIndex={defaultActive || null}>
             {data.map(accordion => {
