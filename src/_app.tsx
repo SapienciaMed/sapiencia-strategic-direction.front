@@ -6,6 +6,7 @@ import "primereact/resources/primereact.min.css";
 import ModalMessageComponent from "./common/components/modal-message.component";
 import ApplicationProvider from "./application-provider";
 import useAppCominicator from "./common/hooks/app-communicator.hook";
+import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/home.page"));
@@ -29,7 +30,7 @@ function App() {
           <Suspense fallback={<p>Loading...</p>}>
             <Routes>
               <Route path={"/direccion-estrategica/*"} element={<HomePage />} />;
-              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsCrud />} />;
+              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsContextProvider><ProjectsCrud /></ProjectsContextProvider>} />;
             </Routes>
           </Suspense>
         </Router>

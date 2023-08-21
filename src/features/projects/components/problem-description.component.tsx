@@ -48,7 +48,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
             const identification = prev ? {...prev.identification, problemDescription: {...problemDescriptionData}} : {problemDescription: {...problemDescriptionData}};
             return {...prev, identification: {...identification}}
         })
-        console.log(projectData)
     }, [problemDescriptionData]);
     
     const causesColumns: ITableElement<ICause>[] = [

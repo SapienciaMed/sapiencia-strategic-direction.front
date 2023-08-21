@@ -21,7 +21,15 @@ export interface IEffect {
 }
 
 export interface IRegisterForm {
-    
+    id?: number;
+    bpin: number;
+    project: string;
+    dateFrom: string;
+    dateTo: string;
+    process: string;
+    localitation: string;
+    dependency: string;
+    object: string;
 }
 
 export interface IProjectTemp {

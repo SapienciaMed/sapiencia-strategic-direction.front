@@ -31,7 +31,7 @@ const TabListComponent = forwardRef<IRef, IAppProps>((props, ref) => {
     }));
 
     function disableTabs(ids: []) {
-        setDisables(ids);
+        setDisables(disables.concat(ids));
     }
     
     function enableTabs(ids: any[]) {
@@ -61,7 +61,7 @@ const TabListComponent = forwardRef<IRef, IAppProps>((props, ref) => {
     }, [selectedTab])
 
     return (
-        <div className={`tabs-component ${className ? className : ""}`}>
+        <div className={`tabs-component ${className || ""}`}>
             <div className="tabs-selection">
                 {tabs.map((tab) => {
                     let active = "";
