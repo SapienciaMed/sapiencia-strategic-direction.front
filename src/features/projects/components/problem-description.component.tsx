@@ -72,16 +72,92 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         },
         {
             fieldName: "description",
-            header: "Descripción"
+            header: "Descripción",
+            renderCell: (row) => {
+                return <>{row.consecutive}. {row.description}</>
+            }
         },
     ];
     const causesActions: ITableAction<ICause>[] = [
         {
-            icon: "Detail",
+            icon: "Edit",
             onClick: (row) => {
-                console.log(row)
-            },
+                const search = row.consecutive.includes(".") ? row.consecutive.split(".")[0] : row.consecutive;
+                const cause = getValues("causes").find(cause => cause.consecutive === search);
+                let counter = null;
+                if(row.consecutive.includes(".")) {
+                    cause.childrens.forEach((children, index) => {
+                        if(children.consecutive === row.consecutive) counter = index;
+                    })
+                }
+                setMessage({
+                    title: "Editar causa",
+                    description: <CausesFormComponent ref={causesEffectsComponentRef} item={cause} counter={counter} />,
+                    show: true,
+                    background: true,
+                    OkTitle: "Guardar",
+                    cancelTitle: "Cancelar",
+                    onOk: () => {
+                        if (causesEffectsComponentRef.current) {
+                            causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
+                                const newCauses = getValues('causes').filter(cause => cause.consecutive !== data.consecutive).concat(data).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive));
+                                setProblemDescriptionData(prev => {
+                                    return {...prev, causes: newCauses};
+                                })
+                                setValue("causes", newCauses);
+                                setMessage({});
+                            })();
+                        }
+                        setMessage({});
+                    },
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                });
+            }
         },
+        {
+            icon: "Delete",
+            onClick: (row) => {
+                setMessage({
+                    background: true,
+                    cancelTitle: "Cancelar",
+                    description: "No se podrá recuperar",
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    show: true,
+                    title: row.consecutive.includes(".") ? "¿Desea quitar la causa indirecta?" : "¿Desea quitar la causa directa junto con sus causas indirectas?",
+                    onOk: () => {
+                        if(row.consecutive.includes(".")) {
+                            const newCauses = getValues("causes").map((cause) => {
+                                return {...cause, childrens: cause.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
+                                    return {...children, consecutive: `${cause.consecutive}.${childrenIndex+1}`}
+                                })}
+                            })
+                            setProblemDescriptionData(prev => {
+                                return {...prev, causes: newCauses};
+                            })
+                            setValue('causes', newCauses);
+                        } else {
+                            const causesFilter = getValues("causes").filter((cause) => cause.consecutive !== row.consecutive);
+                            const newCauses = causesFilter.map((cause, index) => {
+                                const newChildrends = cause.childrens.map((children, childrenIndex) => {
+                                    return {...children, consecutive: `${index+1}.${childrenIndex+1}`}
+                                })
+                                return {...cause, consecutive: `${index+1}`, childrens: newChildrends}
+                            });
+                            setProblemDescriptionData(prev => {
+                                return {...prev, causes: newCauses};
+                            })
+                            setValue('causes', newCauses);
+                        }
+                        setMessage({});
+                    }
+                });
+            },
+        }
     ];
     const effectsColumns: ITableElement<IEffect>[] = [
         {
@@ -93,16 +169,92 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         },
         {
             fieldName: "description",
-            header: "Descripción"
+            header: "Descripción",
+            renderCell: (row) => {
+                return <>{row.consecutive}. {row.description}</>
+            }
         },
     ];
     const effectsActions: ITableAction<ICause>[] = [
         {
-            icon: "Detail",
+            icon: "Edit",
             onClick: (row) => {
-
-            },
+                const search = row.consecutive.includes(".") ? row.consecutive.split(".")[0] : row.consecutive;
+                const effect = getValues("effects").find(effect => effect.consecutive === search);
+                let counter = null;
+                if(row.consecutive.includes(".")) {
+                    effect.childrens.forEach((children, index) => {
+                        if(children.consecutive === row.consecutive) counter = index;
+                    })
+                }
+                setMessage({
+                    title: "Editar efecto",
+                    description: <EffectsFormComponent ref={causesEffectsComponentRef} item={effect} counter={counter} />,
+                    show: true,
+                    background: true,
+                    OkTitle: "Guardar",
+                    cancelTitle: "Cancelar",
+                    onOk: () => {
+                        if (causesEffectsComponentRef.current) {
+                            causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
+                                const newEffects = getValues('effects').filter(effect => effect.consecutive !== data.consecutive).concat(data).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive));
+                                setProblemDescriptionData(prev => {
+                                    return {...prev, effect: newEffects};
+                                })
+                                setValue("effects", newEffects);
+                                setMessage({});
+                            })();
+                        }
+                        setMessage({});
+                    },
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                });
+            }
         },
+        {
+            icon: "Delete",
+            onClick: (row) => {
+                setMessage({
+                    background: true,
+                    cancelTitle: "Cancelar",
+                    description: "No se podrá recuperar",
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    show: true,
+                    title: row.consecutive.includes(".") ? "¿Desea quitar el efecto indirecto?" : "¿Desea quitar el efecto directo junto con sus efectos indirectos?",
+                    onOk: () => {
+                        if(row.consecutive.includes(".")) {
+                            const newEffects = getValues("effects").map((effect) => {
+                                return {...effect, childrens: effect.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
+                                    return {...children, consecutive: `${effect.consecutive}.${childrenIndex+1}`}
+                                })}
+                            })
+                            setProblemDescriptionData(prev => {
+                                return {...prev, effects: newEffects};
+                            })
+                            setValue('effects', newEffects);
+                        } else {
+                            const effectsFilter = getValues("effects").filter((effect) => effect.consecutive !== row.consecutive);
+                            const newEffects = effectsFilter.map((effect, index) => {
+                                const newChildrends = effect.childrens.map((children, childrenIndex) => {
+                                    return {...children, consecutive: `${index+1}.${childrenIndex+1}`}
+                                })
+                                return {...effect, consecutive: `${index+1}`, childrens: newChildrends}
+                            });
+                            setProblemDescriptionData(prev => {
+                                return {...prev, effects: newEffects};
+                            })
+                            setValue('effects', newEffects);
+                        }
+                        setMessage({});
+                    }
+                });
+            },
+        }
     ];
     return (
         <div className="main-page">
@@ -176,7 +328,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar causas",
-                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData.causes.length+1} />,
+                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length+1 : 1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -212,7 +364,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar efectos",
-                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData.causes.length+1} />,
+                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length+1 : 1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -220,7 +372,11 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onOk: () => {
                                     if (causesEffectsComponentRef.current) {
                                         causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
-                                            console.log(data)
+                                            setProblemDescriptionData(prev => {
+                                                const effects = prev?.effects ? prev.effects.concat(data) : [data];
+                                                return {...prev, effects: effects};
+                                            })
+                                            setValue('effects', getValues('effects').concat(data));
                                             setMessage({});
                                         })();
                                     }
@@ -242,22 +398,29 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
 
 
 interface IRef {
-    handleSubmit: UseFormHandleSubmit<ICause | IEffect, undefined>;
+    handleSubmit: UseFormHandleSubmit<ICause | IEffect>;
 }
 
 interface IPropsCausesEffectsForm {
-    counter: number;
+    counter?: number;
+    item?: ICause | IEffect;
 }
 
+const compareIds = (id1: string | number, id2: string | number) => {
+    if(id1 === null || id2 === null) return true;
+    return id1 == id2;
+};
+
 const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
-    const { counter } = props;
+    const { counter, item } = props;
     const resolver = useYupValidationResolver(causesEffectsValidator);
     const {
         handleSubmit,
         register,
         formState: { errors },
-        control
-    } = useForm<ICause>({ mode: "all", resolver, defaultValues: { consecutive: counter.toString() } });
+        control,
+        setValue
+    } = useForm<ICause>({ mode: "all", resolver, defaultValues: { consecutive: item ? item.consecutive : counter.toString(), description: item ? item.description : "" } });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "childrens",
@@ -265,6 +428,20 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
     useImperativeHandle(ref, () => ({
         handleSubmit: handleSubmit
     }));
+    useEffect(() => {
+        if(!item) return;
+        item.childrens.forEach((children) => {
+            append({
+                consecutive: children.consecutive,
+                description: children.description
+            });
+        });
+    }, [item])
+    useEffect(() => {
+        fields.forEach((field, index) => {
+            setValue(`childrens.${index}`, {consecutive: item ? `${item.consecutive}.${index+1}` : `${counter.toString()}.${index+1}`, description: field.description});
+        });
+    }, [fields]);
     return (
         <FormComponent action={undefined} className="causes-form-container">
             <div className="causes-inputs">
@@ -288,6 +465,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                     classNameLabel="text-black big bold text-required"
                     direction={EDirection.row}
                     errors={errors}
+                    disabled={item ? !!counter : false}
                 />
             </div>
             <div className="title-area">
@@ -295,10 +473,11 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                     {errors.childrens?.message}
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
+                    if(item && counter) return;
                     append({
-                        consecutive: `${counter.toString()}.${fields.length + 1}`,
+                        consecutive: item ? `${item.consecutive}.${fields.length + 1}` : `${counter.toString()}.${fields.length + 1}`,
                         description: ""
-                    })
+                    });
                 }}>
                     Añadir causa indirecta <AiOutlinePlusCircle />
                 </div>
@@ -329,6 +508,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
+                                disabled={item ? !compareIds(counter, index) : false}
                             />
                             <div onClick={() => { remove(index) }} style={{ paddingTop: '1.4rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />
@@ -342,14 +522,15 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
 });
 
 const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
-    const { counter } = props;
+    const { counter, item } = props;
     const resolver = useYupValidationResolver(causesEffectsValidator);
     const {
         handleSubmit,
         register,
         formState: { errors },
-        control
-    } = useForm<IEffect>({ mode: "all", resolver, defaultValues: { consecutive: counter.toString() } });
+        control,
+        setValue
+    } = useForm<IEffect>({ mode: "all", resolver, defaultValues: { consecutive: item ? item.consecutive : counter.toString(), description: item ? item.description : "" } });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "childrens",
@@ -357,6 +538,20 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
     useImperativeHandle(ref, () => ({
         handleSubmit: handleSubmit
     }));
+    useEffect(() => {
+        if(!item) return;
+        item.childrens.forEach((children) => {
+            append({
+                consecutive: children.consecutive,
+                description: children.description
+            });
+        });
+    }, [item])
+    useEffect(() => {
+        fields.forEach((field, index) => {
+            setValue(`childrens.${index}`, {consecutive: item ? `${item.consecutive}.${index+1}` : `${counter.toString()}.${index+1}`, description: field.description});
+        });
+    }, [fields]);
     return (
         <FormComponent action={undefined} className="causes-form-container">
             <div className="causes-inputs">
@@ -380,6 +575,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                     classNameLabel="text-black big bold text-required"
                     direction={EDirection.row}
                     errors={errors}
+                    disabled={item ? !!counter : false}
                 />
             </div>
             <div className="title-area">
@@ -388,9 +584,9 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
                     append({
-                        consecutive: `${counter.toString()}.${fields.length + 1}`,
+                        consecutive: item ? `${item.consecutive}.${fields.length + 1}` : `${counter.toString()}.${fields.length + 1}`,
                         description: ""
-                    })
+                    });
                 }}>
                     Añadir efecto indirecto <AiOutlinePlusCircle />
                 </div>
@@ -421,6 +617,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
+                                disabled={item ? !compareIds(counter, index) : false}
                             />
                             <div onClick={() => { remove(index) }} style={{ paddingTop: '1.4rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />

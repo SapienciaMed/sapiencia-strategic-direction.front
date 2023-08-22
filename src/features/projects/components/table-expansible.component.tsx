@@ -147,7 +147,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                     value={data}
                     expandedRows={expandedRows}
                     rowExpansionTemplate={rowExpansionTemplate}
-                    dataKey="id"
+                    dataKey="consecutive"
                     onRowToggle={(e) => setExpandedRows(e.data)}
                     scrollable={true}
                 >

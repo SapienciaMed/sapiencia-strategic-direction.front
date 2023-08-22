@@ -9,6 +9,21 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     @include generate-flex-container(column);
 }
 
+.projects-footer-mobile {
+    display: grid;
+    row-gap: 2rem;
+    .save-temp {
+        display: grid;
+        justify-content: center;
+    }
+}
+
+.mobile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
 .container-button-bot {
     display: none;
     justify-content: end;
@@ -84,9 +99,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
 .causes-form-container {
     display: grid;
+    row-gap: 1rem;
 
     .causes-inputs {
         display: grid;
+        row-gap: 1rem;
     }
 
     .causes-indirect-inputs {
@@ -129,11 +146,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 
     .causes-form-container {
-        row-gap: 1rem;
-
         .causes-inputs {
             grid-template-columns: 1fr 4fr;
             column-gap: 1rem;
+            row-gap: 0rem;
         }
 
         .causes-indirect-inputs {

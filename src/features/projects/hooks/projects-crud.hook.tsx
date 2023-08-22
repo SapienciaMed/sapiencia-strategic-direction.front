@@ -3,10 +3,14 @@ import { ITabsMenuTemplate } from "../../../common/interfaces/tabs-menu.interfac
 import IdentificationPage from "../pages/identification.page";
 import RegisterPage from "../pages/register.page";
 import { ProjectsContext } from "../contexts/projects.context";
+import { AppContext } from "../../../common/contexts/app.context";
+import { useNavigate } from "react-router-dom";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
     const { step, disableContinue, actionContinue, projectData, setProjectData } = useContext(ProjectsContext);
+    const { setMessage } = useContext(AppContext);
+    const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
         { id: "register", title: "1. Registro", content: <RegisterPage /> },
         { id: "identification", title: "2. Identificación", content: <IdentificationPage /> },
@@ -35,5 +39,5 @@ export function useProjectsCrudData() {
         localStorage.setItem('create_project_data', JSON.stringify(projectData));
     }
 
-    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp }
+    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate }
 }

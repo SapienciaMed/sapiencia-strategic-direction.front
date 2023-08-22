@@ -6,7 +6,7 @@ import { ProjectsContext } from "../contexts/projects.context";
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
-    const { projectData } = useContext(ProjectsContext);
+    const { projectData, setDisableContinue } = useContext(ProjectsContext);
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
@@ -40,7 +40,8 @@ function IdentificationPage(): React.JSX.Element {
         },
     ]
     useEffect(() => {
-        disableAccordions([3,4])
+        disableAccordions([1,3,4])
+        setDisableContinue(true);
     }, []);
     return (
         <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
