@@ -272,6 +272,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Descripción detallada del problema central, sus causas y efectos"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
+                                placeholder="Escribe aqui"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -292,6 +293,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Magnitud del problema"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
+                                placeholder="Escribe aqui"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -312,6 +314,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Problema central"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
+                                placeholder="Escribe aqui"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -348,6 +351,10 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onCancel: () => {
                                     setMessage({});
                                 },
+                                onClose: () => {
+                                    setMessage({});
+                                },
+                                style: "causes-effects-modal-size"
                             });
                         }}>
                             Añadir causa <AiOutlinePlusCircle />

@@ -108,6 +108,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
     .causes-indirect-inputs {
         display: grid;
+        row-gap: 1rem;
 
         .button-delete {
             filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
@@ -124,6 +125,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     .title-area {
         @include card-component-title-area()
     }
+}
+
+.causes-effects-modal-size {
+    max-height: 70vh;
 }
 
 @media (min-width: 1024px) {
@@ -159,6 +164,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         .causes-indirect-inputs {
             grid-template-columns: 2fr 4fr 1fr;
             column-gap: 1rem;
+            row-gap: 1rem;
             align-items: center;
         }
     }
