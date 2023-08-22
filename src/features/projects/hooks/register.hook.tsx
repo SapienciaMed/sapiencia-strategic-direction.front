@@ -5,6 +5,7 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { IRegisterForm } from "../interfaces/ProjectsInterfaces";
 import { registerValidator } from "../../../common/schemas";
 import { ProjectsContext } from "../contexts/projects.context";
+import { date } from "yup";
 
 
 export function useRegisterData() {
@@ -49,7 +50,9 @@ export function useRegisterData() {
         register,
         formState: { errors, isValid },
         control: controlRegister,
-        watch
+        watch,
+        setValue,
+        clearErrors
     } = useForm<IRegisterForm>({ resolver, mode: "all", defaultValues: {
         bpin: projectData?.register?.bpin ? projectData.register.bpin : null,
         dateFrom: projectData?.register?.dateFrom ? projectData.register.dateFrom : "",
@@ -60,6 +63,16 @@ export function useRegisterData() {
         process: projectData?.register?.process ? projectData.register.process : null,
         project: projectData?.register?.project ? projectData.register.project : "",
     }});
+
+    const watchDateFrom = watch("dateFrom"); 
+    const watchDateto = watch("dateTo")
+
+    useEffect(() =>{
+        if(!watchDateFrom){
+            setValue("dateTo","")
+            clearErrors("dateTo")
+        }
+    },[watchDateFrom])
 
     useEffect(() => {
         const subscription = watch((value: IRegisterForm) => setProjectData(prev => {
@@ -78,5 +91,5 @@ export function useRegisterData() {
     }, [isValid]);
 
 
-    return { register, errors, controlRegister, onSubmit, processData, DependecyData, localitationData };
+    return { register, errors, controlRegister, onSubmit, processData, DependecyData, localitationData , watchDateFrom};
 }

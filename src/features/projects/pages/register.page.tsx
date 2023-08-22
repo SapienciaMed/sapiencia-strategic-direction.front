@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form";
 
 
 function RegisterPage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, localitationData, DependecyData, processData } = useRegisterData();
+    const { register, errors, controlRegister, onSubmit, localitationData, DependecyData, processData,watchDateFrom } = useRegisterData();
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
@@ -95,6 +95,7 @@ function RegisterPage(): React.JSX.Element {
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
+                                        disabled={!watchDateFrom}
                                     />
                                 );
                             }}
