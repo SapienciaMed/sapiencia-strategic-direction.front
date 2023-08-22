@@ -85,7 +85,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>
                     <ButtonComponent
                         className="button-main huge hover-three"
-                        value="Siguiente"
+                        value="Continuar"
                         type="button"
                         action={actionContinue}
                         disabled={disableContinue}
