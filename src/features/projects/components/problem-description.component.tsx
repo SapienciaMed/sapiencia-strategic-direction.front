@@ -278,7 +278,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Descripción detallada del problema central, sus causas y efectos"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
-                                placeholder="Escribe aqui"
+                                placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -301,7 +301,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Magnitud del problema"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
-                                placeholder="Escribe aqui"
+                                placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -324,7 +324,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 label="Problema central"
                                 classNameLabel="text-black big bold text-required"
                                 className="text-area-basic"
-                                placeholder="Escribe aqui"
+                                placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
@@ -590,7 +590,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                     typeInput="text"
                     className="input-basic"
                     register={register}
-                    label="Descripción efecto directa"
+                    label="Descripción efecto directo"
                     classNameLabel="text-black big bold text-required"
                     direction={EDirection.row}
                     errors={errors}
