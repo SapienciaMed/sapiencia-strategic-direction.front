@@ -51,7 +51,7 @@ export function useRegisterData() {
         control: controlRegister,
         watch
     } = useForm<IRegisterForm>({ resolver, mode: "all", defaultValues: {
-        bpin: projectData?.register?.bpin ? projectData.register.bpin : 0,
+        bpin: projectData?.register?.bpin ? projectData.register.bpin : null,
         dateFrom: projectData?.register?.dateFrom ? projectData.register.dateFrom : "",
         dateTo: projectData?.register?.dateTo ? projectData.register.dateTo : "",
         dependency: projectData?.register?.dependency ? projectData.register.dependency : null,

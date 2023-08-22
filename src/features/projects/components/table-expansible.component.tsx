@@ -150,6 +150,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                     dataKey="consecutive"
                     onRowToggle={(e) => setExpandedRows(e.data)}
                     scrollable={true}
+                    emptyMessage={" "}
                 >
                     <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />
                     {columns.map((col) => (
@@ -179,7 +180,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                 <DataView
                     value={data}
                     itemTemplate={mobilTemplate}
-                    emptyMessage={""}
+                    emptyMessage={" "}
                 />
             )}
         </div>

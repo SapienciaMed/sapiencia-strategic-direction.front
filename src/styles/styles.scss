@@ -5,6 +5,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     width: 100vw;
 }
 
+.label-max-texarea {
+    text-align: end;
+    margin-top: -10px;
+}
+
 .crud-page {
     @include generate-flex-container(column);
 }
@@ -86,7 +91,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
 .problem-description-container {
     display: grid;
-    row-gap: 1.5rem;
+    row-gap: 1.7rem;
 }
 
 .spc-common-table.expansible {
@@ -148,6 +153,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         padding: 0px;
 
         .p-datatable {
+            height: auto;
+            max-height: 50vh;
             border: 0px;
             border-radius: 0px;
             background: transparent;

@@ -39,9 +39,9 @@ export const registerValidator = yup.object({
 });
 
 export const problemDescriptionValidator = yup.object({
-    problemDescription: yup.string().required("El campo es obligatorio"),
-    magnitude: yup.string().required("El campo es obligatorio"),
-    centerProblem: yup.string().required("El campo es obligatorio"),
+    problemDescription: yup.string().required("El campo es obligatorio").max(800),
+    magnitude: yup.string().required("El campo es obligatorio").max(500),
+    centerProblem: yup.string().required("El campo es obligatorio").max(300),
 });
 
 export const causesEffectsValidator = yup.object({

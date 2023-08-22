@@ -30,25 +30,27 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         setValue,
         formState: { errors, isValid },
         watch
-    } = useForm<IProblemDescriptionForm>({ resolver, defaultValues: {
-        problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
-        magnitude: projectData?.identification?.problemDescription?.magnitude ? projectData.identification.problemDescription.magnitude : "",
-        centerProblem: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
-        causes: projectData?.identification?.problemDescription?.causes ? projectData.identification.problemDescription.causes : [],
-        effects: projectData?.identification?.problemDescription?.effects ? projectData.identification.problemDescription.effects : [],
-    }});
+    } = useForm<IProblemDescriptionForm>({
+        resolver, defaultValues: {
+            problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
+            magnitude: projectData?.identification?.problemDescription?.magnitude ? projectData.identification.problemDescription.magnitude : "",
+            centerProblem: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
+            causes: projectData?.identification?.problemDescription?.causes ? projectData.identification.problemDescription.causes : [],
+            effects: projectData?.identification?.problemDescription?.effects ? projectData.identification.problemDescription.effects : [],
+        }
+    });
 
     useEffect(() => {
-        if(projectData) setProblemDescriptionData(projectData.identification?.problemDescription)
+        if (projectData) setProblemDescriptionData(projectData.identification?.problemDescription)
     }, []);
 
     useEffect(() => {
-        const subscription = watch((value: IProblemDescriptionForm) => setProblemDescriptionData(prev => {return {...prev, ...value}}));
+        const subscription = watch((value: IProblemDescriptionForm) => setProblemDescriptionData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
     }, [watch]);
 
     useEffect(() => {
-        if(isValid) {
+        if (isValid) {
             enableNext();
         } else {
             disableNext();
@@ -56,12 +58,12 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
     }, [isValid]);
 
     useEffect(() => {
-        if(problemDescriptionData) setProjectData(prev => {
-            const identification = prev ? {...prev.identification, problemDescription: {...problemDescriptionData}} : {problemDescription: {...problemDescriptionData}};
-            return {...prev, identification: {...identification}}
+        if (problemDescriptionData) setProjectData(prev => {
+            const identification = prev ? { ...prev.identification, problemDescription: { ...problemDescriptionData } } : { problemDescription: { ...problemDescriptionData } };
+            return { ...prev, identification: { ...identification } }
         })
     }, [problemDescriptionData]);
-    
+
     const causesColumns: ITableElement<ICause>[] = [
         {
             fieldName: "type",
@@ -85,9 +87,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                 const search = row.consecutive.includes(".") ? row.consecutive.split(".")[0] : row.consecutive;
                 const cause = getValues("causes").find(cause => cause.consecutive === search);
                 let counter = null;
-                if(row.consecutive.includes(".")) {
+                if (row.consecutive.includes(".")) {
                     cause.childrens.forEach((children, index) => {
-                        if(children.consecutive === row.consecutive) counter = index;
+                        if (children.consecutive === row.consecutive) counter = index;
                     })
                 }
                 setMessage({
@@ -102,7 +104,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
                                 const newCauses = getValues('causes').filter(cause => cause.consecutive !== data.consecutive).concat(data).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive));
                                 setProblemDescriptionData(prev => {
-                                    return {...prev, causes: newCauses};
+                                    return { ...prev, causes: newCauses };
                                 })
                                 setValue("causes", newCauses);
                                 setMessage({});
@@ -130,26 +132,28 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     show: true,
                     title: row.consecutive.includes(".") ? "¿Desea quitar la causa indirecta?" : "¿Desea quitar la causa directa junto con sus causas indirectas?",
                     onOk: () => {
-                        if(row.consecutive.includes(".")) {
+                        if (row.consecutive.includes(".")) {
                             const newCauses = getValues("causes").map((cause) => {
-                                return {...cause, childrens: cause.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
-                                    return {...children, consecutive: `${cause.consecutive}.${childrenIndex+1}`}
-                                })}
+                                return {
+                                    ...cause, childrens: cause.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
+                                        return { ...children, consecutive: `${cause.consecutive}.${childrenIndex + 1}` }
+                                    })
+                                }
                             })
                             setProblemDescriptionData(prev => {
-                                return {...prev, causes: newCauses};
+                                return { ...prev, causes: newCauses };
                             })
                             setValue('causes', newCauses);
                         } else {
                             const causesFilter = getValues("causes").filter((cause) => cause.consecutive !== row.consecutive);
                             const newCauses = causesFilter.map((cause, index) => {
                                 const newChildrends = cause.childrens.map((children, childrenIndex) => {
-                                    return {...children, consecutive: `${index+1}.${childrenIndex+1}`}
+                                    return { ...children, consecutive: `${index + 1}.${childrenIndex + 1}` }
                                 })
-                                return {...cause, consecutive: `${index+1}`, childrens: newChildrends}
+                                return { ...cause, consecutive: `${index + 1}`, childrens: newChildrends }
                             });
                             setProblemDescriptionData(prev => {
-                                return {...prev, causes: newCauses};
+                                return { ...prev, causes: newCauses };
                             })
                             setValue('causes', newCauses);
                         }
@@ -182,9 +186,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                 const search = row.consecutive.includes(".") ? row.consecutive.split(".")[0] : row.consecutive;
                 const effect = getValues("effects").find(effect => effect.consecutive === search);
                 let counter = null;
-                if(row.consecutive.includes(".")) {
+                if (row.consecutive.includes(".")) {
                     effect.childrens.forEach((children, index) => {
-                        if(children.consecutive === row.consecutive) counter = index;
+                        if (children.consecutive === row.consecutive) counter = index;
                     })
                 }
                 setMessage({
@@ -199,7 +203,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
                                 const newEffects = getValues('effects').filter(effect => effect.consecutive !== data.consecutive).concat(data).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive));
                                 setProblemDescriptionData(prev => {
-                                    return {...prev, effect: newEffects};
+                                    return { ...prev, effect: newEffects };
                                 })
                                 setValue("effects", newEffects);
                                 setMessage({});
@@ -227,26 +231,28 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     show: true,
                     title: row.consecutive.includes(".") ? "¿Desea quitar el efecto indirecto?" : "¿Desea quitar el efecto directo junto con sus efectos indirectos?",
                     onOk: () => {
-                        if(row.consecutive.includes(".")) {
+                        if (row.consecutive.includes(".")) {
                             const newEffects = getValues("effects").map((effect) => {
-                                return {...effect, childrens: effect.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
-                                    return {...children, consecutive: `${effect.consecutive}.${childrenIndex+1}`}
-                                })}
+                                return {
+                                    ...effect, childrens: effect.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
+                                        return { ...children, consecutive: `${effect.consecutive}.${childrenIndex + 1}` }
+                                    })
+                                }
                             })
                             setProblemDescriptionData(prev => {
-                                return {...prev, effects: newEffects};
+                                return { ...prev, effects: newEffects };
                             })
                             setValue('effects', newEffects);
                         } else {
                             const effectsFilter = getValues("effects").filter((effect) => effect.consecutive !== row.consecutive);
                             const newEffects = effectsFilter.map((effect, index) => {
                                 const newChildrends = effect.childrens.map((children, childrenIndex) => {
-                                    return {...children, consecutive: `${index+1}.${childrenIndex+1}`}
+                                    return { ...children, consecutive: `${index + 1}.${childrenIndex + 1}` }
                                 })
-                                return {...effect, consecutive: `${index+1}`, childrens: newChildrends}
+                                return { ...effect, consecutive: `${index + 1}`, childrens: newChildrends }
                             });
                             setProblemDescriptionData(prev => {
-                                return {...prev, effects: newEffects};
+                                return { ...prev, effects: newEffects };
                             })
                             setValue('effects', newEffects);
                         }
@@ -276,7 +282,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                            />
+                            >
+                                <label className="label-max-texarea">Max 800 caracteres</label>
+                            </TextAreaComponent>
                         );
                     }}
                 />
@@ -297,7 +305,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                            />
+                            >
+                                <label className="label-max-texarea">Max 500 caracteres</label>
+                            </TextAreaComponent>
                         );
                     }}
                 />
@@ -318,7 +328,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                            />
+                            >
+                                <label className="label-max-texarea">Max 300 caracteres</label>
+                            </TextAreaComponent>
                         );
                     }}
                 />
@@ -331,7 +343,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar causas",
-                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length+1 : 1} />,
+                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length + 1 : 1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -341,7 +353,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                         causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
                                             setProblemDescriptionData(prev => {
                                                 const causes = prev?.causes ? prev.causes.concat(data) : [data];
-                                                return {...prev, causes: causes};
+                                                return { ...prev, causes: causes };
                                             })
                                             setValue('causes', getValues('causes').concat(data));
                                             setMessage({});
@@ -360,7 +372,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             Añadir causa <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />
+                    {getValues('causes').length > 0 && <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />}
                 </div>
                 <div>
                     <div className="title-area">
@@ -371,7 +383,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         <div className="title-button text-main biggest" onClick={() => {
                             setMessage({
                                 title: "Agregar efectos",
-                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length+1 : 1} />,
+                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length + 1 : 1} />,
                                 show: true,
                                 background: true,
                                 OkTitle: "Guardar",
@@ -381,7 +393,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                         causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
                                             setProblemDescriptionData(prev => {
                                                 const effects = prev?.effects ? prev.effects.concat(data) : [data];
-                                                return {...prev, effects: effects};
+                                                return { ...prev, effects: effects };
                                             })
                                             setValue('effects', getValues('effects').concat(data));
                                             setMessage({});
@@ -396,10 +408,10 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             Añadir efecto <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />
+                    {getValues('effects').length > 0 && <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />}
                 </div>
             </FormComponent>
-        </div>
+        </div >
     )
 }
 
@@ -414,7 +426,7 @@ interface IPropsCausesEffectsForm {
 }
 
 const compareIds = (id1: string | number, id2: string | number) => {
-    if(id1 === null || id2 === null) return true;
+    if (id1 === null || id2 === null) return true;
     return id1 == id2;
 };
 
@@ -436,7 +448,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
         handleSubmit: handleSubmit
     }));
     useEffect(() => {
-        if(!item) return;
+        if (!item) return;
         item.childrens.forEach((children) => {
             append({
                 consecutive: children.consecutive,
@@ -446,7 +458,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
     }, [item])
     useEffect(() => {
         fields.forEach((field, index) => {
-            setValue(`childrens.${index}`, {consecutive: item ? `${item.consecutive}.${index+1}` : `${counter.toString()}.${index+1}`, description: field.description});
+            setValue(`childrens.${index}`, { consecutive: item ? `${item.consecutive}.${index + 1}` : `${counter.toString()}.${index + 1}`, description: field.description });
         });
     }, [fields]);
     return (
@@ -480,7 +492,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                     {errors.childrens?.message}
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
-                    if(item && counter) return;
+                    if (item && counter) return;
                     append({
                         consecutive: item ? `${item.consecutive}.${fields.length + 1}` : `${counter.toString()}.${fields.length + 1}`,
                         description: ""
@@ -546,7 +558,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
         handleSubmit: handleSubmit
     }));
     useEffect(() => {
-        if(!item) return;
+        if (!item) return;
         item.childrens.forEach((children) => {
             append({
                 consecutive: children.consecutive,
@@ -556,7 +568,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
     }, [item])
     useEffect(() => {
         fields.forEach((field, index) => {
-            setValue(`childrens.${index}`, {consecutive: item ? `${item.consecutive}.${index+1}` : `${counter.toString()}.${index+1}`, description: field.description});
+            setValue(`childrens.${index}`, { consecutive: item ? `${item.consecutive}.${index + 1}` : `${counter.toString()}.${index + 1}`, description: field.description });
         });
     }, [fields]);
     return (

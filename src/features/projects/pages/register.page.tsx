@@ -16,7 +16,6 @@ function RegisterPage(): React.JSX.Element {
                         <Controller
                             control={controlRegister}
                             name={"bpin"}
-                            defaultValue={0}
                             render={({ field }) => {
                                 return (
                                     <InputComponent
