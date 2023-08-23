@@ -41,7 +41,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
     });
 
     useEffect(() => {
-        if (projectData) setProblemDescriptionData(projectData.identification?.problemDescription)
+        if (projectData) setProblemDescriptionData(projectData.identification?.problemDescription);
     }, []);
 
     useEffect(() => {
@@ -152,9 +152,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     title: row.consecutive.includes(".") ? "¿Desea quitar la causa indirecta?" : "¿Desea quitar la causa directa junto con sus causas indirectas?",
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
-                            if(getValues("causes").length === 1) return setMessage({
+                            if(getValues("causes").find(cause => cause.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({
                                 title: "Accion cancelada",
-                                description: <p className="text-primary biggest">No puede quitar la causa indirecta, recuerde que la causa indirecta debe tener agregada mínimo una causa.</p>,
+                                description: <p className="text-primary biggest">No puede quitar la causa indirecta, recuerde que la causa directa debe tener agregada mínimo una causa indirecta.</p>,
                                 background: true,
                                 show: true,
                                 OkTitle: "Aceptar",
@@ -283,6 +283,19 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     title: row.consecutive.includes(".") ? "¿Desea quitar el efecto indirecto?" : "¿Desea quitar el efecto directo junto con sus efectos indirectos?",
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
+                            if(getValues("effects").find(effect => effect.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({
+                                title: "Accion cancelada",
+                                description: <p className="text-primary biggest">No puede quitar el efecto indirecto, recuerde que el efecto directo debe tener agregada mínimo una causa indirecta.</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Aceptar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
                             const newEffects = getValues("effects").map((effect) => {
                                 return {
                                     ...effect, childrens: effect.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {
@@ -566,7 +579,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 value={`${field.value}`}
                                 label="Descripción causa Directa"
                                 className="input-basic"
-                                classNameLabel="text-black big bold"
+                                classNameLabel="text-black big bold text-required"
                                 direction={EDirection.row}
                                 typeInput={"text"}
                                 register={register}

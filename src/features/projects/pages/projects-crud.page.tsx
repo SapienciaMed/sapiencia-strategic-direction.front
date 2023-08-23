@@ -44,7 +44,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>
                             <ButtonComponent
-                                value="Siguiente"
+                                value="Continuar"
                                 className="button-main huge hover-three"
                                 type="button"
                                 action={actionContinue}
