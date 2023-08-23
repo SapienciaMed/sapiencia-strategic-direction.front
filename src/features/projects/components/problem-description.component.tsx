@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { causesEffectsValidator, problemDescriptionValidator } from "../../../common/schemas";
+import { causesValidator, effectsValidator, problemDescriptionValidator } from "../../../common/schemas";
 import { Controller, UseFormHandleSubmit, useFieldArray, useForm } from "react-hook-form";
 import { FormComponent, InputComponent, TextAreaComponent } from "../../../common/components/Form";
 import TableExpansibleComponent from "./table-expansible.component";
@@ -495,7 +495,7 @@ const compareIds = (id1: string | number, id2: string | number) => {
 
 const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
     const { counter, item } = props;
-    const resolver = useYupValidationResolver(causesEffectsValidator);
+    const resolver = useYupValidationResolver(causesValidator);
     const {
         handleSubmit,
         register,
@@ -616,7 +616,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
 
 const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, ref) => {
     const { counter, item } = props;
-    const resolver = useYupValidationResolver(causesEffectsValidator);
+    const resolver = useYupValidationResolver(effectsValidator);
     const {
         handleSubmit,
         register,
