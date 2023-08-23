@@ -130,6 +130,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     onClose: () => {
                         setMessage({});
                     },
+                    style: "causes-effects-modal-size"
                 });
             }
         },
@@ -247,6 +248,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     onClose: () => {
                         setMessage({});
                     },
+                    style: "causes-effects-modal-size"
                 });
             }
         },
@@ -466,6 +468,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onClose: () => {
                                     setMessage({});
                                 },
+                                style: "causes-effects-modal-size"
                             });
                         }}>
                             Añadir efecto <AiOutlinePlusCircle />
