@@ -39,7 +39,7 @@ export function useProjectsCrudData() {
         localStorage.setItem('create_project_data', JSON.stringify(projectData));
         setMessage({
             title: "Guardado temporal realizado con éxito",
-            description: "¡Cambios guardados exitosamente!",
+            description:<p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
             background: true,
             show: true,
             OkTitle: "Aceptar",

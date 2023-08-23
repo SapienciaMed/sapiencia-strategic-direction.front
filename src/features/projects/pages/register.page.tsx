@@ -26,7 +26,7 @@ function RegisterPage(): React.JSX.Element {
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
-                                        typeInput={"text"}
+                                        typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors} />
@@ -66,11 +66,11 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Periodo inicial"
+                                        label="período inicial"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
-                                        typeInput={"text"}
+                                        typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors} />
@@ -87,11 +87,11 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Periodo final"
+                                        label="período final"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
-                                        typeInput={"text"}
+                                        typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
@@ -150,10 +150,13 @@ function RegisterPage(): React.JSX.Element {
                                         className="text-area-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         rows={4}
+                                        placeholder="Escribe aqui..."
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
-                                    />
+                                    >
+                                        <label className="label-max-textarea">Max. 500 caracteres</label>
+                                    </TextAreaComponent>
                                 );
                             }}
                         />

@@ -10,6 +10,20 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     margin-top: -10px;
 }
 
+.label-max-textarea {
+    text-align: end;
+    margin-top: 0px;
+    font-size: 14px;
+}
+
+.card-form-development {
+    $width: null;
+    $height: null;
+    $padding: 20px;
+    margin-top: 20px;
+    @include card-component($width, $height, $padding);
+  }
+
 .crud-page {
     @include generate-flex-container(column);
 }

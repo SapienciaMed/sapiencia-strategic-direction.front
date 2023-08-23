@@ -3,6 +3,8 @@ import AccordionsComponent from "../../../common/components/accordions.component
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import ProblemDescriptionComponent from "../components/problem-description.component";
 import { ProjectsContext } from "../contexts/projects.context";
+import planDevelopmentPage from "../components/plan-development.component";
+import PlanDevelopmentComponent from "../components/plan-development.component";
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -21,7 +23,7 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 1, 
             name: "Plan de desarrollo", 
-            content: <p>LoremIpsumTest1</p>
+            content: <PlanDevelopmentComponent disableNext={() => {disableAccordions([2])}} enableNext={() => {enableAccordions([2])}}/>
         },
         {
             id: 2, 
@@ -40,7 +42,7 @@ function IdentificationPage(): React.JSX.Element {
         },
     ]
     useEffect(() => {
-        disableAccordions([1,3,4])
+        disableAccordions([3,4])
         setDisableContinue(true);
     }, []);
     return (
