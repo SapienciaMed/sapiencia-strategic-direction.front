@@ -153,7 +153,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
                             if(getValues("causes").find(cause => cause.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({
-                                title: "Accion cancelada",
+                                title: "Acción cancelada",
                                 description: <p className="text-primary biggest">No puede quitar la causa indirecta, recuerde que la causa directa debe tener agregada mínimo una causa indirecta.</p>,
                                 background: true,
                                 show: true,
@@ -284,7 +284,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
                             if(getValues("effects").find(effect => effect.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({
-                                title: "Accion cancelada",
+                                title: "Acción cancelada",
                                 description: <p className="text-primary biggest">No puede quitar el efecto indirecto, recuerde que el efecto directo debe tener agregada mínimo una causa indirecta.</p>,
                                 background: true,
                                 show: true,
