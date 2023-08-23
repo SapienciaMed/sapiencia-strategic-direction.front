@@ -562,7 +562,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                 />
             </div>
             <div className="title-area">
-                <label className="text-main biggest error-message">
+                <label className="text-main biggest error-message bold">
                     {errors.childrens?.message}
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {
@@ -683,7 +683,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                 />
             </div>
             <div className="title-area">
-                <label className="text-main biggest error-message">
+                <label className="text-main biggest error-message bold">
                     {errors.childrens?.message}
                 </label>
                 <div className="title-button text-main biggest" onClick={() => {

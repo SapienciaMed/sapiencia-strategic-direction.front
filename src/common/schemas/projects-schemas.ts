@@ -61,7 +61,7 @@ export const problemDescriptionValidator = yup.object({
 export const causesEffectsValidator = yup.object({
     consecutive: yup.string().required("El campo es obligatorio"),
     description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-    childrens: yup.array().required("Se necesita al menos una causa").min(1, "Se necesita al menos una causa").of(
+    childrens: yup.array().required("La causa directa debe tener mínimo una causa indirecta agregada").min(1, "La causa directa debe tener mínimo una causa indirecta agregada").of(
         yup.object().shape({
             consecutive: yup.string().required("El campo es obligatorio"),
             description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
