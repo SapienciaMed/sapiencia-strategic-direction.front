@@ -122,7 +122,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 });
                             })();
                         }
-                        setMessage({});
                     },
                     onCancel: () => {
                         setMessage({});
@@ -253,7 +252,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 });
                             })();
                         }
-                        setMessage({});
                     },
                     onCancel: () => {
                         setMessage({});
@@ -307,6 +305,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 return { ...prev, effects: newEffects };
                             })
                             setValue('effects', newEffects);
+                            setMessage({});
                         } else {
                             const effectsFilter = getValues("effects").filter((effect) => effect.consecutive !== row.consecutive);
                             const newEffects = effectsFilter.map((effect, index) => {
@@ -319,8 +318,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 return { ...prev, effects: newEffects };
                             })
                             setValue('effects', newEffects);
+                            setMessage({});
                         }
-                        setMessage({});
                     }
                 });
             },
