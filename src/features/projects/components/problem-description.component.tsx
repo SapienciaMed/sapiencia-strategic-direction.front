@@ -448,15 +448,6 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
         handleSubmit: handleSubmit
     }));
     useEffect(() => {
-        if (!item) return;
-        item.childrens.forEach((children) => {
-            append({
-                consecutive: children.consecutive,
-                description: children.description
-            });
-        });
-    }, [item])
-    useEffect(() => {
         fields.forEach((field, index) => {
             setValue(`childrens.${index}`, { consecutive: item ? `${item.consecutive}.${index + 1}` : `${counter.toString()}.${index + 1}`, description: field.description });
         });
@@ -475,16 +466,27 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                     errors={errors}
                     disabled={true}
                 />
-                <InputComponent
-                    idInput="description"
-                    typeInput="text"
-                    className="input-basic"
-                    register={register}
-                    label="Descripción causa Directa"
-                    classNameLabel="text-black big bold text-required"
-                    direction={EDirection.row}
-                    errors={errors}
-                    disabled={item ? !!counter : false}
+                <Controller
+                    control={control}
+                    name={"description"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <InputComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Descripción causa Directa"
+                                className="input-basic"
+                                classNameLabel="text-black big bold"
+                                direction={EDirection.row}
+                                typeInput={"text"}
+                                register={register}
+                                onChange={field.onChange}
+                                disabled={item ? !!counter : false}
+                                errors={errors} />
+                        );
+                    }}
                 />
             </div>
             <div className="title-area">
@@ -529,7 +531,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}
                             />
-                            <div onClick={() => { remove(index) }} style={{ paddingTop: '1.4rem' }}>
+                            <div onClick={() => { remove(index) }} style={{ paddingTop: '1.8rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />
                             </div>
                         </div>
@@ -548,7 +550,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
         register,
         formState: { errors },
         control,
-        setValue
+        setValue,
     } = useForm<IEffect>({ mode: "all", resolver, defaultValues: { consecutive: item ? item.consecutive : counter.toString(), description: item ? item.description : "" } });
     const { fields, append, remove } = useFieldArray({
         control,
@@ -585,16 +587,27 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                     errors={errors}
                     disabled={true}
                 />
-                <InputComponent
-                    idInput="description"
-                    typeInput="text"
-                    className="input-basic"
-                    register={register}
-                    label="Descripción efecto directo"
-                    classNameLabel="text-black big bold text-required"
-                    direction={EDirection.row}
-                    errors={errors}
-                    disabled={item ? !!counter : false}
+                <Controller
+                    control={control}
+                    name={"description"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <InputComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Descripción efecto directo"
+                                className="input-basic"
+                                classNameLabel="text-black big bold"
+                                direction={EDirection.row}
+                                typeInput={"text"}
+                                register={register}
+                                onChange={field.onChange}
+                                disabled={item ? !!counter : false}
+                                errors={errors} />
+                        );
+                    }}
                 />
             </div>
             <div className="title-area">
@@ -638,7 +651,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}
                             />
-                            <div onClick={() => { remove(index) }} style={{ paddingTop: '1.4rem' }}>
+                            <div onClick={() => { remove(index) }} style={{ paddingTop: '1.8rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />
                             </div>
                         </div>
