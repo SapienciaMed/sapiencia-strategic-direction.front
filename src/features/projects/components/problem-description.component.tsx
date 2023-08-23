@@ -107,12 +107,27 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                     return { ...prev, causes: newCauses };
                                 })
                                 setValue("causes", newCauses);
-                                setMessage({});
+                                setMessage({
+                                    title: "Se editó exitosamente",
+                                    description: "Se ha editado la causa exitosamente",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    },
+                                });
                             })();
                         }
                         setMessage({});
                     },
                     onCancel: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
                         setMessage({});
                     },
                 });
@@ -127,6 +142,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     description: "No se podrá recuperar",
                     OkTitle: "Aceptar",
                     onCancel: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
                         setMessage({});
                     },
                     show: true,
@@ -206,12 +224,27 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                     return { ...prev, effect: newEffects };
                                 })
                                 setValue("effects", newEffects);
-                                setMessage({});
+                                setMessage({
+                                    title: "Se editó exitosamente",
+                                    description: "Se ha editado el efecto exitosamente",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    },
+                                });
                             })();
                         }
                         setMessage({});
                     },
                     onCancel: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
                         setMessage({});
                     },
                 });
@@ -226,6 +259,9 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     description: "No se podrá recuperar",
                     OkTitle: "Aceptar",
                     onCancel: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
                         setMessage({});
                     },
                     show: true,
@@ -356,7 +392,19 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                                 return { ...prev, causes: causes };
                                             })
                                             setValue('causes', getValues('causes').concat(data));
-                                            setMessage({});
+                                            setMessage({
+                                                title: "Se guardó exitosamente",
+                                                description: "Se ha agregado una causa exitosamente",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                },
+                                                onClose: () => {
+                                                    setMessage({});
+                                                },
+                                            });
                                         })();
                                     }
                                 },
@@ -396,11 +444,26 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                                 return { ...prev, effects: effects };
                                             })
                                             setValue('effects', getValues('effects').concat(data));
-                                            setMessage({});
+                                            setMessage({
+                                                title: "Se guardó exitosamente",
+                                                description: "Se ha agregado un efecto exitosamente",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                },
+                                                onClose: () => {
+                                                    setMessage({});
+                                                },
+                                            });
                                         })();
                                     }
                                 },
                                 onCancel: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
                                     setMessage({});
                                 },
                             });
@@ -448,6 +511,15 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
         handleSubmit: handleSubmit
     }));
     useEffect(() => {
+        if (!item) return;
+        item.childrens.forEach((children) => {
+            append({
+                consecutive: children.consecutive,
+                description: children.description
+            });
+        });
+    }, [item])
+    useEffect(() => {
         fields.forEach((field, index) => {
             setValue(`childrens.${index}`, { consecutive: item ? `${item.consecutive}.${index + 1}` : `${counter.toString()}.${index + 1}`, description: field.description });
         });
@@ -483,7 +555,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
-                                disabled={item ? !!counter : false}
+                                disabled={item ? counter !== null : false}
                                 errors={errors} />
                         );
                     }}
@@ -604,7 +676,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
-                                disabled={item ? !!counter : false}
+                                disabled={item ? counter !== null : false}
                                 errors={errors} />
                         );
                     }}
