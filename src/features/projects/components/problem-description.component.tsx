@@ -152,6 +152,19 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                     title: row.consecutive.includes(".") ? "¿Desea quitar la causa indirecta?" : "¿Desea quitar la causa directa junto con sus causas indirectas?",
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
+                            if(getValues("causes").length === 1) return setMessage({
+                                title: "Accion cancelada",
+                                description: <p className="text-primary biggest">No puede quitar la causa indirecta, recuerde que la causa indirecta debe tener agregada mínimo una causa.</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Aceptar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
                             const newCauses = getValues("causes").map((cause) => {
                                 return {
                                     ...cause, childrens: cause.childrens.filter(children => children.consecutive !== row.consecutive).map((children, childrenIndex) => {

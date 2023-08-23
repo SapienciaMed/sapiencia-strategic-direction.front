@@ -37,6 +37,19 @@ export function useProjectsCrudData() {
     const onSaveTemp = () => {
         localStorage.removeItem('create_project_data');
         localStorage.setItem('create_project_data', JSON.stringify(projectData));
+        setMessage({
+            title: "Guardado temporal realizado con éxito",
+            description: "¡Cambios guardados exitosamente!",
+            background: true,
+            show: true,
+            OkTitle: "Aceptar",
+            onOk: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            }
+        })
     }
 
     return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate }
