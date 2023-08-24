@@ -79,3 +79,42 @@ export const causesValidator = yup.object({
         })
     ),
 });
+
+export const planDevelopmentValidator = yup.object({
+    pnd_pacto: yup
+        .string()
+        .max(500, "Solo se permiten 500 caracteres")
+        .required("El campo es obligatorio"),
+    pnd_linea: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pnd_programa: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdd_linea: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdd_componentes: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdd_programa: yup
+        .string()
+        .required("Debe Seleccionar una opcion")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdi_linea: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdi_componentes: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    pdi_programa: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+});

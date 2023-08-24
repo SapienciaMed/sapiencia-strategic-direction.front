@@ -66,7 +66,7 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="período inicial"
+                                        label="Período inicial"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
@@ -87,7 +87,7 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="período final"
+                                        label="Período final"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         direction={EDirection.row}
@@ -150,7 +150,7 @@ function RegisterPage(): React.JSX.Element {
                                         className="text-area-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         rows={4}
-                                        placeholder="Escribe aqui..."
+                                        placeholder="Escribe aquí"
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}

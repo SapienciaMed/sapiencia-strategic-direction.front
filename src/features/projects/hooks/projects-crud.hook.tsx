@@ -42,7 +42,7 @@ export function useProjectsCrudData() {
             description:<p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
             background: true,
             show: true,
-            OkTitle: "Aceptar",
+            OkTitle: "Cerrar",
             onOk: () => {
                 setMessage({});
             },

@@ -16,6 +16,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     font-size: 14px;
 }
 
+.label-development {
+    padding:12px 0px;
+}
+
 .card-form-development {
     $width: null;
     $height: null;
@@ -150,6 +154,22 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     max-height: 70vh;
 }
 
+.container-button-bot-reset{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    justify-content: center;
+    align-items: center;
+    span{
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 @media (min-width: 1024px) {
     div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: initial;
@@ -161,6 +181,29 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
     .container-button-bot {
         display: flex;
+    }
+
+    .button-main-reset{
+        width: 25%;
+        height: 2.5em;
+        font-size: 1rem;
+    }
+
+    .container-button-bot-reset{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: stretch;
+        justify-content: flex-end;
+        align-items: flex-end;
+        span{
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
     .spc-common-table.expansible {
