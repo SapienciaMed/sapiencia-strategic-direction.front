@@ -170,6 +170,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.identification-objectives-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1.7rem;
+}
+
 @media (min-width: 1024px) {
     div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: initial;
@@ -261,6 +267,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 1rem;
     }
 
+    .identification-objectives-container {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1rem;
+    }
 }
 
 

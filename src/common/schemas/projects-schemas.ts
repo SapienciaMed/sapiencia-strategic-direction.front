@@ -118,3 +118,12 @@ export const planDevelopmentValidator = yup.object({
         .required("El campo es obligatorio")
         .max(500, "Solo se permiten 500 caracteres"),
 });
+
+export const objectivesValidator = yup.object({
+    generalObjective: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
+    specificObjectives: yup.array().required("El campo es obligatorio").min(1, "El campo es obligatorio"),
+    purposes: yup.array().required("El campo es obligatorio").min(1, "El campo es obligatorio"),
+    indicators: yup.string().required("El campo es obligatorio").max(500, "Solo se permiten 500 caracteres"),
+    measurement: yup.string().required("El campo es obligatorio"),
+    goal: yup.number().required("El campo es obligatorio")
+});

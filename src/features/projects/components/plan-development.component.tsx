@@ -26,17 +26,13 @@ export function PlanDevelopmentComponent({
   disableNext,
   enableNext,
 }: IProps): React.JSX.Element {
-  const [planDevelopmentData, setPlanDevelopment] =
-    useState<IPlanDevelopmentForm>(null);
-  const [resetNumber, setResetNumber] = useState(0);
+  const [planDevelopmentData, setPlanDevelopment] = useState<IPlanDevelopmentForm>(null);
   const { setProjectData, projectData } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(planDevelopmentValidator);
   const {
     control,
     register,
-    getValues,
     setValue,
-    reset,
     clearErrors,
     formState: { errors, isValid },
     watch,
@@ -72,21 +68,14 @@ export function PlanDevelopmentComponent({
       setProjectData((prev) => {
         const identification = prev
           ? {
-              ...prev.identification,
-              planDevelopment: { ...planDevelopmentData },
-            }
+            ...prev.identification,
+            planDevelopment: { ...planDevelopmentData },
+          }
           : { planDevelopment: { ...planDevelopmentData } };
         return { ...prev, identification: { ...identification } };
       });
   }, [planDevelopmentData]);
 
-  useEffect(() => {
-    console.log(projectData);
-  }, [projectData]);
-
-  useEffect(() => {
-    reset();
-  }, [resetNumber]);
   useEffect(() => {
     if (projectData?.identification?.planDevelopment?.pnd_pacto) {
       setValue(
@@ -458,7 +447,7 @@ export function PlanDevelopmentComponent({
               );
               clearErrors();
             }
-        }
+            }
           />
         </div>
       </FormComponent>

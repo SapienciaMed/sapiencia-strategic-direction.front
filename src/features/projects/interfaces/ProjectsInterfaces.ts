@@ -20,6 +20,15 @@ export interface IEffect {
     childrens?: IEffect[];
 }
 
+export interface IObjectivesForm {
+    generalObjective?: string;
+    specificObjectives?: ICause[];
+    purposes?: IEffect[];
+    indicators?: string;
+    measurement?: number;
+    goal?: number;
+}
+
 export interface IRegisterForm {
     id?: number;
     bpin: number;
@@ -30,15 +39,6 @@ export interface IRegisterForm {
     localitation: string;
     dependency: string;
     object: string;
-}
-
-export interface IProjectTemp {
-    register?: IRegisterForm;
-    identification?: {
-        problemDescription?: IProblemDescriptionForm;
-        planDevelopment?:IPlanDevelopmentForm;
-    }
-
 }
 
 export interface IPlanDevelopmentForm {
@@ -52,4 +52,13 @@ export interface IPlanDevelopmentForm {
     pdi_linea?: string;
     pdi_componentes?: string;
     pdi_programa?:string;
+}
+
+export interface IProjectTemp {
+    register?: IRegisterForm;
+    identification?: {
+        problemDescription?: IProblemDescriptionForm;
+        planDevelopment?:IPlanDevelopmentForm;
+        objectives?: IObjectivesForm;
+    }
 }
