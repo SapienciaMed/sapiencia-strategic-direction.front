@@ -37,6 +37,7 @@ export function PlanDevelopmentComponent({
     getValues,
     setValue,
     reset,
+    clearErrors,
     formState: { errors, isValid },
     watch,
   } = useForm<IPlanDevelopmentForm>({
@@ -455,7 +456,9 @@ export function PlanDevelopmentComponent({
                 "pdi_componentes",
                 ""
               );
-            }}
+              clearErrors();
+            }
+        }
           />
         </div>
       </FormComponent>
