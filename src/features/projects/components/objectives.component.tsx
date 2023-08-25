@@ -45,9 +45,9 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
     });
     useEffect(() => {
         getListByGrouper("UNIDAD_MEDIDA_OBJETIVOS").then(response => {
-            if(response.operation.code === EResponseCodes.OK) {
+            if (response.operation.code === EResponseCodes.OK) {
                 const data: IDropdownProps[] = response.data.map(data => {
-                    return {name: data.itemDescription, value: data.itemCode}
+                    return { name: data.itemDescription, value: data.itemCode }
                 })
                 setMeasurementData(data);
             }
@@ -250,7 +250,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
             <div>
                 <div className="title-area">
                     <label className="text-black biggest bold text-required">
-                        Listado de objetivos específicos
+                        Listado de fines
                     </label>
 
                     <div className="title-button text-main biggest">
