@@ -16,7 +16,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     <div className="projects-footer-mobile mobile">
                         <div className="save-temp">
                             <ButtonComponent
-                                className="button-main huge hover-three"
+                                className="button-main huge hover-three button-save"
                                 value="Guardar temporalmente"
                                 type="button"
                                 action={onSaveTemp}
@@ -84,7 +84,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         Cancelar
                     </span>
                     <ButtonComponent
-                        className="button-main huge hover-three"
+                        className="button-main huge hover-three button-save"
                         value="Continuar"
                         type="button"
                         action={actionContinue}

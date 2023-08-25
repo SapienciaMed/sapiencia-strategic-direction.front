@@ -36,8 +36,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     display: grid;
     row-gap: 2rem;
     .save-temp {
-        display: grid;
+        display: flex;
         justify-content: center;
+        .button-save {
+            max-width: 75%;
+        }
     }
 }
 
