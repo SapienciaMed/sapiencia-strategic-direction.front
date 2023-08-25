@@ -54,11 +54,26 @@ export interface IPlanDevelopmentForm {
     pdi_programa?:string;
 }
 
+
+export interface IParticipatingActors{
+    id?:number;
+    actor?:string;
+    expectation?:string;
+    position?:string;
+    contribution?:string;
+}
+
+export interface IActorsForm{
+    actors:IParticipatingActors[];
+}
+
+
 export interface IProjectTemp {
     register?: IRegisterForm;
     identification?: {
         problemDescription?: IProblemDescriptionForm;
         planDevelopment?:IPlanDevelopmentForm;
         objectives?: IObjectivesForm;
+        actors?:IActorsForm;
     }
 }

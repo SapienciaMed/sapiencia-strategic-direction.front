@@ -135,8 +135,8 @@ export function PlanDevelopmentComponent({
 
   return (
     <div className="crud-page full-height">
-      <FormComponent action={undefined}>
-        <div className="card-form">
+      <FormComponent action={undefined} className="card-form-development">
+        <div className="card-table">
           <label className="text-black biggest bold">
             Plan nacional de desarrollo
           </label>
@@ -225,7 +225,7 @@ export function PlanDevelopmentComponent({
             />
           </div>
         </div>
-        <div className="card-form-development">
+        <div className="card-table">
           <label className="text-black biggest bold">
             Plan de desarrollo departamental
           </label>
@@ -314,7 +314,7 @@ export function PlanDevelopmentComponent({
             />
           </div>
         </div>
-        <div className="card-form-development">
+        <div className="card-table">
           <label className="text-black biggest bold">
             Plan de desarrollo distrital
           </label>

@@ -21,11 +21,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 }
 
 .card-form-development {
-    $width: null;
-    $height: null;
-    $padding: 20px;
-    margin-top: 20px;
-    @include card-component($width, $height, $padding);
+    display: grid;
+    row-gap: 1.7rem;
   }
 
 .crud-page {
@@ -196,6 +193,15 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: 25%;
         height: 2.5em;
         font-size: 1rem;
+    }
+
+    .actors-form-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+        padding: 1rem 0px;
+        row-gap: 1rem;
+        column-gap: 1rem;
     }
 
     .container-button-bot-reset{

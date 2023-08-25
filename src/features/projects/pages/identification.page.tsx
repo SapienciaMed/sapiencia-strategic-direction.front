@@ -5,6 +5,8 @@ import ProblemDescriptionComponent from "../components/problem-description.compo
 import { ProjectsContext } from "../contexts/projects.context";
 import PlanDevelopmentComponent from "../components/plan-development.component";
 import ObjectivesComponent from "../components/objectives.component";
+import ActorCreateComponent from "../components/actor-create.component";
+
 import { objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
 
 function IdentificationPage(): React.JSX.Element {
@@ -39,6 +41,11 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Actores participantes",
+            content: <ActorCreateComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+        },
+        {
+            id: 5,
+            name: "Población",
             content: <p>{JSON.stringify(projectData)}</p>
         },
     ]
@@ -48,7 +55,7 @@ function IdentificationPage(): React.JSX.Element {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     //Poner validacion del siguiente tab
                 }).catch(() => {
-                    disableAccordions([4]);
+                    disableAccordions([]);
                 })
             }).catch(() => {
                 disableAccordions([3, 4]);

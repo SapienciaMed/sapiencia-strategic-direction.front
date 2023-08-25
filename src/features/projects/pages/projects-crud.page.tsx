@@ -25,7 +25,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         <div className="mobile-actions">
                             <span className="bold text-center button" onClick={() => {
                                 setMessage({
-                                    title: "Crear proyecto",
+                                    title: "",
                                     description: "Desea cancelar la acción, no se guardarán los datos",
                                     show: true,
                                     background: true,
@@ -65,7 +65,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                 <div className="buttons-bot">
                     <span className="bold text-center button" onClick={() => {
                         setMessage({
-                            title: "Crear proyecto",
+                            title: "",
                             description: "Desea cancelar la acción, no se guardarán los datos",
                             show: true,
                             background: true,

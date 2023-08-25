@@ -11,7 +11,7 @@ function RegisterPage(): React.JSX.Element {
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
-                <div className="card-form">
+                <div className="card-table">
                     <div className="project-container">
                         <Controller
                             control={controlRegister}
