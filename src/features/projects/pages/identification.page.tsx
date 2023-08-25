@@ -43,9 +43,9 @@ function IdentificationPage(): React.JSX.Element {
         },
     ]
     useEffect(() => {
-        planDevelopmentValidator.validate(projectData.identification.planDevelopment).then(() => {
-            problemDescriptionValidator.validate(projectData.identification.problemDescription).then(() => {
-                objectivesValidator.validate(projectData.identification.objectives).then(() => {
+        planDevelopmentValidator.validate(projectData?.identification?.planDevelopment).then(() => {
+            problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
+                objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     //Poner validacion del siguiente tab
                 }).catch(() => {
                     disableAccordions([4]);
