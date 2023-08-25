@@ -5,6 +5,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { DataView } from "primereact/dataview";
 import * as Icons from "react-icons/fa";
+import { Paginator, PaginatorCurrentPageReportOptions, PaginatorNextPageLinkOptions, PaginatorPageChangeEvent, PaginatorPageLinksOptions, PaginatorPrevPageLinkOptions, PaginatorRowsPerPageDropdownOptions, PaginatorTemplateOptions } from "primereact/paginator";
+import { Dropdown } from "primereact/dropdown";
+import { classNames } from "primereact/utils";
 
 interface IProps<T> {
     columns: ITableElement<T>[];
@@ -13,6 +16,9 @@ interface IProps<T> {
 }
 
 const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): React.JSX.Element => {
+    const [first, setFirst] = useState<number>(0);
+    const [perPage, setPerPage] = useState<number>(10);
+    const [page, setPage] = useState<number>(0);
     const { width } = useWidth();
     const widthColumns = width / ((columns.length + 1) * 2);
     const [expandedRows, setExpandedRows] = useState(null);
@@ -20,6 +26,11 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
     const allowExpansion = (rowData) => {
         return rowData.childrens?.length > 0;
     };
+    function onPageChange(event: PaginatorPageChangeEvent): void {
+        setPerPage(event.rows);
+        setFirst(event.first);
+        setPage(event.page);
+    }
     const rowExpansionTemplate = (data) => {
         const rows = data.childrens;
         return (
@@ -141,10 +152,19 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
         );
     };
     return (
-        <div className="spc-common-table expansible card-form">
+        <div className="spc-common-table expansible card-table">
+            <Paginator
+                className="between spc-table-paginator"
+                template={paginatorHeader}
+                leftContent={leftContent}
+                first={first}
+                rows={perPage}
+                totalRecords={data?.length || 0}
+                onPageChange={onPageChange}
+            />
             {width > 830 ? (
                 <DataTable
-                    value={data}
+                    value={[...data].slice(perPage * page, (perPage * page) + perPage)}
                     expandedRows={expandedRows}
                     rowExpansionTemplate={rowExpansionTemplate}
                     dataKey="consecutive"
@@ -178,14 +198,119 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                 </DataTable>
             ) : (
                 <DataView
-                    value={data}
+                    value={[...data].slice(perPage * page, (perPage * page) + perPage)}
                     itemTemplate={mobilTemplate}
                     emptyMessage={" "}
                 />
             )}
+            <Paginator
+                className="spc-table-paginator"
+                template={paginatorFooter}
+                first={first}
+                rows={perPage}
+                totalRecords={data?.length || 0}
+                onPageChange={onPageChange}
+            />
         </div>
     )
 }
+
+const leftContent = (
+    <p className="header-information text-black bold biggest">
+    </p>
+  );
+
+const paginatorHeader: PaginatorTemplateOptions = {
+    layout: "CurrentPageReport RowsPerPageDropdown",
+    CurrentPageReport: (options: PaginatorCurrentPageReportOptions) => {
+        return (
+            <>
+                <p className="header-information text-black bold big">
+                    Total de resultados
+                </p>
+                <p className="header-information text-main bold big">
+                    {options.totalRecords}
+                </p>
+            </>
+        );
+    },
+    RowsPerPageDropdown: (options: PaginatorRowsPerPageDropdownOptions) => {
+        const dropdownOptions = [
+            { label: 10, value: 10 },
+            { label: 30, value: 30 },
+            { label: 50, value: 50 },
+            { label: 100, value: 100 },
+        ];
+
+        return (
+            <React.Fragment>
+                <p className="header-information text-black bold big">
+                    Registros por página{" "}
+                </p>
+                <Dropdown
+                    value={options.value}
+                    className="header-information"
+                    options={dropdownOptions}
+                    onChange={options.onChange}
+                />
+            </React.Fragment>
+        );
+    },
+};
+
+const paginatorFooter: PaginatorTemplateOptions = {
+    layout: "PrevPageLink PageLinks NextPageLink",
+    PrevPageLink: (options: PaginatorPrevPageLinkOptions) => {
+      return (
+        <button
+          type="button"
+          className={classNames(options.className, "border-round")}
+          onClick={options.onClick}
+          disabled={options.disabled}
+        >
+          <span className="p-3 table-previus"></span>
+        </button>
+      );
+    },
+    NextPageLink: (options: PaginatorNextPageLinkOptions) => {
+      return (
+        <button
+          type="button"
+          className={classNames(options.className, "border-round")}
+          onClick={options.onClick}
+          disabled={options.disabled}
+        >
+          <span className="p-3 table-next"></span>
+        </button>
+      );
+    },
+    PageLinks: (options: PaginatorPageLinksOptions) => {
+      if (
+        (options.view.startPage === options.page &&
+          options.view.startPage !== 0) ||
+        (options.view.endPage === options.page &&
+          options.page + 1 !== options.totalPages)
+      ) {
+        const className = classNames(options.className, { "p-disabled": true });
+  
+        return (
+          <span className={className} style={{ userSelect: "none" }}>
+            ...
+          </span>
+        );
+      }
+  
+      return (
+        <button
+          type="button"
+          className={options.className}
+          onClick={options.onClick}
+        >
+          {options.page + 1}
+        </button>
+      );
+    },
+  };
 
 const ActionComponent = (props: {
     row: any;

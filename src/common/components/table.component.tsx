@@ -371,7 +371,7 @@ const paginatorHeader: PaginatorTemplateOptions = {
         <p className="header-information text-black bold big">
           Total de resultados
         </p>
-        <p className="header-information text-three bold big">
+        <p className="header-information text-main bold big">
           {options.totalRecords}
         </p>
       </>
