@@ -31,7 +31,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         formState: { errors, isValid },
         watch
     } = useForm<IProblemDescriptionForm>({
-        resolver, defaultValues: {
+        resolver, mode: "all", defaultValues: {
             problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
             magnitude: projectData?.identification?.problemDescription?.magnitude ? projectData.identification.problemDescription.magnitude : "",
             centerProblem: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
