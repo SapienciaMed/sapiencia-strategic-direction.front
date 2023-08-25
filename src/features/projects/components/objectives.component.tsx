@@ -34,7 +34,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         formState: { errors, isValid },
         watch
     } = useForm<IObjectivesForm>({
-        resolver, defaultValues: {
+        resolver, mode: "all", defaultValues: {
             generalObjective: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
             specificObjectives: projectData?.identification?.problemDescription?.causes ? projectData.identification.problemDescription.causes : [],
             purposes: projectData?.identification?.problemDescription?.effects ? projectData.identification.problemDescription.effects : [],

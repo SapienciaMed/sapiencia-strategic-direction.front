@@ -125,5 +125,5 @@ export const objectivesValidator = yup.object({
     purposes: yup.array().required("El campo es obligatorio").min(1, "El campo es obligatorio"),
     indicators: yup.string().required("El campo es obligatorio").max(500, "Solo se permiten 500 caracteres"),
     measurement: yup.string().required("El campo es obligatorio"),
-    goal: yup.number().required("El campo es obligatorio")
+    goal: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
 });
