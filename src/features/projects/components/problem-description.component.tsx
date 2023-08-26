@@ -326,7 +326,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         }
     ];
     return (
-        <FormComponent action={undefined} className="problem-description-container">
+        <div className="card-table">
+            <FormComponent action={undefined} className="problem-description-container">
             <Controller
                 control={control}
                 name={"problemDescription"}
@@ -501,6 +502,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                 {getValues('effects').length > 0 && <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />}
             </div>
         </FormComponent>
+        </div>
     )
 }
 

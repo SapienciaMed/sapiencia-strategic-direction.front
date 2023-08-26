@@ -100,7 +100,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                             return (
                                 <div key={item} className="item-value-container">
                                     <p className="text-black bold">{column.header}</p>
-                                    <p>
+                                    <p className="auto-size-column">
                                         {" "}
                                         {column.renderCell
                                             ? column.renderCell(item)
@@ -156,7 +156,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
             <Paginator
                 className="between spc-table-paginator"
                 template={paginatorHeader}
-                leftContent={leftContent}
+                leftContent={width > 830 ? leftContent : null}
                 first={first}
                 rows={perPage}
                 totalRecords={data?.length || 0}
@@ -224,14 +224,14 @@ const paginatorHeader: PaginatorTemplateOptions = {
     layout: "CurrentPageReport RowsPerPageDropdown",
     CurrentPageReport: (options: PaginatorCurrentPageReportOptions) => {
         return (
-            <>
+            <div className="information">
                 <p className="header-information text-black bold big">
                     Total de resultados
                 </p>
                 <p className="header-information text-main bold big">
                     {options.totalRecords}
                 </p>
-            </>
+            </div>
         );
     },
     RowsPerPageDropdown: (options: PaginatorRowsPerPageDropdownOptions) => {
@@ -243,7 +243,7 @@ const paginatorHeader: PaginatorTemplateOptions = {
         ];
 
         return (
-            <React.Fragment>
+            <div className="information">
                 <p className="header-information text-black bold big">
                     Registros por página{" "}
                 </p>
@@ -253,7 +253,7 @@ const paginatorHeader: PaginatorTemplateOptions = {
                     options={dropdownOptions}
                     onChange={options.onChange}
                 />
-            </React.Fragment>
+            </div>
         );
     },
 };

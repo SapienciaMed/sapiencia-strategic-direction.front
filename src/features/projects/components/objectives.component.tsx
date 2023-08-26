@@ -211,7 +211,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         }
     ];
     return (
-        <FormComponent action={undefined} className="problem-description-container">
+        <div className="card-table">
+            <FormComponent action={undefined} className="problem-description-container">
             <Controller
                 control={control}
                 name={"generalObjective"}
@@ -316,6 +317,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                 />
             </div>
         </FormComponent>
+        </div>
     )
 }
 
