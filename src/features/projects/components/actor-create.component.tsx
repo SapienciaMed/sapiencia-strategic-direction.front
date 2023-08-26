@@ -226,7 +226,6 @@ export function ActorCreateComponent({
                     if (ActorCreateComponentRef.current) {
                       ActorCreateComponentRef.current.handleSubmit(
                         (data: IParticipatingActors) => {
-                            debugger
                           setActorCreateData((prev) => {
                             const actors = prev?.actors
                               ? prev.actors.concat(data)
