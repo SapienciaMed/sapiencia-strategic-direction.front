@@ -75,7 +75,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
             fieldName: "type",
             header: "Tipo",
             renderCell: (row) => {
-                return <>{row.consecutive.includes(".") ? "Indirecto" : "Directo"}</>
+                return <>{row.consecutive.includes(".") ? "Indirecta" : "Directa"}</>
             }
         },
         {

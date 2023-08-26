@@ -55,7 +55,7 @@ function IdentificationPage(): React.JSX.Element {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     //Poner validacion del siguiente tab
                 }).catch(() => {
-                    disableAccordions([]);
+                    disableAccordions([4]);
                 })
             }).catch(() => {
                 disableAccordions([3, 4]);
