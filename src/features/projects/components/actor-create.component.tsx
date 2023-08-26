@@ -58,6 +58,7 @@ export function ActorCreateComponent({
     setValue,
     formState: { errors, isValid },
     watch,
+    trigger
   } = useForm<IActorsForm>({
     resolver,
     mode: "all",
@@ -141,6 +142,7 @@ export function ActorCreateComponent({
                     return { ...prev, actors: newActors };
                   });
                   setValue("actors", newActors);
+                  trigger("actors");
                   setMessage({
                     title: "Se editó exitosamente",
                     description: "Se ha editado el actor exitosamente",
@@ -192,6 +194,7 @@ export function ActorCreateComponent({
               return { ...prev, actors: newActors };
             });
             setValue("actors", newActors);
+            trigger("actors");
             setMessage({});
           },
         });
@@ -233,6 +236,7 @@ export function ActorCreateComponent({
                             return { ...prev, actors: actors };
                           });
                           setValue("actors", getValues("actors").concat(data));
+                          trigger("actors");
                           setMessage({
                             title: "Se guardó exitosamente",
                             description: "Se ha agregado una  exitosamente",

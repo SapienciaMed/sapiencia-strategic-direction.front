@@ -7,7 +7,7 @@ import PlanDevelopmentComponent from "../components/plan-development.component";
 import ObjectivesComponent from "../components/objectives.component";
 import ActorCreateComponent from "../components/actor-create.component";
 
-import { objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
+import { actorsValidator, objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -53,15 +53,19 @@ function IdentificationPage(): React.JSX.Element {
         planDevelopmentValidator.validate(projectData?.identification?.planDevelopment).then(() => {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
-                    //Poner validacion del siguiente tab
+                    actorsValidator.validate(projectData?.identification?.objectives).then(() => {
+                        //agregar validacion siguiente tab
+                    }).catch(() => {
+                    disableAccordions([5]);
+                })
                 }).catch(() => {
-                    disableAccordions([4]);
+                    disableAccordions([4, 5]);
                 })
             }).catch(() => {
-                disableAccordions([3, 4]);
+                disableAccordions([3, 4, 5]);
             })
         }).catch(() => {
-            disableAccordions([2, 3, 4]);
+            disableAccordions([2, 3, 4, 5]);
         })
         setDisableContinue(true);
     }, []);
