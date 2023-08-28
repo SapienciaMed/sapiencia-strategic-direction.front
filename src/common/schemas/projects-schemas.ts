@@ -128,14 +128,14 @@ export const actorsFormValidator = yup.object({
     expectation: yup  
     .string()
     .required("El campo es obligatorio")
-    .max(200, "Solo se permiten 200 caracteres"),
+    .max(300, "Solo se permiten 300 caracteres"),
     position: yup
     .string()
     .required("Debe seleccionar una opción"),
     contribution: yup  
     .string()
     .required("El campo es obligatorio")
-    .max(200, "Solo se permiten 200 caracteres"),
+    .max(300, "Solo se permiten 300 caracteres"),
 });
 
 export const actorsValidator = yup.object({

@@ -558,7 +558,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                 <InputComponent
                     idInput="consecutive"
                     typeInput="text"
-                    className="input-basic"
+                    className="input-basic background-textArea"
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
@@ -610,7 +610,7 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                             <InputComponent
                                 idInput={`childrens.${index}.consecutive`}
                                 typeInput="text"
-                                className="input-basic"
+                                className="input-basic background-textArea"
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}
@@ -679,7 +679,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                 <InputComponent
                     idInput="consecutive"
                     typeInput="text"
-                    className="input-basic"
+                    className="input-basic background-textArea"
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
@@ -730,7 +730,7 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                             <InputComponent
                                 idInput={`childrens.${index}.consecutive`}
                                 typeInput="text"
-                                className="input-basic"
+                                className="input-basic background-textArea"
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}

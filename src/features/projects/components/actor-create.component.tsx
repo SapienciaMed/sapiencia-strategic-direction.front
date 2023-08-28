@@ -264,7 +264,7 @@ export function ActorCreateComponent({
                 });
               }}
             >
-              Añadir Actor <AiOutlinePlusCircle />
+              Añadir Actores <AiOutlinePlusCircle />
             </div>
           </div>
           {
