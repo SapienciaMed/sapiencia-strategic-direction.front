@@ -12,11 +12,11 @@ export function useRegisterData() {
     const { setDisableContinue, setActionContinue, setStep, step, setProjectData, projectData } = useContext(ProjectsContext);
     const processData: IDropdownProps[] = [
         {
-            name: "proceso 1",
+            name: "Proceso 1",
             value: "1",
         },
         {
-            name: "proceso 2",
+            name: "Proceso 2",
             value: "2",
         }
     ];
