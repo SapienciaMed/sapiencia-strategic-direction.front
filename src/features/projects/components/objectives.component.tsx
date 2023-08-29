@@ -12,6 +12,7 @@ import { ITableAction, ITableElement } from "../../../common/interfaces/table.in
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
+import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
 
 interface IProps {
     disableNext: () => void;
@@ -75,7 +76,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
             fieldName: "type",
             header: "Tipo",
             renderCell: (row) => {
-                return <>{row.consecutive.includes(".") ? "Indirecta" : "Directa"}</>
+                return <>{row.consecutive.includes(".") ? "Indirecto" : "Directo"}</>
             }
         },
         {
@@ -213,110 +214,100 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
-            <Controller
-                control={control}
-                name={"generalObjective"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Objetivo general"
-                            classNameLabel="text-black big bold text-required"
-                            className="text-area-basic"
-                            placeholder="Escribe aquí"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                        >
-                            <label className="label-max-texarea">Max 300 caracteres</label>
-                        </TextAreaComponent>
-                    );
-                }}
-            />
-            <div>
-                <div className="title-area">
-                    <label className="text-black biggest bold text-required">
-                        Listado de objetivos específicos
-                    </label>
-
-                    <div className="title-button text-main biggest">
-                        {errors.specificObjectives}
-                    </div>
-                </div>
-                {getValues('specificObjectives').length > 0 && <TableExpansibleComponent actions={specificObjectivesActions} columns={specificObjectivesColumns} data={getValues('specificObjectives')} />}
-            </div>
-            <div>
-                <div className="title-area">
-                    <label className="text-black biggest bold text-required">
-                        Listado de fines
-                    </label>
-
-                    <div className="title-button text-main biggest">
-                        {errors.purposes}
-                    </div>
-                </div>
-                {getValues('purposes').length > 0 && <TableExpansibleComponent actions={purposesActions} columns={purposesColumns} data={getValues('purposes')} />}
-            </div>
-            <Controller
-                control={control}
-                name={"indicators"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Indicadores para medir objetivo central"
-                            classNameLabel="text-black big bold text-required"
-                            className="text-area-basic"
-                            placeholder="Escribe aquí"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                        >
-                            <label className="label-max-texarea">Max 500 caracteres</label>
-                        </TextAreaComponent>
-                    );
-                }}
-            />
-            <div className="identification-objectives-container">
-                <SelectComponent
-                    control={control}
-                    idInput={"measurement"}
-                    className="select-basic"
-                    label="Unidad de medida"
-                    classNameLabel="text-black big bold text-required"
-                    data={measurementData}
-                    errors={errors}
-                />
                 <Controller
                     control={control}
-                    name={"goal"}
-                    defaultValue={0}
+                    name={"generalObjective"}
+                    defaultValue=""
                     render={({ field }) => {
                         return (
-                            <InputComponent
+                            <TextAreaComponent
                                 id={field.name}
                                 idInput={field.name}
                                 value={`${field.value}`}
-                                label="Meta"
-                                className="input-basic"
+                                label="Objetivo general"
                                 classNameLabel="text-black big bold text-required"
-                                direction={EDirection.row}
-                                typeInput={"number"}
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                            />
+                            >
+                                <label className="label-max-texarea">Max 300 caracteres</label>
+                            </TextAreaComponent>
                         );
                     }}
                 />
-            </div>
-        </FormComponent>
+                <div>
+                    <div className="title-area">
+                        <label className="text-black biggest bold text-required">
+                            Listado de objetivos específicos
+                        </label>
+
+                        <div className="title-button text-main biggest">
+                            {errors.specificObjectives}
+                        </div>
+                    </div>
+                    {getValues('specificObjectives').length > 0 && <TableExpansibleComponent actions={specificObjectivesActions} columns={specificObjectivesColumns} data={getValues('specificObjectives')} />}
+                </div>
+                <div>
+                    <div className="title-area">
+                        <label className="text-black biggest bold text-required">
+                            Listado de fines
+                        </label>
+
+                        <div className="title-button text-main biggest">
+                            {errors.purposes}
+                        </div>
+                    </div>
+                    {getValues('purposes').length > 0 && <TableExpansibleComponent actions={purposesActions} columns={purposesColumns} data={getValues('purposes')} />}
+                </div>
+                <Controller
+                    control={control}
+                    name={"indicators"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Indicadores para medir objetivo central"
+                                classNameLabel="text-black big bold text-required"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                            >
+                                <label className="label-max-texarea">Max 500 caracteres</label>
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+                <div className="identification-objectives-container">
+                    <SelectComponent
+                        control={control}
+                        idInput={"measurement"}
+                        className="select-basic"
+                        label="Unidad de medida"
+                        classNameLabel="text-black big bold text-required"
+                        data={measurementData}
+                        errors={errors}
+                    />
+                    <InputNumberComponent
+                        idInput="goal"
+                        control={control}
+                        label="Meta"
+                        errors={errors}
+                        classNameLabel="text-black big bold text-required"
+                        className="inputNumber-basic"
+                        mode="currency"
+                        currency="COP"
+                        locale="es-CO"
+                        minFractionDigits={0}
+                    />
+                </div>
+            </FormComponent>
         </div>
     )
 }
