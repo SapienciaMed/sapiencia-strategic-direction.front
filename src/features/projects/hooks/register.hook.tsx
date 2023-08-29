@@ -5,11 +5,10 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { IRegisterForm } from "../interfaces/ProjectsInterfaces";
 import { registerValidator } from "../../../common/schemas";
 import { ProjectsContext } from "../contexts/projects.context";
-import { date } from "yup";
 
 
 export function useRegisterData() {
-    const { setDisableContinue, setActionContinue, setStep, step, setProjectData, projectData } = useContext(ProjectsContext);
+    const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData } = useContext(ProjectsContext);
     const processData: IDropdownProps[] = [
         {
             name: "Proceso 1",
@@ -65,7 +64,6 @@ export function useRegisterData() {
     }});
 
     const watchDateFrom = watch("dateFrom"); 
-    const watchDateto = watch("dateTo")
 
     useEffect(() =>{
         if(!watchDateFrom){
@@ -82,7 +80,7 @@ export function useRegisterData() {
     }, [watch]);
 
     const onSubmit = handleSubmit(async (data: IRegisterForm) => {
-        setStep(step + 1);
+        setStep(1);
     });
 
     useEffect(() => {

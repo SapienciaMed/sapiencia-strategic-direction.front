@@ -5,18 +5,19 @@ import RegisterPage from "../pages/register.page";
 import { ProjectsContext } from "../contexts/projects.context";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useNavigate } from "react-router-dom";
+import PreparationPage from "../pages/preparation.page";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue, projectData, setProjectData } = useContext(ProjectsContext);
+    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
-        { id: "register", title: "1. Registro", content: <RegisterPage /> },
-        { id: "identification", title: "2. Identificación", content: <IdentificationPage /> },
-        { id: "preparation", title: "3. Preparación", content: <>aqui va tu pagina c:</> },
-        { id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</> },
-        { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</> }
+        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(0)} },
+        { id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {setStep(1)} },
+        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(2)} },
+        { id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {setStep(3)} },
+        { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {setStep(4)} }
     ];
     useEffect(() => {
         const projectDataLocal = JSON.parse(localStorage.getItem("create_project_data"));
