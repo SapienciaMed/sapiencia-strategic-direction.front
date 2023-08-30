@@ -35,7 +35,6 @@ import {
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
-import { EDirection } from "../../../common/constants/input.enum";
 import { ProjectsContext } from "../contexts/projects.context";
 
 interface IProps {
@@ -372,7 +371,6 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
               errors={errors}
               label="Posición"
               classNameLabel="text-black biggest bold text-required"
-              direction={EDirection.row}
               data={positionData}
             />
           );

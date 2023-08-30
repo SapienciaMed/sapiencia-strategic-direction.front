@@ -9,7 +9,6 @@ import { ICause, IEffect, IProblemDescriptionForm } from "../interfaces/Projects
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
 import { AppContext } from "../../../common/contexts/app.context";
-import { EDirection } from "../../../common/constants/input.enum";
 import { ProjectsContext } from "../contexts/projects.context";
 
 interface IProps {
@@ -562,7 +561,6 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
-                    direction={EDirection.row}
                     errors={errors}
                     disabled={true}
                 />
@@ -579,7 +577,6 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 label="Descripción causa Directa"
                                 className="input-basic"
                                 classNameLabel="text-black big bold text-required"
-                                direction={EDirection.row}
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
@@ -614,7 +611,6 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={true}
@@ -626,7 +622,6 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 label="Descripción causa Indirecta"
                                 classNameLabel="text-black big bold text-required"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}
@@ -683,7 +678,6 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
-                    direction={EDirection.row}
                     errors={errors}
                     disabled={true}
                 />
@@ -700,7 +694,6 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 label="Descripción efecto directo"
                                 className="input-basic"
                                 classNameLabel="text-black big bold text-required"
-                                direction={EDirection.row}
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
@@ -734,7 +727,6 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={true}
@@ -746,7 +738,6 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 label="Descripción efecto indirecto"
                                 classNameLabel="text-black big bold text-required"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}

@@ -150,3 +150,8 @@ export const objectivesValidator = yup.object({
     measurement: yup.string().required("El campo es obligatorio"),
     goal: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
 });
+
+export const needsValidator = yup.object({
+    
+});
+

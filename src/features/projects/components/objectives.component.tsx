@@ -7,7 +7,6 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { causesValidator, effectsValidator, objectivesValidator } from "../../../common/schemas";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import TableExpansibleComponent from "./table-expansible.component";
-import { EDirection } from "../../../common/constants/input.enum";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -367,7 +366,6 @@ const SpecificObjectivesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
-                    direction={EDirection.row}
                     errors={errors}
                     disabled={true}
                 />
@@ -384,7 +382,6 @@ const SpecificObjectivesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm
                                 label="Descripción objetivo Directo"
                                 className="input-basic"
                                 classNameLabel="text-black big bold text-required"
-                                direction={EDirection.row}
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
@@ -405,7 +402,6 @@ const SpecificObjectivesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={true}
@@ -417,7 +413,6 @@ const SpecificObjectivesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm
                                 label="Descripción objetivo Indirecto"
                                 classNameLabel="text-black big bold text-required"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}
@@ -471,7 +466,6 @@ const PurposesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, 
                     register={register}
                     label="No"
                     classNameLabel="text-black big bold"
-                    direction={EDirection.row}
                     errors={errors}
                     disabled={true}
                 />
@@ -488,7 +482,6 @@ const PurposesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, 
                                 label="Descripción fin Directo"
                                 className="input-basic"
                                 classNameLabel="text-black big bold text-required"
-                                direction={EDirection.row}
                                 typeInput={"text"}
                                 register={register}
                                 onChange={field.onChange}
@@ -509,7 +502,6 @@ const PurposesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, 
                                 label="No"
                                 classNameLabel="text-black big bold"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={true}
@@ -521,7 +513,6 @@ const PurposesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, 
                                 label="Descripción fin Indirecto"
                                 classNameLabel="text-black big bold text-required"
                                 register={register}
-                                direction={EDirection.row}
                                 errors={errors}
                                 fieldArray={true}
                                 disabled={item ? !compareIds(counter, index) : false}
