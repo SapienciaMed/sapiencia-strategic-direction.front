@@ -67,6 +67,24 @@ export interface IActorsForm{
     actors:IParticipatingActors[];
 }
 
+export interface IEstatesService {
+    id?: number;
+    description: string;
+}
+
+export interface INeedObjetive {
+    id?: number;
+    objetive: ICause;
+    interventionActions: string;
+    quantification: number;
+    estatesService: IEstatesService[];
+}
+
+export interface INeedsForm {
+    alternative?: string;
+    generalObjetive?: string;
+    objetive: INeedObjetive[];
+}
 
 export interface IProjectTemp {
     register?: IRegisterForm;
@@ -75,5 +93,8 @@ export interface IProjectTemp {
         planDevelopment?:IPlanDevelopmentForm;
         objectives?: IObjectivesForm;
         actors?:IActorsForm;
+    };
+    preparation?: {
+        needs: INeedsForm
     }
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
@@ -7,6 +7,7 @@ import NeedsComponent from "../components/needs.component";
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
     const {} = useContext(ProjectsContext);
+    const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
@@ -26,7 +27,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 2,
             name: "Necesidades",
-            content: <NeedsComponent disableNext={() => {}} enableNext={() => {}} />
+            content: <NeedsComponent disableNext={() => {}} enableNext={() => {}} setForm={setPlaneFormComponent} />
         },
         {
             id: 3,
@@ -50,7 +51,15 @@ function PreparationPage(): React.JSX.Element {
         },
     ];
     return (
-        <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
+        <div>
+            <div>
+                {PlaneFormComponent}
+            </div>
+            <div style={{display: PlaneFormComponent ? "none" : "block"}}>
+                <AccordionsComponent data={accordionsData} ref={accordionsComponentRef}/>
+            </div>
+        </div>
+        
     )
 }
 
