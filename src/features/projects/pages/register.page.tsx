@@ -1,7 +1,6 @@
 import React from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useRegisterData } from "../hooks/register.hook";
-import { EDirection } from "../../../common/constants/input.enum";
 import { Controller } from "react-hook-form";
 
 
@@ -25,7 +24,6 @@ function RegisterPage(): React.JSX.Element {
                                         label="Código BPIN"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
-                                        direction={EDirection.row}
                                         typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
@@ -46,7 +44,6 @@ function RegisterPage(): React.JSX.Element {
                                         label="Nombre Proyecto"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
-                                        direction={EDirection.row}
                                         typeInput={"text"}
                                         register={register}
                                         onChange={field.onChange}
@@ -69,7 +66,6 @@ function RegisterPage(): React.JSX.Element {
                                         label="Período inicial"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
-                                        direction={EDirection.row}
                                         typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
@@ -90,7 +86,6 @@ function RegisterPage(): React.JSX.Element {
                                         label="Período final"
                                         className="input-basic"
                                         classNameLabel="text-black biggest bold text-required"
-                                        direction={EDirection.row}
                                         typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
@@ -110,7 +105,6 @@ function RegisterPage(): React.JSX.Element {
                             errors={errors}
                             label="Proceso"
                             classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
                             data={processData}
                         />
                         <SelectComponent
@@ -120,7 +114,6 @@ function RegisterPage(): React.JSX.Element {
                             errors={errors}
                             label="Localización"
                             classNameLabel="text-black biggest bold"
-                            direction={EDirection.row}
                             data={localitationData}
                             disabled={true}
                         />
@@ -131,7 +124,6 @@ function RegisterPage(): React.JSX.Element {
                             errors={errors}
                             label="Dependencia"
                             classNameLabel="text-black biggest bold text-required"
-                            direction={EDirection.row}
                             data={DependecyData}
                         />
                     </div>

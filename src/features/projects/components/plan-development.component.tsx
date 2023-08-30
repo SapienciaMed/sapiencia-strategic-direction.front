@@ -2,16 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   ButtonComponent,
   FormComponent,
-  InputComponent,
-  SelectComponent,
   TextAreaComponent,
 } from "../../../common/components/Form";
-import { useRegisterData } from "../hooks/register.hook";
-import { EDirection } from "../../../common/constants/input.enum";
 import { Controller, useForm } from "react-hook-form";
 import {
   IPlanDevelopmentForm,
-  IProblemDescriptionForm,
 } from "../interfaces/ProjectsInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { ProjectsContext } from "../contexts/projects.context";
