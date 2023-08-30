@@ -179,7 +179,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                             field={col.fieldName}
                             header={col.header}
                             body={col.renderCell}
-                            sortable={col.sortable}
+                            // sortable={col.sortable}
                             style={{ maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
                         />
                     ))}
