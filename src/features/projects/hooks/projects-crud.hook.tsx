@@ -13,9 +13,9 @@ export function useProjectsCrudData() {
     const { setMessage } = useContext(AppContext);
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
-        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(0)} },
+        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(0)} },
         { id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {setStep(1)} },
-        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(2)} },
+        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(2)} },
         { id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {setStep(3)} },
         { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {setStep(4)} }
     ];

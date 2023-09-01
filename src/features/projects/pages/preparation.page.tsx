@@ -3,6 +3,8 @@ import AccordionsComponent from "../../../common/components/accordions.component
 import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import NeedsComponent from "../components/needs.component";
+import CapacityComponent from "../components/capacity.component";
+import EnvironmentalAnalysisComponent from "../components/environmental-analysis.component";
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -32,12 +34,12 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 3,
             name: "Capacidad",
-            content: <>Aqui va tu componente</>
+            content: <CapacityComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
         },
         {
             id: 4,
             name: "Análisis Ambiental",
-            content: <>Aqui va tu componente</>
+            content: <EnvironmentalAnalysisComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
         },
         {
             id: 5,

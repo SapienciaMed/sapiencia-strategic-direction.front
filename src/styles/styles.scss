@@ -193,10 +193,99 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
             filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
             width: 24px;
             height: 24px;
+
+
+.capacity-page {
+    .group-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        grid-auto-flow: column;
+    }
+}
+
+
+.environmental-analysis-page { 
+    .cursor-pointer { 
+        cursor: pointer;
+    }
+
+    .effects-container {
+        width: 100%;
+
+        .effects-container-header {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            grid-auto-flow: column;
+            padding-bottom: 20px;
+
+            .add-effect { 
+                justify-content: end;
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
         }
     }
 }
 
+.w-100 {
+    width: 100%;
+}
+
+.effect-form {
+    .p-dropdown-label { 
+        text-align: initial
+    }
+
+    .group-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        grid-auto-flow: column;
+    }
+}
+
+@media (max-width: 1024px) {
+    .capacity-page {
+        .group-inputs {
+            grid-template-columns: 1fr;
+            grid-auto-flow: row;
+        }
+    }
+
+    .effect-form {
+        .p-dropdown-label { 
+            text-align: initial
+        }
+    
+        .group-inputs {
+            grid-template-columns: 1fr;
+            grid-auto-flow: row;
+        }
+    }
+    
+
+    .environmental-analysis-page { 
+        .effects-container {
+            width: 100%;
+
+            label {
+                text-align: center;
+            }
+    
+            .effects-container-header {
+                grid-template-columns: 1fr;
+                grid-auto-flow: row;
+                
+                .add-effect {
+                    justify-content: center;
+
+                }
+            }
+        }
 .needs-objectives-details {
     display: grid;
     grid-template-columns: 1fr;
