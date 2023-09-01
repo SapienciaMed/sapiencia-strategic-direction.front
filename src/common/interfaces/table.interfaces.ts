@@ -7,6 +7,16 @@ export interface ITableElement<T> {
   width?: string | number;
 }
 
+export interface IGroupTableElement<T> {
+  header: string;
+  fieldName: string;
+  parent?: string
+  required?: boolean;
+  dataList?: IListTableElement[];
+  renderCell?: (row: T) => JSX.Element;
+  width?: string | number;
+}
+
 export interface IListTableElement {
   id: string | number;
   value: string;

@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
-import { FormComponent, TextAreaComponent } from "../../../common/components/Form";
-import { Controller, useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from "react";
+import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { needsValidator } from "../../../common/schemas";
+import { needsObjectivesValidator, needsValidator } from "../../../common/schemas";
 import { INeedObjetive, INeedsForm } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
 import { AppContext } from "../../../common/contexts/app.context";
 import { ProjectsContext } from "../contexts/projects.context";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
+import { IDropdownProps } from "../../../common/interfaces/select.interface";
+import { FaTrashAlt } from "react-icons/fa";
 
 interface IProps {
     disableNext: () => void;
@@ -16,8 +18,9 @@ interface IProps {
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
 }
 
-export function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
-    const { setProjectData, projectData } = useContext(ProjectsContext);
+function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+    const [needsData, setNeedsData] = useState<INeedsForm>(null)
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsValidator);
     const {
@@ -26,9 +29,35 @@ export function NeedsComponent({ disableNext, enableNext, setForm }: IProps): Re
         getValues,
         setValue,
         formState: { errors, isValid },
+        watch,
+        trigger
     } = useForm<INeedsForm>({
-        resolver, mode: "all"
+        resolver, mode: "all", defaultValues: {
+            alternative: "prueba",
+            generalObjetive: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : null,
+            objetives: projectData?.preparation?.needs?.objetives ? projectData.preparation.needs.objetives : null
+        }
     });
+    const onCancel = () => {
+        setMessage({
+            title: "Cancelar objetivo",
+            description: "Desea cancelar la acción, no se guardarán los datos",
+            show: true,
+            background: true,
+            cancelTitle: "Continuar",
+            OkTitle: "Si, cancelar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                setForm(null);
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        })
+    }
     const objectivesColumns: ITableElement<INeedObjetive>[] = [
         {
             fieldName: "objetive",
@@ -55,12 +84,92 @@ export function NeedsComponent({ disableNext, enableNext, setForm }: IProps): Re
     ];
     const objectivesActions: ITableAction<INeedObjetive>[] = [
         {
+            icon: "Detail",
+            onClick: (row) => {
+                setMessage({
+                    title: "Detalle del objetivo",
+                    description: <DetailsComponent row={row} />,
+                    OkTitle: "Cerrar",
+                    background: true,
+                    show: true,
+                    onOk: () => {
+                        setMessage({});
+                    }
+                })
+            }
+        },
+        {
             icon: "Edit",
             onClick: (row) => {
-                
+                setForm(<NeedObjectivesComponent setForm={setForm} returnData={changeObjetives} item={row} />);
+                setTextContinue("Guardar y regresar");
+                setActionCancel(() => onCancel);
+            }
+        },
+        {
+            icon: "Delete",
+            onClick: (row) => {
+                setMessage({
+                    title: "Eliminar objetivo",
+                    description: "¿Desea eliminar el objetivo?",
+                    show: true,
+                    background: true,
+                    cancelTitle: "Cancelar",
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    onOk: () => {
+                        const objectivesData = getValues("objetives").filter(item => item !== row);
+                        setValue("objetives", objectivesData);
+                        setNeedsData(prev => {
+                            return { ...prev, objetives: objectivesData };
+                        });
+                        trigger("objetives");
+                        setMessage({
+                            title: "Objetivo eliminado",
+                            description: "¡Objetivo eliminado exitosamente!",
+                            show: true,
+                            background: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                });
             }
         }
     ];
+    const changeObjetives = (data: INeedObjetive, row?: INeedObjetive) => {
+        if (row) {
+            const objectivesData = getValues("objetives").filter(item => item !== row).concat(data).sort((a, b) => parseInt(a.objetive.consecutive) - parseInt(b.objetive.consecutive));
+            setValue("objetives", objectivesData);
+            setNeedsData(prev => {
+                return { ...prev, objetives: objectivesData };
+            });
+        } else {
+            const objectivesData = getValues("objetives");
+            setValue("objetives", objectivesData ? objectivesData.concat(data) : [data]);
+            setNeedsData(prev => {
+                return { ...prev, objetives: objectivesData ? objectivesData.concat(data) : [data] };
+            });
+        }
+        trigger("objetives");
+    };
+    useEffect(() => {
+        console.log(isValid)
+    }, [isValid]);
+    useEffect(() => {
+        const subscription = watch((value: INeedsForm) => setNeedsData(prev => { return { ...prev, ...value } }));
+        return () => subscription.unsubscribe();
+    }, [watch]);
+    useEffect(() => {
+        if (needsData) setProjectData(prev => {
+            const preparation = prev ? { ...prev.preparation, needs: { ...needsData } } : { needs: { ...needsData } };
+            return { ...prev, preparation: { ...preparation } };
+        })
+    }, [needsData]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
@@ -75,17 +184,17 @@ export function NeedsComponent({ disableNext, enableNext, setForm }: IProps): Re
                                 idInput={field.name}
                                 value={`${field.value}`}
                                 label="Nombre de la alternativa"
-                                classNameLabel="text-black big bold text-required"
+                                classNameLabel="text-black biggest bold text-required"
                                 className="text-area-basic"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                            >
-                                <label className="label-max-texarea">Max 300 caracteres</label>
-                            </TextAreaComponent>
+                                disabled={true}
+                            />
                         );
                     }}
+
                 />
                 <Controller
                     control={control}
@@ -98,35 +207,242 @@ export function NeedsComponent({ disableNext, enableNext, setForm }: IProps): Re
                                 idInput={field.name}
                                 value={`${field.value}`}
                                 label="Objetivo general"
-                                classNameLabel="text-black big bold text-required"
+                                classNameLabel="text-black biggest bold text-required"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                disabled={true}
+                            />
+                        );
+                    }}
+                />
+                <div>
+                    <div className="title-area">
+                        <label className="text-black large bold text-required">
+                            Listado de objetivos específicos
+                        </label>
+
+                        <div className="title-button text-main large" onClick={() => {
+                            setForm(<NeedObjectivesComponent setForm={setForm} returnData={changeObjetives} />);
+                            setTextContinue("Guardar y regresar");
+                            setActionCancel(() => onCancel);
+                        }}>
+                            Añadir objetivo <AiOutlinePlusCircle />
+                        </div>
+                    </div>
+                    {getValues('objetives')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('objetives')} />}
+                </div>
+            </FormComponent>
+        </div>
+    )
+}
+
+interface IPropsNeedsObjectives {
+    returnData: (data: INeedObjetive, item?: INeedObjetive) => void;
+    setForm: (value: React.SetStateAction<React.JSX.Element>) => void;
+    item?: INeedObjetive;
+}
+
+function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjectives) {
+    const { setMessage } = useContext(AppContext);
+    const resolver = useYupValidationResolver(needsObjectivesValidator);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel } = useContext(ProjectsContext);
+    const {
+        control,
+        register,
+        setValue,
+        handleSubmit,
+        formState: { errors },
+        watch,
+    } = useForm<INeedObjetive>({
+        resolver, mode: "all", defaultValues: {
+            interventionActions: item?.interventionActions ? item.interventionActions : "",
+            objetive: item?.objetive ? item.objetive : null,
+            objectiveSelect: item?.objetive?.consecutive ? item.objetive.consecutive : null,
+            quantification: item?.quantification ? item?.quantification : null,
+            estatesService: item?.estatesService ? item?.estatesService : null
+        }
+    });
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "estatesService",
+    });
+    const objectiveSelect = watch("objectiveSelect");
+    const newObjectives = item ? projectData.identification.problemDescription.causes.filter(cause => !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive)).concat(item?.objetive).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive)) : projectData.identification.problemDescription.causes.filter(cause => !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive));
+    const getValObj = projectData?.preparation?.needs?.objetives?.length > 0 ? newObjectives : projectData.identification.problemDescription.causes;
+    const objectives: IDropdownProps[] = getValObj.map((cause) => {
+        return {
+            name: `${cause.consecutive}. ${cause.description}`,
+            value: cause.consecutive
+        }
+    });
+    const onSubmit = handleSubmit(async (data: INeedObjetive) => {
+        setMessage({
+            title: item ? "Editar objetivo" : "Guardar objetivo",
+            description: item ? "¿Desea editar el objetivo?" : "¿Desea guardar el objetivo?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                returnData(data, item);
+                setMessage({
+                    title: item ? "Editar objetivo" : "Guardar objetivo",
+                    description: item ? "¡Objetivo editado exitosamente!" : "¡Objetivo guardado exitosamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Cerrar",
+                    onOk: () => {
+                        setForm(null);
+                        setTextContinue(null);
+                        setActionCancel(null);
+                        setActionContinue(null);
+                        setMessage({});
+                    }
+                })
+            }
+        });
+    });
+    useEffect(() => {
+        setActionContinue(() => onSubmit);
+    }, []);
+    useEffect(() => {
+        if (objectiveSelect) setValue("objetive", projectData.identification.problemDescription.causes.find(cause => cause.consecutive == objectiveSelect));
+    }, [objectiveSelect]);
+    return (
+        <FormComponent action={undefined} className="card-table">
+            <p className="text-black large bold">Agregar Objetivo</p>
+            <div className="problem-description-container">
+                <SelectComponent
+                    control={control}
+                    idInput={"objectiveSelect"}
+                    className="select-basic"
+                    label="Objetivo"
+                    classNameLabel="text-black biggest bold text-required"
+                    data={objectives}
+                    errors={errors}
+                    tooltip
+                />
+                <Controller
+                    control={control}
+                    name={"interventionActions"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Acciones de intervención"
+                                classNameLabel="text-black biggest bold text-required"
                                 className="text-area-basic"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
                             >
-                                <label className="label-max-texarea">Max 300 caracteres</label>
+                                <label className="label-max-textarea">Max 300 caracteres</label>
                             </TextAreaComponent>
+                        );
+                    }}
+                />
+                <Controller
+                    control={control}
+                    name={"quantification"}
+                    render={({ field }) => {
+                        return (
+                            <InputComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Cuantificación"
+                                className="input-basic"
+                                classNameLabel="text-black biggest bold text-required"
+                                typeInput={"number"}
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                            />
                         );
                     }}
                 />
                 <div>
                     <div className="title-area">
-                        <label className="text-black biggest bold text-required">
-                            Listado de objetivos específicos
+                        <label className="text-black large bold text-required">
+                            Bienes y/o servicios
                         </label>
 
-                        <div className="title-button text-main biggest" onClick={() => {
-                            setForm(<>hola</>);
+                        <div className="title-button text-main large" onClick={() => {
+                            append({ description: "" });
                         }}>
-                            Añadir objetivo <AiOutlinePlusCircle />
+                            Añadir bienes y/o servicios <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('objetive')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('objetive')} />}
+                    <label className="text-main big error-message bold">
+                        {errors?.estatesService?.message}
+                    </label>
+                    <div className="problem-description-container">
+                        {fields.map((field, index) => {
+                            return (
+                                <div key={field.id} className="needs-objectives-estates-services">
+                                    <TextAreaComponent
+                                        id={`estatesService.${index}.description`}
+                                        idInput={`estatesService.${index}.description`}
+                                        className="text-area-basic"
+                                        placeholder="Escribe aquí"
+                                        register={register}
+                                        fieldArray={true}
+                                        errors={errors}
+                                    >
+                                        <label className="label-max-textarea">Max 300 caracteres</label>
+                                    </TextAreaComponent>
+                                    <div onClick={() => { remove(index) }} className="actions-needs">
+                                        <FaTrashAlt className="button grid-button button-delete" />
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
-            </FormComponent>
-        </div>
+            </div>
+        </FormComponent>
     )
+}
+
+interface IDetailsProps {
+    row: INeedObjetive;
+}
+
+function DetailsComponent({ row }: IDetailsProps): React.JSX.Element {
+    return (
+        <section className="needs-objectives-details">
+            <div className="items-details">
+                <label className="text-black bold biggest">Objetivo</label>
+                <span className="text-primary biggest">{row.objetive.description}</span>
+            </div>
+            <div className="items-details">
+                <label className="text-black bold biggest">Acciones de intervención</label>
+                <span className="text-primary biggest">{row.interventionActions}</span>
+            </div>
+            <div className="items-details">
+                <label className="text-black bold biggest">Cuantificación</label>
+                <span className="text-primary biggest">{row.quantification}</span>
+            </div>
+            <div className="items-estates">
+                <p className="text-black bold text-center biggest">Bienes y servicios</p>
+                {row.estatesService.map(estates => {
+                    return (
+                        <span className="text-primary biggest" key={estates.description}>{estates.description}</span>
+                    )
+                })}
+            </div>
+        </section>
+    );
 }
 
 export default React.memo(NeedsComponent);

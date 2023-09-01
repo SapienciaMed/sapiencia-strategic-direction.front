@@ -5,6 +5,7 @@ import { LabelComponent } from "./label.component";
 import { Control, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { IDropdownProps } from "../../interfaces/select.interface";
+import { Tooltip } from "primereact/tooltip";
 
 interface ISelectProps<T> {
   idInput: string;
@@ -21,6 +22,7 @@ interface ISelectProps<T> {
   fieldArray?: boolean;
   filter?: boolean;
   emptyMessage?: string;
+  tooltip?: boolean;
 }
 
 function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
@@ -49,6 +51,7 @@ export function SelectComponent({
   fieldArray,
   filter,
   emptyMessage = "Sin resultados.",
+  tooltip
 }: ISelectProps<any>): React.JSX.Element {
   if (data) {
     const seleccione: IDropdownProps = { name: "Seleccione", value: null };
@@ -74,7 +77,6 @@ export function SelectComponent({
       return errs?.message ?? null;
     }
   };
-
   return (
     <div
       className={
@@ -86,6 +88,7 @@ export function SelectComponent({
         idInput={idInput}
         classNameLabel={classNameLabel}
       />
+      <Tooltip target=".tooltip-select" mouseTrack mouseTrackLeft={10} />
       <div>
         <Controller
           name={idInput}
@@ -95,14 +98,17 @@ export function SelectComponent({
               id={field.name}
               value={data ? data.find((row) => row.value === field.value)?.value : null}
               onChange={(e) => field.onChange(e.value)}
-              options={data}
+              options={data.map(item => {
+                return {...item, name: item.name.length < 50 ? item.name : `${item.name.slice(0,50).trim()}...`}
+              })}
               optionLabel="name"
               placeholder={placeholder}
-              className={`${className} ${messageError() ? "p-invalid" : ""}`}
+              className={`${className} ${tooltip && "tooltip-select"} ${messageError() ? "p-invalid" : ""}`}
               disabled={disabled}
               filter={filter}
               emptyMessage={emptyMessage}
               emptyFilterMessage={emptyMessage}
+              data-pr-tooltip={data ? data.find((row) => row.value === field.value)?.name : null}
             />
           )}
         />

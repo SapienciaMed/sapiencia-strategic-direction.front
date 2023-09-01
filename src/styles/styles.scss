@@ -5,13 +5,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     width: 100vw;
 }
 
-.background-textArea{
-    background-color: #E0E0E0;
+.p-accordion-content {
+    font-size: .8rem;
 }
 
-.label-max-texarea {
-    text-align: end;
-    margin-top: -10px;
+.background-textArea {
+    background-color: #E0E0E0;
 }
 
 .label-max-textarea {
@@ -21,13 +20,13 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 }
 
 .label-development {
-    padding:12px 0px;
+    padding: 12px 0px;
 }
 
 .card-form-development {
     display: grid;
     row-gap: 1.7rem;
-  }
+}
 
 .crud-page {
     @include generate-flex-container(column);
@@ -36,9 +35,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 .projects-footer-mobile {
     display: grid;
     row-gap: 2rem;
+
     .save-temp {
         display: flex;
         justify-content: center;
+
         .button-save {
             max-width: 75%;
         }
@@ -143,29 +144,30 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
             height: 24px;
         }
     }
+}
 
-    .error-message {
-        color: #ff0000;
-        text-align: left;
-    }
+.error-message {
+    color: #ff0000;
+    text-align: left;
+}
 
-    .title-area {
-        @include card-component-title-area()
-    }
+.title-area {
+    @include card-component-title-area();
 }
 
 .causes-effects-modal-size {
     max-height: 70vh;
 }
 
-.container-button-bot-reset{
+.container-button-bot-reset {
     margin-top: 20px;
     display: flex;
     flex-direction: row;
     align-content: stretch;
     justify-content: center;
     align-items: center;
-    span{
+
+    span {
         display: flex;
         flex-direction: column;
         align-content: center;
@@ -180,9 +182,45 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     row-gap: 1.7rem;
 }
 
+.needs-objectives-estates-services {
+    display: grid;
+    grid-template-columns: 93% 7%;
+    .actions-needs {
+        padding-top: 1.7rem;
+        display: flex;
+        justify-content: center;
+        .button-delete {
+            filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+.needs-objectives-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+    text-align: start;
+    padding: 0px 1rem;
+    width: 100%;
+    .items-details {
+        display: grid;
+        row-gap: 0.3rem;
+    }
+    .items-estates {
+        display: grid;
+        row-gap: 1rem;
+    }
+}
+
 @media (min-width: 1024px) {
     div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: initial;
+    }
+    .title-area {
+        @include card-component-title-area();
+        align-items: flex-end;
     }
 
     .projects-footer-mobile {
@@ -193,13 +231,13 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         display: flex;
     }
 
-    .button-main-reset{
+    .button-main-reset {
         width: 25%;
         height: 2.5em;
         font-size: 1rem;
     }
 
-    .actors-form-container{
+    .actors-form-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
@@ -208,7 +246,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 1rem;
     }
 
-    .container-button-bot-reset{
+    .container-button-bot-reset {
         margin-top: 20px;
         display: flex;
         flex-direction: row;
@@ -216,7 +254,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         align-content: stretch;
         justify-content: flex-end;
         align-items: flex-end;
-        span{
+
+        span {
             display: flex;
             flex-direction: column;
             align-content: center;
@@ -248,8 +287,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
             row-gap: 1rem;
         }
     }
-    
-    
+
+
     .project-container {
         display: grid;
         grid-template-columns: 1fr 3fr;
@@ -283,5 +322,3 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 1rem;
     }
 }
-
-

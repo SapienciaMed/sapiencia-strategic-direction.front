@@ -224,21 +224,21 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 idInput={field.name}
                                 value={`${field.value}`}
                                 label="Objetivo general"
-                                classNameLabel="text-black big bold text-required"
+                                classNameLabel="text-black biggest bold text-required"
                                 className="text-area-basic"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
                             >
-                                <label className="label-max-texarea">Max 300 caracteres</label>
+                                <label className="label-max-textarea">Max 300 caracteres</label>
                             </TextAreaComponent>
                         );
                     }}
                 />
                 <div>
                     <div className="title-area">
-                        <label className="text-black biggest bold text-required">
+                        <label className="text-black large bold text-required">
                             Listado de objetivos específicos
                         </label>
 
@@ -250,11 +250,11 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                 </div>
                 <div>
                     <div className="title-area">
-                        <label className="text-black biggest bold text-required">
+                        <label className="text-black large bold text-required">
                             Listado de fines
                         </label>
 
-                        <div className="title-button text-main biggest">
+                        <div className="title-button text-main large">
                             {errors.purposes}
                         </div>
                     </div>
@@ -271,14 +271,14 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 idInput={field.name}
                                 value={`${field.value}`}
                                 label="Indicadores para medir objetivo central"
-                                classNameLabel="text-black big bold text-required"
+                                classNameLabel="text-black biggest bold text-required"
                                 className="text-area-basic"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
                             >
-                                <label className="label-max-texarea">Max 500 caracteres</label>
+                                <label className="label-max-textarea">Max 500 caracteres</label>
                             </TextAreaComponent>
                         );
                     }}
@@ -289,7 +289,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         idInput={"measurement"}
                         className="select-basic"
                         label="Unidad de medida"
-                        classNameLabel="text-black big bold text-required"
+                        classNameLabel="text-black biggest bold text-required"
                         data={measurementData}
                         errors={errors}
                     />
@@ -298,7 +298,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         control={control}
                         label="Meta"
                         errors={errors}
-                        classNameLabel="text-black big bold text-required"
+                        classNameLabel="text-black biggest bold text-required"
                         className="inputNumber-basic"
                         mode="currency"
                         currency="COP"

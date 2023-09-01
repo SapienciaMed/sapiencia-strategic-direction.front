@@ -74,6 +74,7 @@ export interface IEstatesService {
 
 export interface INeedObjetive {
     id?: number;
+    objectiveSelect: string;
     objetive: ICause;
     interventionActions: string;
     quantification: number;
@@ -83,7 +84,7 @@ export interface INeedObjetive {
 export interface INeedsForm {
     alternative?: string;
     generalObjetive?: string;
-    objetive: INeedObjetive[];
+    objetives: INeedObjetive[];
 }
 
 export interface IProjectTemp {
