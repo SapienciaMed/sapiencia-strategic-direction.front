@@ -158,7 +158,11 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         trigger("objetives");
     };
     useEffect(() => {
-        console.log(isValid)
+        if (isValid) {
+            enableNext();
+        } else {
+            disableNext();
+        }
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: INeedsForm) => setNeedsData(prev => { return { ...prev, ...value } }));

@@ -9,13 +9,13 @@ import PreparationPage from "../pages/preparation.page";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep } = useContext(ProjectsContext);
+    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
-        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(0)} },
+        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(0)} },
         { id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {setStep(1)} },
-        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(2)} },
+        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(2)} },
         { id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {setStep(3)} },
         { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {setStep(4)} }
     ];
@@ -53,5 +53,5 @@ export function useProjectsCrudData() {
         })
     }
 
-    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate }
+    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue }
 }
