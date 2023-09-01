@@ -59,14 +59,6 @@ export const problemDescriptionValidator = yup.object({
 });
 
 export const effectsValidator = yup.object({
-    consecutive: yup.string().required("El campo es obligatorio"),
-    description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-    childrens: yup.array().required("El efecto directo debe tener mínimo un efecto indirecto agregado").min(1, "El efecto directo debe tener mínimo un efecto indirecto agregado").of(
-        yup.object().shape({
-            consecutive: yup.string().required("El campo es obligatorio"),
-            description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-        })
-    ),
 });
 
 export const causesValidator = yup.object({
@@ -117,6 +109,17 @@ export const planDevelopmentValidator = yup.object({
         .string()
         .required("El campo es obligatorio")
         .max(500, "Solo se permiten 500 caracteres"),
+});
+
+export const capacityValidator = yup.object({
+    description: yup
+        .string()
+        .max(600, "Solo se permiten 600 caracteres")
+        .required("El campo es obligatorio"),
+    unit: yup
+        .string()
+        .required("El campo es obligatorio"),
+    capacity: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
 });
 
 
