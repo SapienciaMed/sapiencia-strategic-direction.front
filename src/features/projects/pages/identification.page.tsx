@@ -65,6 +65,8 @@ function IdentificationPage(): React.JSX.Element {
         planDevelopmentValidator.validate(projectData?.identification?.planDevelopment).then(() => {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
+                    
+                    console.log("a")
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
                         //agregar validacion siguiente tab
                         setDisableContinue(false);

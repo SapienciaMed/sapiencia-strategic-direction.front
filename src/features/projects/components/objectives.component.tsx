@@ -17,7 +17,6 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
 }
-
 export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
@@ -47,7 +46,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         getListByGrouper("UNIDAD_MEDIDA_OBJETIVOS").then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const data: IDropdownProps[] = response.data.map(data => {
-                    return { name: data.itemDescription, value: data.itemCode }
+                    return { name: data.itemDescription, value: Number(data.itemCode) }
                 })
                 setMeasurementData(data);
             }

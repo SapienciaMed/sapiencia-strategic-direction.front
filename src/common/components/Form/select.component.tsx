@@ -98,9 +98,7 @@ export function SelectComponent({
               id={field.name}
               value={data ? data.find((row) => row.value === field.value)?.value : null}
               onChange={(e) => field.onChange(e.value)}
-              options={data.map(item => {
-                return {...item, name: item.name.length < 50 ? item.name : `${item.name.slice(0,50).trim()}...`}
-              })}
+              options={data}
               optionLabel="name"
               placeholder={placeholder}
               className={`${className} ${tooltip && "tooltip-select"} ${messageError() ? "p-invalid" : ""}`}

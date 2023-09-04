@@ -4,7 +4,7 @@ import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue } = useProjectsCrudData();
+    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData } = useProjectsCrudData();
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -44,10 +44,10 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>
                             <ButtonComponent
-                                value="Continuar"
+                                value={textContinue || "Continuar"}
                                 className="button-main huge hover-three"
                                 type="button"
-                                action={actionContinue}
+                                action={actionContinue || (() => {})}
                                 disabled={disableContinue}
                             />
                         </div>
@@ -77,7 +77,9 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                localStorage.removeItem('create_project_data');
+                                if(projectData.id) {
+                                    DeleteProject(projectData.id);
+                                }
                                 navigate('./../');
                                 setMessage({});
                             }

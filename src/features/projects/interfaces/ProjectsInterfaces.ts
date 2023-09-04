@@ -1,7 +1,7 @@
 export interface IProblemDescriptionForm {
-    problemDescription: string;
-    magnitude: string;
-    centerProblem: string;
+    problemDescription?: string;
+    magnitude?: string;
+    centerProblem?: string;
     causes?: ICause[];
     effects?: IEffect[];
 }
@@ -30,19 +30,17 @@ export interface IObjectivesForm {
 }
 
 export interface IRegisterForm {
-    id?: number;
-    bpin: number;
-    project: string;
-    dateFrom: string;
-    dateTo: string;
-    process: string;
-    localitation: string;
-    dependency: string;
-    object: string;
+    bpin?: number;
+    project?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    process?: number;
+    localitation?: number;
+    dependency?: number;
+    object?: string;
 }
 
 export interface IPlanDevelopmentForm {
-    id?: number;
     pnd_pacto?: string;
     pnd_linea?: string;
     pnd_programa?: string;
@@ -51,20 +49,20 @@ export interface IPlanDevelopmentForm {
     pdd_programa?: string;
     pdi_linea?: string;
     pdi_componentes?: string;
-    pdi_programa?:string;
+    pdi_programa?: string;
 }
 
 
-export interface IParticipatingActors{
-    id?:number;
-    actor?:string;
-    expectation?:string;
-    position?:string;
-    contribution?:string;
+export interface IParticipatingActors {
+    id?: number;
+    actor: string;
+    expectation: string;
+    position: string;
+    contribution: string;
 }
 
-export interface IActorsForm{
-    actors:IParticipatingActors[];
+export interface IActorsForm {
+    actors?: IParticipatingActors[];
 }
 
 export interface IEstatesService {
@@ -88,14 +86,44 @@ export interface INeedsForm {
 }
 
 export interface IProjectTemp {
+    id?: number;
     register?: IRegisterForm;
     identification?: {
         problemDescription?: IProblemDescriptionForm;
-        planDevelopment?:IPlanDevelopmentForm;
+        planDevelopment?: IPlanDevelopmentForm;
         objectives?: IObjectivesForm;
-        actors?:IActorsForm;
+        actors?: IActorsForm;
     };
     preparation?: {
-        needs: INeedsForm
+        needs?: INeedsForm
     }
+}
+
+export interface IProject {
+    id: number;
+    bpin: number | null;
+    project: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
+    process: number | null;
+    dependency: number | null;
+    pnd_pacto: string | null;
+    pnd_linea: string | null;
+    pnd_programa: string | null;
+    pdd_linea: string | null;
+    pdd_componentes: string | null;
+    pdd_programa: string | null;
+    pdi_linea: string | null;
+    pdi_componentes: string | null;
+    pdi_programa: string | null;
+    problemDescription: string | null;
+    magnitude: string | null;
+    centerProblem: string | null;
+    indicators: string | null;
+    measurement: string | null;
+    goal: number | null;
+    causeId: number | null;
+    effectId: number | null;
+    causes: ICause | null;
+    effects: IEffect | null;
 }
