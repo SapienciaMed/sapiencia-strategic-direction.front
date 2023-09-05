@@ -49,13 +49,11 @@ export function PoblationComponent({
   const { getListByGrouper } = useGenericListService();
 
   const {
-    getValues,
     formState: { errors, isValid },
     watch,
     register,
     control
   } = useForm<IPoblationForm>({
-    resolver,
     mode: "all",
     defaultValues: {
       objectivePeople: projectData?.identification?.poblation?.objectivePeople ? projectData.identification.poblation.objectivePeople : "",

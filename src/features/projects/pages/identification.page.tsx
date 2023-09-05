@@ -70,7 +70,6 @@ function IdentificationPage(): React.JSX.Element {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
                         disableAccordions([]);
-                        //agregar validacion siguiente tab
                         setDisableContinue(false);
                         setActionContinue(() => nextStep);
                     }).catch(() => {
