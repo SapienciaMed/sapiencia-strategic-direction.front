@@ -235,7 +235,7 @@ export function PlanDevelopmentComponent({
                     id={field.name}
                     idInput={field.name}
                     value={`${field.value}`}
-                    label="Pacto"
+                    label="Línea"
                     className="text-area-basic"
                     classNameLabel="text-black big bold text-required label-development"
                     rows={2}

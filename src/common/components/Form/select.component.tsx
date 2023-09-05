@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EDirection } from "../../constants/input.enum";
 import { LabelComponent } from "./label.component";
 
@@ -13,6 +13,7 @@ interface ISelectProps<T> {
   className?: string;
   placeholder?: string;
   data?: Array<IDropdownProps>;
+  promiseData?: Promise<IDropdownProps[]>;
   label?: string | React.JSX.Element;
   classNameLabel?: string;
   direction?: EDirection;
@@ -41,7 +42,8 @@ export function SelectComponent({
   control,
   className = "select-basic",
   placeholder = "Seleccione",
-  data = [{} as IDropdownProps],
+  data = [],
+  promiseData = null,
   label,
   classNameLabel = "text-main",
   direction = EDirection.column,
@@ -53,13 +55,30 @@ export function SelectComponent({
   emptyMessage = "Sin resultados.",
   tooltip
 }: ISelectProps<any>): React.JSX.Element {
-  if (data) {
-    const seleccione: IDropdownProps = { name: "Seleccione", value: null };
-    const dataSelect = data.find(
-      (item) => item.name === seleccione.name && item.value === seleccione.value
-    );
-    if (!dataSelect) data.unshift(seleccione);
-  }
+  const [selectData, setSelectData] = useState<IDropdownProps[]>(null);
+  useEffect(() => {
+    if (data?.length > 0) {
+      const seleccione: IDropdownProps = { name: "Seleccione", value: null };
+      const dataSelect = data.find(
+        (item) => item.name === seleccione.name && item.value === seleccione.value
+      );
+      if (!dataSelect) data.unshift(seleccione);
+      setSelectData(data)
+    }
+    else if (promiseData) {
+      promiseData.then(response => {
+        const dataRes = response;
+        const seleccione: IDropdownProps = { name: "Seleccione", value: null };
+        const dataSelect = dataRes.find(
+          (item) => item.name === seleccione.name && item.value === seleccione.value
+        );
+        if (!dataSelect) dataRes.unshift(seleccione);
+        dataRes.unshift()
+        setSelectData(dataRes);
+      }).catch(() => { });
+    }
+  }, [data, promiseData]);
+
 
   const messageError = () => {
     const keysError = idInput.split(".");
@@ -96,9 +115,9 @@ export function SelectComponent({
           render={({ field }) => (
             <Dropdown
               id={field.name}
-              value={data ? data.find((row) => row.value === field.value)?.value : null}
+              value={selectData ? selectData.find((row) => row.value === field.value)?.value : null}
               onChange={(e) => field.onChange(e.value)}
-              options={data}
+              options={selectData}
               optionLabel="name"
               placeholder={placeholder}
               className={`${className} ${tooltip && "tooltip-select"} ${messageError() ? "p-invalid" : ""}`}

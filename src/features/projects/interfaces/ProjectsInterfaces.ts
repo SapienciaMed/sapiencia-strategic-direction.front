@@ -65,6 +65,46 @@ export interface IActorsForm {
     actors?: IParticipatingActors[];
 }
 
+
+export interface IDemographicCharacteristics{
+    id?:number;
+    clasification?:number;
+    detail?:number;
+    numPerson?:number;
+    InfoSource?:string;
+}
+
+
+export interface IPoblationForm{
+    objectivePeople:string;
+    informationSource:string;
+    region:number;
+    departament:number;
+    district:number;
+    shelter:string;
+    demographic:IDemographicCharacteristics[];
+}
+
+
+export interface IDemographicCharacteristics{
+    id?:number;
+    clasification?:number;
+    detail?:number;
+    numPerson?:number;
+    InfoSource?:string;
+}
+
+
+export interface IPoblationForm{
+    objectivePeople:string;
+    informationSource:string;
+    region:number;
+    departament:number;
+    district:number;
+    shelter:string;
+    demographic:IDemographicCharacteristics[];
+}
+
 export interface IEstatesService {
     id?: number;
     description: string;
@@ -92,7 +132,9 @@ export interface IProjectTemp {
         problemDescription?: IProblemDescriptionForm;
         planDevelopment?: IPlanDevelopmentForm;
         objectives?: IObjectivesForm;
-        actors?: IActorsForm;
+        actors?:IActorsForm;
+        poblation?:IPoblationForm;
+        
     };
     preparation?: {
         needs?: INeedsForm
