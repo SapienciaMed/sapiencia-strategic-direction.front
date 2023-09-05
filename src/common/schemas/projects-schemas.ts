@@ -195,10 +195,14 @@ export const poblationValidator = yup.object({
     shelter:yup
     .string()
     .max(100, "Solo se permiten 100 caracteres"),
-    clasification:yup
-    .string()
-    .required("Debe seleccionar una opción"),
-    detail:yup
-    .string()
-    .required("Debe seleccionar una opción"),
+    demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
+        yup.object(({
+            clasification:yup
+            .string()
+            .required("Debe seleccionar una opción"),
+            detail:yup
+            .string()
+            .required("Debe seleccionar una opción"),
+        }))
+    ),
 })

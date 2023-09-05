@@ -8,7 +8,7 @@ import ObjectivesComponent from "../components/objectives.component";
 import ActorCreateComponent from "../components/actor-create.component";
 import PoblationComponent from "../components/poblation-component";
 
-import { actorsValidator, objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
+import { actorsValidator, objectivesValidator, planDevelopmentValidator, poblationValidator, problemDescriptionValidator } from "../../../common/schemas";
 
 
 
@@ -69,9 +69,11 @@ function IdentificationPage(): React.JSX.Element {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
+                        poblationValidator.validate(projectData?.identification?.poblation).then(() => {
                         disableAccordions([]);
                         setDisableContinue(false);
                         setActionContinue(() => nextStep);
+                        })
                     }).catch(() => {
                         disableAccordions([5]);
                     })
