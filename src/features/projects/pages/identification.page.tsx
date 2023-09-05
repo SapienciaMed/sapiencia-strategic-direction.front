@@ -6,8 +6,11 @@ import { ProjectsContext } from "../contexts/projects.context";
 import PlanDevelopmentComponent from "../components/plan-development.component";
 import ObjectivesComponent from "../components/objectives.component";
 import ActorCreateComponent from "../components/actor-create.component";
+import PoblationComponent from "../components/poblation-component";
 
 import { actorsValidator, objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
+
+
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -55,7 +58,7 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 5,
             name: "Población",
-            content: <p>{JSON.stringify(projectData)}</p>
+            content: <PoblationComponent disableNext={() => { disableAccordions([]) }} enableNext={() => { enableAccordions([]) }}/>
         },
     ]
     const nextStep = () => {
