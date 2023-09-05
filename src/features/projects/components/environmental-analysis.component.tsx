@@ -292,7 +292,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
   const [levels, setLevels] = useState<IDropdownProps[]>([]);
   const [types, setTypes] = useState<IDropdownProps[]>([]);
   const [ratings, setRatings] = useState<IDropdownProps[]>([]);
-  const { get } = useCrudService('http://127.0.0.1:4206');
+  const { get } = useCrudService(process.env.urlApiStrategicDirection);
 
   useEffect(() => {
     get<any>('/api/v1/impact-level').then(response => {

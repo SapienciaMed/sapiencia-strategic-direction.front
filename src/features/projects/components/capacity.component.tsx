@@ -17,7 +17,7 @@ interface IProps {
 export function CapacityComponent({ disableNext, enableNext, }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-  const { get } = useCrudService('http://127.0.0.1:4206');
+  const { get } = useCrudService(process.env.urlApiStrategicDirection);
   const {
     control,
     register,
