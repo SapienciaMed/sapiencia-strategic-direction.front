@@ -25,8 +25,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                         <div className="mobile-actions">
                             <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
-                                    title: "",
-                                    description: "Desea cancelar la acción, no se guardarán los datos",
+                                    title: "Cancelar creación de proyecto",
+                                    description: "¿Desea cancelar la creación? No se guardarán los datos",
                                     show: true,
                                     background: true,
                                     cancelTitle: "Continuar",
@@ -47,7 +47,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 value={textContinue || "Continuar"}
                                 className="button-main huge hover-three"
                                 type="button"
-                                action={actionContinue || (() => {})}
+                                action={actionContinue || (() => { })}
                                 disabled={disableContinue}
                             />
                         </div>
@@ -67,8 +67,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                 <div className="buttons-bot">
                     <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
-                            title: "",
-                            description: "Desea cancelar la acción, no se guardarán los datos",
+                            title: "Cancelar creación de proyecto",
+                            description: "¿Desea cancelar la creación? No se guardarán los datos",
                             show: true,
                             background: true,
                             cancelTitle: "Continuar",
@@ -77,7 +77,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                if(projectData.id) {
+                                if (projectData.id) {
                                     DeleteProject(projectData.id);
                                 }
                                 navigate('./../');
@@ -91,7 +91,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         className="button-main huge hover-three button-save"
                         value={textContinue || "Continuar"}
                         type="button"
-                        action={actionContinue || (() => {})}
+                        action={actionContinue || (() => { })}
                         disabled={disableContinue}
                     />
                 </div>
