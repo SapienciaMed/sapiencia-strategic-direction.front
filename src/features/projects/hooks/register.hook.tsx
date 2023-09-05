@@ -5,6 +5,8 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { IRegisterForm } from "../interfaces/ProjectsInterfaces";
 import { registerValidator } from "../../../common/schemas";
 import { ProjectsContext } from "../contexts/projects.context";
+import { ITableElement } from "../../../common/interfaces/table.interfaces";
+import { IFfectForm } from "../interfaces/EnvironmentalAnalysisInterfaces";
 
 
 export function useRegisterData() {
@@ -41,6 +43,29 @@ export function useRegisterData() {
             name: "Dependencia 2",
             value: 2,
         }
+    ];
+
+    const effectsColumns: ITableElement<IFfectForm>[] = [
+        {
+            fieldName: "type",
+            header: "Tipo de impacto",
+        },
+        {
+            fieldName: "impact",
+            header: "Impacto",
+        },
+        {
+            fieldName: "level",
+            header: "Nivel de impacto",
+        },
+        {
+            fieldName: "classification",
+            header: "Clasificación",
+        },
+        {
+            fieldName: "measures",
+            header: "Medidas de mitigación",
+        },
     ];
 
     const resolver = useYupValidationResolver(registerValidator);
@@ -106,5 +131,5 @@ export function useRegisterData() {
     }, [projectData]);
 
 
-    return { register, errors, controlRegister, onSubmit, processData, DependecyData, localitationData , watchDateFrom};
+    return { register, errors, controlRegister, onSubmit, processData, DependecyData, localitationData , watchDateFrom, effectsColumns };
 }

@@ -1,5 +1,3 @@
-import { ITableElement } from "../../../common/interfaces/table.interfaces";
-
 export interface IRegisterForm {
     id?: string;
     diagnosis: string;
@@ -35,25 +33,4 @@ export interface IProjectTemp {
     register?: IRegisterForm;
 }
 
-export const effectsColumns: ITableElement<IFfectForm>[] = [
-    {
-        fieldName: "type",
-        header: "Tipo de impacto",
-    },
-    {
-        fieldName: "impact",
-        header: "Impacto",
-    },
-    {
-        fieldName: "level",
-        header: "Nivel de impacto",
-    },
-    {
-        fieldName: "classification",
-        header: "Clasificación",
-    },
-    {
-        fieldName: "measures",
-        header: "Medidas de mitigación",
-    },
-];
+

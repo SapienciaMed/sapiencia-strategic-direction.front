@@ -1,17 +1,16 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { FormComponent, SelectComponent, TextAreaComponent, } from "../../../common/components/Form";
 import { Controller, UseFormHandleSubmit, useForm } from "react-hook-form";
-import { IEnvironmentAnalysisForm, IFfectForm, effectsColumns } from "../interfaces/EnvironmentalAnalysisInterfaces";
+import { IEnvironmentAnalysisForm, IFfectForm } from "../interfaces/EnvironmentalAnalysisInterfaces";
 import addIcon from '../../../public/images/icons/icon-add.png';
 import TableExpansibleComponent from "./table-expansible.component";
 import { ITableAction } from "../../../common/interfaces/table.interfaces";
 import { AppContext } from "../../../common/contexts/app.context";
 import { EDirection } from "../../../common/constants/input.enum";
 import useCrudService from "../../../common/hooks/crud-service.hook";
-import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { effectsValidator } from "../../../common/schemas";
 import { EResponseCodes } from "../../../common/constants/api.enum";
+import { useRegisterData } from "../hooks/register.hook";
 
 interface IProps {
   disableNext: () => void;
@@ -19,7 +18,7 @@ interface IProps {
 }
 
 export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
-
+  const { effectsColumns } = useRegisterData();
   const {
     control,
     register,
@@ -64,9 +63,11 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           OkTitle: "Aceptar",
           cancelTitle: "Cancelar",
           onOk: () => {
+            console.log('data.............', 12312312312312)
             if (EffectCreateComponentRef.current) {
               EffectCreateComponentRef.current.handleSubmit(
                 (data: IFfectForm) => {
+                  console.log('data.............', data)
                   setMessage({
                     title: "Guardar efecto ambiental",
                     description: "¿Desea guardar el efecto ambiental?",
@@ -321,13 +322,12 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
     })
   }, []);
 
-  const resolver = useYupValidationResolver(effectsValidator);
   const {
     handleSubmit,
     register,
     formState: { errors },
     control,
-  } = useForm<IFfectForm>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
+  } = useForm<IFfectForm>({ mode: "all", defaultValues: item ? {...item} : {} });
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,
