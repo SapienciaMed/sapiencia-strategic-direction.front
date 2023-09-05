@@ -106,13 +106,12 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                     background: true,
                     OkTitle: "Aceptar",
                     onOk: () => {
-                      console.log(data)
                       effects[effects.findIndex(e => e.id === row.id)] = {
                         id: row.id,
-                        type: data.type === '' ? '/' : types.find((type) => type.value === data.type ).name,
+                        type: data.type === '' ? '/' : types.find((type) => type.value === data.type)?.name,
                         impact: data.impact === '' ? '/' : data.impact,
-                        level: data.level === '' ? '/' : levels.find((level) => level.value === data.level).name,
-                        classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value === data.classification).name,
+                        level: data.level === '' ? '/' : levels.find((level) => level.value === data.level)?.name,
+                        classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value === data.classification)?.name,
                         measures: data.measures === '' ? '/' : data.measures
                       };
                       setEffects(effects);
@@ -244,14 +243,12 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                           background: true,
                           OkTitle: "Aceptar",
                           onOk: () => {
-                            console.log('data..........', data);
-                            console.log('data..........', types.find((type) => type.value == data.type).name);
                             effects.push({
                               id: Array.from({ length: 10 }, () => String.fromCharCode(Math.floor(Math.random() * 26) + 97)).join(''),
-                              type: data.type === '' ? '/' : types.find((type) => type.value == data.type).name,
+                              type: data.type === '' ? '/' : types.find((type) => type.value == data.type)?.name,
                               impact: data.impact === '' ? '/' : data.impact,
-                              level: data.level === '' ? '/' : levels.find((level) => level.value == data.level).name,
-                              classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value == data.classification).name,
+                              level: data.level === '' ? '/' : levels.find((level) => level.value == data.level)?.name,
+                              classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value == data.classification)?.name,
                               measures: data.measures === '' ? '/' : data.measures
                             });
                             setEffects(effects);
