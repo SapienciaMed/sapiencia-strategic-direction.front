@@ -176,4 +176,29 @@ export const needsObjectivesValidator = yup.object({
     ),
 });
 
-
+export const poblationValidator = yup.object({
+    objectivePeople : yup 
+    .string()
+    .required("El campo es obligatorio"),
+    informationSource: yup  
+    .string()
+    .required("El campo es obligatorio"),
+    region: yup
+    .string()
+    .required("Debe seleccionar una opción"),
+    departament: yup  
+    .string()
+    .required("Debe seleccionar una opción"),
+    district: yup  
+    .string()
+    .required("Debe seleccionar una opción"),
+    shelter:yup
+    .string()
+    .max(100, "Solo se permiten 100 caracteres"),
+    clasification:yup
+    .string()
+    .required("Debe seleccionar una opción"),
+    detail:yup
+    .string()
+    .required("Debe seleccionar una opción"),
+})
