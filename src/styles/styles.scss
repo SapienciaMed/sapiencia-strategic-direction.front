@@ -85,8 +85,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
 .poblation-container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr;
     padding: 1rem 0px;
     row-gap: 1rem;
     column-gap: 1rem;
@@ -94,8 +94,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
 .poblation-container-2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr;
     padding: 1rem 0px;
     row-gap: 1rem;
     column-gap: 1rem;
@@ -103,20 +103,25 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
 .poblation-container-3 {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: 1fr;
     padding: 1rem 0px;
     row-gap: 1rem;
     column-gap: 1rem;
     .grid-span-4-columns {
-        grid-column: span 4;
+        grid-column: span 0;
       }
     .div-acciones{
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        align-content: center;
+        display: none;
     }
+  }
+
+  
+  .div-acciones-mobile{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
   }
 
 
@@ -440,6 +445,47 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         row-gap: 1rem;
         column-gap: 1rem;
     }
+
+    .poblation-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+.poblation-container-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+.poblation-container-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+    .grid-span-4-columns {
+        grid-column: span 4;
+      }
+    .div-acciones{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+  }
+
+  
+  .div-acciones-mobile{
+    display: none;
+  }
 
 
     .project-dates-container {
