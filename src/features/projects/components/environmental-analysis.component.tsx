@@ -7,9 +7,11 @@ import TableExpansibleComponent from "./table-expansible.component";
 import { ITableAction } from "../../../common/interfaces/table.interfaces";
 import { AppContext } from "../../../common/contexts/app.context";
 import { EDirection } from "../../../common/constants/input.enum";
+import useCrudService from "../../../common/hooks/crud-service.hook";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { effectsValidator } from "../../../common/schemas";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 interface IProps {
   disableNext: () => void;
@@ -17,6 +19,7 @@ interface IProps {
 }
 
 export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
+
   const {
     control,
     register,
@@ -36,9 +39,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
     }
   }, [isValid]);
 
-  useEffect(() => {
-  }, []);
-
+  
   const EffectsActions: ITableAction<IFfectForm>[] = [
     {
       icon: "Edit",
@@ -288,16 +289,38 @@ interface IPropsEffectssForm {
 
 const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) => {
   const { item } = props;
-  const positionData: IDropdownProps[] = [
-    {
-      name: "Posición 1",
-      value: "1",
-    },
-    {
-      name: " Posición 2",
-      value: "2",
-    },
-  ];
+  const [levels, setLevels] = useState<IDropdownProps[]>([]);
+  const [types, setTypes] = useState<IDropdownProps[]>([]);
+  const [ratings, setRatings] = useState<IDropdownProps[]>([]);
+  const { get } = useCrudService('http://127.0.0.1:4206');
+
+  useEffect(() => {
+    get<any>('/api/v1/impact-level').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setLevels(data);
+      }
+    })
+    get<any>('/api/v1/impact-type').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setTypes(data);
+      }
+    })
+    get<any>('/api/v1/impact-rating').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setRatings(data);
+      }
+    })
+  }, []);
+
   const resolver = useYupValidationResolver(effectsValidator);
   const {
     handleSubmit,
@@ -328,7 +351,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Tipo de impacto"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
-                data={positionData}
+                data={types}
               />
             );
           }}
@@ -375,7 +398,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Clasificación"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
-                data={positionData}
+                data={ratings}
               />
             );
           }}
@@ -395,7 +418,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Nivel de impacto"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
-                data={positionData}
+                data={levels}
               />
             );
           }}

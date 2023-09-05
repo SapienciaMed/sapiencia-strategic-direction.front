@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent, } from "../../../common/components/Form";
 import { EDirection } from "../../../common/constants/input.enum";
 import { Controller, useForm } from "react-hook-form";
 import { ICapacityForm, } from "../interfaces/CapacityInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
+import useCrudService from "../../../common/hooks/crud-service.hook";
 import { capacityValidator } from "../../../common/schemas/projects-schemas";
+import { EResponseCodes } from "../../../common/constants/api.enum";
+import { IDropdownProps } from "../../../common/interfaces/select.interface";
 
 interface IProps {
   disableNext: () => void;
@@ -13,6 +16,8 @@ interface IProps {
 
 export function CapacityComponent({ disableNext, enableNext, }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
+  const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
+  const { get } = useCrudService('http://127.0.0.1:4206');
   const {
     control,
     register,
@@ -31,7 +36,16 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
   }, [isValid]);
 
   useEffect(() => {
+    get<any>('/api/v1/measurement-capacity').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setMeasurementData(data);
+      }
+    })
   }, []);
+
 
   return (
     <div className="full-height capacity-page">
@@ -88,16 +102,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
                 classNameLabel="text-black big bold text-required"
                 direction={EDirection.column}
                 placeholder="Seleccionar"
-                data={[
-                  {
-                    name: "Proceso 1",
-                    value: "1",
-                  },
-                  {
-                    name: "Proceso 2",
-                    value: "2",
-                  }
-                ]}
+                data={measurementData}
               />
 
             </div>
