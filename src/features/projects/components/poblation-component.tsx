@@ -1,19 +1,14 @@
 import React, {
-  forwardRef,
   useContext,
   useEffect,
-  useImperativeHandle,
-  useRef,
   useState,
 } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import {
-  actorsFormValidator,
   actorsValidator
 } from "../../../common/schemas";
 import {
   Controller,
-  UseFormHandleSubmit,
   useFieldArray,
   useForm,
   useWatch,
@@ -24,21 +19,14 @@ import {
   SelectComponent,
   TextAreaComponent,
 } from "../../../common/components/Form";
-import TableExpansibleComponent from "./table-expansible.component";
 import {
-  ITableAction,
-  ITableElement,
 } from "../../../common/interfaces/table.interfaces";
 import {
-  IDemographicCharacteristics,
   IPoblationForm
 } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { AppContext } from "../../../common/contexts/app.context";
-import { EDirection } from "../../../common/constants/input.enum";
 import { ProjectsContext } from "../contexts/projects.context";
-import identificationPage from "../pages/identification.page";
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { FaTrashAlt } from "react-icons/fa";
@@ -52,23 +40,18 @@ export function PoblationComponent({
   disableNext,
   enableNext,
 }: IProps): React.JSX.Element {
-  const PoblationComponentRef = useRef(null);
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [departamentData, setDepartamentData] = useState<IDropdownProps[]>([]);
   const [districtData, setDistrictData] = useState<IDropdownProps[]>([]);
   const { setProjectData, projectData } = useContext(ProjectsContext);
-  const [fieldValues, setFieldValues] = useState([]);
-  const { setMessage } = useContext(AppContext);
   const resolver = useYupValidationResolver(actorsValidator);
-  const { getListByParent, getListByGroupers, getListByGrouper } = useGenericListService();
+  const { getListByGrouper } = useGenericListService();
 
   const {
     getValues,
-    setValue,
     formState: { errors, isValid },
     watch,
-    trigger,
     register,
     control
   } = useForm<IPoblationForm>({
@@ -160,8 +143,6 @@ export function PoblationComponent({
   }, []);
 
   useEffect(() => {
-    const generos = getValues("demographic");
-
     getListByGrouper("MUNICIPIOS").then(response => {
       if (response.operation.code === EResponseCodes.OK) {
         const data: IDropdownProps[] = response.data.map(data => {
@@ -195,7 +176,6 @@ export function PoblationComponent({
     if(!clasificationSelected) return [];
     const response = await getListByGrouper(Reflect.get(clasificationActions, clasificationSelected))
     if (response.operation.code === EResponseCodes.OK) {
-      debugger
       const data: IDropdownProps[] = response.data.map(data => {
         return { name: data.itemDescription, value: data.itemCode }
       });

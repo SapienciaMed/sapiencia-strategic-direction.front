@@ -44,21 +44,21 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Actores participantes",
-            content: <ActorCreateComponent
+            content: <ActorCreateComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+        },
+        {
+            id: 5,
+            name: "Población",
+            content: <PoblationComponent
                 disableNext={() => {
                     setDisableContinue(true);
-                    setActionContinue(() => {});
+                    setActionContinue(() => { });
                 }}
                 enableNext={() => {
                     setDisableContinue(false);
                     setActionContinue(() => nextStep);
                 }}
             />
-        },
-        {
-            id: 5,
-            name: "Población",
-            content: <PoblationComponent disableNext={() => { disableAccordions([]) }} enableNext={() => { enableAccordions([]) }}/>
         },
     ]
     const nextStep = () => {
@@ -68,9 +68,8 @@ function IdentificationPage(): React.JSX.Element {
         planDevelopmentValidator.validate(projectData?.identification?.planDevelopment).then(() => {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
-                    
-                    console.log("a")
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
+                        disableAccordions([]);
                         //agregar validacion siguiente tab
                         setDisableContinue(false);
                         setActionContinue(() => nextStep);
