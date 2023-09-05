@@ -252,13 +252,13 @@ interface IPropsNeedsObjectives {
 function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjectives) {
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsObjectivesValidator);
-    const { projectData, setActionContinue, setTextContinue, setActionCancel } = useContext(ProjectsContext);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
     const {
         control,
         register,
         setValue,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
         watch,
     } = useForm<INeedObjetive>({
         resolver, mode: "all", defaultValues: {
@@ -278,6 +278,9 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
             setForm(null);
         }
     }, []);
+    useEffect(() => {
+        setDisableContinue(!isValid);
+    }, [isValid]);
     const objectiveSelect = watch("objectiveSelect");
     const newObjectives = item ? projectData.identification.problemDescription.causes.filter(cause => !projectData?.preparation?.needs?.objetives ? null : !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive)).concat(item?.objetive).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive)) : projectData.identification.problemDescription.causes.filter(cause => !projectData?.preparation?.needs?.objetives ? null : !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive));
     const getValObj = projectData?.preparation?.needs?.objetives?.length > 0 ? newObjectives : projectData.identification.problemDescription.causes;
@@ -312,6 +315,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                         setActionCancel(null);
                         setActionContinue(null);
                         setMessage({});
+                        setDisableContinue(true);
                     }
                 })
             }
@@ -325,7 +329,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
     }, [objectiveSelect]);
     return (
         <FormComponent action={undefined} className="card-table">
-            <p className="text-black large bold">Agregar Objetivo</p>
+            <p className="text-black large bold">{item ? "Editar Objetivo" : "Agregar Objetivo"}</p>
             <div className="problem-description-container">
                 <SelectComponent
                     control={control}
@@ -410,7 +414,23 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                     >
                                         <label className="label-max-textarea">Max 300 caracteres</label>
                                     </TextAreaComponent>
-                                    <div onClick={() => { remove(index) }} className="actions-needs">
+                                    <div onClick={() => {
+                                        setMessage({
+                                            title: "Eliminar registro",
+                                            description: "¿Desea continuar?",
+                                            show: true,
+                                            background: true,
+                                            OkTitle: "Aceptar",
+                                            cancelTitle: "Cancelar",
+                                            onOk: () => {
+                                                remove(index);
+                                                setMessage({});
+                                            },
+                                            onCancel: () => {
+                                                setMessage({});
+                                            }
+                                        })
+                                    }} className="actions-needs">
                                         <FaTrashAlt className="button grid-button button-delete" />
                                     </div>
                                 </div>

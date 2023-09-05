@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
@@ -8,7 +8,7 @@ import EnvironmentalAnalysisComponent from "../components/environmental-analysis
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
-    const {} = useContext(ProjectsContext);
+    const { setDisableContinue } = useContext(ProjectsContext);
     const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
@@ -29,7 +29,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 2,
             name: "Necesidades",
-            content: <NeedsComponent disableNext={() => {disableAccordions([3])}} enableNext={() => {enableAccordions([3])}} setForm={setPlaneFormComponent} />
+            content: <NeedsComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />
         },
         {
             id: 3,
@@ -52,14 +52,17 @@ function PreparationPage(): React.JSX.Element {
             content: <>Aqui va tu componente</>
         },
     ];
+    useEffect(() => {
+        setDisableContinue(true);
+    }, []);
     return (
         <div>
             {PlaneFormComponent}
-            <div style={{display: PlaneFormComponent ? "none" : "block"}}>
-                <AccordionsComponent data={accordionsData} ref={accordionsComponentRef}/>
+            <div style={{ display: PlaneFormComponent ? "none" : "block" }}>
+                <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
             </div>
         </div>
-        
+
     )
 }
 
