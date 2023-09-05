@@ -27,4 +27,8 @@ export interface IGenericList {
   parentItemCode?: string;
 }
 
-
+export interface IAdditionalField {
+  grouper: string;
+  parentItemCode: string;
+  fieldName: string;
+}
