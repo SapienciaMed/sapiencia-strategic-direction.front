@@ -30,7 +30,7 @@ export interface IObjectivesForm {
 }
 
 export interface IRegisterForm {
-    bpin?: number;
+    bpin?: string;
     project?: string;
     dateFrom?: string;
     dateTo?: string;
@@ -147,7 +147,7 @@ export interface IProject {
     id: number;
     user: string;
     status: boolean;
-    bpin: number | null;
+    bpin: string | null;
     project: string | null;
     dateFrom: string | null;
     dateTo: string | null;

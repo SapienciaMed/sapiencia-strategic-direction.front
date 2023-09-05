@@ -11,25 +11,65 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue } = useContext(ProjectsContext);
+    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
-        { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(0)} },
-        { id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {setStep(1)} },
-        { id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {setStep(2)} },
-        { id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {setStep(3)} },
-        { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {setStep(4)} }
+        {
+            id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {
+                setStep(0);
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        },
+        {
+            id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {
+                setStep(1)
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        },
+        {
+            id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {
+                setStep(2)
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        },
+        {
+            id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {
+                setStep(3)
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        },
+        {
+            id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {
+                setStep(4)
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        }
     ];
     useEffect(() => {
         if (tabsComponentRef.current) {
-            tabsComponentRef.current.disableTabs(["identification","programming", "preparation", "transfer"]);
+            tabsComponentRef.current.disableTabs(["identification", "programming", "preparation", "transfer"]);
         }
     }, []);
     useEffect(() => {
-        if(authorization?.user?.numberDocument) GetProjectByUser(authorization.user.numberDocument).then((response => {
-            if(response.operation.code === EResponseCodes.OK) {
+        if (authorization?.user?.numberDocument) GetProjectByUser(authorization.user.numberDocument).then((response => {
+            if (response.operation.code === EResponseCodes.OK) {
                 const projectDataResponse = response.data;
                 setProjectData({
                     id: projectDataResponse.id,
@@ -80,7 +120,7 @@ export function useProjectsCrudData() {
             } else {
                 setMessage({
                     title: "No se pudo cargar el proyecto",
-                    description:<p className="text-primary biggest">{response.operation.message}</p>,
+                    description: <p className="text-primary biggest">{response.operation.message}</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
@@ -95,7 +135,7 @@ export function useProjectsCrudData() {
         })).catch((error) => {
             setMessage({
                 title: "Error peticion proyecto",
-                description:<p className="text-primary biggest">{error}</p>,
+                description: <p className="text-primary biggest">{error}</p>,
                 background: true,
                 show: true,
                 OkTitle: "Cerrar",
@@ -109,7 +149,7 @@ export function useProjectsCrudData() {
         });
     }, [authorization])
     useEffect(() => {
-        if(step) {
+        if (step) {
             if (tabsComponentRef.current) {
                 tabsComponentRef.current.enableTabs(tabs[step].id);
                 tabsComponentRef.current.goToTab(tabs[step].id);
@@ -117,13 +157,13 @@ export function useProjectsCrudData() {
         }
     }, [step]);
     const onSaveTemp = async () => {
-        if(projectData?.id) {
-            const data = {...projectData, user: authorization.user.numberDocument, status: false};
+        if (projectData?.id) {
+            const data = { ...projectData, user: authorization.user.numberDocument, status: false };
             const res = await UpdateProject(projectData.id, data);
-            if(res.operation.code === EResponseCodes.OK) {
+            if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
-                    description:<p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                    description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
@@ -137,7 +177,7 @@ export function useProjectsCrudData() {
             } else {
                 setMessage({
                     title: "Ocurrio un problema...",
-                    description:<p className="text-primary biggest">{res.operation.message}</p>,
+                    description: <p className="text-primary biggest">{res.operation.message}</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
@@ -150,15 +190,15 @@ export function useProjectsCrudData() {
                 });
             }
         } else {
-            const data = {...projectData, user: authorization.user.numberDocument, status: false};
+            const data = { ...projectData, user: authorization.user.numberDocument, status: false };
             const res = await CreateProject(data);
             setProjectData(prev => {
-                return {...prev, id: res.data.id}
+                return { ...prev, id: res.data.id }
             });
-            if(res.operation.code === EResponseCodes.OK) {
+            if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
-                    description:<p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                    description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
@@ -172,7 +212,7 @@ export function useProjectsCrudData() {
             } else {
                 setMessage({
                     title: "Ocurrio un problema...",
-                    description:<p className="text-primary biggest">{res.operation.message}</p>,
+                    description: <p className="text-primary biggest">{res.operation.message}</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
@@ -185,7 +225,7 @@ export function useProjectsCrudData() {
                 });
             }
         }
-        
+
     }
 
     return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData }

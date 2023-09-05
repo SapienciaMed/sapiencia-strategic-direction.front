@@ -3,9 +3,8 @@ import * as yup from "yup";
 export const registerValidator = yup.object({
     bpin: yup
         .string()
-        .matches(/^[0-9]+$/, "Solo se permiten números")
-        .max(20, "Solo se permiten 20 caracteres")
-        .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
+        .test('len', "Solo se permiten 20 caracteres", val => val.length <= 20),
     project: yup
         .string()
         .required("El campo es obligatorio")
@@ -59,6 +58,14 @@ export const problemDescriptionValidator = yup.object({
 });
 
 export const effectsValidator = yup.object({
+    consecutive: yup.string().required("El campo es obligatorio"),
+    description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
+    childrens: yup.array().required("El efecto directo debe tener mínimo un efecto indirecto agregado").min(1, "El efecto directo debe tener mínimo un efecto indirecto agregado").of(
+        yup.object().shape({
+            consecutive: yup.string().required("El campo es obligatorio"),
+            description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
+        })
+    ),
 });
 
 export const causesValidator = yup.object({

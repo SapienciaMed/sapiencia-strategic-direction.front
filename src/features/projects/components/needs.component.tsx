@@ -273,6 +273,11 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
         control,
         name: "estatesService",
     });
+    useEffect(() => {
+        return () => {
+            setForm(null);
+        }
+    }, []);
     const objectiveSelect = watch("objectiveSelect");
     const newObjectives = item ? projectData.identification.problemDescription.causes.filter(cause => !projectData?.preparation?.needs?.objetives ? null : !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive)).concat(item?.objetive).sort((a, b) => parseInt(a.consecutive) - parseInt(b.consecutive)) : projectData.identification.problemDescription.causes.filter(cause => !projectData?.preparation?.needs?.objetives ? null : !projectData.preparation.needs.objetives.some(obj => cause.consecutive === obj.objetive.consecutive));
     const getValObj = projectData?.preparation?.needs?.objetives?.length > 0 ? newObjectives : projectData.identification.problemDescription.causes;
