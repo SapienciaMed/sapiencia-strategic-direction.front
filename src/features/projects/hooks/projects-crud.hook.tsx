@@ -12,8 +12,8 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
     const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue } = useContext(ProjectsContext);
-    const { setMessage } = useContext(AppContext);
-    const { CreateProject, GetProject, UpdateProject, DeleteProject } = useProjectsService();
+    const { setMessage, authorization } = useContext(AppContext);
+    const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
         { id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {setStep(0)} },
@@ -23,31 +23,35 @@ export function useProjectsCrudData() {
         { id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {setStep(4)} }
     ];
     useEffect(() => {
-        GetProject(15).then((response => {
+        if (tabsComponentRef.current) {
+            tabsComponentRef.current.disableTabs(["identification","programming", "preparation", "transfer"]);
+        }
+    }, []);
+    useEffect(() => {
+        if(authorization?.user?.numberDocument) GetProjectByUser(authorization.user.numberDocument).then((response => {
             if(response.operation.code === EResponseCodes.OK) {
                 const projectDataResponse = response.data;
                 setProjectData({
                     id: projectDataResponse.id,
+                    status: projectDataResponse.status,
+                    user: projectDataResponse.user,
                     register: {
                         bpin: projectDataResponse.bpin,
                         project: projectDataResponse.project,
-                        dateFrom: projectDataResponse.dateFrom,
-                        dateTo: projectDataResponse.dateTo,
+                        dateFrom: projectDataResponse.dateFrom.toString(),
+                        dateTo: projectDataResponse.dateTo.toString(),
                         process: projectDataResponse.process,
                         dependency: projectDataResponse.dependency,
-
-                        //CAMBIO: Poner los valores del objeto
-                        object: "FALTA EN BD",
-                        localitation: 1
+                        object: projectDataResponse.object,
+                        localitation: projectDataResponse.localitation
                     },
                     identification: {
                         problemDescription: {
                             problemDescription: projectDataResponse.problemDescription,
                             magnitude: projectDataResponse.magnitude,
                             centerProblem: projectDataResponse.centerProblem,
-                            causes: [projectDataResponse.causes],
-                            //CAMBIO: descomentar efectos
-                            //effects: projectDataResponse.effects
+                            causes: projectDataResponse.causes,
+                            effects: projectDataResponse.effects
                         },
                         planDevelopment: {
                             pnd_pacto: projectDataResponse.pnd_pacto,
@@ -62,12 +66,14 @@ export function useProjectsCrudData() {
                         },
                         objectives: {
                             generalObjective: projectDataResponse.centerProblem,
-                            specificObjectives: [projectDataResponse.causes],
-                            //CAMBIO: descomentar efectos
-                            //purposes: [projectDataResponse.effects],
+                            specificObjectives: projectDataResponse.causes,
+                            purposes: projectDataResponse.effects,
                             indicators: projectDataResponse.indicators,
                             measurement: Number(projectDataResponse.measurement),
                             goal: projectDataResponse.goal
+                        },
+                        actors: {
+                            actors: projectDataResponse.actors
                         }
                     }
                 })
@@ -101,10 +107,7 @@ export function useProjectsCrudData() {
                 }
             });
         });
-        if (tabsComponentRef.current) {
-            tabsComponentRef.current.disableTabs(["identification","programming", "preparation", "transfer"]);
-        }
-    }, []);
+    }, [authorization])
     useEffect(() => {
         if(step) {
             if (tabsComponentRef.current) {
@@ -115,7 +118,8 @@ export function useProjectsCrudData() {
     }, [step]);
     const onSaveTemp = async () => {
         if(projectData?.id) {
-            const res = await UpdateProject(projectData.id, projectData);
+            const data = {...projectData, user: authorization.user.numberDocument, status: false};
+            const res = await UpdateProject(projectData.id, data);
             if(res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
@@ -146,7 +150,8 @@ export function useProjectsCrudData() {
                 });
             }
         } else {
-            const res = await CreateProject(projectData);
+            const data = {...projectData, user: authorization.user.numberDocument, status: false};
+            const res = await CreateProject(data);
             setProjectData(prev => {
                 return {...prev, id: res.data.id}
             });

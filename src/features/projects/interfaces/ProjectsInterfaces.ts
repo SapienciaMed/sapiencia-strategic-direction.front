@@ -57,7 +57,7 @@ export interface IParticipatingActors {
     id?: number;
     actor: string;
     expectation: string;
-    position: string;
+    position: number;
     contribution: string;
 }
 
@@ -87,6 +87,8 @@ export interface INeedsForm {
 
 export interface IProjectTemp {
     id?: number;
+    user: string;
+    status: boolean;
     register?: IRegisterForm;
     identification?: {
         problemDescription?: IProblemDescriptionForm;
@@ -101,12 +103,16 @@ export interface IProjectTemp {
 
 export interface IProject {
     id: number;
+    user: string;
+    status: boolean;
     bpin: number | null;
     project: string | null;
     dateFrom: string | null;
     dateTo: string | null;
     process: number | null;
+    localitation?: number;
     dependency: number | null;
+    object?: string;
     pnd_pacto: string | null;
     pnd_linea: string | null;
     pnd_programa: string | null;
@@ -120,10 +126,9 @@ export interface IProject {
     magnitude: string | null;
     centerProblem: string | null;
     indicators: string | null;
-    measurement: string | null;
+    measurement: number | null;
     goal: number | null;
-    causeId: number | null;
-    effectId: number | null;
-    causes: ICause | null;
-    effects: IEffect | null;
-}
+    causes: ICause[] | null;
+    effects: IEffect[] | null;
+    actors: IParticipatingActors[] | null;
+  }

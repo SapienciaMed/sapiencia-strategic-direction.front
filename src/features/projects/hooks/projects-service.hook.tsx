@@ -7,8 +7,8 @@ export function useProjectsService() {
     const projectsUrl: string = "/api/v1/project";
     const { get, post, put, deleted } = useCrudService(baseURL);
 
-    async function GetProject(id: number): Promise<ApiResponse<IProject>> {
-        const endpoint: string = `/get-by-id/${id}`;
+    async function GetProjectByUser(user: string): Promise<ApiResponse<IProject>> {
+        const endpoint: string = `/get-by-user/${user}`;
         return get(`${projectsUrl}${endpoint}`);
     }
 
@@ -30,5 +30,5 @@ export function useProjectsService() {
         return deleted(`${projectsUrl}${endpoint}`);
     }
 
-    return { GetProject, CreateProject, UpdateProject, DeleteProject }
+    return { GetProjectByUser, CreateProject, UpdateProject, DeleteProject }
 }
