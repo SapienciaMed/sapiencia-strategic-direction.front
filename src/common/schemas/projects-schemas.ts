@@ -170,9 +170,9 @@ export const needsObjectivesValidator = yup.object({
     interventionActions: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
     quantification: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio").min(0, "El número tiene que ser positivo"),
     estatesService: yup.array().required("Debe haber al menos un bien y/o servicio").min(1, "Debe haber al menos un bien y/o servicio").of(
-        yup.object().shape({
+        yup.object(({
             description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-        })
+        }))
     ),
 });
 

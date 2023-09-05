@@ -5,7 +5,6 @@ import { LabelComponent } from "./label.component";
 import { Control, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { IDropdownProps } from "../../interfaces/select.interface";
-import { Tooltip } from "primereact/tooltip";
 
 interface ISelectProps<T> {
   idInput: string;
@@ -65,7 +64,7 @@ export function SelectComponent({
       if (!dataSelect) data.unshift(seleccione);
       setSelectData(data)
     }
-    else if (promiseData) {
+    else if (promiseData !== null) {
       promiseData.then(response => {
         const dataRes = response;
         const seleccione: IDropdownProps = { name: "Seleccione", value: null };
@@ -107,7 +106,6 @@ export function SelectComponent({
         idInput={idInput}
         classNameLabel={classNameLabel}
       />
-      <Tooltip target=".tooltip-select" mouseTrack mouseTrackLeft={10} />
       <div>
         <Controller
           name={idInput}
@@ -125,7 +123,7 @@ export function SelectComponent({
               filter={filter}
               emptyMessage={emptyMessage}
               emptyFilterMessage={emptyMessage}
-              data-pr-tooltip={data ? data.find((row) => row.value === field.value)?.name : null}
+              virtualScrollerOptions={{ itemSize: 38}}
             />
           )}
         />
