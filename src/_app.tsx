@@ -11,6 +11,7 @@ import { ProjectsContextProvider } from "./features/projects/contexts/projects.c
 
 function App() {
   const HomePage = lazy(() => import("./features/home/home.page"));
+  const TestPage = lazy(() => import("./features/home/test.page"));
   const ProjectsCrud = lazy(() => import("./features/projects/pages/projects-crud.page"));
   const { publish } = useAppCominicator();
 
@@ -31,6 +32,7 @@ function App() {
           <Suspense fallback={<p>Loading...</p>}>
             <Routes>
               <Route path={"/direccion-estrategica/*"} element={<HomePage />} />;
+              <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
               <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsContextProvider><ProjectsCrud /></ProjectsContextProvider>} />;
             </Routes>
           </Suspense>

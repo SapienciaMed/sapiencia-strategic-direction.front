@@ -29,12 +29,12 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 2,
             name: "Necesidades",
-            content: <NeedsComponent disableNext={() => {}} enableNext={() => {}} setForm={setPlaneFormComponent} />
+            content: <NeedsComponent disableNext={() => {disableAccordions([3])}} enableNext={() => {enableAccordions([3])}} setForm={setPlaneFormComponent} />
         },
         {
             id: 3,
             name: "Capacidad",
-            content: <CapacityComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
+            content: <CapacityComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} />
         },
         {
             id: 4,
@@ -54,9 +54,7 @@ function PreparationPage(): React.JSX.Element {
     ];
     return (
         <div>
-            <div>
-                {PlaneFormComponent}
-            </div>
+            {PlaneFormComponent}
             <div style={{display: PlaneFormComponent ? "none" : "block"}}>
                 <AccordionsComponent data={accordionsData} ref={accordionsComponentRef}/>
             </div>

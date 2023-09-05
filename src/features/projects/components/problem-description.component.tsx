@@ -106,6 +106,16 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                     return { ...prev, causes: newCauses };
                                 })
                                 setValue("causes", newCauses);
+                                if(projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
+                                    return {...prev, preparation: {...prev.preparation, needs: {...prev.preparation.needs, objetives: prev.preparation.needs.objetives.map((obj, index) => {
+                                        if(obj.objetive.consecutive === row.consecutive) {
+                                            return {...obj, objetive: data};
+                                        } else {
+                                            return obj;
+                                        }
+                                        
+                                    })}}};
+                                });
                                 setMessage({
                                     title: "Se editó exitosamente",
                                     description: "Se ha editado la causa exitosamente",
@@ -186,6 +196,12 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 return { ...prev, causes: newCauses };
                             })
                             setValue('causes', newCauses);
+                            //Solo si es en la creacion. No deberia aplicar si se esta editando
+                            if(projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
+                                return {...prev, preparation: {...prev.preparation, needs: {...prev.preparation.needs, objetives: prev.preparation.needs.objetives.filter(obj => obj.objetive.consecutive != row.consecutive).map((obj, index) => {
+                                    return {...obj, objetive: {...obj.objetive, consecutive: `${index + 1}`}};
+                                })}}};
+                            });
                         }
                         setMessage({});
                     }
@@ -338,14 +354,14 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             idInput={field.name}
                             value={`${field.value}`}
                             label="Descripción detallada del problema central, sus causas y efectos"
-                            classNameLabel="text-black big bold text-required"
+                            classNameLabel="text-black biggest bold text-required"
                             className="text-area-basic"
                             placeholder="Escribe aquí"
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
                         >
-                            <label className="label-max-texarea">Max 800 caracteres</label>
+                            <label className="label-max-textarea">Max 800 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}
@@ -361,14 +377,14 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             idInput={field.name}
                             value={`${field.value}`}
                             label="Magnitud del problema"
-                            classNameLabel="text-black big bold text-required"
+                            classNameLabel="text-black biggest bold text-required"
                             className="text-area-basic"
                             placeholder="Escribe aquí"
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
                         >
-                            <label className="label-max-texarea">Max 500 caracteres</label>
+                            <label className="label-max-textarea">Max 500 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}
@@ -384,25 +400,25 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             idInput={field.name}
                             value={`${field.value}`}
                             label="Problema central"
-                            classNameLabel="text-black big bold text-required"
+                            classNameLabel="text-black biggest bold text-required"
                             className="text-area-basic"
                             placeholder="Escribe aquí"
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
                         >
-                            <label className="label-max-texarea">Max 300 caracteres</label>
+                            <label className="label-max-textarea">Max 300 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}
             />
             <div>
                 <div className="title-area">
-                    <label className="text-black biggest bold">
+                    <label className="text-black large bold">
                         Listado de causas
                     </label>
 
-                    <div className="title-button text-main biggest" onClick={() => {
+                    <div className="title-button text-main large" onClick={() => {
                         setMessage({
                             title: "Agregar causas",
                             description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length + 1 : 1} />,
@@ -450,11 +466,11 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
             </div>
             <div>
                 <div className="title-area">
-                    <label className="text-black biggest bold">
+                    <label className="text-black large bold">
                         Listado de efectos
                     </label>
 
-                    <div className="title-button text-main biggest" onClick={() => {
+                    <div className="title-button text-main large" onClick={() => {
                         setMessage({
                             title: "Agregar efectos",
                             description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length + 1 : 1} />,

@@ -4,7 +4,7 @@ import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate } = useProjectsCrudData();
+    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData } = useProjectsCrudData();
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -14,16 +14,16 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </div>
                     <TabListComponent tabs={tabs} ref={tabsComponentRef} />
                     <div className="projects-footer-mobile mobile">
-                        <div className="save-temp">
+                        {!actionCancel && <div className="save-temp">
                             <ButtonComponent
                                 className="button-main huge hover-three button-save"
                                 value="Guardar temporalmente"
                                 type="button"
                                 action={onSaveTemp}
                             />
-                        </div>
+                        </div>}
                         <div className="mobile-actions">
-                            <span className="bold text-center button" onClick={() => {
+                            <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
                                     title: "",
                                     description: "Desea cancelar la acción, no se guardarán los datos",
@@ -40,14 +40,14 @@ function ProjectsCrudPage(): React.JSX.Element {
                                         setMessage({});
                                     }
                                 })
-                            }}>
+                            })}>
                                 Cancelar
                             </span>
                             <ButtonComponent
-                                value="Continuar"
+                                value={textContinue || "Continuar"}
                                 className="button-main huge hover-three"
                                 type="button"
-                                action={actionContinue}
+                                action={actionContinue || (() => {})}
                                 disabled={disableContinue}
                             />
                         </div>
@@ -56,14 +56,16 @@ function ProjectsCrudPage(): React.JSX.Element {
                 </div>
             </div>
             <div className="container-button-bot space-between">
-                <ButtonComponent
-                    className="button-main huge hover-three"
-                    value="Guardar temporalmente"
-                    type="button"
-                    action={onSaveTemp}
-                />
+                {actionCancel ? <div></div> :
+                    <ButtonComponent
+                        className="button-main huge hover-three"
+                        value="Guardar temporalmente"
+                        type="button"
+                        action={onSaveTemp}
+                    />
+                }
                 <div className="buttons-bot">
-                    <span className="bold text-center button" onClick={() => {
+                    <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
                             title: "",
                             description: "Desea cancelar la acción, no se guardarán los datos",
@@ -75,19 +77,21 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                localStorage.removeItem('create_project_data');
+                                if(projectData.id) {
+                                    DeleteProject(projectData.id);
+                                }
                                 navigate('./../');
                                 setMessage({});
                             }
                         })
-                    }}>
+                    })}>
                         Cancelar
                     </span>
                     <ButtonComponent
                         className="button-main huge hover-three button-save"
-                        value="Continuar"
+                        value={textContinue || "Continuar"}
                         type="button"
-                        action={actionContinue}
+                        action={actionContinue || (() => {})}
                         disabled={disableContinue}
                     />
                 </div>

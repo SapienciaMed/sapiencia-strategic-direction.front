@@ -293,11 +293,11 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
   const positionData: IDropdownProps[] = [
     {
       name: "Posición 1",
-      value: "1",
+      value: 1,
     },
     {
       name: " Posición 2",
-      value: "2",
+      value: 2,
     },
   ];
   const resolver = useYupValidationResolver(actorsFormValidator);
@@ -361,7 +361,7 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
       <Controller
         control={control}
         name={"position"}
-        defaultValue=""
+        defaultValue={null}
         render={({ field }) => {
           return (
             <SelectComponent

@@ -6,8 +6,11 @@ import { ProjectsContext } from "../contexts/projects.context";
 import PlanDevelopmentComponent from "../components/plan-development.component";
 import ObjectivesComponent from "../components/objectives.component";
 import ActorCreateComponent from "../components/actor-create.component";
+import PoblationComponent from "../components/poblation-component";
 
 import { actorsValidator, objectivesValidator, planDevelopmentValidator, problemDescriptionValidator } from "../../../common/schemas";
+
+
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -41,21 +44,21 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Actores participantes",
-            content: <ActorCreateComponent
+            content: <ActorCreateComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+        },
+        {
+            id: 5,
+            name: "Población",
+            content: <PoblationComponent
                 disableNext={() => {
                     setDisableContinue(true);
-                    setActionContinue(() => {});
+                    setActionContinue(() => { });
                 }}
                 enableNext={() => {
                     setDisableContinue(false);
                     setActionContinue(() => nextStep);
                 }}
             />
-        },
-        {
-            id: 5,
-            name: "Población",
-            content: <p>{JSON.stringify(projectData)}</p>
         },
     ]
     const nextStep = () => {
@@ -66,7 +69,7 @@ function IdentificationPage(): React.JSX.Element {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
-                        //agregar validacion siguiente tab
+                        disableAccordions([]);
                         setDisableContinue(false);
                         setActionContinue(() => nextStep);
                     }).catch(() => {

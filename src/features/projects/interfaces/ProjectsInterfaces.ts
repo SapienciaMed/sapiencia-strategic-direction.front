@@ -1,7 +1,7 @@
 export interface IProblemDescriptionForm {
-    problemDescription: string;
-    magnitude: string;
-    centerProblem: string;
+    problemDescription?: string;
+    magnitude?: string;
+    centerProblem?: string;
     causes?: ICause[];
     effects?: IEffect[];
 }
@@ -30,19 +30,17 @@ export interface IObjectivesForm {
 }
 
 export interface IRegisterForm {
-    id?: number;
-    bpin: number;
-    project: string;
-    dateFrom: string;
-    dateTo: string;
-    process: string;
-    localitation: string;
-    dependency: string;
-    object: string;
+    bpin?: number;
+    project?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    process?: number;
+    localitation?: number;
+    dependency?: number;
+    object?: string;
 }
 
 export interface IPlanDevelopmentForm {
-    id?: number;
     pnd_pacto?: string;
     pnd_linea?: string;
     pnd_programa?: string;
@@ -51,20 +49,60 @@ export interface IPlanDevelopmentForm {
     pdd_programa?: string;
     pdi_linea?: string;
     pdi_componentes?: string;
-    pdi_programa?:string;
+    pdi_programa?: string;
 }
 
 
-export interface IParticipatingActors{
+export interface IParticipatingActors {
+    id?: number;
+    actor: string;
+    expectation: string;
+    position: number;
+    contribution: string;
+}
+
+export interface IActorsForm {
+    actors?: IParticipatingActors[];
+}
+
+
+export interface IDemographicCharacteristics{
     id?:number;
-    actor?:string;
-    expectation?:string;
-    position?:string;
-    contribution?:string;
+    clasification?:number;
+    detail?:number;
+    numPerson?:number;
+    InfoSource?:string;
 }
 
-export interface IActorsForm{
-    actors:IParticipatingActors[];
+
+export interface IPoblationForm{
+    objectivePeople:string;
+    informationSource:string;
+    region:number;
+    departament:number;
+    district:number;
+    shelter:string;
+    demographic:IDemographicCharacteristics[];
+}
+
+
+export interface IDemographicCharacteristics{
+    id?:number;
+    clasification?:number;
+    detail?:number;
+    numPerson?:number;
+    InfoSource?:string;
+}
+
+
+export interface IPoblationForm{
+    objectivePeople:string;
+    informationSource:string;
+    region:number;
+    departament:number;
+    district:number;
+    shelter:string;
+    demographic:IDemographicCharacteristics[];
 }
 
 export interface IEstatesService {
@@ -74,6 +112,7 @@ export interface IEstatesService {
 
 export interface INeedObjetive {
     id?: number;
+    objectiveSelect: string;
     objetive: ICause;
     interventionActions: string;
     quantification: number;
@@ -83,18 +122,55 @@ export interface INeedObjetive {
 export interface INeedsForm {
     alternative?: string;
     generalObjetive?: string;
-    objetive: INeedObjetive[];
+    objetives: INeedObjetive[];
 }
 
 export interface IProjectTemp {
+    id?: number;
+    user: string;
+    status: boolean;
     register?: IRegisterForm;
     identification?: {
         problemDescription?: IProblemDescriptionForm;
-        planDevelopment?:IPlanDevelopmentForm;
+        planDevelopment?: IPlanDevelopmentForm;
         objectives?: IObjectivesForm;
         actors?:IActorsForm;
+        poblation?:IPoblationForm;
+        
     };
     preparation?: {
-        needs: INeedsForm
+        needs?: INeedsForm
     }
 }
+
+export interface IProject {
+    id: number;
+    user: string;
+    status: boolean;
+    bpin: number | null;
+    project: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
+    process: number | null;
+    localitation?: number;
+    dependency: number | null;
+    object?: string;
+    pnd_pacto: string | null;
+    pnd_linea: string | null;
+    pnd_programa: string | null;
+    pdd_linea: string | null;
+    pdd_componentes: string | null;
+    pdd_programa: string | null;
+    pdi_linea: string | null;
+    pdi_componentes: string | null;
+    pdi_programa: string | null;
+    problemDescription: string | null;
+    magnitude: string | null;
+    centerProblem: string | null;
+    indicators: string | null;
+    measurement: number | null;
+    goal: number | null;
+    causes: ICause[] | null;
+    effects: IEffect[] | null;
+    actors: IParticipatingActors[] | null;
+  }
