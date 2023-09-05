@@ -15,10 +15,10 @@ export interface IFfectRegister {
 
 export interface IFfectForm {
     id?: string;
-    type?: string;
+    type?: string | number;
     impact?: string;
-    classification?: string;
-    level?: string;
+    classification?: string | number;
+    level?: string | number;
     measures?: string;
 }
 

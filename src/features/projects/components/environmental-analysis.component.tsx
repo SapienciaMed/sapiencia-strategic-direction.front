@@ -38,6 +38,38 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
     }
   }, [isValid]);
 
+  const [levels, setLevels] = useState<IDropdownProps[]>([]);
+  const [types, setTypes] = useState<IDropdownProps[]>([]);
+  const [ratings, setRatings] = useState<IDropdownProps[]>([]);
+  const { get } = useCrudService(process.env.urlApiStrategicDirection);
+
+  useEffect(() => {
+    get<any>('/api/v1/impact-level').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setLevels(data);
+      }
+    })
+    get<any>('/api/v1/impact-type').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setTypes(data);
+      }
+    })
+    get<any>('/api/v1/impact-rating').then(response => {
+      if (response.operation.code === EResponseCodes.OK) {
+        const data: IDropdownProps[] = response.data.map(data => {
+          return { name: data.description, value: data.id }
+        })
+        setRatings(data);
+      }
+    })
+  }, []);
+
   
   const EffectsActions: ITableAction<IFfectForm>[] = [
     {
@@ -48,13 +80,14 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           show: true,
           description: (
             <EffectFormComponent
+              types={types} ratings={ratings} levels={levels}
               ref={EffectCreateComponentRef}
               item={{
                 id: row.id,
-                type:row.type === '/' ? '' : row.type,
+                type: row.type === '/' ? '' : types.find((type) => type.name === row.type)?.value,
                 impact: row.impact === '/' ? '' : row.impact,
-                level: row.level === '/' ? '' : row.level,
-                classification: row.classification === '/' ? '' : row.classification,
+                level: row.level === '/' ? '' : levels.find((level) => level.name === row.level)?.value,
+                classification: row.classification === '' ? '' : ratings.find((rating) => rating.name === row.classification)?.value,
                 measures: row.measures === '/' ? '' : row.measures
               }}
             />
@@ -63,11 +96,9 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           OkTitle: "Aceptar",
           cancelTitle: "Cancelar",
           onOk: () => {
-            console.log('data.............', 12312312312312)
             if (EffectCreateComponentRef.current) {
               EffectCreateComponentRef.current.handleSubmit(
                 (data: IFfectForm) => {
-                  console.log('data.............', data)
                   setMessage({
                     title: "Guardar efecto ambiental",
                     description: "¿Desea guardar el efecto ambiental?",
@@ -75,13 +106,14 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                     background: true,
                     OkTitle: "Aceptar",
                     onOk: () => {
+                      console.log(data)
                       effects[effects.findIndex(e => e.id === row.id)] = {
                         id: row.id,
-                        type: data.type !== '' ? data.type : '/',
-                          impact:  data.impact !== '' ? data.impact : '/',
-                          level:  data.level !== '' ? data.level : '/',
-                          classification:  data.classification !== '' ? data.classification : '/',
-                          measures:  data.measures !== '' ? data.measures : '/',
+                        type: data.type === '' ? '/' : types.find((type) => type.value === data.type ).name,
+                        impact: data.impact === '' ? '/' : data.impact,
+                        level: data.level === '' ? '/' : levels.find((level) => level.value === data.level).name,
+                        classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value === data.classification).name,
+                        measures: data.measures === '' ? '/' : data.measures
                       };
                       setEffects(effects);
                       setMessage({});
@@ -195,7 +227,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
               setMessage({
                 title: "Agregar efecto ambiental",
                 description: (
-                  <EffectFormComponent ref={EffectCreateComponentRef} />
+                  <EffectFormComponent ref={EffectCreateComponentRef} types={types} ratings={ratings} levels={levels}  />
                 ),
                 show: true,
                 background: true,
@@ -212,13 +244,15 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                           background: true,
                           OkTitle: "Aceptar",
                           onOk: () => {
+                            console.log('data..........', data);
+                            console.log('data..........', types.find((type) => type.value == data.type).name);
                             effects.push({
                               id: Array.from({ length: 10 }, () => String.fromCharCode(Math.floor(Math.random() * 26) + 97)).join(''),
-                              type: data.type !== '' ? data.type : '/',
-                              impact:  data.impact !== '' ? data.impact : '/',
-                              level:  data.level !== '' ? data.level : '/',
-                              classification:  data.classification !== '' ? data.classification : '/',
-                              measures:  data.measures !== '' ? data.measures : '/',
+                              type: data.type === '' ? '/' : types.find((type) => type.value == data.type).name,
+                              impact: data.impact === '' ? '/' : data.impact,
+                              level: data.level === '' ? '/' : levels.find((level) => level.value == data.level).name,
+                              classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value == data.classification).name,
+                              measures: data.measures === '' ? '/' : data.measures
                             });
                             setEffects(effects);
                             setMessage({
@@ -286,42 +320,13 @@ interface IRef {
 interface IPropsEffectssForm {
   counter?: number;
   item?: IFfectForm;
+  types: IDropdownProps[];
+  ratings: IDropdownProps[];
+  levels: IDropdownProps[];
 }
 
 const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) => {
-  const { item } = props;
-  const [levels, setLevels] = useState<IDropdownProps[]>([]);
-  const [types, setTypes] = useState<IDropdownProps[]>([]);
-  const [ratings, setRatings] = useState<IDropdownProps[]>([]);
-  const { get } = useCrudService(process.env.urlApiStrategicDirection);
-
-  useEffect(() => {
-    get<any>('/api/v1/impact-level').then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.description, value: data.id }
-        })
-        setLevels(data);
-      }
-    })
-    get<any>('/api/v1/impact-type').then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.description, value: data.id }
-        })
-        setTypes(data);
-      }
-    })
-    get<any>('/api/v1/impact-rating').then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.description, value: data.id }
-        })
-        setRatings(data);
-      }
-    })
-  }, []);
-
+  const { item, types, ratings, levels } = props;
   const {
     handleSubmit,
     register,
