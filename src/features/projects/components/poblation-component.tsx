@@ -57,6 +57,7 @@ export function PoblationComponent({
     watch,
     register,
     control,
+    setValue
   } = useForm<IPoblationForm>({
     resolver,
     mode: "all",
@@ -401,6 +402,9 @@ export function PoblationComponent({
                     classNameLabel="text-black biggest bold text-required"
                     data={clasificationData}
                     errors={errors}
+                    onChange={() => {
+                      setValue(`demographic.${index}.detail`, null);
+                    }}
                     fieldArray
                   />
                 </div>

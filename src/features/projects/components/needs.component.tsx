@@ -340,7 +340,6 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                     classNameLabel="text-black biggest bold text-required"
                     data={objectives}
                     errors={errors}
-                    tooltip
                 />
                 <Controller
                     control={control}
