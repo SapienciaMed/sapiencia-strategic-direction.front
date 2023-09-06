@@ -33,6 +33,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { IGenericList } from "../../../common/interfaces/global.interface";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { json } from "react-router-dom";
+import { AppContext } from "../../../common/contexts/app.context";
 
 interface IProps {
   disableNext: () => void;
@@ -46,18 +47,21 @@ export function PoblationComponent({
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [departamentData, setDepartamentData] = useState<IDropdownProps[]>([]);
+  const [districtList,setDistrictList] = useState([]);
   const [districtData, setDistrictData] = useState<IDropdownProps[]>([]);
   const [deparmentList, setDeparmentList] = useState([]);
   const { setProjectData, projectData } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(poblationValidator);
+  const { setMessage } = useContext(AppContext);
   const { getListByGrouper , getListByParent } = useGenericListService();
 
   const {
     formState: { errors, isValid },
     watch,
     register,
+    setValue,
+    getValues,
     control,
-    setValue
   } = useForm<IPoblationForm>({
     resolver,
     mode: "all",
@@ -73,16 +77,21 @@ export function PoblationComponent({
   });
 
   const idRegion = watch("region")
+  const idDepartament = watch("departament")
+ // const detail = watch("demographic.${number}.detail")
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "demographic",
   });
 
+
+
   const demographicFieldArray = useWatch({
     control,
     name: "demographic"
   });
+console.log(demographicFieldArray);
 
   const clasificationActions = {
     1: "GENEROS",
@@ -127,8 +136,10 @@ export function PoblationComponent({
   }, []);
 
   useEffect(() => {
-    if(idRegion)
-    getListByParent({ grouper: "DEPARTAMENTOS", parentItemCode: idRegion.toString(), fieldName:"regionId" })
+    setDeparmentList([{}]) 
+    setDistrictList([{}])
+    if(idRegion){
+      getListByParent({ grouper: "DEPARTAMENTOS", parentItemCode: idRegion.toString(), fieldName:"regionId" })
       .then((response: ApiResponse<IGenericList[]>) => {
         if (response && response?.operation?.code === EResponseCodes.OK) {
           setDeparmentList(
@@ -143,42 +154,32 @@ export function PoblationComponent({
         }
       })
       .catch((e) => {});
+    }
   }, [idRegion]);
 
-
+console.log(idRegion,"region value")
   useEffect(() => {
-    getListByGrouper("DEPARTAMENTOS").then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.itemDescription, value: data.itemCode }
-        })
-        setDepartamentData(data);
-      }
-    })
-  }, []);
+    setDistrictList([{}])
+    if(idDepartament){
+      getListByParent({ grouper: "MUNICIPIOS", parentItemCode: idDepartament.toString(), fieldName:"departmentId" })
+      .then((response: ApiResponse<IGenericList[]>) => {
+        if (response && response?.operation?.code === EResponseCodes.OK) {
+          setDistrictList(
+            response.data.map((item) => {
+              const list = {
+                name: item.itemDescription,
+                value: item.itemCode,
+              };
+              return list;
+            })
+          );
+        }
+      })
+      .catch((e) => {});
+    }
+  }, [idDepartament]);
 
-  useEffect(() => {
-    getListByGrouper("MUNICIPIOS").then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.itemDescription, value: data.itemCode }
-        })
-        setDistrictData(data);
-      }
-    })
-  }, []);
-
-  useEffect(() => {
-    getListByGrouper("MUNICIPIOS").then(response => {
-      if (response.operation.code === EResponseCodes.OK) {
-        const data: IDropdownProps[] = response.data.map(data => {
-          return { name: data.itemDescription, value: data.itemCode }
-        })
-        setDistrictData(data);
-      }
-    })
-  }, []);
-
+   console.log(districtList,"municipios");
 
 
   useEffect(() => {
@@ -210,6 +211,8 @@ export function PoblationComponent({
       return [];
     }
   }
+
+
 
   useEffect(() => {
     if (PoblationData)
@@ -273,7 +276,7 @@ export function PoblationComponent({
                     errors={errors}
                   >
                     <label className="label-max-textarea">
-                      Max. 300 caracteres
+                      Max. 100 caracteres
                     </label>
                   </TextAreaComponent>
                 );
@@ -338,7 +341,7 @@ export function PoblationComponent({
                     className="select-basic"
                     label="Distrito/Municipio"
                     classNameLabel="text-black biggest bold text-required"
-                    data={districtData}
+                    data={districtList}
                     errors={errors}
                   />
                 );
@@ -406,7 +409,9 @@ export function PoblationComponent({
                       setValue(`demographic.${index}.detail`, null);
                     }}
                     fieldArray
-                  />
+                  >
+                    {getValues(`demographic.${index}.clasification`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
+                  </SelectComponent>
                 </div>
                 <div>
                   <SelectComponent
@@ -418,7 +423,10 @@ export function PoblationComponent({
                     promiseData={getSelectsData(demographicFieldArray[index]?.clasification).then(response => response)}
                     errors={errors}
                     fieldArray
-                  />
+                  >
+                   {getValues(`demographic.${index}.detail`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
+                  
+                  </SelectComponent>
                 </div>
                 <div>
                 <InputComponent
@@ -435,25 +443,54 @@ export function PoblationComponent({
                 </div>
                 <div className="div-acciones">
                 <label className="text-black biggest bold">Acciones</label>
-                  <div className="actions-poblations ">
-                      <FaTrashAlt className="button grid-button button-delete" onClick={() => { remove(index) }} />
-                  </div>
+                <div onClick={() => {
+                                        setMessage({
+                                            title: "Eliminar registro",
+                                            description: "¿Desea continuar?",
+                                            show: true,
+                                            background: true,
+                                            OkTitle: "Aceptar",
+                                            cancelTitle: "Cancelar",
+                                            onOk: () => {
+                                                remove(index);
+                                                setMessage({});
+                                            },
+                                            onCancel: () => {
+                                                setMessage({});
+                                            }
+                                        })
+                                    }} className="div-acciones">
+                                        <div className="actions-poblations ">
+                                         <FaTrashAlt className="button grid-button button-delete" />
+                                        </div>
+                                    </div>
+                 
                 </div>
                 <div className="grid-span-4-columns">  
-                <TextAreaComponent
-                id={`demographic.${index}.informationSource`}
-                idInput={`demographic.${index}.informationSource`}
-                label={"Fuente de información"}
-                className="text-area-basic"
-                classNameLabel="text-black biggest bold"
-                rows={2}
-                placeholder="Escribe aquí"
-                register={register}
-                errors={errors}
-                fieldArray
-              >
-              </TextAreaComponent>
-                </div>
+                                 <Controller
+                                        control={control}
+                                        name={`demographic.${index}.infoSource`}
+                                        defaultValue=""
+                                        render={({ field }) => {
+                                            return (
+                                                <TextAreaComponent
+                                                    id={field.name}
+                                                    idInput={field.name}
+                                                    value={`${field.value}`}
+                                                    className="text-area-basic"
+                                                    placeholder="Escribe aquí"
+                                                    register={register}
+                                                    fieldArray={true}
+                                                    onChange={field.onChange}
+                                                    errors={errors}
+                                                >
+                                                 {getValues(`demographic.${index}.infoSource`).length > 100 ? <p className="error-message bold not-margin-padding">Solo se permiten 100 caracteres</p> : <></>}
+                                                <label className="label-max-textarea">Max 300 caracteres</label>
+                                                </TextAreaComponent>
+                                            );
+                                        }}
+                                    />
+                             </div>
                 <div className="div-acciones-mobile">
                   <div className="actions-poblations ">
                       <FaTrashAlt className="button grid-button button-delete" onClick={() => { remove(index) }} />

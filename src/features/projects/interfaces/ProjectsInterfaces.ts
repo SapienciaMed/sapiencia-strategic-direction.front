@@ -91,7 +91,7 @@ export interface IDemographicCharacteristics{
     clasification?:number;
     detail?:number;
     numPerson?:number;
-    InfoSource?:string;
+    infoSource?:string;
 }
 
 
