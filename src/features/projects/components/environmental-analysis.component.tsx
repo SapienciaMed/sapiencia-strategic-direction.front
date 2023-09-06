@@ -176,7 +176,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
   ];
 
   return (
-    <div className="environmental-analysis-page full-height">
+    <div className="environmental-analysis-page full-height card-table">
       <FormComponent action={undefined} className="">
         <div className="">
           <div style={{ paddingBottom: 12 }}>
@@ -289,7 +289,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
               });
             }}
           >
-            <span>Añadir efecto ambiental</span>
+            <span style={{ color: '#533893' }} className="text-add-effect">Añadir efecto ambiental</span>
             <img style={{ marginLeft: 4 }} width={16} src={addIcon} alt="add" />
           </div>
         </div>

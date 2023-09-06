@@ -48,7 +48,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
 
 
   return (
-    <div className="full-height capacity-page">
+    <div className="full-height capacity-page card-table">
       <FormComponent action={undefined} className="">
         <div className="">
           <InputComponent
