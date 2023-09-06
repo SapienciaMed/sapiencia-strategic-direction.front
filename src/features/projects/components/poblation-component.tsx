@@ -5,7 +5,7 @@ import React, {
 } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import {
-  actorsValidator
+  poblationValidator
 } from "../../../common/schemas";
 import {
   Controller,
@@ -30,6 +30,9 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { FaTrashAlt } from "react-icons/fa";
+import { IGenericList } from "../../../common/interfaces/global.interface";
+import { ApiResponse } from "../../../common/utils/api-response";
+import { json } from "react-router-dom";
 
 interface IProps {
   disableNext: () => void;
@@ -44,16 +47,18 @@ export function PoblationComponent({
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [departamentData, setDepartamentData] = useState<IDropdownProps[]>([]);
   const [districtData, setDistrictData] = useState<IDropdownProps[]>([]);
+  const [deparmentList, setDeparmentList] = useState([]);
   const { setProjectData, projectData } = useContext(ProjectsContext);
-  const resolver = useYupValidationResolver(actorsValidator);
-  const { getListByGrouper } = useGenericListService();
+  const resolver = useYupValidationResolver(poblationValidator);
+  const { getListByGrouper , getListByParent } = useGenericListService();
 
   const {
     formState: { errors, isValid },
     watch,
     register,
-    control
+    control,
   } = useForm<IPoblationForm>({
+    resolver,
     mode: "all",
     defaultValues: {
       objectivePeople: projectData?.identification?.poblation?.objectivePeople ? projectData.identification.poblation.objectivePeople : "",
@@ -65,6 +70,8 @@ export function PoblationComponent({
       demographic: projectData?.identification?.poblation?.demographic ? projectData.identification.poblation.demographic : [],
     },
   });
+
+  const idRegion = watch("region")
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -117,6 +124,26 @@ export function PoblationComponent({
       }
     })
   }, []);
+
+  useEffect(() => {
+    if(idRegion)
+    getListByParent({ grouper: "DEPARTAMENTOS", parentItemCode: idRegion.toString(), fieldName:"regionId" })
+      .then((response: ApiResponse<IGenericList[]>) => {
+        if (response && response?.operation?.code === EResponseCodes.OK) {
+          setDeparmentList(
+            response.data.map((item) => {
+              const list = {
+                name: item.itemDescription,
+                value: item.itemCode,
+              };
+              return list;
+            })
+          );
+        }
+      })
+      .catch((e) => {});
+  }, [idRegion]);
+
 
   useEffect(() => {
     getListByGrouper("DEPARTAMENTOS").then(response => {
@@ -199,7 +226,7 @@ export function PoblationComponent({
       className="card-form-development">
       <div className="card-table">
         <label className="text-black biggest bold">
-          Plan de desarrollo departamental
+          Población objetivo de la intervención
         </label>
         <div className="poblation-container">
           <div>
@@ -291,7 +318,7 @@ export function PoblationComponent({
                     className="select-basic"
                     label="Departamento"
                     classNameLabel="text-black biggest bold text-required"
-                    data={departamentData}
+                    data={deparmentList}
                     errors={errors}
                   />
                 );
@@ -330,7 +357,7 @@ export function PoblationComponent({
                     value={`${field.value}`}
                     label="Resguardo"
                     className="text-area-basic"
-                    classNameLabel="text-black biggest bold text-required"
+                    classNameLabel="text-black biggest bold"
                     rows={2}
                     placeholder="Escribe aquí"
                     register={register}
@@ -346,6 +373,8 @@ export function PoblationComponent({
             />
           </div>
         </div>
+        <div></div>
+        
         <div className="card_table">
              <div className="title-area">
                         <label className="text-black biggest bold text-required">
@@ -402,7 +431,7 @@ export function PoblationComponent({
                 </div>
                 <div className="div-acciones">
                 <label className="text-black biggest bold">Acciones</label>
-                  <div className="actions-poblations">
+                  <div className="actions-poblations ">
                       <FaTrashAlt className="button grid-button button-delete" onClick={() => { remove(index) }} />
                   </div>
                 </div>
@@ -420,6 +449,11 @@ export function PoblationComponent({
                 fieldArray
               >
               </TextAreaComponent>
+                </div>
+                <div className="div-acciones-mobile">
+                  <div className="actions-poblations ">
+                      <FaTrashAlt className="button grid-button button-delete" onClick={() => { remove(index) }} />
+                  </div>
                 </div>
               </div>
             </div>

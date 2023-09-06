@@ -170,10 +170,39 @@ export const needsObjectivesValidator = yup.object({
     interventionActions: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
     quantification: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio").min(0, "El número tiene que ser positivo"),
     estatesService: yup.array().required("Debe haber al menos un bien y/o servicio").min(1, "Debe haber al menos un bien y/o servicio").of(
-        yup.object().shape({
+        yup.object(({
             description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-        })
+        }))
     ),
 });
 
-
+export const poblationValidator = yup.object({
+    objectivePeople : yup 
+    .string()
+    .required("El campo es obligatorio"),
+    informationSource: yup  
+    .string()
+    .required("El campo es obligatorio"),
+    region: yup
+    .string()
+    .required("Debe seleccionar una opción"),
+    departament: yup  
+    .string()
+    .required("Debe seleccionar una opción"),
+    district: yup  
+    .string()
+    .required("Debe seleccionar una opción"),
+    shelter:yup
+    .string()
+    .max(100, "Solo se permiten 100 caracteres"),
+    demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
+        yup.object(({
+            clasification:yup
+            .string()
+            .required("Debe seleccionar una opción"),
+            detail:yup
+            .string()
+            .required("Debe seleccionar una opción"),
+        }))
+    ),
+})

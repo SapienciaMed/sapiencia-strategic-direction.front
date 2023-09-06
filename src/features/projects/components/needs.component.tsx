@@ -260,6 +260,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
         handleSubmit,
         formState: { errors, isValid },
         watch,
+        getValues
     } = useForm<INeedObjetive>({
         resolver, mode: "all", defaultValues: {
             interventionActions: item?.interventionActions ? item.interventionActions : "",
@@ -334,7 +335,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                 <SelectComponent
                     control={control}
                     idInput={"objectiveSelect"}
-                    className="select-basic"
+                    className="select-basic span-width"
                     label="Objetivo"
                     classNameLabel="text-black biggest bold text-required"
                     data={objectives}
@@ -403,17 +404,30 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                         {fields.map((field, index) => {
                             return (
                                 <div key={field.id} className="needs-objectives-estates-services">
-                                    <TextAreaComponent
-                                        id={`estatesService.${index}.description`}
-                                        idInput={`estatesService.${index}.description`}
-                                        className="text-area-basic"
-                                        placeholder="Escribe aquí"
-                                        register={register}
-                                        fieldArray={true}
-                                        errors={errors}
-                                    >
-                                        <label className="label-max-textarea">Max 300 caracteres</label>
-                                    </TextAreaComponent>
+                                    <Controller
+                                        control={control}
+                                        name={`estatesService.${index}.description`}
+                                        defaultValue=""
+                                        render={({ field }) => {
+                                            return (
+                                                <TextAreaComponent
+                                                    id={field.name}
+                                                    idInput={field.name}
+                                                    value={`${field.value}`}
+                                                    className="text-area-basic"
+                                                    placeholder="Escribe aquí"
+                                                    register={register}
+                                                    fieldArray={true}
+                                                    onChange={field.onChange}
+                                                    errors={errors}
+                                                >
+                                                    {getValues(`estatesService.${index}.description`) === "" ? <p className="error-message bold not-margin-padding">El campo es obligatorio</p> : <></>}
+                                                    {getValues(`estatesService.${index}.description`).length > 300 ? <p className="error-message bold not-margin-padding">Solo se permiten 300 caracteres</p> : <></>}
+                                                    <label className="label-max-textarea">Max 300 caracteres</label>
+                                                </TextAreaComponent>
+                                            );
+                                        }}
+                                    />
                                     <div onClick={() => {
                                         setMessage({
                                             title: "Eliminar registro",

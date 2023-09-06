@@ -29,8 +29,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                                     description: "¿Desea cancelar la creación? No se guardarán los datos",
                                     show: true,
                                     background: true,
-                                    cancelTitle: "Continuar",
-                                    OkTitle: "Si, cancelar",
+                                    cancelTitle: "Cancelar",
+                                    OkTitle: "Aceptar",
                                     onCancel: () => {
                                         setMessage({});
                                     },
@@ -71,8 +71,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                             description: "¿Desea cancelar la creación? No se guardarán los datos",
                             show: true,
                             background: true,
-                            cancelTitle: "Continuar",
-                            OkTitle: "Si, cancelar",
+                            cancelTitle: "Cancelar",
+                            OkTitle: "Aceptar",
                             onCancel: () => {
                                 setMessage({});
                             },
