@@ -125,6 +125,11 @@ export interface INeedsForm {
     objetives: INeedObjetive[];
 }
 
+export interface ItechnicalAnalysisForm{
+    alternative:string;
+    resumeAlternative:string;
+}
+
 export interface IProjectTemp {
     id?: number;
     user: string;
@@ -139,6 +144,7 @@ export interface IProjectTemp {
         
     };
     preparation?: {
+        technicalAnalysis?:ItechnicalAnalysisForm
         needs?: INeedsForm
     }
 }

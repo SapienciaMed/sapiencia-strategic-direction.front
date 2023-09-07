@@ -85,13 +85,10 @@ export function PoblationComponent({
     name: "demographic",
   });
 
-
-
   const demographicFieldArray = useWatch({
     control,
     name: "demographic"
   });
-console.log(demographicFieldArray);
 
   const clasificationActions = {
     1: "GENEROS",
@@ -157,7 +154,7 @@ console.log(demographicFieldArray);
     }
   }, [idRegion]);
 
-console.log(idRegion,"region value")
+
   useEffect(() => {
     setDistrictList([{}])
     if(idDepartament){
@@ -179,7 +176,7 @@ console.log(idRegion,"region value")
     }
   }, [idDepartament]);
 
-   console.log(districtList,"municipios");
+
 
 
   useEffect(() => {
@@ -452,8 +449,17 @@ console.log(idRegion,"region value")
                                             OkTitle: "Aceptar",
                                             cancelTitle: "Cancelar",
                                             onOk: () => {
-                                                remove(index);
-                                                setMessage({});
+                                              remove(index);
+                                              setMessage({
+                                                title: "Registro eliminado",
+                                                description: "¡Registro eliminado exitosamente!",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Cerrar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                }
+                                             })
                                             },
                                             onCancel: () => {
                                                 setMessage({});
@@ -465,7 +471,7 @@ console.log(idRegion,"region value")
                                         </div>
                                     </div>
                  
-                </div>
+                                   </div>
                 <div className="grid-span-4-columns">  
                                  <Controller
                                         control={control}
@@ -476,6 +482,8 @@ console.log(idRegion,"region value")
                                                 <TextAreaComponent
                                                     id={field.name}
                                                     idInput={field.name}
+                                                    label={"Fuente de Información"}
+                                                    classNameLabel="text-black biggest bold"
                                                     value={`${field.value}`}
                                                     className="text-area-basic"
                                                     placeholder="Escribe aquí"
@@ -492,9 +500,36 @@ console.log(idRegion,"region value")
                                     />
                              </div>
                 <div className="div-acciones-mobile">
-                  <div className="actions-poblations ">
-                      <FaTrashAlt className="button grid-button button-delete" onClick={() => { remove(index) }} />
-                  </div>
+                <div onClick={() => {
+                                        setMessage({
+                                            title: "Eliminar registro",
+                                            description: "¿Desea continuar con la eliminación?",
+                                            show: true,
+                                            background: true,
+                                            OkTitle: "Aceptar",
+                                            cancelTitle: "Cancelar",
+                                            onOk: () => {
+                                              remove(index);
+                                              setMessage({
+                                                title: "Registro eliminado",
+                                                description: "¡Registro eliminado exitosamente!",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Cerrar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                }
+                                            })
+                                            },
+                                            onCancel: () => {
+                                                setMessage({});
+                                            }
+                                        })
+                                    }} className="div-acciones-mobile">
+                                        <div className="actions-poblations ">
+                                         <FaTrashAlt className="button grid-button button-delete" />
+                                        </div>
+                                    </div>
                 </div>
               </div>
             </div>

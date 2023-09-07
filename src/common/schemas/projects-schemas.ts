@@ -226,3 +226,12 @@ export const poblationValidator = yup.object().shape({
         }))
     ),
 })
+
+export const technicalAnalysisValidator = yup.object({
+    alternative: yup.string()
+    .required("El campo es obligatorio")
+    .max(300, "Solo se permiten 300 caracteres"),
+    resumeAlternative :yup.string()
+    .required("El campo es obligatorio")
+    .max(5000, "Solo se permiten 5000 caracteres"),
+});

@@ -92,6 +92,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     column-gap: 1rem;
 }
 
+
 .poblation-container-2 {
     display: grid;
     grid-template-columns: 1fr;
@@ -124,6 +125,14 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     align-content: center;
   }
 
+  .technicalAnalysis-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+  }
 
 
 .project-dates-container {
@@ -480,6 +489,14 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
   }
 
+  .technicalAnalysis-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+  }
   
   .div-acciones-mobile{
     display: none;

@@ -5,6 +5,7 @@ import { IAccordionTemplate } from "../../../common/interfaces/accordions.interf
 import NeedsComponent from "../components/needs.component";
 import CapacityComponent from "../components/capacity.component";
 import EnvironmentalAnalysisComponent from "../components/environmental-analysis.component";
+import TechnicalAnalysisComponent  from "../components/technical-analysis.component";
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -24,7 +25,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 1,
             name: "Análisis Técnico",
-            content: <>Aqui va tu componente</>
+            content: <TechnicalAnalysisComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
         },
         {
             id: 2,
@@ -39,7 +40,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Análisis Ambiental",
-            content: <EnvironmentalAnalysisComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
+            content: <EnvironmentalAnalysisComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
         },
         {
             id: 5,
