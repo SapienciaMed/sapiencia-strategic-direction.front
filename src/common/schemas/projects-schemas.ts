@@ -129,6 +129,22 @@ export const capacityValidator = yup.object({
     capacity: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
 });
 
+export const environmentalFffectsValidator = yup.object({
+    impact: yup
+        .string().optional()
+        .max(300, "Solo se permiten 300 caracteres"),
+    measures: yup
+        .string().optional()
+        .max(500, "Solo se permiten 500 caracteres"),
+});
+
+export const environmentalAnalysisValidator = yup.object({
+    diagnosis: yup
+        .string().optional()
+        .max(600, "Solo se permiten 600 caracteres"),
+
+});
+
 
 export const actorsFormValidator = yup.object({ 
     actor : yup 

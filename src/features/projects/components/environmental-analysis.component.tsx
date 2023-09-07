@@ -11,7 +11,8 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useRegisterData } from "../hooks/register.hook";
-
+import { environmentalFffectsValidator, environmentalAnalysisValidator } from "../../../common/schemas";
+import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
@@ -19,12 +20,13 @@ interface IProps {
 
 export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
   const { effectsColumns } = useRegisterData();
+  const resolver = useYupValidationResolver(environmentalAnalysisValidator);
   const {
     control,
     register,
     formState: { errors, isValid },
   } = useForm<IEnvironmentAnalysisForm>({
-    mode: "all",
+    resolver, mode: "all",
   });
   const EffectCreateComponentRef = useRef(null);
   const { setMessage } = useContext(AppContext);
@@ -242,6 +244,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                           show: true,
                           background: true,
                           OkTitle: "Aceptar",
+                          cancelTitle: "Cancelar",
                           onOk: () => {
                             effects.push({
                               id: Array.from({ length: 10 }, () => String.fromCharCode(Math.floor(Math.random() * 26) + 97)).join(''),
@@ -324,12 +327,13 @@ interface IPropsEffectssForm {
 
 const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) => {
   const { item, types, ratings, levels } = props;
+  const resolver = useYupValidationResolver(environmentalFffectsValidator);
   const {
     handleSubmit,
     register,
     formState: { errors },
     control,
-  } = useForm<IFfectForm>({ mode: "all", defaultValues: item ? {...item} : {} });
+  } = useForm<IFfectForm>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,
@@ -379,7 +383,11 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 onChange={field.onChange}
                 rows={1}
                 errors={errors}
-              />
+              >
+                <label className="label-max-textarea" style={{ color: '#818181' }}>
+                  Máx. 300 caracteres
+                </label>
+              </TextAreaComponent>
             );
           }}
         />
@@ -446,7 +454,11 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 onChange={field.onChange}
                 rows={1}
                 errors={errors}
-              />
+              >
+                <label className="label-max-textarea" style={{ color: '#818181' }}>
+                  Máx. 500 caracteres
+                </label>
+              </TextAreaComponent>
             );
           }}
         />
