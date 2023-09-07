@@ -22,7 +22,7 @@ interface ISelectProps<T> {
   fieldArray?: boolean;
   filter?: boolean;
   emptyMessage?: string;
-  tooltip?: boolean;
+  onChange?: () => void;
 }
 
 function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
@@ -52,7 +52,7 @@ export function SelectComponent({
   fieldArray,
   filter,
   emptyMessage = "Sin resultados.",
-  tooltip
+  onChange = () => {}
 }: ISelectProps<any>): React.JSX.Element {
   const [selectData, setSelectData] = useState<IDropdownProps[]>(null);
   useEffect(() => {
@@ -114,11 +114,14 @@ export function SelectComponent({
             <Dropdown
               id={field.name}
               value={selectData ? selectData.find((row) => row.value === field.value)?.value : null}
-              onChange={(e) => field.onChange(e.value)}
+              onChange={(e) => {
+                field.onChange(e.value);
+                onChange();
+              }}
               options={selectData}
               optionLabel="name"
               placeholder={placeholder}
-              className={`${className} ${tooltip && "tooltip-select"} ${messageError() ? "p-invalid" : ""}`}
+              className={`${className} ${messageError() ? "p-invalid" : ""}`}
               disabled={disabled}
               filter={filter}
               emptyMessage={emptyMessage}

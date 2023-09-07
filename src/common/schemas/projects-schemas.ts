@@ -192,12 +192,13 @@ export const needsObjectivesValidator = yup.object({
     ),
 });
 
-export const poblationValidator = yup.object({
+export const poblationValidator = yup.object().shape({
     objectivePeople : yup 
     .string()
     .required("El campo es obligatorio"),
     informationSource: yup  
     .string()
+    .max(100, "Solo se permiten 100 caracteres")
     .required("El campo es obligatorio"),
     region: yup
     .string()
@@ -212,13 +213,16 @@ export const poblationValidator = yup.object({
     .string()
     .max(100, "Solo se permiten 100 caracteres"),
     demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
-        yup.object(({
+        yup.object().shape(({
             clasification:yup
             .string()
             .required("Debe seleccionar una opción"),
             detail:yup
             .string()
             .required("Debe seleccionar una opción"),
+            infoSource:yup
+            .string()
+            .max(100, "Solo se permiten 100 caracteres"),
         }))
     ),
 })
