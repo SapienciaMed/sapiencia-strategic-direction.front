@@ -493,7 +493,7 @@ export function PoblationComponent({
                                                     errors={errors}
                                                 >
                                                  {getValues(`demographic.${index}.infoSource`).length > 100 ? <p className="error-message bold not-margin-padding">Solo se permiten 100 caracteres</p> : <></>}
-                                                <label className="label-max-textarea">Max 300 caracteres</label>
+                                                <label className="label-max-textarea">Max 100 caracteres</label>
                                                 </TextAreaComponent>
                                             );
                                         }}
