@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent, } from "../../../common/components/Form";
 import { EDirection } from "../../../common/constants/input.enum";
 import { Controller, useForm } from "react-hook-form";
-import { ICapacityForm, } from "../interfaces/CapacityInterfaces";
+import { ICapacityForm, } from "../interfaces/ProjectsInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { capacityValidator } from "../../../common/schemas/projects-schemas";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
+import { ProjectsContext } from "../contexts/projects.context";
 
 interface IProps {
   disableNext: () => void;
@@ -16,15 +17,25 @@ interface IProps {
 
 export function CapacityComponent({ disableNext, enableNext, }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
+  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const [capacityData, setCapacityData] = useState<ICapacityForm>();
+  
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
   const {
     control,
     register,
+    watch,
     formState: { errors, isValid },
   } = useForm<ICapacityForm>({
     resolver,
     mode: "all",
+    defaultValues: {
+      alternative : projectData?.preparation?.capacity?.alternative ? projectData.preparation.capacity.alternative : "",
+      description : projectData?.preparation?.capacity?.description ? projectData.preparation.capacity.description : "",
+      unit : projectData?.preparation?.capacity?.unit ? projectData.preparation.capacity.unit : "",
+      capacity : projectData.preparation?.capacity?.capacity ?  projectData.preparation.capacity.capacity : "" ,
+    },
   });
 
   useEffect(() => {
@@ -34,6 +45,25 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
       disableNext();
     }
   }, [isValid]);
+
+  useEffect(() => {
+    const subscription = watch((value: ICapacityForm) =>
+    setCapacityData((prev) => {
+        return { ...prev, ...value };
+      })
+    );
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  useEffect(() => {
+    if (capacityData)
+      setProjectData((prev) => {
+        const preparation = prev
+          ? { ...prev.preparation, capacity: { ...capacityData } }
+          : { capacity: { ...capacityData } };
+        return { ...prev, preparation: { ...preparation } };
+      });
+  }, [capacityData]);
 
   useEffect(() => {
     get<any>('/api/v1/measurement-capacity').then(response => {

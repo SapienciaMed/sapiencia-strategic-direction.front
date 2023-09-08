@@ -66,12 +66,13 @@ export interface IActorsForm {
 }
 
 
-export interface IDemographicCharacteristics{
-    id?:number;
-    clasification?:number;
-    detail?:number;
-    numPerson?:number;
-    InfoSource?:string;
+export interface IeffectEnviromentForm {
+    id?: string;
+    type?: string | number;
+    impact?: string;
+    classification?: string | number;
+    level?: string | number;
+    measures?: string;
 }
 
 
@@ -110,6 +111,21 @@ export interface IEstatesService {
     description: string;
 }
 
+export interface ICapacityForm {
+    id?: number;
+    alternative?: string;
+    description?: string;
+    unit?: string;
+    capacity?: string;
+}
+
+export interface IEnvironmentAnalysisForm {
+    id?: string;
+    diagnosis: string;
+    effects: IeffectEnviromentForm[]
+}
+
+
 export interface INeedObjetive {
     id?: number;
     objectiveSelect: string;
@@ -123,6 +139,14 @@ export interface INeedsForm {
     alternative?: string;
     generalObjetive?: string;
     objetives: INeedObjetive[];
+}
+
+export interface ICapacityForm {
+    id?: number;
+    alternative?: string;
+    description?: string;
+    unit?: string;
+    capacity?: string;
 }
 
 export interface ItechnicalAnalysisForm{
@@ -146,6 +170,8 @@ export interface IProjectTemp {
     preparation?: {
         technicalAnalysis?:ItechnicalAnalysisForm
         needs?: INeedsForm
+        capacity?:ICapacityForm
+        enviromentalAnalysis?:IEnvironmentAnalysisForm
     }
 }
 

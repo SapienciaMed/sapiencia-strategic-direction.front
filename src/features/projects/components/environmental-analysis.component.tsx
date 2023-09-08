@@ -1,7 +1,6 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { FormComponent, SelectComponent, TextAreaComponent, } from "../../../common/components/Form";
 import { Controller, UseFormHandleSubmit, useForm } from "react-hook-form";
-import { IEnvironmentAnalysisForm, IFfectForm } from "../interfaces/EnvironmentalAnalysisInterfaces";
 import addIcon from '../../../public/images/icons/icon-add.png';
 import TableExpansibleComponent from "./table-expansible.component";
 import { ITableAction } from "../../../common/interfaces/table.interfaces";
@@ -13,6 +12,8 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useRegisterData } from "../hooks/register.hook";
 import { environmentalFffectsValidator, environmentalAnalysisValidator } from "../../../common/schemas";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
+import { ProjectsContext } from "../contexts/projects.context";
+import { IEnvironmentAnalysisForm, IeffectEnviromentForm} from "../interfaces/ProjectsInterfaces";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
@@ -20,17 +21,24 @@ interface IProps {
 
 export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
   const { effectsColumns } = useRegisterData();
+  const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
+  const { setProjectData, projectData } = useContext(ProjectsContext);
   const {
     control,
     register,
+    watch,
     formState: { errors, isValid },
   } = useForm<IEnvironmentAnalysisForm>({
     resolver, mode: "all",
+    defaultValues: {
+      diagnosis : projectData?.preparation?.enviromentalAnalysis?.diagnosis ? projectData.preparation.enviromentalAnalysis.diagnosis : "",
+      effects : projectData?.preparation?.enviromentalAnalysis?.effects ? projectData.preparation.enviromentalAnalysis.effects : [],
+    },
   });
   const EffectCreateComponentRef = useRef(null);
   const { setMessage } = useContext(AppContext);
-  const [effects, setEffects] = useState<IFfectForm[]>([])
+  const [effects, setEffects] = useState<IeffectEnviromentForm[]>([])
 
   useEffect(() => {
     if (isValid) {
@@ -72,8 +80,27 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
     })
   }, []);
 
-  
-  const EffectsActions: ITableAction<IFfectForm>[] = [
+  useEffect(() => {
+        
+    if (environmentalAnalysisData)
+      setProjectData((prev) => {
+        const preparation = prev?.preparation
+          ? { ...prev.preparation, enviromentalAnalysis: { ...environmentalAnalysisData } }
+          : { enviromentalAnalysis: { ...environmentalAnalysisData } };
+        return { ...prev, preparation: { ...preparation } };
+      });
+  }, [environmentalAnalysisData]);
+
+  useEffect(() => {
+    const subscription = watch((value: IeffectEnviromentForm) =>
+    setEnvironmentalAnalysisData((prev) => {
+        return { ...prev, ...value };
+      })
+    );
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const EffectsActions: ITableAction<IeffectEnviromentForm>[] = [
     {
       icon: "Edit",
       onClick: (row) => {
@@ -100,7 +127,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           onOk: () => {
             if (EffectCreateComponentRef.current) {
               EffectCreateComponentRef.current.handleSubmit(
-                (data: IFfectForm) => {
+                (data: IeffectEnviromentForm) => {
                   setMessage({
                     title: "Guardar efecto ambiental",
                     description: "¿Desea guardar el efecto ambiental?",
@@ -237,7 +264,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                 onOk: () => {
                   if (EffectCreateComponentRef.current) {
                     EffectCreateComponentRef.current.handleSubmit(
-                      (data: IFfectForm) => {
+                      (data: IeffectEnviromentForm) => {
                         setMessage({
                           title: "Guardar efecto ambiental",
                           description: "¿Desea guardar el efecto ambiental?",
@@ -319,7 +346,7 @@ interface IRef {
 
 interface IPropsEffectssForm {
   counter?: number;
-  item?: IFfectForm;
+  item?: IeffectEnviromentForm;
   types: IDropdownProps[];
   ratings: IDropdownProps[];
   levels: IDropdownProps[];
@@ -333,7 +360,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
     register,
     formState: { errors },
     control,
-  } = useForm<IFfectForm>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
+  } = useForm<IeffectEnviromentForm>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,

@@ -1,8 +1,3 @@
-export interface IRegisterForm {
-    id?: string;
-    diagnosis: string;
-    effects: IFfectRegister[]
-}
 
 export interface IFfectRegister {
     id?: string;
@@ -23,14 +18,6 @@ export interface IFfectForm {
 }
 
 export interface IEnvironmentAnalysisForm {
-    id?: string;
     diagnosis: string;
     effects: IFfectForm[]
 }
-
-
-export interface IProjectTemp {
-    register?: IRegisterForm;
-}
-
-
