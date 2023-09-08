@@ -88,7 +88,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         Cancelar
                     </span>
                     <ButtonComponent
-                        className="button-main huge hover-three button-save"
+                        className={`button-main ${textContinue ? "extra_extra_large": "huge"} hover-three button-save`}
                         value={textContinue || "Continuar"}
                         type="button"
                         action={actionContinue || (() => { })}

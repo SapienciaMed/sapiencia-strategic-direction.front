@@ -189,7 +189,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                                 value={`${field.value}`}
                                 label="Nombre de la alternativa"
                                 classNameLabel="text-black biggest bold text-required"
-                                className="text-area-basic"
+                                className="text-area-basic background-textArea"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
@@ -212,7 +212,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                                 value={`${field.value}`}
                                 label="Objetivo general"
                                 classNameLabel="text-black biggest bold text-required"
-                                className="text-area-basic"
+                                className="text-area-basic background-textArea"
                                 placeholder="Escribe aquí"
                                 register={register}
                                 onChange={field.onChange}
