@@ -12,5 +12,15 @@ export function useEntitiesService() {
         return get(`${roleUrl}${endpoint}`);
     }
 
-    return { GetEntities }
+    async function GetEntitiesDependency(): Promise<ApiResponse<IEntities[]>> {
+        const endpoint: string = "/get-all-dependency";
+        return get(`${roleUrl}${endpoint}`);
+    }
+
+    async function GetEntitiesPosition(): Promise<ApiResponse<IEntities[]>> {
+        const endpoint: string = "/get-all-position";
+        return get(`${roleUrl}${endpoint}`);
+    }
+
+    return { GetEntities, GetEntitiesDependency , GetEntitiesPosition}
 }

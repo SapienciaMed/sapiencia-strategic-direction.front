@@ -5,25 +5,25 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { IRegisterForm } from "../interfaces/ProjectsInterfaces";
 import { registerValidator } from "../../../common/schemas";
 import { ProjectsContext } from "../contexts/projects.context";
+import { useEntitiesService } from "./entities-service.hook";
+import { EResponseCodes } from "../../../common/constants/api.enum";
+import { IEntities } from "../interfaces/Entities";
+import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 
 
 export function useRegisterData() {
+    const { GetEntities , GetEntitiesDependency } = useEntitiesService();
+    const [ locationData, setLocationData] = useState<IDropdownProps[]>([]);
+    const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
+    const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
+    const { getListByGrouper, getListByParent } = useGenericListService();
     const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData } = useContext(ProjectsContext);
     const [ charged, setCharged ] = useState<boolean>(false);
-    const processData: IDropdownProps[] = [
-        {
-            name: "Proceso 1",
-            value: 1,
-        },
-        {
-            name: "Proceso 2",
-            value: 2,
-        }
-    ];
+    
 
     const localitationData: IDropdownProps[] = [
         {
-            name: "Localizacion 1",
+            name: "Postsecundaria - SAPIENCIA",
             value: 1,
         },
         {
@@ -75,6 +75,30 @@ export function useRegisterData() {
     },[watchDateFrom])
 
     useEffect(() => {
+        GetEntities().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setprocessData(arrayEntities);
+            }
+        }).catch(() => { });
+    }, [])
+
+    useEffect(() => {
+        GetEntitiesDependency().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setDependencyData(arrayEntities);
+            }
+        }).catch(() => { });
+    }, [])
+
+    useEffect(() => {
         const subscription = watch((value: IRegisterForm) => setProjectData(prev => {
             return { ...prev, register: { ...value } }
         }));
@@ -106,5 +130,5 @@ export function useRegisterData() {
     }, [projectData]);
 
 
-    return { register, errors, controlRegister, onSubmit, processData, DependecyData, localitationData , watchDateFrom };
+    return { register, errors, controlRegister, onSubmit, processData, dependecyData, localitationData , watchDateFrom };
 }

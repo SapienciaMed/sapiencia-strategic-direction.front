@@ -60,6 +60,11 @@ export interface IParticipatingActors {
   contribution: string;
 }
 
+export interface IPosition {
+  name: string,
+  value: string | number;
+}
+
 export interface IActorsForm {
   actors?: IParticipatingActors[];
 }

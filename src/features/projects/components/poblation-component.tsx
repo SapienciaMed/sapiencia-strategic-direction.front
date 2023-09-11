@@ -400,7 +400,6 @@ export function PoblationComponent({
                     data={clasificationData}
                     errors={errors}
                     onChange={() => {
-                      debugger;
                       setValue(`demographic.${index}.detail`, null);
                     }}
                     fieldArray

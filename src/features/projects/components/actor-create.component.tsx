@@ -36,6 +36,9 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
 import { ProjectsContext } from "../contexts/projects.context";
+import { useEntitiesService } from "../hooks/entities-service.hook";
+import { IEntities } from "../interfaces/Entities";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 interface IProps {
   disableNext: () => void;
@@ -50,7 +53,9 @@ export function ActorCreateComponent({
   const [ActorCreateData, setActorCreateData] = useState<IActorsForm>();
   const { setProjectData, projectData } = useContext(ProjectsContext);
   const { setMessage } = useContext(AppContext);
+  const { GetEntitiesPosition } = useEntitiesService();
   const resolver = useYupValidationResolver(actorsValidator);
+  const [ positionData, setPositionData] = useState<IDropdownProps[]>([]);
 
   const {
     getValues,
@@ -71,6 +76,7 @@ export function ActorCreateComponent({
   useEffect(() => {
     if (projectData) setActorCreateData(projectData.identification?.actors);
   }, []);
+
 
   useEffect(() => {
     const subscription = watch((value: IActorsForm) =>
@@ -98,6 +104,21 @@ export function ActorCreateComponent({
         return { ...prev, identification: { ...identification } };
       });
   }, [ActorCreateData]);
+
+  useEffect(() => {
+    GetEntitiesPosition().then(response => {
+        if (response.operation.code === EResponseCodes.OK) {
+            const entities: IEntities[] = response.data;
+            const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                return { name: entity.description, value: entity.id };
+            });
+            setPositionData(arrayEntities);
+        }
+    }).catch(() => { });
+}, [])
+
+console.log(positionData, "posicion tabla");
+
 
   const actorColumns: ITableElement<IParticipatingActors>[] = [
     {
@@ -290,17 +311,9 @@ interface IPropsActorsForm {
 
 const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
   const { item } = props;
-  const positionData: IDropdownProps[] = [
-    {
-      name: "Posición 1",
-      value: 1,
-    },
-    {
-      name: " Posición 2",
-      value: 2,
-    },
-  ];
   const resolver = useYupValidationResolver(actorsFormValidator);
+  const { GetEntitiesPosition } = useEntitiesService();
+  const [ positionData, setPositionData] = useState<IDropdownProps[]>([]);
   const {
     handleSubmit,
     register,
@@ -311,6 +324,20 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,
   }));
+
+  useEffect(() => {
+    GetEntitiesPosition().then(response => {
+        if (response.operation.code === EResponseCodes.OK) {
+            const entities: IEntities[] = response.data;
+            const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                return { name: entity.description, value: entity.id };
+            });
+            setPositionData(arrayEntities);
+        }
+    }).catch(() => { });
+}, [])
+
+console.log(positionData);
 
   return (
     <FormComponent action={undefined} className="actors-form-container">

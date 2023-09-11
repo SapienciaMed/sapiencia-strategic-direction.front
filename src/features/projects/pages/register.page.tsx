@@ -6,7 +6,7 @@ import { Controller } from "react-hook-form";
 
 
 function RegisterPage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, localitationData, DependecyData, processData,watchDateFrom } = useRegisterData();
+    const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
@@ -125,7 +125,7 @@ function RegisterPage(): React.JSX.Element {
                             errors={errors}
                             label="Dependencia"
                             classNameLabel="text-black biggest bold text-required"
-                            data={DependecyData}
+                            data={dependecyData}
                         />
                     </div>
                     <div>
