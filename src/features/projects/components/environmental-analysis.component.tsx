@@ -154,9 +154,10 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",
+                    cancelTitle: "Cancelar",
                     onOk: () => {
                       setEnvironmentalAnalysisData(prev => {
-                        const effects = prev.effects.map(effect => {
+                        const effects = prev?.effects.map(effect => {
                           if(JSON.stringify(effect) === JSON.stringify(row)) {
                             return data;
                           } else {
@@ -172,7 +173,19 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                           return effect;
                         }
                       }));
-                      setMessage({});
+                      setMessage({
+                        title: "Guardar efecto",
+                        description: "¡Efecto ambiental guardado exitosamente!",
+                        show: true,
+                        background: true,
+                        OkTitle: "Cerrar",
+                        onOk: () => {
+                          setMessage({});
+                        },
+                        onClose: () => {
+                          setMessage({});
+                        },
+                      });
                     },
                     onCancel: () => {
                       setMessage({});
