@@ -19,7 +19,6 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
   const resolver = useYupValidationResolver(capacityValidator);
   const { setProjectData, projectData } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();
-  
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
   const {
@@ -82,7 +81,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
       <FormComponent action={undefined} className="">
         <div className="">
           <InputComponent
-              idInput="alternative"
+              idInput="alternativeCapacity"
               typeInput="text"
               className="input-basic background-textArea"
               register={register}
@@ -91,7 +90,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
               direction={EDirection.column}
               errors={errors}
               disabled={true}
-              value="Análisis Técnico"
+              value={projectData?.preparation?.technicalAnalysis?.alternative}
           />
 
           <Controller

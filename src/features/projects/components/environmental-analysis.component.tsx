@@ -217,7 +217,19 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
               return { ...prev, effects: effects };
             });
             setValue('effects', getValues('effects').filter(effect => JSON.stringify(effect) !== JSON.stringify(row)));
-            setMessage({});
+            setMessage({
+              title: "Efecto eliminado",
+              description: "¡Efecto ambiental eliminado exitosamente!",
+              show: true,
+              background: true,
+              OkTitle: "Cerrar",
+              onOk: () => {
+                setMessage({});
+              },
+              onClose: () => {
+                setMessage({});
+              },
+            });
           },
         });
       },
