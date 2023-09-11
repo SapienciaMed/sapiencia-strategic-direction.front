@@ -57,7 +57,7 @@ export function SelectComponent({
   const [selectData, setSelectData] = useState<IDropdownProps[]>(null);
   useEffect(() => {
     if (data?.length > 0) {
-      const seleccione: IDropdownProps = { name: "Seleccione", value: null };
+      const seleccione: IDropdownProps = { name: placeholder, value: null };
       const dataSelect = data.find(
         (item) => item.name === seleccione.name && item.value === seleccione.value
       );
@@ -67,7 +67,7 @@ export function SelectComponent({
     else if (promiseData !== null) {
       promiseData.then(response => {
         const dataRes = response;
-        const seleccione: IDropdownProps = { name: "Seleccione", value: null };
+        const seleccione: IDropdownProps = { name: placeholder, value: null };
         const dataSelect = dataRes.find(
           (item) => item.name === seleccione.name && item.value === seleccione.value
         );

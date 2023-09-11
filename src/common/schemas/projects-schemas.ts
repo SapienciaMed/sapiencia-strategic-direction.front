@@ -119,14 +119,14 @@ export const planDevelopmentValidator = yup.object({
 });
 
 export const capacityValidator = yup.object({
-    description: yup
+    descriptionCapacity: yup
         .string()
         .max(600, "Solo se permiten 600 caracteres")
         .required("El campo es obligatorio"),
-    unit: yup
+    unitCapacity: yup
         .string()
         .required("El campo es obligatorio"),
-    capacity: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
+    capacityGenerated: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
 });
 
 export const environmentalFffectsValidator = yup.object({
@@ -194,20 +194,20 @@ export const needsObjectivesValidator = yup.object({
 
 export const poblationValidator = yup.object().shape({
     objectivePeople : yup 
-    .string()
+    .number()
     .required("El campo es obligatorio"),
     informationSource: yup  
     .string()
     .max(100, "Solo se permiten 100 caracteres")
     .required("El campo es obligatorio"),
     region: yup
-    .string()
+    .number()
     .required("Debe seleccionar una opción"),
     departament: yup  
-    .string()
+    .number()
     .required("Debe seleccionar una opción"),
     district: yup  
-    .string()
+    .number()
     .required("Debe seleccionar una opción"),
     shelter:yup
     .string()
@@ -215,10 +215,10 @@ export const poblationValidator = yup.object().shape({
     demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
         yup.object().shape(({
             clasification:yup
-            .string()
+            .number()
             .required("Debe seleccionar una opción"),
             detail:yup
-            .string()
+            .number()
             .required("Debe seleccionar una opción"),
             infoSource:yup
             .string()

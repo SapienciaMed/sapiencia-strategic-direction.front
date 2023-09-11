@@ -3,24 +3,22 @@ import { FormComponent, SelectComponent, TextAreaComponent, } from "../../../com
 import { Controller, UseFormHandleSubmit, useForm } from "react-hook-form";
 import addIcon from '../../../public/images/icons/icon-add.png';
 import TableExpansibleComponent from "./table-expansible.component";
-import { ITableAction } from "../../../common/interfaces/table.interfaces";
+import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { AppContext } from "../../../common/contexts/app.context";
 import { EDirection } from "../../../common/constants/input.enum";
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { useRegisterData } from "../hooks/register.hook";
 import { environmentalFffectsValidator, environmentalAnalysisValidator } from "../../../common/schemas";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { ProjectsContext } from "../contexts/projects.context";
-import { IEnvironmentAnalysisForm, IeffectEnviromentForm} from "../interfaces/ProjectsInterfaces";
+import { IEffectEnviromentForm, IEnvironmentAnalysisForm } from "../interfaces/ProjectsInterfaces";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
 }
 
 export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
-  const { effectsColumns } = useRegisterData();
   const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
   const { setProjectData, projectData } = useContext(ProjectsContext);
@@ -29,16 +27,39 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
     register,
     watch,
     formState: { errors, isValid },
+    setValue,
+    getValues
   } = useForm<IEnvironmentAnalysisForm>({
     resolver, mode: "all",
     defaultValues: {
-      diagnosis : projectData?.preparation?.enviromentalAnalysis?.diagnosis ? projectData.preparation.enviromentalAnalysis.diagnosis : "",
-      effects : projectData?.preparation?.enviromentalAnalysis?.effects ? projectData.preparation.enviromentalAnalysis.effects : [],
+      environmentDiagnosis: projectData?.preparation?.enviromentalAnalysis?.environmentDiagnosis ? projectData.preparation.enviromentalAnalysis.environmentDiagnosis : "",
+      effects: projectData?.preparation?.enviromentalAnalysis?.effects ? projectData.preparation.enviromentalAnalysis.effects : [],
     },
   });
   const EffectCreateComponentRef = useRef(null);
   const { setMessage } = useContext(AppContext);
-  const [effects, setEffects] = useState<IeffectEnviromentForm[]>([])
+  const effectsColumns: ITableElement<IEffectEnviromentForm>[] = [
+    {
+      fieldName: "type",
+      header: "Tipo de impacto",
+    },
+    {
+      fieldName: "impact",
+      header: "Impacto",
+    },
+    {
+      fieldName: "level",
+      header: "Nivel de impacto",
+    },
+    {
+      fieldName: "classification",
+      header: "Clasificación",
+    },
+    {
+      fieldName: "measures",
+      header: "Medidas de mitigación",
+    },
+  ];
 
   useEffect(() => {
     if (isValid) {
@@ -81,7 +102,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
   }, []);
 
   useEffect(() => {
-        
+
     if (environmentalAnalysisData)
       setProjectData((prev) => {
         const preparation = prev?.preparation
@@ -92,42 +113,41 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
   }, [environmentalAnalysisData]);
 
   useEffect(() => {
-    const subscription = watch((value: IeffectEnviromentForm) =>
-    setEnvironmentalAnalysisData((prev) => {
+    const subscription = watch((value: IEnvironmentAnalysisForm) =>
+      setEnvironmentalAnalysisData((prev) => {
         return { ...prev, ...value };
       })
     );
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const EffectsActions: ITableAction<IeffectEnviromentForm>[] = [
+  const EffectsActions: ITableAction<IEffectEnviromentForm>[] = [
     {
       icon: "Edit",
       onClick: (row) => {
         setMessage({
           title: "Editar efecto ambiental",
           show: true,
-          description: (
+          description:
             <EffectFormComponent
               types={types} ratings={ratings} levels={levels}
               ref={EffectCreateComponentRef}
               item={{
                 id: row.id,
-                type: row.type === '/' ? '' : types.find((type) => type.name === row.type)?.value,
-                impact: row.impact === '/' ? '' : row.impact,
-                level: row.level === '/' ? '' : levels.find((level) => level.name === row.level)?.value,
-                classification: row.classification === '' ? '' : ratings.find((rating) => rating.name === row.classification)?.value,
-                measures: row.measures === '/' ? '' : row.measures
+                type: row.type === null || row.type === undefined ? null : Number(types.find((type) => type.value === row.type)?.value),
+                impact: row.type === null ? null : row.impact,
+                level: row.type === null || row.type === undefined ? null : Number(levels.find((level) => level.value === row.level)?.value),
+                classification: row.type === null || row.type === undefined ? null : Number(ratings.find((rating) => rating.value === row.classification)?.value),
+                measures: row.type === null ? null : row.measures
               }}
-            />
-          ),
+            />,
           background: true,
           OkTitle: "Aceptar",
           cancelTitle: "Cancelar",
           onOk: () => {
             if (EffectCreateComponentRef.current) {
               EffectCreateComponentRef.current.handleSubmit(
-                (data: IeffectEnviromentForm) => {
+                (data: IEffectEnviromentForm) => {
                   setMessage({
                     title: "Guardar efecto ambiental",
                     description: "¿Desea guardar el efecto ambiental?",
@@ -135,15 +155,23 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                     background: true,
                     OkTitle: "Aceptar",
                     onOk: () => {
-                      effects[effects.findIndex(e => e.id === row.id)] = {
-                        id: row.id,
-                        type: data.type === '' ? '/' : types.find((type) => type.value === data.type)?.name,
-                        impact: data.impact === '' ? '/' : data.impact,
-                        level: data.level === '' ? '/' : levels.find((level) => level.value === data.level)?.name,
-                        classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value === data.classification)?.name,
-                        measures: data.measures === '' ? '/' : data.measures
-                      };
-                      setEffects(effects);
+                      setEnvironmentalAnalysisData(prev => {
+                        const effects = prev.effects.map(effect => {
+                          if(JSON.stringify(effect) === JSON.stringify(row)) {
+                            return data;
+                          } else {
+                            return effect;
+                          }
+                        });
+                        return { ...prev, effects: effects };
+                      });
+                      setValue('effects', getValues('effects').map(effect => {
+                        if(JSON.stringify(effect) === JSON.stringify(row)) {
+                          return data;
+                        } else {
+                          return effect;
+                        }
+                      }));
                       setMessage({});
                     },
                     onCancel: () => {
@@ -184,20 +212,12 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           show: true,
           title: "Eliminar efecto",
           onOk: () => {
-            setEffects(effects.filter(effect => effect.id !== row.id));
-            setMessage({
-              title: "Efecto eliminado",
-              description: "¡Efecto ambiental eliminado exitosamente!",
-              show: true,
-              background: true,
-              OkTitle: "Cerrar",
-              onOk: () => {
-                setMessage({});
-              },
-              onClose: () => {
-                setMessage({});
-              },
+            setEnvironmentalAnalysisData(prev => {
+              const effects = prev?.effects?.filter(effect => JSON.stringify(effect) !== JSON.stringify(row));
+              return { ...prev, effects: effects };
             });
+            setValue('effects', getValues('effects').filter(effect => JSON.stringify(effect) !== JSON.stringify(row)));
+            setMessage({});
           },
         });
       },
@@ -215,7 +235,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
           </div>
           <Controller
             control={control}
-            name="diagnosis"
+            name="environmentDiagnosis"
             defaultValue=""
             render={({ field }) => {
               return (
@@ -242,7 +262,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
 
         </div>
       </FormComponent>
-      
+
       <div className="effects-container" style={{ marginTop: 20 }}>
         <div className="effects-container-header" style={{ marginTop: 20 }}>
           <label className="text-black big bold">
@@ -255,7 +275,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
               setMessage({
                 title: "Agregar efecto ambiental",
                 description: (
-                  <EffectFormComponent ref={EffectCreateComponentRef} types={types} ratings={ratings} levels={levels}  />
+                  <EffectFormComponent ref={EffectCreateComponentRef} types={types} ratings={ratings} levels={levels} />
                 ),
                 show: true,
                 background: true,
@@ -264,7 +284,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                 onOk: () => {
                   if (EffectCreateComponentRef.current) {
                     EffectCreateComponentRef.current.handleSubmit(
-                      (data: IeffectEnviromentForm) => {
+                      (data: IEffectEnviromentForm) => {
                         setMessage({
                           title: "Guardar efecto ambiental",
                           description: "¿Desea guardar el efecto ambiental?",
@@ -273,15 +293,11 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                           OkTitle: "Aceptar",
                           cancelTitle: "Cancelar",
                           onOk: () => {
-                            effects.push({
-                              id: Array.from({ length: 10 }, () => String.fromCharCode(Math.floor(Math.random() * 26) + 97)).join(''),
-                              type: data.type === '' ? '/' : types.find((type) => type.value == data.type)?.name,
-                              impact: data.impact === '' ? '/' : data.impact,
-                              level: data.level === '' ? '/' : levels.find((level) => level.value == data.level)?.name,
-                              classification: data.classification === '' ? '/' : ratings.find((rating) => rating.value == data.classification)?.name,
-                              measures: data.measures === '' ? '/' : data.measures
+                            setEnvironmentalAnalysisData(prev => {
+                              const effects = prev?.effects ? prev.effects.concat(data) : [data];
+                              return { ...prev, effects: effects };
                             });
-                            setEffects(effects);
+                            setValue('effects', getValues('effects').concat(data));
                             setMessage({
                               title: "Guardar efecto",
                               description: "¡Efecto ambiental guardado exitosamente!",
@@ -303,8 +319,8 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                             setMessage({});
                           },
                         });
-                       
-                        
+
+
                       }
                     )();
                   }
@@ -323,16 +339,8 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
             <img style={{ marginLeft: 4 }} width={16} src={addIcon} alt="add" />
           </div>
         </div>
-        {
-          effects.length > 0 ? (
-            <TableExpansibleComponent
-              actions={EffectsActions}
-              columns={effectsColumns}
-              data={effects}
-            />
-          ) : null
-        }
-          
+        {getValues('effects').length > 0 && <TableExpansibleComponent actions={EffectsActions} columns={effectsColumns} data={getValues('effects')} />}
+
       </div>
     </div>
   );
@@ -346,7 +354,7 @@ interface IRef {
 
 interface IPropsEffectssForm {
   counter?: number;
-  item?: IeffectEnviromentForm;
+  item?: IEffectEnviromentForm;
   types: IDropdownProps[];
   ratings: IDropdownProps[];
   levels: IDropdownProps[];
@@ -360,7 +368,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
     register,
     formState: { errors },
     control,
-  } = useForm<IeffectEnviromentForm>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
+  } = useForm<IEffectEnviromentForm>({ resolver, mode: "all", defaultValues: item ? { ...item } : {} });
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,
@@ -373,7 +381,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
         <Controller
           control={control}
           name="type"
-          defaultValue=""
+          defaultValue={null}
           render={({ field }) => {
             return (
               <SelectComponent
@@ -390,7 +398,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
           }}
         />
       </div>
-      
+
       <div style={{ marginTop: 20 }}>
         <Controller
           control={control}
@@ -419,12 +427,12 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
           }}
         />
       </div>
-      
+
       <div className="group-inputs" style={{ marginTop: 20 }}>
         <Controller
           control={control}
           name="classification"
-          defaultValue=""
+          defaultValue={null}
           render={({ field }) => {
             return (
               <SelectComponent
@@ -444,7 +452,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
         <Controller
           control={control}
           name="level"
-          defaultValue=""
+          defaultValue={null}
           render={({ field }) => {
             return (
               <SelectComponent
@@ -461,7 +469,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
           }}
         />
       </div>
-      
+
       <div style={{ marginTop: 20 }}>
         <Controller
           control={control}

@@ -33,8 +33,8 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         trigger
     } = useForm<INeedsForm>({
         resolver, mode: "all", defaultValues: {
-            alternative: "prueba",
-            generalObjetive: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : null,
+            alternative: projectData?.preparation?.technicalAnalysis?.alternative ? projectData.preparation.technicalAnalysis.alternative : "",
+            generalObjetive: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
             objetives: projectData?.preparation?.needs?.objetives ? projectData.preparation.needs.objetives : null
         }
     });

@@ -78,12 +78,12 @@ export function useProjectsCrudData() {
                     register: {
                         bpin: projectDataResponse.bpin,
                         project: projectDataResponse.project,
-                        dateFrom: projectDataResponse.dateFrom.toString(),
-                        dateTo: projectDataResponse.dateTo.toString(),
+                        dateFrom: projectDataResponse.dateFrom ? projectDataResponse.dateFrom.toString() : null,
+                        dateTo: projectDataResponse.dateTo ? projectDataResponse.dateTo.toString() : null,
                         process: projectDataResponse.process,
                         dependency: projectDataResponse.dependency,
                         object: projectDataResponse.object,
-                        localitation: projectDataResponse.localitation
+                        localitation: projectDataResponse.localitation ? projectDataResponse.localitation : 1
                     },
                     identification: {
                         problemDescription: {
@@ -114,10 +114,37 @@ export function useProjectsCrudData() {
                         },
                         actors: {
                             actors: projectDataResponse.actors
+                        },
+                        poblation: {
+                            objectivePeople: projectDataResponse.objectivePeople,
+                            informationSource: projectDataResponse.informationSource,
+                            region: projectDataResponse.region,
+                            departament: projectDataResponse.departament,
+                            district: projectDataResponse.district,
+                            shelter: projectDataResponse.shelter,
+                            demographic: projectDataResponse.classifications
+                        }
+                    },
+                    preparation: {
+                        technicalAnalysis: {
+                            alternative: projectDataResponse.alternative,
+                            resumeAlternative: projectDataResponse.resumeAlternative
+                        },
+                        needs: {
+                            objetives: projectDataResponse.specificObjectives
+                        },
+                        capacity: {
+                            descriptionCapacity: projectDataResponse.descriptionCapacity,
+                            unitCapacity: projectDataResponse.unitCapacity,
+                            capacityGenerated: projectDataResponse.capacityGenerated
+                        },
+                        enviromentalAnalysis: {
+                            environmentDiagnosis: projectDataResponse.environmentDiagnosis,
+                            effects: projectDataResponse.environmentalEffects
                         }
                     }
                 })
-            } else {
+            } else if(response.operation.code === EResponseCodes.FAIL) {
                 setMessage({
                     title: "No se pudo cargar el proyecto",
                     description: <p className="text-primary biggest">{response.operation.message}</p>,

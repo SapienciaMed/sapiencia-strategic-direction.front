@@ -113,7 +113,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                         } else {
                                             return obj;
                                         }
-                                        
                                     })}}};
                                 });
                                 setMessage({

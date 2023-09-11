@@ -31,10 +31,10 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
     resolver,
     mode: "all",
     defaultValues: {
-      alternative : projectData?.preparation?.capacity?.alternative ? projectData.preparation.capacity.alternative : "",
-      description : projectData?.preparation?.capacity?.description ? projectData.preparation.capacity.description : "",
-      unit : projectData?.preparation?.capacity?.unit ? projectData.preparation.capacity.unit : "",
-      capacity : projectData.preparation?.capacity?.capacity ?  projectData.preparation.capacity.capacity : "" ,
+      alternativeCapacity : projectData?.preparation?.capacity?.alternativeCapacity ? projectData.preparation.capacity.alternativeCapacity : "",
+      descriptionCapacity : projectData?.preparation?.capacity?.descriptionCapacity ? projectData.preparation.capacity.descriptionCapacity : "",
+      unitCapacity : projectData?.preparation?.capacity?.unitCapacity ? projectData.preparation.capacity.unitCapacity : null,
+      capacityGenerated : projectData.preparation?.capacity?.capacityGenerated ?  projectData.preparation.capacity.capacityGenerated : null,
     },
   });
 
@@ -96,7 +96,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
 
           <Controller
             control={control}
-            name="description"
+            name="descriptionCapacity"
             defaultValue=""
             render={({ field }) => {
               return (
@@ -124,7 +124,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
           <div className="w-100 group-inputs">
             <div className="w-100">
               <SelectComponent
-                idInput="unit"
+                idInput="unitCapacity"
                 className="select-basic"
                 control={control}
                 errors={errors}
@@ -140,7 +140,7 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
             <div className="w-100">
               <Controller
                 control={control}
-                name="capacity"
+                name="capacityGenerated"
                 render={({ field }) => {
                   return (
                     <InputComponent
