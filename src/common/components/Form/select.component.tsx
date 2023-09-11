@@ -61,7 +61,9 @@ export function SelectComponent({
       const dataSelect = data.find(
         (item) => item.name === seleccione.name && item.value === seleccione.value
       );
-      if (!dataSelect) data.unshift(seleccione);
+      if(!Reflect.has(data[0],"value")) {
+        data = [seleccione];
+      } else if (!dataSelect) data.unshift(seleccione);
       setSelectData(data)
     }
     else if (promiseData !== null) {
