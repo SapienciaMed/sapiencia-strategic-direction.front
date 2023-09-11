@@ -198,7 +198,7 @@ export function PoblationComponent({
     const response = await getListByGrouper(Reflect.get(clasificationActions, clasificationSelected))
     if (response.operation.code === EResponseCodes.OK) {
       const data: IDropdownProps[] = response.data.map(data => {
-        return { name: data.itemDescription, value: Number(data.itemCode) }
+        return { name: data.itemDescription, value: Number(data.id) }
       });
       return data;
     } else {
@@ -400,6 +400,7 @@ export function PoblationComponent({
                     data={clasificationData}
                     errors={errors}
                     onChange={() => {
+                      debugger;
                       setValue(`demographic.${index}.detail`, null);
                     }}
                     fieldArray
