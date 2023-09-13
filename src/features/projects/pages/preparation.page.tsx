@@ -6,6 +6,7 @@ import NeedsComponent from "../components/needs.component";
 import CapacityComponent from "../components/capacity.component";
 import EnvironmentalAnalysisComponent from "../components/environmental-analysis.component";
 import TechnicalAnalysisComponent  from "../components/technical-analysis.component";
+import ActivitiesComponent from "../components/activities.component";
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -45,7 +46,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 5,
             name: "Actividades",
-            content: <>Aqui va tu componente</>
+            content: <ActivitiesComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
         },
         {
             id: 6,
