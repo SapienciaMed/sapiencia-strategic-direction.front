@@ -111,10 +111,8 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
                   register={register}
                   onChange={field.onChange}
                   errors={errors}
+                  characters={600}
                 >
-                  <label className="label-max-textarea">
-                    Max. 600 caracteres
-                  </label>
                 </TextAreaComponent>
               );
             }}

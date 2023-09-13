@@ -359,8 +359,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
+                            characters={800}
                         >
-                            <label className="label-max-textarea">Max 800 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}
@@ -382,8 +382,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
+                            characters={500}
                         >
-                            <label className="label-max-textarea">Max 500 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}
@@ -405,8 +405,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
+                            characters={300}
                         >
-                            <label className="label-max-textarea">Max 300 caracteres</label>
                         </TextAreaComponent>
                     );
                 }}

@@ -104,10 +104,8 @@ export function TechnicalAnalysisComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={300}
                   >
-                    <label className="label-max-textarea">
-                      Max. 300 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -132,10 +130,8 @@ export function TechnicalAnalysisComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={5000}
                   >
-                    <label className="label-max-textarea">
-                      Max. 5000 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}

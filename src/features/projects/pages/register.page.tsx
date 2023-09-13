@@ -147,9 +147,8 @@ function RegisterPage(): React.JSX.Element {
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
-                                    >
-                                        <label className="label-max-textarea">Max. 500 caracteres</label>
-                                    </TextAreaComponent>
+                                        characters={500}
+                                    ></TextAreaComponent>
                                 );
                             }}
                         />

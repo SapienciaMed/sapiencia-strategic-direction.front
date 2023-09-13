@@ -337,8 +337,6 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
     }).catch(() => { });
 }, [])
 
-console.log(positionData);
-
   return (
     <FormComponent action={undefined} className="actors-form-container">
       <Controller

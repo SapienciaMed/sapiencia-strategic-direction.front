@@ -268,10 +268,8 @@ export function PoblationComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={100}
                   >
-                    <label className="label-max-textarea">
-                      Max. 100 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -361,10 +359,8 @@ export function PoblationComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={100}
                   >
-                    <label className="label-max-textarea">
-                      Max. 100 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -488,9 +484,9 @@ export function PoblationComponent({
                           fieldArray={true}
                           onChange={field.onChange}
                           errors={errors}
+                          characters={100}
                         >
                           {getValues(`demographic.${index}.infoSource`).length > 100 ? <p className="error-message bold not-margin-padding">Solo se permiten 100 caracteres</p> : <></>}
-                          <label className="label-max-textarea">Max. 100 caracteres</label>
                         </TextAreaComponent>
                       );
                     }}

@@ -154,10 +154,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -182,10 +180,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -210,10 +206,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -243,10 +237,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -271,10 +263,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -299,10 +289,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -332,10 +320,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -360,10 +346,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}
@@ -388,10 +372,8 @@ export function PlanDevelopmentComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
+                    characters={500}
                   >
-                    <label className="label-max-textarea">
-                      Max. 500 caracteres
-                    </label>
                   </TextAreaComponent>
                 );
               }}

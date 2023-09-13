@@ -358,8 +358,8 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
+                                characters={300}
                             >
-                                <label className="label-max-textarea">Max 300 caracteres</label>
                             </TextAreaComponent>
                         );
                     }}
@@ -419,10 +419,10 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                                     fieldArray={true}
                                                     onChange={field.onChange}
                                                     errors={errors}
+                                                    characters={300}
                                                 >
                                                     {getValues(`estatesService.${index}.description`) === "" ? <p className="error-message bold not-margin-padding">El campo es obligatorio</p> : <></>}
                                                     {getValues(`estatesService.${index}.description`).length > 300 ? <p className="error-message bold not-margin-padding">Solo se permiten 300 caracteres</p> : <></>}
-                                                    <label className="label-max-textarea">Max 300 caracteres</label>
                                                 </TextAreaComponent>
                                             );
                                         }}

@@ -275,10 +275,8 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                   register={register}
                   onChange={field.onChange}
                   errors={errors}
+                  characters={600}
                 >
-                  <label className="label-max-textarea">
-                    Max. 600 caracteres
-                  </label>
                 </TextAreaComponent>
               );
             }}
@@ -443,10 +441,8 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 onChange={field.onChange}
                 rows={1}
                 errors={errors}
+                characters={300}
               >
-                <label className="label-max-textarea" style={{ color: '#818181' }}>
-                  Máx. 300 caracteres
-                </label>
               </TextAreaComponent>
             );
           }}
@@ -514,10 +510,8 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 onChange={field.onChange}
                 rows={1}
                 errors={errors}
+                characters={500}
               >
-                <label className="label-max-textarea" style={{ color: '#818181' }}>
-                  Máx. 500 caracteres
-                </label>
               </TextAreaComponent>
             );
           }}

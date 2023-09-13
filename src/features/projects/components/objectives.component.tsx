@@ -229,8 +229,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
+                                characters={300}
                             >
-                                <label className="label-max-textarea">Max 300 caracteres</label>
                             </TextAreaComponent>
                         );
                     }}
@@ -276,8 +276,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
+                                characters={500}
                             >
-                                <label className="label-max-textarea">Max 500 caracteres</label>
                             </TextAreaComponent>
                         );
                     }}
