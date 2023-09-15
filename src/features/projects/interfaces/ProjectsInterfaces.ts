@@ -134,6 +134,23 @@ export interface ItechnicalAnalysisForm {
   resumeAlternative?: string;
 }
 
+export interface IAddRisks {
+  id?: number;
+  level: number;
+  risk:number;
+  typeRisk:number;
+  descriptionRisk: string;
+  probability:number;
+  impact:number;
+  effects:string;
+  mitigation:string;
+}
+
+export interface IRisks {
+  risks?: IAddRisks[];
+}
+
+
 export interface IProjectTemp {
   id?: number;
   user: string;
@@ -151,6 +168,8 @@ export interface IProjectTemp {
     needs?: INeedsForm
     capacity?: ICapacityForm
     enviromentalAnalysis?: IEnvironmentAnalysisForm
+
+    risks?:IRisks
   }
 }
 

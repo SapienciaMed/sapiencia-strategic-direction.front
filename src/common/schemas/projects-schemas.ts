@@ -235,3 +235,34 @@ export const technicalAnalysisValidator = yup.object({
     .required("El campo es obligatorio")
     .max(5000, "Solo se permiten 5000 caracteres"),
 });
+
+
+export const risksValidator = yup.object().shape({
+    level : yup 
+    .number()
+    .required("Debe seleccionar una opción"),
+    risk: yup  
+    .number()
+    .required("Debe seleccionar una opción"),
+    typeRisk: yup
+    .number()
+    .required("Debe seleccionar una opción"),
+    descriptionRisk: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(500, "Solo se permiten 500 caracteres"),
+    probability: yup  
+    .number()
+    .required("Debe seleccionar una opción"),
+    impact: yup  
+    .number()
+    .required("Debe seleccionar una opción"),
+    effects: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(500, "Solo se permiten 500 caracteres"),
+    mitigation: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(500, "Solo se permiten 500 caracteres"),
+});

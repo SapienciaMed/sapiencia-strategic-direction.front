@@ -7,10 +7,11 @@ import CapacityComponent from "../components/capacity.component";
 import EnvironmentalAnalysisComponent from "../components/environmental-analysis.component";
 import TechnicalAnalysisComponent  from "../components/technical-analysis.component";
 import ActivitiesComponent from "../components/activities.component";
+import RisksComponent from "../components/risks.component";
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
-    const { setDisableContinue } = useContext(ProjectsContext);
+    const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
@@ -51,9 +52,24 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 6,
             name: "Riesgos",
-            content: <>Aqui va tu componente</>
+            content: <RisksComponent
+            disableNext={() => {
+                setDisableContinue(true);
+                setActionContinue(() => { });
+
+            }}
+            enableNext={() => {
+                setDisableContinue(false);
+                setActionContinue(() => nextStep);
+            }}
+            setForm={setPlaneFormComponent}
+        />
+
         },
     ];
+    const nextStep = () => {
+        setStep(3);
+    }
     useEffect(() => {
         setDisableContinue(true);
     }, []);
