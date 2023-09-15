@@ -12,10 +12,11 @@ import { classNames } from "primereact/utils";
 interface IProps<T> {
     columns: ITableElement<T>[];
     actions?: ITableAction<T>[];
-    data?: object[];
+    data?: any[];
+    hidePagination?: boolean;
 }
 
-const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): React.JSX.Element => {
+const TableExpansibleComponent = ({ columns, actions, data, hidePagination = false }: IProps<any>): React.JSX.Element => {
     const [first, setFirst] = useState<number>(0);
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(0);
@@ -151,9 +152,13 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
             </>
         );
     };
+    let expansibleCount = 0;
+    data.forEach(item => {
+        if(item.childrens?.length > 0) expansibleCount++;
+    })
     return (
         <div className="spc-common-table expansible card-table">
-            <Paginator
+            {!hidePagination && <Paginator
                 className="between spc-table-paginator"
                 template={paginatorHeader}
                 leftContent={width > 830 ? leftContent : null}
@@ -161,7 +166,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                 rows={perPage}
                 totalRecords={data?.length || 0}
                 onPageChange={onPageChange}
-            />
+            />}
             {width > 830 ? (
                 <DataTable
                     value={[...data].slice(perPage * page, (perPage * page) + perPage)}
@@ -172,7 +177,7 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                     scrollable={true}
                     emptyMessage={" "}
                 >
-                    <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />
+                    {expansibleCount > 0 && <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />}
                     {columns.map((col) => (
                         <Column
                             key={col.fieldName}
@@ -203,14 +208,14 @@ const TableExpansibleComponent = ({ columns, actions, data }: IProps<any>): Reac
                     emptyMessage={" "}
                 />
             )}
-            <Paginator
+            {!hidePagination && <Paginator
                 className="spc-table-paginator"
                 template={paginatorFooter}
                 first={first}
                 rows={perPage}
                 totalRecords={data?.length || 0}
                 onPageChange={onPageChange}
-            />
+            />}
         </div>
     )
 }
