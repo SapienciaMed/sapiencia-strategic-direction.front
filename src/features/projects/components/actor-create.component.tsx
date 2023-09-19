@@ -117,8 +117,6 @@ export function ActorCreateComponent({
     }).catch(() => { });
 }, [])
 
-console.log(positionData, "posicion tabla");
-
 
   const actorColumns: ITableElement<IParticipatingActors>[] = [
     {

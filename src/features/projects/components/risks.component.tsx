@@ -62,7 +62,28 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const onCancel = () => {
         setMessage({
             title: "Cancelar riesgo",
-            description: "Desea cancelar la acción, no se guardarán los datos",
+            description: "¿Deseas cancelar la creación del riesgo?",
+            show: true,
+            background: true,
+            cancelTitle: "Continuar",
+            OkTitle: "Si, cancelar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                setForm(null);
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        })
+    }
+
+    const onCancelEdit = () => {
+        setMessage({
+            title: "Cancelar cambios",
+            description: "¿Desea cancelar los cambios del riesgo? ",
             show: true,
             background: true,
             cancelTitle: "Continuar",
@@ -112,7 +133,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                 const levelRisk = LevelData.find( item => item.value == row.level)
                 return <>{ levelRisk.name || ""}</>
             },
-            width:"100px"
+            width:"200px"
 
         },
         {
@@ -126,7 +147,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         return <></>
                 }         
             },
-            width:"100px"
+            width:"200px"
         },
         {
             fieldName: "typeRisk",
@@ -135,11 +156,12 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                 const typeRisk = typeRiskData.find( item => item.value == row.typeRisk)
                 return <>{ typeRisk.name || ""}</>
             },
-            width:"100px"
+            width:"200px"
         },
         {
             fieldName: "descriptionRisk",
             header: "Descripción del riesgo",
+            width:"200px"
         },
         {
             fieldName: "probability",
@@ -147,19 +169,23 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             renderCell: (row) => {
                 const probability = probabilityData.find( item => item.value == row.probability)
                 return <>{ probability.name || ""}</>
-            }
+            },
+            width:"200px"
         },
         {
             fieldName: "impact",
             header: "Impacto",
+            width:"200px"
         },
         {
             fieldName: "effects",
             header: "Efectos",
+            width:"200px"
         },
         {
             fieldName: "mitigation",
             header: "Medidas de mitigación",
+            width:"200px"
         },
     ];
     const objectivesActions: ITableAction<IAddRisks>[] = [
@@ -168,7 +194,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             onClick: (row) => {
                 setForm(<AddRisksComponent setForm={setForm} returnData={changeRisks} item={row} />);
                 setTextContinue("Guardar y regresar");
-                setActionCancel(() => onCancel);
+                setActionCancel(() => onCancelEdit);
             }
         },
         {
@@ -176,7 +202,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             onClick: (row) => {
                 setMessage({
                     title: "Eliminar Riesgo",
-                    description: "¿Desea eliminar el Riesgo?",
+                    description: "¿Deseas eliminar el Riesgo?",
                     show: true,
                     background: true,
                     cancelTitle: "Cancelar",
@@ -192,8 +218,8 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         });
                         trigger("risks");
                         setMessage({
-                            title: "Riesgo eliminado",
-                            description: "Riesgo eliminado exitosamente!",
+                            title: "Riesgo",
+                            description: "!Eliminado exitosamente!",
                             show: true,
                             background: true,
                             OkTitle: "Cerrar",
@@ -223,8 +249,6 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         }
         trigger("risks");
     };
-
-    console.log(getValues("risks"));
 
     useEffect(() => {
         if (isValid) {
@@ -369,8 +393,8 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
 
     const onSubmit = handleSubmit(async (data: IAddRisks) => {
         setMessage({
-            title: item ? "Editar riesgo" : "Guardar riesgo",
-            description: item ? "¿Desea editar el riesgo?" : "¿Desea guardar el riesgo?",
+            title: item ? "Editar riesgo" : "Crear riesgo",
+            description: item ? "¿Deseas editar el riesgo?" : "¿Deseas guardar el riesgo?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
@@ -381,8 +405,8 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
             onOk: () => {
                 returnData(data, item);
                 setMessage({
-                    title: item ? "Editar riesgo" : "Guardar riesgo",
-                    description: item ? "Riesgo editado exitosamente!" : "Riesgo guardado exitosamente!",
+                    title: item ? "Cambios guardados" : "Riesgo",
+                    description: item ? "!Cambios Guardados exitosamente!" : "¡Guardado exitosamente!",
                     show: true,
                     background: true,
                     OkTitle: "Cerrar",

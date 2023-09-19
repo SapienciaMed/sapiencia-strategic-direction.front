@@ -26,7 +26,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                             <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
                                     title: "Cancelar creación de proyecto",
-                                    description: "¿Desea cancelar la creación? No se guardarán los datos",
+                                    description: "¿Deseas cancelar la creación? No se guardarán los datos",
                                     show: true,
                                     background: true,
                                     cancelTitle: "Cancelar",
@@ -68,7 +68,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
                             title: "Cancelar creación de proyecto",
-                            description: "¿Desea cancelar la creación? No se guardarán los datos",
+                            description: "¿Deseas cancelar la creación? No se guardarán los datos",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
