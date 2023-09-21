@@ -151,6 +151,27 @@ export interface IRisks {
 }
 
 
+export interface IprofitsIncome {
+  id?: number;
+  type: string;
+  description: string;
+  unit: number;
+  period: Iperiod[];
+}
+
+export interface IproftisIncomeForm {
+  profitsIncome?: IprofitsIncome[];
+}
+
+export interface Iperiod {
+  id?: number;
+  period: number;
+  quantity:number;
+  unitValue:number;
+  financialValue:number;
+}
+
+
 export interface IProjectTemp {
   id?: number;
   user: string;
@@ -170,6 +191,9 @@ export interface IProjectTemp {
     enviromentalAnalysis?: IEnvironmentAnalysisForm
 
     risks?:IRisks
+  }
+  programation?:{
+    profitsIncome?:IproftisIncomeForm;
   }
 }
 

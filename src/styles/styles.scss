@@ -46,6 +46,28 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.type-container {
+    display: grid;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.clasification-period-container{
+    display: grid;
+    row-gap: 1.3rem;
+    .actions-needs{
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        .button-delete {
+            filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+
 .mobile-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -337,6 +359,9 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+
+
+
 .w-100 {
     width: 100%;
 }
@@ -423,6 +448,15 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         padding: 1rem 0px;
         row-gap: 1rem;
         column-gap: 1rem;
+    }
+
+    .type-container {
+        display: flex;
+        column-gap: 1rem;
+        align-content: center;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
     }
 
     .risk-component {
@@ -579,5 +613,31 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         .actions-needs {
             padding-top: 1.7rem;
         }
+    }
+
+    .clasification-period-container{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            padding: 1rem 0px;
+            row-gap: 1rem;
+            column-gap: 1rem;
+            .actions-needs{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex-wrap: wrap;
+                align-content: center;
+                .button-delete {
+                    filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+    }
+
+    .container-profits{
+        display: grid;
+        row-gap: 1.5rem;
     }
 }

@@ -29,6 +29,7 @@ interface IInputnumber<T> {
   useGrouping?: boolean;
   optionsRegister?: {};
   shouldUnregister?: boolean;
+  onChange?: () => void;
 }
 
 function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
@@ -66,6 +67,7 @@ export function InputNumberComponent({
   useGrouping = true,
   optionsRegister,
   shouldUnregister,
+  onChange
 }: IInputnumber<any>): React.JSX.Element {
   const messageError = () => {
     const keysError = idInput.split(".");
@@ -104,7 +106,12 @@ export function InputNumberComponent({
           render={({ field }) => (
             <InputNumber
               id={field.name}
-              onChange={(e) => field.onChange(e.value)}
+              onChange={(e) => {
+                field.onChange(e.value);
+                if(onChange){
+                  onChange();
+                }
+              }}
               onBlur={(e) => field.onBlur()}
               placeholder={placeholder}
               value={field.value}

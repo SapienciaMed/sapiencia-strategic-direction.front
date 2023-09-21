@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import PreparationPage from "../pages/preparation.page";
 import { useProjectsService } from "./projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
+import ProgramationPage from "../pages/programation.page";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
@@ -44,7 +45,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "programming", title: "4. Programación", content: <>aqui va tu pagina c:</>, action: () => {
+            id: "programming", title: "4. Programación", content: <ProgramationPage/>, action: () => {
                 setStep(3)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -190,7 +191,7 @@ export function useProjectsCrudData() {
             if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
-                    description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                    description: <p className="text-primary biggest">Podrás continuar la creación del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",

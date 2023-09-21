@@ -266,3 +266,16 @@ export const risksValidator = yup.object().shape({
     .required("El campo es obligatorio")
     .max(500, "Solo se permiten 500 caracteres"),
 });
+
+
+export const profitsIncomeValidator = yup.object({
+    type: yup.string().required("Debe seleccionar una opción"),
+    description: yup.string().required("El campo es obligatorio").max(600, "Solo se permiten 600 caracteres"),
+    unit: yup.number().required("Debe seleccionar una opción"),
+    period: yup.array().required("Debe haber al menos un periodo").min(1, "Debe haber al menos un periodo").of(
+        yup.object(({
+            quantity: yup.number().required("El campo es obligatorio"),
+            unitValue: yup.number().required("El campo es obligatorio"),
+        }))
+    ),
+});

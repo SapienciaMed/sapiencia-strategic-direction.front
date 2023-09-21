@@ -45,7 +45,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const [ typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [ probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
     const [ impactData, setImpactData] = useState<IDropdownProps[]>(null);
-    const { getEntitiesTypesRisks, getEntitiesProbability } = useEntitiesService();
+    const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
     const {
         control,
         register,
@@ -66,7 +66,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             show: true,
             background: true,
             cancelTitle: "Continuar",
-            OkTitle: "Si, cancelar",
+            OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
             },
@@ -100,6 +100,19 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             }
         })
     }
+
+    
+    useEffect(() => {
+        getEntitiesImpact().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setImpactData(arrayEntities);
+            }
+        }).catch(() => { });
+    }, [])
 
     useEffect(() => {
         getEntitiesTypesRisks().then(response => {
@@ -175,6 +188,10 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         {
             fieldName: "impact",
             header: "Impacto",
+            renderCell: (row) => {
+                const impact = impactData.find( item => item.value == row.impact)
+                return <>{ impact.name || ""}</>
+            },
             width:"200px"
         },
         {
@@ -234,7 +251,6 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     ];
     const changeRisks = (data: IAddRisks, row?: IAddRisks) => {
         if (row) {
-            debugger;
             const risksData = getValues("risks").filter(item => item !== row).concat(data)
             setValue("risks", risksData);
             setRisksData(prev => {
@@ -305,7 +321,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const [ typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [ probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
     const [ impactData, setImpactData] = useState<IDropdownProps[]>(null);
-    const { getEntitiesTypesRisks, getEntitiesProbability } = useEntitiesService();
+    const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
     
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
     const {
@@ -329,18 +345,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
-    const DataImpact: IDropdownProps[] = [
-        {
-            name: "impacto 1",
-            value: 1,
-        },
-        {
-            name: "impacto 2",
-            value: 2,
-        }
-    ];
-
-
+    
     const idLevel = watch("level")
     useEffect(() => {
         if (idLevel == 1) {
@@ -366,6 +371,18 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         setDisableContinue(!isValid);
     }, [isValid]);
 
+
+    useEffect(() => {
+        getEntitiesImpact().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setImpactData(arrayEntities);
+            }
+        }).catch(() => { });
+    }, [])
     
     useEffect(() => {
         getEntitiesTypesRisks().then(response => {
@@ -504,7 +521,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                             className="select-basic span-width"
                             label="Impacto"
                             classNameLabel="text-black biggest bold text-required"
-                            data={DataImpact}
+                            data={impactData}
                             errors={errors}
                             
                         />
