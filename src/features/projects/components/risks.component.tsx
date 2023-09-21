@@ -139,9 +139,14 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "level",
             header: "Nivel",
             renderCell: (row) => {
-                const levelRisk = LevelData.find( item => item.value == row.level)
-                return <>{ levelRisk.name || ""}</>
+                if(LevelData){
+                    const levelRisk = LevelData.find( item => item.value == row.level)
+                    return <>{levelRisk ? levelRisk.name || "" : ""}</>;
+                }
+              
             },
+
+            
             width:"200px"
 
         },
@@ -162,8 +167,13 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "typeRisk",
             header: "Tipo de riesgo",
             renderCell: (row) => {
-                const typeRisk = typeRiskData.find( item => item.value == row.typeRisk)
-                return <>{ typeRisk.name || ""}</>
+                if(typeRiskData){
+                    const typeRisk = typeRiskData.find( item => item.value == row.typeRisk)
+                    return <>{typeRisk ? typeRisk.name || "" : ""}</>;
+                }else {
+                    return;
+                }
+              
             },
             width:"200px"
         },
@@ -176,8 +186,12 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "probability",
             header: "Probabilidad",
             renderCell: (row) => {
-                const probability = probabilityData.find( item => item.value == row.probability)
-                return <>{ probability.name || ""}</>
+                if (probabilityData) {
+                    const probability = probabilityData.find(item => item.value == row.probability);
+                    return <>{probability ? probability.name || "" : ""}</>;
+                } else {
+                    return ;
+                }
             },
             width:"200px"
         },
@@ -185,8 +199,12 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "impact",
             header: "Impacto",
             renderCell: (row) => {
-                const impact = impactData.find( item => item.value == row.impact)
-                return <>{ impact.name || ""}</>
+                if(impactData){
+                    const impact = impactData.find( item => item.value == row.impact)
+                    return <>{impact ? impact.name || "" : ""}</>;
+                }else{
+                    return;
+                }
             },
             width:"200px"
         },
