@@ -48,7 +48,7 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 5,
             name: "Actividades",
-            content: <ActivitiesComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} setForm={setPlaneFormComponent} />
+            content: <ActivitiesComponent disableNext={() => { disableAccordions([6]) }} enableNext={() => { enableAccordions([6]) }} setForm={setPlaneFormComponent} />
         },
         {
             id: 6,
