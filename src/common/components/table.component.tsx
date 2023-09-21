@@ -201,6 +201,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
               field={col.fieldName}
               header={col.header}
               body={col.renderCell}
+              sortable={col.sorteable}
             />
           ))}
 

@@ -68,7 +68,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
             fieldName: "type",
             header: "Tipo",
             renderCell: (row) => {
-                return <>{row.consecutive.includes(".") ? "Indirecto" : "Directo"}</>
+                return <>{row.consecutive.includes(".") ? "Indirecta" : "Directa"}</>
             }
         },
         {
@@ -156,7 +156,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         setMessage({});
                     },
                     show: true,
-                    title: row.consecutive.includes(".") ? "¿Desea quitar la causa indirecta?" : "¿Desea quitar la causa directa junto con sus causas indirectas?",
+                    title: row.consecutive.includes(".") ? "¿Deseas quitar la causa indirecta?" : "¿Deseas quitar la causa directa junto con sus causas indirectas?",
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
                             if (getValues("causes").find(cause => cause.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({
@@ -292,7 +292,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                         setMessage({});
                     },
                     show: true,
-                    title: row.consecutive.includes(".") ? "¿Desea quitar el efecto indirecto?" : "¿Desea quitar el efecto directo junto con sus efectos indirectos?",
+                    title: row.consecutive.includes(".") ? "¿Deseas quitar el efecto indirecto?" : "¿Deseas quitar el efecto directo junto con sus efectos indirectos?",
                     onOk: () => {
                         if (row.consecutive.includes(".")) {
                             if (getValues("effects").find(effect => effect.consecutive === row.consecutive.split(".")[0]).childrens.length === 1) return setMessage({

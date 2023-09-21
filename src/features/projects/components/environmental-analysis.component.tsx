@@ -150,7 +150,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                 (data: IEffectEnviromentForm) => {
                   setMessage({
                     title: "Guardar efecto ambiental",
-                    description: "¿Desea guardar el efecto ambiental?",
+                    description: "¿Deseas guardar el efecto ambiental?",
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",
@@ -214,7 +214,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
         setMessage({
           background: true,
           cancelTitle: "Cancelar",
-          description: "¿Desea eliminar el efecto ambiental?",
+          description: "¿Deseas eliminar el efecto ambiental?",
           OkTitle: "Aceptar",
           onCancel: () => {
             setMessage({});
@@ -310,7 +310,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): Rea
                       (data: IEffectEnviromentForm) => {
                         setMessage({
                           title: "Guardar efecto ambiental",
-                          description: "¿Desea guardar el efecto ambiental?",
+                          description: "¿Deseas guardar el efecto ambiental?",
                           show: true,
                           background: true,
                           OkTitle: "Aceptar",

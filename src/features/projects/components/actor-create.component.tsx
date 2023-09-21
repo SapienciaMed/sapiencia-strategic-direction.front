@@ -203,7 +203,7 @@ export function ActorCreateComponent({
             setMessage({});
           },
           show: true,
-          title: "¿Desea quitar el actor?",
+          title: "¿Deseas quitar el actor?",
           onOk: () => {
             const newActors = getValues("actors").filter((actor) =>
               actor !== row

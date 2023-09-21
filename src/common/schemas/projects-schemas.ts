@@ -279,3 +279,47 @@ export const profitsIncomeValidator = yup.object({
         }))
     ),
 });
+
+export const activitiesValidator = yup.object({
+    activities: yup.array().required("Debe haber almenos una actividad").min(1, "Debe haber almenos una actividad")
+});
+
+export const activityMGAValidator = yup.object({
+    objectiveSelect: yup.string()
+        .required("El campo es obligatorio"),
+    stageActivity: yup.number()
+        .required("Debe seleccionar una opción"),
+    productDescriptionMGA: yup.string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    activityDescriptionMGA: yup.string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    budgetsMGA: yup.object(),
+    validity: yup.number()
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
+    year: yup.number()
+        .required("Debe seleccionar una opción"),
+    detailActivities: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
+        yup.object().shape(({
+            detailActivity: yup
+                .string()
+                .required("Debe seleccionar una opción"),
+            component: yup
+                .number()
+                .required("Debe seleccionar una opción"),
+            measurement: yup
+                .number()
+                .required("Debe seleccionar una opción"),
+            amount: yup
+                .number()
+                .transform((value) => Number.isNaN(value) ? null : value).nullable()
+                .required("El campo es obligatorio"),
+            unitCost: yup
+                .number()
+                .transform((value) => Number.isNaN(value) ? null : value).nullable()
+                .required("El campo es obligatorio"),
+        }))
+    )
+});

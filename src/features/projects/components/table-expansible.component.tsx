@@ -112,7 +112,7 @@ const TableExpansibleComponent = ({ columns, actions, data, hidePagination = fal
                         })}
                     </div>
                     <div className="card-footer">
-                        {actions.map((action) => (
+                        {actions && actions.map((action) => (
                             <div key={action.icon} onClick={() => action.onClick(item)}>
                                 {getIconElement(action.icon, "src")}
                             </div>
@@ -140,7 +140,7 @@ const TableExpansibleComponent = ({ columns, actions, data, hidePagination = fal
                                 })}
                             </div>
                             <div className="card-footer">
-                                {actions.map((action) => (
+                                {actions && actions.map((action) => (
                                     <div key={action.icon} onClick={() => action.onClick(item)}>
                                         {getIconElement(action.icon, "src")}
                                     </div>
@@ -184,7 +184,7 @@ const TableExpansibleComponent = ({ columns, actions, data, hidePagination = fal
                             field={col.fieldName}
                             header={col.header}
                             body={col.renderCell}
-                            // sortable={col.sortable}
+                            sortable={col.sorteable}
                             style={{ maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
                         />
                     ))}

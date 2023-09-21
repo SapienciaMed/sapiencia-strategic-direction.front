@@ -379,6 +379,18 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.strategic-direction-grid-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+}
+
+.strategic-direction-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1.5rem;
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -639,5 +651,23 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     .container-profits{
         display: grid;
         row-gap: 1.5rem;
+    }
+
+    .strategic-direction-grid-3-web {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 1.5rem;
+        row-gap: 1.5rem;
+    }
+
+    .strategic-direction-grid-2-web {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1.5rem;
+        row-gap: 1.5rem;
+    }
+
+    .strategic-direction-activities-total-cost {
+        display: flex;
     }
 }

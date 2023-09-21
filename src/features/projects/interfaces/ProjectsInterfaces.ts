@@ -171,6 +171,60 @@ export interface Iperiod {
   financialValue:number;
 }
 
+export interface IBudgetMGA {
+  year0: {
+    validity: number;
+    budget: number;
+  };
+  year1: {
+    validity: number;
+    budget: number;
+  };
+  year2: {
+    validity: number;
+    budget: number;
+  };
+  year3: {
+    validity: number;
+    budget: number;
+  };
+  year4: {
+    validity: number;
+    budget: number;
+  };
+}
+
+export interface IDetailActivity {
+  consecutive: string;
+  detailActivity: string;
+  component: number;
+  measurement: number;
+  amount: number;
+  unitCost: number;
+  totalCost?: string;
+  pospre?: number;
+  validatorCPC?: string;
+  clasificatorCPC?: number;
+  sectionValidatorCPC?: string;
+}
+
+export interface IActivityMGA {
+  objectiveSelect: string;
+  objetiveActivity: ICause;
+  stageActivity: number;
+  productMGA: string;
+  activityMGA: string;
+  productDescriptionMGA: string;
+  activityDescriptionMGA: string;
+  budgetsMGA: IBudgetMGA;
+  validity: number;
+  year: number;
+  detailActivities: IDetailActivity[];
+}
+
+export interface IActivitiesForm {
+  activities: IActivityMGA[];
+}
 
 export interface IProjectTemp {
   id?: number;
@@ -189,7 +243,7 @@ export interface IProjectTemp {
     needs?: INeedsForm
     capacity?: ICapacityForm
     enviromentalAnalysis?: IEnvironmentAnalysisForm
-
+    activities?: IActivitiesForm;
     risks?:IRisks
   }
   programation?:{

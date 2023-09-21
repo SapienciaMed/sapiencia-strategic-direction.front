@@ -436,7 +436,7 @@ export function PoblationComponent({
                   <div onClick={() => {
                     setMessage({
                       title: "Eliminar registro",
-                      description: "¿Desea continuar?",
+                      description: "¿Deseas continuar?",
                       show: true,
                       background: true,
                       OkTitle: "Aceptar",
@@ -496,7 +496,7 @@ export function PoblationComponent({
                   <div onClick={() => {
                     setMessage({
                       title: "Eliminar registro",
-                      description: "¿Desea continuar con la eliminación?",
+                      description: "¿Deseas continuar con la eliminación?",
                       show: true,
                       background: true,
                       OkTitle: "Aceptar",

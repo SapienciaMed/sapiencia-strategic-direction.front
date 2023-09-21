@@ -41,11 +41,11 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const onCancel = () => {
         setMessage({
             title: "Cancelar objetivo",
-            description: "Desea cancelar la acción, no se guardarán los datos",
+            description: "Deseas cancelar la acción, no se guardarán los datos",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
-            OkTitle: "Si, cancelar",
+            cancelTitle: "Cancelar",
+            OkTitle: "Continuar",
             onCancel: () => {
                 setMessage({});
             },
@@ -111,7 +111,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             onClick: (row) => {
                 setMessage({
                     title: "Eliminar objetivo",
-                    description: "¿Desea eliminar el objetivo?",
+                    description: "¿Deseas eliminar el objetivo?",
                     show: true,
                     background: true,
                     cancelTitle: "Cancelar",
@@ -294,7 +294,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
     const onSubmit = handleSubmit(async (data: INeedObjetive) => {
         setMessage({
             title: item ? "Editar objetivo" : "Guardar objetivo",
-            description: item ? "¿Desea editar el objetivo?" : "¿Desea guardar el objetivo?",
+            description: item ? "¿Deseas editar el objetivo?" : "¿Deseas guardar el objetivo?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
@@ -430,7 +430,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                     <div onClick={() => {
                                         setMessage({
                                             title: "Eliminar registro",
-                                            description: "¿Desea continuar?",
+                                            description: "¿Deseas continuar?",
                                             show: true,
                                             background: true,
                                             OkTitle: "Aceptar",

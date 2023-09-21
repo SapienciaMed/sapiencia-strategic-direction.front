@@ -83,11 +83,11 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const onCancelEdit = () => {
         setMessage({
             title: "Cancelar cambios",
-            description: "¿Desea cancelar los cambios del riesgo? ",
+            description: "¿Deseas cancelar los cambios del riesgo? ",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
-            OkTitle: "Si, cancelar",
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
             },

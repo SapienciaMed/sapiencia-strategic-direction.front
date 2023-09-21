@@ -70,10 +70,10 @@ function IdentificationPage(): React.JSX.Element {
                 objectivesValidator.validate(projectData?.identification?.objectives).then(() => {
                     actorsValidator.validate(projectData?.identification?.actors).then(() => {
                         poblationValidator.validate(projectData?.identification?.poblation).then(() => {
-                        disableAccordions([]);
-                        setDisableContinue(false);
-                        setActionContinue(() => nextStep);
-                        })
+                            disableAccordions([]);
+                            setDisableContinue(false);
+                            setActionContinue(() => nextStep);
+                        }).catch(() => { });
                     }).catch(() => {
                         disableAccordions([5]);
                     })
