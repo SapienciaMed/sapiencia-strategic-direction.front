@@ -8,7 +8,7 @@ import EnvironmentalAnalysisComponent from "../components/environmental-analysis
 import TechnicalAnalysisComponent from "../components/technical-analysis.component";
 import ActivitiesComponent from "../components/activities.component";
 import RisksComponent from "../components/risks.component";
-import { activitiesValidator, capacityValidator, environmentalAnalysisValidator, needsValidator, risksValidator, technicalAnalysisValidator } from "../../../common/schemas";
+import { activitiesValidator, capacityValidator, environmentalAnalysisValidator, needsValidator, riskValidator, technicalAnalysisValidator } from "../../../common/schemas";
 
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
@@ -57,7 +57,6 @@ function PreparationPage(): React.JSX.Element {
                 disableNext={() => {
                     setDisableContinue(true);
                     setActionContinue(() => { });
-
                 }}
                 enableNext={() => {
                     setDisableContinue(false);
@@ -76,7 +75,7 @@ function PreparationPage(): React.JSX.Element {
                 capacityValidator.validate(projectData?.preparation?.capacity).then(() => {
                     environmentalAnalysisValidator.validate(projectData?.preparation?.enviromentalAnalysis).then(() => {
                         activitiesValidator.validate(projectData?.preparation?.activities).then(() => {
-                            risksValidator.validate(projectData?.preparation?.risks).then(() => {
+                            riskValidator.validate(projectData?.preparation?.risks).then(() => {
                                 disableAccordions([]);
                                 setDisableContinue(false);
                                 setActionContinue(() => nextStep);

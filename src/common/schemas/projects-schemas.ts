@@ -280,6 +280,10 @@ export const profitsIncomeValidator = yup.object({
     ),
 });
 
+export const riskValidator = yup.object({
+    risks: yup.array().required("Debe haber almenos un riesgo").min(1, "Debe haber almenos un riesgo")
+});
+
 export const activitiesValidator = yup.object({
     activities: yup.array().required("Debe haber almenos una actividad").min(1, "Debe haber almenos una actividad")
 });

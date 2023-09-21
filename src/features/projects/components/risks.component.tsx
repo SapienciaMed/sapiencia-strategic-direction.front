@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { Controller, useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { risksValidator } from "../../../common/schemas";
+import { riskValidator, risksValidator } from "../../../common/schemas";
 import { IAddRisks, IRisks } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
@@ -11,7 +11,6 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import {useEntitiesService} from "../hooks/entities-service.hook"
-import { FaTrashAlt } from "react-icons/fa";
 import { IEntities } from "../interfaces/Entities";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 
@@ -37,9 +36,8 @@ const LevelData: IDropdownProps[] = [
 ];
 
 function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
-
-    const [RisksData, setRisksData] = useState<IRisks>(null)
-    const [riskSelectData, setRiskSelectData] = useState([]);
+    const resolver = useYupValidationResolver(riskValidator);
+    const [RisksData, setRisksData] = useState<IRisks>(null);
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [ typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
@@ -47,15 +45,13 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const [ impactData, setImpactData] = useState<IDropdownProps[]>(null);
     const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
     const {
-        control,
-        register,
         getValues,
         setValue,
-        formState: { errors, isValid },
+        formState: { isValid },
         watch,
         trigger
     } = useForm<IRisks>({
-         mode: "all", defaultValues: {
+        resolver, mode: "all", defaultValues: {
             risks: projectData?.preparation?.risks?.risks ? projectData.preparation.risks.risks : null
         }
     });
