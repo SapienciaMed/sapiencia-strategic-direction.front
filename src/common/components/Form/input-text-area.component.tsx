@@ -160,6 +160,6 @@ export function TextAreaComponent({
 
 const CharactersComponent = ({characters, count}) => {
   return (
-    count > 0 ? <label className="label-max-textarea">{characters-count} caracteres restantes</label> : <label className="label-max-textarea">Max. {characters} caracteres</label>
+    count > 0 ? <label className="label-max-textarea">{characters-count} caracteres restantes</label> : <label className="label-max-textarea">Máx. {characters} caracteres</label>
   )
 }
