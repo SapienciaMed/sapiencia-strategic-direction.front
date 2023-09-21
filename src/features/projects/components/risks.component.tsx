@@ -236,7 +236,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         trigger("risks");
                         setMessage({
                             title: "Riesgo",
-                            description: "!Eliminado exitosamente!",
+                            description: "¡Eliminado exitosamente!",
                             show: true,
                             background: true,
                             OkTitle: "Cerrar",
@@ -423,7 +423,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                 returnData(data, item);
                 setMessage({
                     title: item ? "Cambios guardados" : "Riesgo",
-                    description: item ? "!Cambios Guardados exitosamente!" : "¡Guardado exitosamente!",
+                    description: item ? "¡Cambios Guardados exitosamente!" : "¡Guardado exitosamente!",
                     show: true,
                     background: true,
                     OkTitle: "Cerrar",
