@@ -42,7 +42,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
     const onCancel = () => {
         setMessage({
             title: "Cancelar la acción",
-            description: "Deseas cancelar la creación del ingreso/beneficio",
+            description: "¿Deseas cancelar la creación del ingreso/beneficio?",
             show: true,
             background: true,
             cancelTitle: "Continuar",
