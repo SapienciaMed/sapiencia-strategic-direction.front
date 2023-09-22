@@ -15,6 +15,7 @@ import { useGenericListService } from "../../../common/hooks/generic-list-servic
 import { useStagesService } from "../hooks/stages-service.hook";
 import { useComponentsService } from "../hooks/components-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
+import { formaterNumberToCurrency } from "../../../common/utils/helpers";
 
 interface IProps {
     disableNext: () => void;
@@ -23,8 +24,10 @@ interface IProps {
 }
 
 function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+    const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [activitiesData, setActivitiesData] = useState<IActivitiesForm>(null)
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { GetStages } = useStagesService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
     const {
@@ -41,12 +44,12 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
 
     const onCancel = () => {
         setMessage({
-            title: "Cancelar actividad",
+            title: "Cancelar cambios",
             description: "¿Deseas cancelar la creación de la actividad?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
-            OkTitle: "Continuar",
+            OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
             },
@@ -94,6 +97,10 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         {
             fieldName: "stageActivity",
             header: "Etapa",
+            renderCell: (row) => {
+                const stage = stagesData.find(stage => stage.value === row.stageActivity) || null;
+                return <>{stage.name}</>
+            }
         },
         {
             fieldName: "activityMGA",
@@ -106,35 +113,35 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             fieldName: "budgetsMGA.year0",
             header: "Año 0",
             renderCell: (row) => {
-                return <>$ {row.budgetsMGA.year0.budget}</>
+                return <>$ {formaterNumberToCurrency(row.budgetsMGA.year0.budget)}</>
             }
         },
         {
             fieldName: "budgetsMGA.year1",
             header: "Año 1",
             renderCell: (row) => {
-                return <>$ {row.budgetsMGA.year1.budget}</>
+                return <>$ {formaterNumberToCurrency(row.budgetsMGA.year1.budget)}</>
             }
         },
         {
             fieldName: "budgetsMGA.year2",
             header: "Año 2",
             renderCell: (row) => {
-                return <>$ {row.budgetsMGA.year2.budget}</>
+                return <>$ {formaterNumberToCurrency(row.budgetsMGA.year2.budget)}</>
             }
         },
         {
             fieldName: "budgetsMGA.year3",
             header: "Año 3",
             renderCell: (row) => {
-                return <>$ {row.budgetsMGA.year3.budget}</>
+                return <>$ {formaterNumberToCurrency(row.budgetsMGA.year3.budget)}</>
             }
         },
         {
             fieldName: "budgetsMGA.year4",
             header: "Año 4",
             renderCell: (row) => {
-                return <>$ {row.budgetsMGA.year4.budget}</>
+                return <>$ {formaterNumberToCurrency(row.budgetsMGA.year4.budget)}</>
             }
         },
         {
@@ -142,7 +149,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             header: "Presupuesto",
             renderCell: (row) => {
                 const suma = row.budgetsMGA.year0.budget + row.budgetsMGA.year1.budget + row.budgetsMGA.year2.budget + row.budgetsMGA.year3.budget + row.budgetsMGA.year4.budget;
-                return <>$ {suma}</>
+                return <>$ {formaterNumberToCurrency(suma)}</>
             }
         },
     ];
@@ -186,6 +193,17 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         })
     }, [activitiesData]);
 
+    useEffect(() => {
+        GetStages().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return { name: data.description, value: data.id }
+                })
+                setStagesData(data);
+            }
+        });
+    }, []);
+
     return (
         <div className="card-table">
             <FormComponent action={undefined}>
@@ -195,7 +213,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
                     </label>
 
 
-                    <div className={getValues('activities')?.length > 0 && "strategic-direction-grid-1 strategic-direction-grid-2-web"} style={{justifyItems:"end"}}>
+                    <div className={getValues('activities')?.length > 0 && "strategic-direction-grid-1 strategic-direction-grid-2-web"} style={{ justifyItems: "end" }}>
                         {getValues('activities')?.length > 0 && <div className="title-button text-main large" onClick={async () => {
                             const response = await fetch(`${process.env.urlApiStrategicDirection}/api/v1/activities/generate-consolidated`, {
                                 method: "POST",
@@ -228,7 +246,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
                         </div>
                     </div>
                 </div>
-                {getValues('activities')?.length > 0 && <TableExpansibleComponent actions={activitiesActions} columns={activitiesColumns} data={getValues('activities')} />}
+                {stagesData.length > 0 && getValues('activities')?.length > 0 && <TableExpansibleComponent actions={activitiesActions} columns={activitiesColumns} data={getValues('activities')} />}
             </FormComponent>
         </div>
     );
@@ -249,6 +267,7 @@ interface IBudgetsTable {
 
 function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAObjectives): React.JSX.Element {
     const { setMessage } = useContext(AppContext);
+    const [totalCostCalculate, setTotalCostCalculate] = useState<number>(0);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [componentsData, setComponentsData] = useState<IDropdownProps[]>([]);
@@ -276,7 +295,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 year3: { budget: 0, validity: 0 },
                 year4: { budget: 0, validity: 0 },
             },
-            detailActivities: item?.detailActivities ? item.detailActivities : null,
+            detailActivities: item?.detailActivities ? item.detailActivities.map(detail => {
+                return { ...detail, totalCost: formaterNumberToCurrency(detail.amount * detail.unitCost) }
+            }) : null,
             objetiveActivity: item?.objetiveActivity ? item.objetiveActivity : null,
             productDescriptionMGA: item?.productDescriptionMGA ? item.productDescriptionMGA : "",
             productMGA: item?.productMGA ? item.productMGA : "",
@@ -343,8 +364,8 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             setDisableContinue(true);
         } else {
             setMessage({
-                title: item ? "Editar actividad" : "Crear actividad",
-                description: item ? "¿Deseas editar la actividad?" : "¿Deseas guardar la actividad?",
+                title: item ? "Guardar cambios" : "Crear actividad",
+                description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar la actividad?",
                 show: true,
                 background: true,
                 cancelTitle: "Cancelar",
@@ -355,8 +376,8 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 onOk: () => {
                     returnData(data, item);
                     setMessage({
-                        title: item ? "Editar actividad" : "Crear actividad",
-                        description: item ? "¡Actividad editada exitosamente!" : "¡Actividad guardada exitosamente!",
+                        title: item ? "Guardar cambios" : "Actividad",
+                        description: item ? "¡Cambios guardados exitosamente!" : "¡Guardada exitosamente!",
                         show: true,
                         background: true,
                         OkTitle: "Cerrar",
@@ -501,6 +522,13 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 setStagesData(data);
             }
         });
+        setTotalCostCalculate(_prev => {
+            let count = 0;
+            getValues("detailActivities").forEach(item => {
+                count += item.amount * item.unitCost;
+            });
+            return count;
+        });
         return () => {
             setForm(null);
         }
@@ -541,15 +569,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             setValue("activityMGA", "");
         }
     }, [objectiveSelect]);
-    const totalCostCalculate = () => {
-        let totalCost = 0
-        const detailActivities = getValues("detailActivities");
-        if (!detailActivities) return "$ 0"
-        detailActivities.forEach(item => {
-            totalCost += item.unitCost * item.amount || 0;
-        })
-        return `$${totalCost}`;
-    }
     return (
         <FormComponent action={undefined} className="card-table">
             {view && <p className="text-black large bold">Detalle actividad MGA</p>}
@@ -680,7 +699,8 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 <div className="card-table">
                     <div className="title-area">
                         <label className="text-black large bold text-required">
-                            Actividad detallada
+                            {view && "Actividad detallada"}
+                            {!view && item ? "Editar actividades detalladas" : "Actividad detallada"}
                         </label>
 
                         <div className="title-button text-main large" onClick={() => {
@@ -777,7 +797,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                     register={register}
                                                     onChange={field.onChange}
                                                     errors={errors}
-                                                    characters={600}
+                                                    characters={500}
                                                     fieldArray
                                                     disabled={view}
                                                 >
@@ -816,7 +836,14 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             classNameLabel="text-black biggest bold text-required"
                                             className={`inputNumber-basic ${view && "background-textArea"}`}
                                             onChange={() => {
-                                                setValue(`detailActivities.${index}.totalCost`, `$ ${getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)}`)
+                                                setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
+                                                setTotalCostCalculate(_prev => {
+                                                    let count = 0;
+                                                    getValues("detailActivities").forEach(item => {
+                                                        count += item.amount * item.unitCost;
+                                                    });
+                                                    return count;
+                                                });
                                             }}
                                             fieldArray
                                             disabled={view}
@@ -833,9 +860,16 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             mode="currency"
                                             currency="COP"
                                             locale="es-CO"
-                                            minFractionDigits={0}
+                                            minFractionDigits={2}
                                             onChange={() => {
-                                                setValue(`detailActivities.${index}.totalCost`, `$ ${getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)}`)
+                                                setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
+                                                setTotalCostCalculate(_prev => {
+                                                    let count = 0;
+                                                    getValues("detailActivities").forEach(item => {
+                                                        count += item.amount * item.unitCost;
+                                                    });
+                                                    return count;
+                                                });
                                             }}
                                             fieldArray
                                             disabled={view}
@@ -927,7 +961,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         })}
                         <div className="strategic-direction-grid-2 strategic-direction-activities-total-cost" style={{ alignItems: "center" }}>
                             <label className="text-black large bold">Costo total actividades detalladas:</label>
-                            <label className="text-main large bold" style={{ marginLeft: "5px" }}>{totalCostCalculate()}</label>
+                            <label className="text-main large bold" style={{ marginLeft: "5px" }}>{formaterNumberToCurrency(totalCostCalculate)}</label>
                         </div>
                     </div>
                 </div>

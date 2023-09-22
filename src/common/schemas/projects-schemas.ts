@@ -309,7 +309,8 @@ export const activityMGAValidator = yup.object({
         yup.object().shape(({
             detailActivity: yup
                 .string()
-                .required("Debe seleccionar una opción"),
+                .required("Debe seleccionar una opción")
+                .max(500, "Solo se permiten 500 caracteres"),
             component: yup
                 .number()
                 .required("Debe seleccionar una opción"),
