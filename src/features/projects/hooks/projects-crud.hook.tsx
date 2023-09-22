@@ -142,6 +142,32 @@ export function useProjectsCrudData() {
                         enviromentalAnalysis: {
                             environmentDiagnosis: projectDataResponse.environmentDiagnosis,
                             effects: projectDataResponse.environmentalEffects
+                        },
+                        activities: {
+                            activities: projectDataResponse.activities.map(item => {
+                                return {...item, budgetsMGA: {
+                                    year0: {
+                                        budget: item.budgetsMGA[0].budget,
+                                        validity: item.budgetsMGA[0].validity,
+                                    },
+                                    year1: {
+                                        budget: item.budgetsMGA[1].budget,
+                                        validity: item.budgetsMGA[1].validity,
+                                    },
+                                    year2: {
+                                        budget: item.budgetsMGA[2].budget,
+                                        validity: item.budgetsMGA[2].validity,
+                                    },
+                                    year3: {
+                                        budget: item.budgetsMGA[3].budget,
+                                        validity: item.budgetsMGA[3].validity,
+                                    },
+                                    year4: {
+                                        budget: item.budgetsMGA[4].budget,
+                                        validity: item.budgetsMGA[4].validity,
+                                    },
+                                }}
+                            })
                         }
                     }
                 })

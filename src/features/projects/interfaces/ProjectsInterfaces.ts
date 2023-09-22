@@ -209,7 +209,7 @@ export interface IDetailActivity {
 }
 
 export interface IActivityMGA {
-  objectiveSelect: string;
+  objectiveSelect?: string;
   objetiveActivity: ICause;
   stageActivity: number;
   productMGA: string;
@@ -223,7 +223,7 @@ export interface IActivityMGA {
 }
 
 export interface IActivitiesForm {
-  activities: IActivityMGA[];
+  activities?: IActivityMGA[];
 }
 
 export interface IProjectTemp {
@@ -249,6 +249,26 @@ export interface IProjectTemp {
   programation?:{
     profitsIncome?:IproftisIncomeForm;
   }
+}
+
+export interface IActivitiesProject {
+  objectiveSelect?: string;
+  objetiveActivity: ICause;
+  stageActivity: number;
+  productMGA: string;
+  activityMGA: string;
+  productDescriptionMGA: string;
+  activityDescriptionMGA: string;
+  budgetsMGA: {
+    id?: number;
+    activityId?: number;
+    year: number;
+    validity: number;
+    budget: number;
+  }[];
+  validity: number;
+  year: number;
+  detailActivities: IDetailActivity[];
 }
 
 export interface IProject {
@@ -296,4 +316,5 @@ export interface IProject {
   classifications: IDemographicCharacteristics[] | null;
   specificObjectives: INeedObjetive[] | null;
   environmentalEffects: IEffectEnviromentForm[] | null;
+  activities: IActivitiesProject[] | null;
 }
