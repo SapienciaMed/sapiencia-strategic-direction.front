@@ -44,8 +44,28 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
 
     const onCancel = () => {
         setMessage({
-            title: "Cancelar cambios",
+            title: "Cancelar actividad",
             description: "¿Deseas cancelar la creación de la actividad?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                setForm(null);
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+            }
+        })
+    }
+    const onCancelEdit = () => {
+        setMessage({
+            title: "Cancelar cambios",
+            description: "¿Desea cancelar los cambios de la actividad?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
@@ -168,7 +188,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             onClick: (row) => {
                 setForm(<ActivityMGAComponent setForm={setForm} returnData={changeActivities} item={row} />);
                 setTextContinue("Guardar y regresar");
-                setActionCancel(() => onCancel);
+                setActionCancel(() => onCancelEdit);
             }
         }
     ];
