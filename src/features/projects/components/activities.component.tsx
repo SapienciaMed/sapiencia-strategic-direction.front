@@ -6,11 +6,15 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { activitiesValidator, activityMGAValidator } from "../../../common/schemas";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent, InputInplaceComponent, InputNumberInplaceComponent } from "../../../common/components/Form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineDownload } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
+import { useStagesService } from "../hooks/stages-service.hook";
+import { useComponentsService } from "../hooks/components-service.hook";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 interface IProps {
     disableNext: () => void;
@@ -57,16 +61,16 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
     }
     const changeActivities = (data: IActivityMGA, row?: IActivityMGA) => {
         if (row) {
-            const activitiesData = getValues("activities").filter(item => item !== row).concat(data);
+            const activitiesData = getValues("activities").filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("activities", activitiesData);
             setActivitiesData(prev => {
                 return { ...prev, activities: activitiesData };
             });
         } else {
             const activitiesData = getValues("activities");
-            setValue("activities", activitiesData ? activitiesData.concat(data) : [data]);
+            setValue("activities", activitiesData ? activitiesData.concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [data]);
             setActivitiesData(prev => {
-                return { ...prev, activities: activitiesData ? activitiesData.concat(data) : [data] };
+                return { ...prev, activities: activitiesData ? activitiesData.concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [data] };
             });
         }
         trigger("activities");
@@ -137,7 +141,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             fieldName: "",
             header: "Presupuesto",
             renderCell: (row) => {
-                const suma = row.budgetsMGA.year0.budget+row.budgetsMGA.year1.budget+row.budgetsMGA.year2.budget+row.budgetsMGA.year3.budget+row.budgetsMGA.year4.budget;
+                const suma = row.budgetsMGA.year0.budget + row.budgetsMGA.year1.budget + row.budgetsMGA.year2.budget + row.budgetsMGA.year3.budget + row.budgetsMGA.year4.budget;
                 return <>$ {suma}</>
             }
         },
@@ -147,7 +151,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         {
             icon: "Detail",
             onClick: (row) => {
-                setForm(<ActivityMGAComponent setForm={setForm} returnData={(data: IActivityMGA, row?: IActivityMGA) => {}} item={row} view/>);
+                setForm(<ActivityMGAComponent setForm={setForm} returnData={(data: IActivityMGA, row?: IActivityMGA) => { }} item={row} view />);
                 setTextContinue("Aceptar");
                 setActionCancel(() => onCancel);
             }
@@ -174,7 +178,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         const subscription = watch((value: IActivitiesForm) => setActivitiesData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
     }, [watch]);
-    
+
     useEffect(() => {
         if (activitiesData) setProjectData(prev => {
             const preparation = prev ? { ...prev.preparation, activities: { ...activitiesData } } : { activities: { ...activitiesData } };
@@ -190,12 +194,38 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
                         Cadena de valor MGA
                     </label>
 
-                    <div className="title-button text-main large" onClick={() => {
-                        setForm(<ActivityMGAComponent setForm={setForm} returnData={changeActivities} />);
-                        setTextContinue("Guardar y regresar");
-                        setActionCancel(() => onCancel);
-                    }}>
-                        Añadir actividad <AiOutlinePlusCircle />
+
+                    <div className={getValues('activities')?.length > 0 && "strategic-direction-grid-1 strategic-direction-grid-2-web"} style={{justifyItems:"end"}}>
+                        {getValues('activities')?.length > 0 && <div className="title-button text-main large" onClick={async () => {
+                            const response = await fetch(`${process.env.urlApiStrategicDirection}/api/v1/activities/generate-consolidated`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(getValues())
+                            });
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            const fechaActual = new Date();
+                            const dia = fechaActual.getDate().toString().padStart(2, '0');
+                            const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+                            const anio = fechaActual.getFullYear();
+                            a.download = `Consolidado actividades_${dia}${mes}${anio}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        }}>
+                            Descargar consolidado <AiOutlineDownload />
+                        </div>}
+                        <div className="title-button text-main large" onClick={() => {
+                            setForm(<ActivityMGAComponent setForm={setForm} returnData={changeActivities} />);
+                            setTextContinue("Guardar y regresar");
+                            setActionCancel(() => onCancel);
+                        }}>
+                            Añadir actividad <AiOutlinePlusCircle />
+                        </div>
                     </div>
                 </div>
                 {getValues('activities')?.length > 0 && <TableExpansibleComponent actions={activitiesActions} columns={activitiesColumns} data={getValues('activities')} />}
@@ -219,6 +249,12 @@ interface IBudgetsTable {
 
 function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAObjectives): React.JSX.Element {
     const { setMessage } = useContext(AppContext);
+    const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
+    const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
+    const [componentsData, setComponentsData] = useState<IDropdownProps[]>([]);
+    const { getListByGrouper } = useGenericListService();
+    const { GetStages } = useStagesService();
+    const { GetComponents } = useComponentsService();
     const resolver = useYupValidationResolver(activityMGAValidator);
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
     const {
@@ -258,7 +294,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         name: "detailActivities",
     });
 
-    const suma = view || item ? 0 : 1;
+    let suma = item || view ? 0 : 1;
 
     const objectives: IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
         return {
@@ -298,7 +334,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     ];
 
     const onSubmit = handleSubmit(async (data: IActivityMGA) => {
-        if(view) {
+        if (view) {
             setForm(null);
             setTextContinue(null);
             setActionCancel(null);
@@ -319,7 +355,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 onOk: () => {
                     returnData(data, item);
                     setMessage({
-                        title: item ? "Editar actividad" : "Crear actividad", 
+                        title: item ? "Editar actividad" : "Crear actividad",
                         description: item ? "¡Actividad editada exitosamente!" : "¡Actividad guardada exitosamente!",
                         show: true,
                         background: true,
@@ -336,7 +372,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 }
             });
         }
-        
+
     });
 
     const budgetsYears = {
@@ -441,6 +477,30 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
     useEffect(() => {
         setActionContinue(() => onSubmit);
+        getListByGrouper("UNIDAD_MEDIDA_OBJETIVOS").then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return { name: data.itemDescription, value: Number(data.itemCode) }
+                })
+                setMeasurementData(data);
+            }
+        });
+        GetComponents().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return { name: data.description, value: data.id }
+                })
+                setComponentsData(data);
+            }
+        });
+        GetStages().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return { name: data.description, value: data.id }
+                })
+                setStagesData(data);
+            }
+        });
         return () => {
             setForm(null);
         }
@@ -450,13 +510,32 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     }, [isValid]);
     useEffect(() => {
         if (objectiveSelect) {
-            setValue("objetiveActivity", projectData.identification.problemDescription.causes.find(cause => cause.consecutive == objectiveSelect));
-            const productCount = projectData?.preparation?.activities?.activities ? projectData.preparation.activities.activities.filter(activity => activity.objectiveSelect === objectiveSelect).length : 0;
-            setValue("productMGA", `${objectiveSelect}.${productCount + suma}`);
-            setValue("activityMGA", `${objectiveSelect}.${productCount + suma}.${productCount + suma}`);
-            fields.forEach((item, index) => {
-                setValue(`detailActivities.${index}.consecutive`, `${objectiveSelect}.${productCount + suma}.${productCount + suma}.${index+1}`)
-            })
+            if (item) {
+                setValue("objetiveActivity", projectData.identification.problemDescription.causes.find(cause => cause.consecutive == objectiveSelect));
+                if (objectiveSelect === item.objectiveSelect) {
+                    setValue("productMGA", item.productMGA);
+                    setValue("activityMGA", item.activityMGA);
+                    fields.forEach((_item, index) => {
+                        setValue(`detailActivities.${index}.consecutive`, `${item.activityMGA}.${index + 1}`)
+                    })
+                } else {
+                    suma++;
+                    const productCount = projectData?.preparation?.activities?.activities ? projectData.preparation.activities.activities.filter(activity => activity.objectiveSelect === objectiveSelect).length : 0;
+                    setValue("productMGA", `${objectiveSelect}.${productCount + suma}`);
+                    setValue("activityMGA", `${objectiveSelect}.${productCount + suma}.${productCount + suma}`);
+                    fields.forEach((_item, index) => {
+                        setValue(`detailActivities.${index}.consecutive`, `${objectiveSelect}.${productCount + suma}.${productCount + suma}.${index + 1}`)
+                    })
+                }
+            } else {
+                setValue("objetiveActivity", projectData.identification.problemDescription.causes.find(cause => cause.consecutive == objectiveSelect));
+                const productCount = projectData?.preparation?.activities?.activities ? projectData.preparation.activities.activities.filter(activity => activity.objectiveSelect === objectiveSelect).length : 0;
+                setValue("productMGA", `${objectiveSelect}.${productCount + suma}`);
+                setValue("activityMGA", `${objectiveSelect}.${productCount + suma}.${productCount + suma}`);
+                fields.forEach((_item, index) => {
+                    setValue(`detailActivities.${index}.consecutive`, `${objectiveSelect}.${productCount + suma}.${productCount + suma}.${index + 1}`)
+                })
+            }
         } else {
             setValue("productMGA", "");
             setValue("activityMGA", "");
@@ -465,7 +544,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     const totalCostCalculate = () => {
         let totalCost = 0
         const detailActivities = getValues("detailActivities");
-        if(!detailActivities) return "$ 0"
+        if (!detailActivities) return "$ 0"
         detailActivities.forEach(item => {
             totalCost += item.unitCost * item.amount || 0;
         })
@@ -493,7 +572,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         className={`select-basic span-width ${view && "background-textArea"}`}
                         label="Etapa"
                         classNameLabel="text-black biggest bold text-required"
-                        data={testData}
+                        data={stagesData}
                         errors={errors}
                         disabled={view}
                     />
@@ -713,7 +792,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className={`select-basic span-width ${view && "background-textArea"}`}
                                             label="Componente"
                                             classNameLabel="text-black biggest bold text-required"
-                                            data={testData}
+                                            data={componentsData}
                                             errors={errors}
                                             fieldArray
                                             disabled={view}
@@ -724,7 +803,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className={`select-basic span-width ${view && "background-textArea"}`}
                                             label="Unidad de medida"
                                             classNameLabel="text-black biggest bold text-required"
-                                            data={testData}
+                                            data={measurementData}
                                             errors={errors}
                                             fieldArray
                                             disabled={view}
