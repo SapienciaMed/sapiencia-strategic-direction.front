@@ -46,7 +46,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             show: true,
             background: true,
             cancelTitle: "Continuar",
-            OkTitle: "Si, cancelar",
+            OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
             },
@@ -67,7 +67,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             show: true,
             background: true,
             cancelTitle: "Continuar",
-            OkTitle: "Si, cancelar",
+            OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
             },
@@ -108,8 +108,12 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             fieldName: "unit",
             header: "Unidad de medida",
             renderCell: (row) => {
-                const levelRisk = measurementData.find( item => item.value == row.unit)
-                return <>{ levelRisk.name || ""}</>
+                if(measurementData){
+                    const typeRisk = measurementData.find( item => item.value == row.unit)
+                    return <>{typeRisk ? typeRisk.name || "" : ""}</>;
+                }else {
+                    return;
+                }
             },
         },
         
@@ -358,7 +362,15 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         
         <FormComponent action={undefined} className="card-form-development">
             <div className="card-table">
-            <p className="text-black large bold">{item ? "Editar ingreso/beneficio" : "Agregar ingreso/beneficio"}</p>
+            <p className="text-black large bold">
+                {
+                    view ? (
+                        "Detalle ingreso/beneficio"
+                    ) : (
+                        item ? "Editar ingreso/beneficio" : "Agregar ingreso/beneficio"
+                    )
+                }
+            </p>
             <div className="container-profits">
                 <div className="type-container">
                 <label className="text-black large bold text-required">
@@ -514,7 +526,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         onChange={() => {
                                             setValue(`period.${index}.financialValue`,  getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
                                         }}
-                                        minFractionDigits={0}
+                                        minFractionDigits={2}
                                         disabled={view ? true : false }
                                 />
                                    <InputNumberComponent
@@ -528,7 +540,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         currency="COP"
                                         locale="es-CO"
                                         disabled={true}
-                                        minFractionDigits={0}
+                                        minFractionDigits={2}
                                     />
                                     <div className="actions-needs">
                                          {!view && (
@@ -546,7 +558,16 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                             cancelTitle: "Cancelar",
                                             onOk: () => {
                                                 remove(index);
-                                                setMessage({});
+                                                setMessage({
+                                                    title: "Registro eliminado",
+                                                    description: "¡Eliminado exitosamente!",
+                                                    show: true,
+                                                    background: true,
+                                                    OkTitle: "Cerrar",
+                                                    onOk: () => {
+                                                        setMessage({});
+                                                    }
+                                                });
                                             },
                                             onCancel: () => {
                                                 setMessage({});
