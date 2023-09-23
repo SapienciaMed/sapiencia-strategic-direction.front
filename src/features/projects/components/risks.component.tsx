@@ -10,7 +10,7 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { ProjectsContext } from "../contexts/projects.context";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import {useEntitiesService} from "../hooks/entities-service.hook"
+import { useEntitiesService } from "../hooks/entities-service.hook"
 import { IEntities } from "../interfaces/Entities";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 
@@ -40,10 +40,10 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const [RisksData, setRisksData] = useState<IRisks>(null);
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
-    const [ typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
-    const [ probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
-    const [ impactData, setImpactData] = useState<IDropdownProps[]>(null);
-    const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
+    const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
+    const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
+    const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
+    const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
     const {
         getValues,
         setValue,
@@ -97,7 +97,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         })
     }
 
-    
+
     useEffect(() => {
         getEntitiesImpact().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -139,15 +139,15 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "level",
             header: "Nivel",
             renderCell: (row) => {
-                if(LevelData){
-                    const levelRisk = LevelData.find( item => item.value == row.level)
+                if (LevelData) {
+                    const levelRisk = LevelData.find(item => item.value == row.level)
                     return <>{levelRisk ? levelRisk.name || "" : ""}</>;
                 }
-              
+
             },
 
-            
-            width:"200px"
+
+            width: "200px"
 
         },
         {
@@ -159,28 +159,28 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         return <>{projectData.identification.objectives.generalObjective}</>
                     default:
                         return <></>
-                }         
+                }
             },
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "typeRisk",
             header: "Tipo de riesgo",
             renderCell: (row) => {
-                if(typeRiskData){
-                    const typeRisk = typeRiskData.find( item => item.value == row.typeRisk)
+                if (typeRiskData) {
+                    const typeRisk = typeRiskData.find(item => item.value == row.typeRisk)
                     return <>{typeRisk ? typeRisk.name || "" : ""}</>;
-                }else {
+                } else {
                     return;
                 }
-              
+
             },
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "descriptionRisk",
             header: "Descripción del riesgo",
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "probability",
@@ -190,33 +190,33 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                     const probability = probabilityData.find(item => item.value == row.probability);
                     return <>{probability ? probability.name || "" : ""}</>;
                 } else {
-                    return ;
+                    return;
                 }
             },
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "impact",
             header: "Impacto",
             renderCell: (row) => {
-                if(impactData){
-                    const impact = impactData.find( item => item.value == row.impact)
+                if (impactData) {
+                    const impact = impactData.find(item => item.value == row.impact)
                     return <>{impact ? impact.name || "" : ""}</>;
-                }else{
+                } else {
                     return;
                 }
             },
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "effects",
             header: "Efectos",
-            width:"200px"
+            width: "200px"
         },
         {
             fieldName: "mitigation",
             header: "Medidas de mitigación",
-            width:"200px"
+            width: "200px"
         },
     ];
     const objectivesActions: ITableAction<IAddRisks>[] = [
@@ -247,7 +247,6 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         setRisksData(prev => {
                             return { ...prev, risks: risksData };
                         });
-                        trigger("risks");
                         setMessage({
                             title: "Riesgo",
                             description: "¡Eliminado exitosamente!",
@@ -258,6 +257,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                                 setMessage({});
                             }
                         });
+                        trigger("risks");
                     }
                 });
             }
@@ -332,22 +332,20 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const resolver = useYupValidationResolver(risksValidator);
 
     const [riskData, setRiskData] = useState([]);
-    const [ typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
-    const [ probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
-    const [ impactData, setImpactData] = useState<IDropdownProps[]>(null);
-    const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
-    
+    const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
+    const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
+    const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
+    const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
+
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
     const {
         control,
         register,
-        setValue,
         handleSubmit,
         formState: { errors, isValid },
         watch,
-        getValues
     } = useForm<IAddRisks>({
-         resolver, mode: "all", defaultValues: {
+        resolver, mode: "all", defaultValues: {
             level: item?.level ? item.level : null,
             risk: item?.risk ? item.risk : null,
             typeRisk: item?.typeRisk ? item.typeRisk : null,
@@ -359,22 +357,22 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
-    
+
     const idLevel = watch("level")
     useEffect(() => {
         if (idLevel == 1) {
             const levelObjectives = [
                 {
-                    name:projectData.identification.objectives.generalObjective,
+                    name: projectData.identification.objectives.generalObjective,
                     value: 1,
                 },
             ];
             setRiskData(levelObjectives);
-        }else {
+        } else {
             setRiskData([{}])
         }
-    
-      }, [idLevel]);
+
+    }, [idLevel]);
 
     useEffect(() => {
         return () => {
@@ -397,7 +395,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
             }
         }).catch(() => { });
     }, [])
-    
+
     useEffect(() => {
         getEntitiesTypesRisks().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -434,6 +432,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                 setMessage({});
             },
             onOk: () => {
+                setDisableContinue(true);
                 returnData(data, item);
                 setMessage({
                     title: item ? "Cambios guardados" : "Riesgo",
@@ -447,7 +446,6 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         setActionCancel(null);
                         setActionContinue(null);
                         setMessage({});
-                        setDisableContinue(true);
                     }
                 })
             }
@@ -470,7 +468,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={LevelData}
                         errors={errors}
-                        
+
                     />
                     <SelectComponent
                         control={control}
@@ -480,9 +478,9 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={riskData}
                         errors={errors}
-                        
+
                     />
-                        <SelectComponent
+                    <SelectComponent
                         control={control}
                         idInput={"typeRisk"}
                         className="select-basic span-width"
@@ -490,82 +488,82 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={typeRiskData}
                         errors={errors}
-                        
+
                     />
-                        <div className="grid-span-3-columns">
-                            <Controller
-                                    control={control}
-                                    name={"descriptionRisk"}
-                                    defaultValue=""
-                                    render={({ field }) => {
-                                        return (
-                                            <TextAreaComponent
-                                                id={field.name}
-                                                idInput={field.name}
-                                                value={`${field.value}`}
-                                                label="Descripción riesgo"
-                                                classNameLabel="text-black biggest bold text-required"
-                                                className="text-area-basic"
-                                                placeholder="Escribe aquí"
-                                                register={register}
-                                                onChange={field.onChange}
-                                                errors={errors}
-                                                characters={500}
-                                            >
-                                            </TextAreaComponent>
-                                        );
-                                    }}
-                                />
-                        </div>
-                    </div>
-                    <div className="risk-component-2">
-                        <SelectComponent
+                    <div className="grid-span-3-columns">
+                        <Controller
                             control={control}
-                            idInput={"probability"}
-                            className="select-basic span-width"
-                            label="Probabilidad"
-                            classNameLabel="text-black biggest bold text-required"
-                            data={probabilityData}
-                            errors={errors}
-                            
+                            name={"descriptionRisk"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Descripción riesgo"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        className="text-area-basic"
+                                        placeholder="Escribe aquí"
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                        characters={500}
+                                    >
+                                    </TextAreaComponent>
+                                );
+                            }}
                         />
-                            <SelectComponent
-                            control={control}
-                            idInput={"impact"}
-                            className="select-basic span-width"
-                            label="Impacto"
-                            classNameLabel="text-black biggest bold text-required"
-                            data={impactData}
-                            errors={errors}
-                            
-                        />
-                        <div className="grid-span-2-columns">
-                            <Controller
-                                control={control}
-                                name={"effects"}
-                                defaultValue=""
-                                render={({ field }) => {
-                                    return (
-                                        <TextAreaComponent
-                                            id={field.name}
-                                            idInput={field.name}
-                                            value={`${field.value}`}
-                                            label="Efectos"
-                                            classNameLabel="text-black biggest bold text-required"
-                                            className="text-area-basic"
-                                            placeholder="Escribe aquí"
-                                            register={register}
-                                            onChange={field.onChange}
-                                            errors={errors}
-                                            characters={500}
-                                        >
-                                        </TextAreaComponent>
-                                    );
-                                }}
-                            />
-                        </div>
                     </div>
-                    <div>
+                </div>
+                <div className="risk-component-2">
+                    <SelectComponent
+                        control={control}
+                        idInput={"probability"}
+                        className="select-basic span-width"
+                        label="Probabilidad"
+                        classNameLabel="text-black biggest bold text-required"
+                        data={probabilityData}
+                        errors={errors}
+
+                    />
+                    <SelectComponent
+                        control={control}
+                        idInput={"impact"}
+                        className="select-basic span-width"
+                        label="Impacto"
+                        classNameLabel="text-black biggest bold text-required"
+                        data={impactData}
+                        errors={errors}
+
+                    />
+                    <div className="grid-span-2-columns">
+                        <Controller
+                            control={control}
+                            name={"effects"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Efectos"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        className="text-area-basic"
+                                        placeholder="Escribe aquí"
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                        characters={500}
+                                    >
+                                    </TextAreaComponent>
+                                );
+                            }}
+                        />
+                    </div>
+                </div>
+                <div>
                     <Controller
                         control={control}
                         name={"mitigation"}
@@ -589,8 +587,8 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                             );
                         }}
                     />
-                    </div>
                 </div>
+            </div>
         </FormComponent>
     )
 }
