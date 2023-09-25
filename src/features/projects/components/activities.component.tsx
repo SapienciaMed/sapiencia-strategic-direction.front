@@ -86,17 +86,39 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         })
     }
     const changeActivities = (data: IActivityMGA, row?: IActivityMGA) => {
+        const activityData = {...data, budgetsMGA: {
+            year0: {
+                validity: data.budgetsMGA.year0.validity || 0,
+                budget: data.budgetsMGA.year0.budget || 0,
+            },
+            year1: {
+                validity: data.budgetsMGA.year1.validity || 0,
+                budget: data.budgetsMGA.year1.budget || 0,
+            },
+            year2: {
+                validity: data.budgetsMGA.year2.validity || 0,
+                budget: data.budgetsMGA.year2.budget || 0,
+            },
+            year3: {
+                validity: data.budgetsMGA.year3.validity || 0,
+                budget: data.budgetsMGA.year3.budget || 0,
+            },
+            year4: {
+                validity: data.budgetsMGA.year4.validity || 0,
+                budget: data.budgetsMGA.year4.budget || 0,
+            },
+        }}
         if (row) {
-            const activitiesData = getValues("activities").filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+            const activitiesData = getValues("activities").filter(item => item !== row).concat(activityData).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("activities", activitiesData);
             setActivitiesData(prev => {
                 return { ...prev, activities: activitiesData };
             });
         } else {
             const activitiesData = getValues("activities");
-            setValue("activities", activitiesData ? activitiesData.concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [data]);
+            setValue("activities", activitiesData ? activitiesData.concat(activityData).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [activityData]);
             setActivitiesData(prev => {
-                return { ...prev, activities: activitiesData ? activitiesData.concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [data] };
+                return { ...prev, activities: activitiesData ? activitiesData.concat(activityData).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA)) : [activityData] };
             });
         }
         trigger("activities");
@@ -366,13 +388,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         resolver, mode: "all", defaultValues: {
             activityDescriptionMGA: item?.activityDescriptionMGA ? item.activityDescriptionMGA : "",
             activityMGA: item?.activityMGA ? item.activityMGA : "",
-            budgetsMGA: item?.budgetsMGA ? item.budgetsMGA : {
-                year0: { budget: 0, validity: 0 },
-                year1: { budget: 0, validity: 0 },
-                year2: { budget: 0, validity: 0 },
-                year3: { budget: 0, validity: 0 },
-                year4: { budget: 0, validity: 0 },
-            },
+            budgetsMGA: item?.budgetsMGA ? item.budgetsMGA : null,
             detailActivities: item?.detailActivities ? item.detailActivities.map(detail => {
                 return { ...detail, totalCost: formaterNumberToCurrency(detail.amount * detail.unitCost) }
             }) : null,
