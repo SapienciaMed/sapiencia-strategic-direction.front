@@ -235,7 +235,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     const DivConIcono = ({ esValidoPreinversion,esValidoOperacion,esValidoInversion }) => {
         return (
             <>
-            <div className="Validation-form ">
+            <div className="Validation-form">
 
             {esValidoPreinversion !== null && (
             <div>

@@ -465,7 +465,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const onSubmit = handleSubmit(async (data: IAddRisks) => {
         setMessage({
             title: item ? "Editar riesgo" : "Crear riesgo",
-            description: item ? "¿Desea guardar los cambios?" : "¿Deseas guardar el riesgo?",
+            description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar el riesgo?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
