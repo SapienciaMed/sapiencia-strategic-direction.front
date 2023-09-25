@@ -336,4 +336,5 @@ export interface IProject {
   environmentalEffects: IEffectEnviromentForm[] | null;
   activities: IActivitiesProject[] | null;
   risks:IAddRisks[] | null;
+  profitsIncome:IprofitsIncome[] | null;
 }

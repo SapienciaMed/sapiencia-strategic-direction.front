@@ -172,7 +172,13 @@ export function useProjectsCrudData() {
                         risks: {
                             risks: projectDataResponse.risks,
                         },
+                    },
+                    programation:{
+                        profitsIncome: {
+                            profitsIncome: projectDataResponse.profitsIncome,
+                        },
                     }
+
                 })
             } else if(response.operation.code === EResponseCodes.FAIL) {
                 setMessage({

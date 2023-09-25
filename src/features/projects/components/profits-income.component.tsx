@@ -245,7 +245,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
     const { getListByGrouper } = useGenericListService();
     const [addedPeriod, setAddedPeriod] = useState(false); // Nuevo estado local
     const [periodCounter, setPeriodCounter] = useState(0); 
-    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue,setShowCancel } = useContext(ProjectsContext);
     const {
         control,
         register,
@@ -317,6 +317,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
             setActionContinue(null);
             setMessage({});
             setDisableContinue(true);
+            setShowCancel(true);
         }else {
             setMessage({
                 title: item ? "Guardar cambios" : "Crear Ingreso/Beneficio",
@@ -471,7 +472,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                             setPeriodCounter(periodCounter + 1); // Incrementar el contador de períodos
                         }
                        }}>
-                          {!view && (<> Añadir clasificación <AiOutlinePlusCircle /></>)}
+                          {!view && (<> Añadir periodo <AiOutlinePlusCircle /></>)}
                         </div>
                     </div>
                     <label className="text-main big error-message bold">
