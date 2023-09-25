@@ -127,6 +127,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
                 setForm(<ProfitsIncomeAddComponent setForm={setForm} returnData={changeProfitsIncome} item={row} view={true}/>);
                 setTextContinue("Aceptar");
                 setShowCancel(false);
+                setActionCancel(() => onCancel);
             }
         },
         {
