@@ -337,4 +337,5 @@ export interface IProject {
   activities: IActivitiesProject[] | null;
   risks:IAddRisks[] | null;
   profitsIncome:IprofitsIncome[] | null;
+  sourceFunding:ISourceFunding[] | null;
 }

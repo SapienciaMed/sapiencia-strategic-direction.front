@@ -45,7 +45,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "programming", title: "4. Programación", content: <ProgramationPage/>, action: () => {
+            id: "programation", title: "4. Programación", content: <ProgramationPage/>, action: () => {
                 setStep(3)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -177,8 +177,10 @@ export function useProjectsCrudData() {
                         profitsIncome: {
                             profitsIncome: projectDataResponse.profitsIncome,
                         },
+                        sourceFunding: {
+                            sourceFunding: projectDataResponse.sourceFunding,
+                        },
                     }
-
                 })
             } else if(response.operation.code === EResponseCodes.FAIL) {
                 setMessage({

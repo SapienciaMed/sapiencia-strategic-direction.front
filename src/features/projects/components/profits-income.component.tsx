@@ -472,7 +472,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                             setPeriodCounter(periodCounter + 1); // Incrementar el contador de períodos
                         }
                        }}>
-                          {!view && (<> Añadir periodo <AiOutlinePlusCircle /></>)}
+                          {!view && (<> Añadir período <AiOutlinePlusCircle /></>)}
                         </div>
                     </div>
                     <label className="text-main big error-message bold">
