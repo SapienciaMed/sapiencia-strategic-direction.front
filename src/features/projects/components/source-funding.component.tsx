@@ -143,16 +143,15 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             header: "Etapa",
             renderCell: (row) => {
                 const stage = stagesData.find(stage => stage.value === row.stage) || null;
-                return <>{stage.name}</>
+                return <>{stage ? stage.name || "" : ""}</>
             }
         },
         {
             fieldName: "typeEntity",
             header: "Tipo de entidad",
             renderCell: (row) => {
-                debugger;
                 const entity = entityData.find(stage => stage.value === row.typeEntity) || null;
-                return <>{entity.name}</>
+                return <>{entity ? entity.name || "" : ""}</>
             }
         },
         {
@@ -164,7 +163,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             header: "Tipo de recurso",
             renderCell: (row) => {
                 const resource = resourceData.find(stage => stage.value === row.resource) || null;
-                return <>{resource.name}</>
+                return <>{resource ? resource.name || "" : ""}</>
             }
         },
         {
@@ -384,7 +383,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
 
     function validarFormulario() 
     {
-        debugger;
         if (activitiesPreinversion != 0 && fundingPreInversion != 0 && activitiesPreinversion == fundingPreInversion) {
             setEsValidoPreinversion(true); 
           }else if(activitiesPreinversion != 0 || fundingPreInversion != 0){
