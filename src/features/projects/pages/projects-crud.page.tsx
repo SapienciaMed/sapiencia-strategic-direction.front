@@ -4,7 +4,7 @@ import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData } = useProjectsCrudData();
+    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel } = useProjectsCrudData();
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -23,7 +23,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                             />
                         </div>}
                         <div className="mobile-actions">
-                            <span className="bold text-center button" onClick={actionCancel || (() => {
+                            {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
                                     title: "Cancelar creación de proyecto",
                                     description: "¿Deseas cancelar la creación? No se guardarán los datos",
@@ -42,7 +42,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 })
                             })}>
                                 Cancelar
-                            </span>
+                            </span>}
                             <ButtonComponent
                                 value={textContinue || "Continuar"}
                                 className="button-main huge hover-three"
@@ -65,7 +65,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     />
                 }
                 <div className="buttons-bot">
-                    <span className="bold text-center button" onClick={actionCancel || (() => {
+                    {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
                             title: "Cancelar creación de proyecto",
                             description: "¿Deseas cancelar la creación? No se guardarán los datos",
@@ -86,9 +86,9 @@ function ProjectsCrudPage(): React.JSX.Element {
                         })
                     })}>
                         Cancelar
-                    </span>
+                    </span>}
                     <ButtonComponent
-                        className={`button-main ${textContinue ? "extra_extra_large": "huge"} hover-three button-save`}
+                        className={`button-main ${textContinue ? "extra_extra_large" : "huge"} hover-three button-save`}
                         value={textContinue || "Continuar"}
                         type="button"
                         action={actionContinue || (() => { })}

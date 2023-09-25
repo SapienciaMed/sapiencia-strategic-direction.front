@@ -21,6 +21,8 @@ interface IProjectsContext {
   setActionContinue: Dispatch<SetStateAction<() => void>>;
   actionCancel: () => void;
   setActionCancel: Dispatch<SetStateAction<() => void>>;
+  showCancel: boolean;
+  setShowCancel: Dispatch<SetStateAction<boolean>>;
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -39,6 +41,8 @@ export const ProjectsContext = createContext<IProjectsContext>({
   setActionContinue: () => {},
   actionCancel: () => {},
   setActionCancel: () => {},
+  showCancel: true,
+  setShowCancel: () => {},
 });
 
 export function ProjectsContextProvider({ children }: IProps) {
@@ -48,6 +52,7 @@ export function ProjectsContextProvider({ children }: IProps) {
   const [textContinue, setTextContinue] = useState<string>(null);
   const [actionContinue, setActionContinue] = useState<() => void>(() => {});
   const [actionCancel, setActionCancel] = useState<() => void>(() => {});
+  const [showCancel, setShowCancel] = useState<boolean>(true);
   const values = useMemo<IProjectsContext>(() => {
     return {
       step,
@@ -61,9 +66,11 @@ export function ProjectsContextProvider({ children }: IProps) {
       actionContinue,
       setActionContinue,
       actionCancel,
-      setActionCancel
+      setActionCancel,
+      showCancel,
+      setShowCancel
     };
-  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel]);
+  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel]);
 
   return <ProjectsContext.Provider value={values}>{children}</ProjectsContext.Provider>;
 }

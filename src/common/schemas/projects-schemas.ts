@@ -305,7 +305,7 @@ export const activityMGAValidator = yup.object({
         .required("El campo es obligatorio"),
     year: yup.number()
         .required("Debe seleccionar una opción"),
-    detailActivities: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
+    detailActivities: yup.array().of(
         yup.object().shape(({
             detailActivity: yup
                 .string()

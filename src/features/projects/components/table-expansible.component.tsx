@@ -13,10 +13,12 @@ interface IProps<T> {
     columns: ITableElement<T>[];
     actions?: ITableAction<T>[];
     data?: any[];
+    widthTable?: string;
     hidePagination?: boolean;
+    horizontalScroll?: boolean;
 }
 
-const TableExpansibleComponent = ({ columns, actions, data, hidePagination = false }: IProps<any>): React.JSX.Element => {
+const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagination = false, horizontalScroll = false }: IProps<any>): React.JSX.Element => {
     const [first, setFirst] = useState<number>(0);
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(0);
@@ -175,6 +177,7 @@ const TableExpansibleComponent = ({ columns, actions, data, hidePagination = fal
                     dataKey="consecutive"
                     onRowToggle={(e) => setExpandedRows(e.data)}
                     scrollable={true}
+                    style={{maxWidth: widthTable}}
                     emptyMessage={" "}
                 >
                     {expansibleCount > 0 && <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />}
@@ -185,12 +188,12 @@ const TableExpansibleComponent = ({ columns, actions, data, hidePagination = fal
                             header={col.header}
                             body={col.renderCell}
                             sortable={col.sorteable}
-                            style={{ maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
+                            style={horizontalScroll ? {} : { maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
                         />
                     ))}
 
                     {actions && (
-                        <Column style={{ maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
+                        <Column style={horizontalScroll ? {} : { maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
                             className="spc-table-actions"
                             header={
                                 <div>

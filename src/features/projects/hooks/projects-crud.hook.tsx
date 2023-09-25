@@ -12,7 +12,7 @@ import ProgramationPage from "../pages/programation.page";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue, setTextContinue, setActionCancel, setActionContinue, showCancel } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
     const navigate = useNavigate();
@@ -282,5 +282,5 @@ export function useProjectsCrudData() {
 
     }
 
-    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData }
+    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel }
 }
