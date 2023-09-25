@@ -568,7 +568,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         mode="currency"
                         currency="COP"
                         locale="es-CO"
-                        minFractionDigits={0}
+                        minFractionDigits={2}
                     />
                 )
             }
@@ -782,7 +782,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                             {!view && item ? "Editar actividades detalladas" : "Actividad detallada"}
                         </label>
 
-                        <div className="title-button text-main large" onClick={() => {
+                        {!view && <div className="title-button text-main large" onClick={() => {
                             const consecutive = `${getValues("activityMGA")}.${fields.length + 1}`;
                             append({
                                 consecutive: consecutive,
@@ -794,7 +794,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                             });
                         }}>
                             Añadir actividad detallada <AiOutlinePlusCircle />
-                        </div>
+                        </div>}
                     </div>
                     <div className="strategic-direction-grid-1">
                         <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
