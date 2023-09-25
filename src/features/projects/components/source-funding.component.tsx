@@ -65,7 +65,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     const onCancel = () => {
         setMessage({
             title: "Cancelar entidad",
-            description: "¿Deseas cancelar la creación del entidad?",
+            description: "¿Deseas cancelar la creación de la entidad?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
