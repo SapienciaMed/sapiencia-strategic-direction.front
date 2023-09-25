@@ -168,23 +168,23 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         },
         {
             fieldName: "year0",
-            header: "año 0",
+            header: "Año 0",
         },
         {
             fieldName: "year1",
-            header: "año 1",
+            header: "Año 1",
         },
         {
             fieldName: "year2",
-            header: "año 2",
+            header: "Año 2",
         },
         {
             fieldName: "year3",
-            header: "año 3",
+            header: "Año 3",
         },
         {
             fieldName: "year4",
-            header: "año 4",
+            header: "Año 4",
         },
         
     ];
