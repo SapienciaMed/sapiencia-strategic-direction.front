@@ -168,7 +168,10 @@ export function useProjectsCrudData() {
                                     },
                                 }}
                             })
-                        }
+                        },
+                        risks: {
+                            risks: projectDataResponse.risks,
+                        },
                     }
                 })
             } else if(response.operation.code === EResponseCodes.FAIL) {

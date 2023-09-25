@@ -242,7 +242,7 @@ export const risksValidator = yup.object().shape({
     .number()
     .required("Debe seleccionar una opción"),
     risk: yup  
-    .number()
+    .string()
     .required("Debe seleccionar una opción"),
     typeRisk: yup
     .number()

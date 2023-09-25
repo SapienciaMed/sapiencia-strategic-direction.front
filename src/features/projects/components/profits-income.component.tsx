@@ -576,8 +576,9 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                     }} className="actions-needs">
                                        <div className="actions-poblations ">
                                        {!view && (
-                                            <>
+                                            <> <div>
                                                  <FaTrashAlt className="button grid-button button-delete" />
+                                              </div>
                                             </>
                                         )}
                                         </div>

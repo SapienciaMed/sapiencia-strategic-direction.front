@@ -137,7 +137,7 @@ export interface ItechnicalAnalysisForm {
 export interface IAddRisks {
   id?: number;
   level: number;
-  risk:number;
+  risk:string;
   typeRisk:number;
   descriptionRisk: string;
   probability:number;
@@ -335,4 +335,5 @@ export interface IProject {
   specificObjectives: INeedObjetive[] | null;
   environmentalEffects: IEffectEnviromentForm[] | null;
   activities: IActivitiesProject[] | null;
+  risks:IAddRisks[] | null;
 }

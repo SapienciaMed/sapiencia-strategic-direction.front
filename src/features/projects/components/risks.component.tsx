@@ -58,6 +58,22 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             risks: projectData?.preparation?.risks?.risks ? projectData.preparation.risks.risks : null
         }
     });
+
+    const products : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+        return {
+            name: `${cause.productMGA}. ${cause.productDescriptionMGA}`,
+            value: cause.productMGA
+        }
+    });
+
+      const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+        return {
+            name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
+            value: cause.activityMGA
+        }
+    });
+
+
     const onCancel = () => {
         setMessage({
             title: "Cancelar riesgo",
@@ -160,6 +176,13 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                 switch (row.level) {
                     case 1:
                         return <>{projectData.identification.objectives.generalObjective}</>
+              
+                     case 2:
+                        const levelRisk = products.find(item => item.value == row.risk)
+                        return <>{levelRisk.name || ""}</>;
+                    case 3:
+                        const levelActivities = activities.find(item => item.value == row.risk)
+                        return <>{levelActivities.name || "" }</>;
                     default:
                         return <></>
                 }
@@ -360,8 +383,22 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
+    const products : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+        return {
+            name: `${cause.productMGA}. ${cause.productDescriptionMGA}`,
+            value: cause.productMGA
+        }
+    });
+
+      const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+        return {
+            name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
+            value: cause.activityMGA
+        }
+    });
 
     const idLevel = watch("level")
+
     useEffect(() => {
         if (idLevel == 1) {
             const levelObjectives = [
@@ -371,8 +408,10 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                 },
             ];
             setRiskData(levelObjectives);
-        } else {
-            setRiskData([{}])
+        } else if (idLevel == 2){
+            setRiskData(products);
+        } else if (idLevel == 3) {
+            setRiskData(activities)
         }
 
     }, [idLevel]);
