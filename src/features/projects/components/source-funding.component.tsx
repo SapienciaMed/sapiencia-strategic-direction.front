@@ -22,6 +22,7 @@ import { IEntities } from "../interfaces/Entities";
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaTimesCircle } from 'react-icons/fa';
 import { useWidth } from "../../../common/hooks/use-width";
+import { formaterNumberToCurrency } from "../../../common/utils/helpers";
 
 
 interface IProps {
@@ -169,22 +170,37 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         {
             fieldName: "year0",
             header: "Año 0",
+            renderCell: (row) => {
+                return <>{formaterNumberToCurrency(row.year0)}</>
+            }
         },
         {
             fieldName: "year1",
             header: "Año 1",
+            renderCell: (row) => {
+                return <>{formaterNumberToCurrency(row.year1)}</>
+            }
         },
         {
             fieldName: "year2",
             header: "Año 2",
+            renderCell: (row) => {
+                return <>{formaterNumberToCurrency(row.year2)}</>
+            }
         },
         {
             fieldName: "year3",
             header: "Año 3",
+            renderCell: (row) => {
+                return <>{formaterNumberToCurrency(row.year3)}</>
+            }
         },
         {
             fieldName: "year4",
             header: "Año 4",
+            renderCell: (row) => {
+                return <>{formaterNumberToCurrency(row.year4)}</>
+            }
         },
         
     ];
