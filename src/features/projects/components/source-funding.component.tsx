@@ -21,6 +21,7 @@ import { useEntitiesService } from "../hooks/entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaTimesCircle } from 'react-icons/fa';
+import { useWidth } from "../../../common/hooks/use-width";
 
 
 interface IProps {
@@ -34,14 +35,18 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const  resolver = useYupValidationResolver(sourceFundingValidator)
+    const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
+    const [ entityData, setEntityData] = useState<IDropdownProps[]>([]);
+    const [ resourceData, setResourceData] = useState<IDropdownProps[]>([]);
     const [esValidoPreinversion, setEsValidoPreinversion] = useState(false);
     const [esValidoOperacion, setEsValidoOperacion] = useState(false);
     const [esValidoInversion, setEsValidoInversion] = useState(false);
+    const { width } = useWidth();
     
 
 
-    const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
-
+    const { getEntity,getResource } = useEntitiesService();
+    const { GetStages } = useStagesService();
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
     const {
@@ -62,7 +67,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             description: "¿Deseas cancelar la creación del entidad?",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
+            cancelTitle: "Cancelar",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
@@ -83,7 +88,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             description: "¿Deseas cancelar los cambios? ",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
+            cancelTitle: "Cancelar",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
@@ -98,31 +103,68 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         })
     }
 
+    useEffect(() => {
+        GetStages().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return { name: data.description, value: data.id }
+                })
+                setStagesData(data);
+            }
+        });
+        getEntity().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setEntityData(arrayEntities);
+            }
+        }).catch(() => { });
+
+        getResource().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setResourceData(arrayEntities);
+            }
+        }).catch(() => { });
+
+    }, []);
+
+
 
     const objectivesColumns: ITableElement<ISourceFunding>[] = [
         {
             fieldName: "stage",
             header: "Etapa",
+            renderCell: (row) => {
+                const stage = stagesData.find(stage => stage.value === row.stage) || null;
+                return <>{stage.name}</>
+            }
         },
         {
             fieldName: "typeEntity",
             header: "Tipo de entidad",
+            renderCell: (row) => {
+                debugger;
+                const entity = entityData.find(stage => stage.value === row.typeEntity) || null;
+                return <>{entity.name}</>
+            }
         },
         {
             fieldName: "entity",
             header: "Entidad",
-            // renderCell: (row) => {
-            //     if(measurementData){
-            //         const typeRisk = measurementData.find( item => item.value == row.unit)
-            //         return <>{typeRisk ? typeRisk.name || "" : ""}</>;
-            //     }else {
-            //         return;
-            //     }
-            // },
         },
         {
             fieldName: "resource",
             header: "Tipo de recurso",
+            renderCell: (row) => {
+                const resource = resourceData.find(stage => stage.value === row.resource) || null;
+                return <>{resource.name}</>
+            }
         },
         {
             fieldName: "year0",
@@ -368,7 +410,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
                             Añadir entidad <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('sourceFunding')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('sourceFunding')} />}
+                    {getValues('sourceFunding')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns}  widthTable={`${(width * 0.0149) + 40}vw`}  data={getValues('sourceFunding')}  horizontalScroll />}
                 </div>
             </FormComponent>
         </div>
@@ -439,8 +481,6 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
         }
     });
 
-console.log(stagesData)
-
     useEffect(() => {
         return () => {
             setForm(null);
@@ -492,7 +532,7 @@ console.log(stagesData)
         }else {
             setMessage({
                 title: item ? "Guardar cambios" : "Crear Entidad",
-                description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar el registro?",
+                description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar la entidad?",
                 show: true,
                 background: true,
                 cancelTitle: "Cancelar",
@@ -504,7 +544,7 @@ console.log(stagesData)
                     returnData(data, item);
                     setMessage({
                         title: item ? "Cambios guardados" : "Entidad",
-                        description: item ? "¡Cambios guardados exitosamente!" : "¡Registro guardado exitosamente!",
+                        description: item ? "¡Cambios guardados exitosamente!" : "¡Guardada exitosamente!",
                         show: true,
                         background: true,
                         OkTitle: "Cerrar",

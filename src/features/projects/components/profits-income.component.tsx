@@ -15,6 +15,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import { useWidth } from "../../../common/hooks/use-width";
 
 interface IProps {
     disableNext: () => void;
@@ -28,6 +29,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
+    const { width } = useWidth();
     const {
         getValues,
         setValue,
@@ -220,7 +222,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
                             Añadir ingreso/beneficio <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('profitsIncome')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('profitsIncome')} />}
+                    {getValues('profitsIncome')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns}  widthTable={`${(width * 0.0149) + 40}vw`}  data={getValues('profitsIncome')}  horizontalScroll/>}
                 </div>
             </FormComponent>
         </div>
