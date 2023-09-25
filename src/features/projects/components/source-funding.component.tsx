@@ -216,7 +216,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             icon: "Delete",
             onClick: (row) => {
                 setMessage({
-                    title: "Eliminar registro",
+                    title: "Eliminar entidad",
                     description: "¿Deseas Continuar?",
                     show: true,
                     background: true,
@@ -233,8 +233,8 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
                         });
                         trigger("sourceFunding");
                         setMessage({
-                            title: "Registro eliminado",
-                            description: "¡Eliminado exitosamente!",
+                            title: "Entidad",
+                            description: "¡Eliminada exitosamente!",
                             show: true,
                             background: true,
                             OkTitle: "Cerrar",
