@@ -38,9 +38,8 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     const [esValidoOperacion, setEsValidoOperacion] = useState(false);
     const [esValidoInversion, setEsValidoInversion] = useState(false);
     
-    const [esValido, setEsValido] = useState(false);
-    const [esValidoPreinversionDiv, setEsValidoPreinversionDiv] = useState(false);
-    const [esValidoOperacionDiv, setEsValidoOperacionDiv] = useState(false);
+
+
     const { getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact } = useEntitiesService();
 
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
@@ -234,37 +233,43 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
       };
 
     const DivConIcono = ({ esValidoPreinversion,esValidoOperacion,esValidoInversion }) => {
-        debugger;
         return (
             <>
             <div className="Validation-form ">
-                <div>
-                    <label className="text-black large bold">
+
+            {esValidoPreinversion !== null && (
+            <div>
+                <label className="text-black large bold">
                         Preinversión
-                    </label>
-                    <div className="centrar-div">
-                            {esValidoPreinversion ? <PositivoIcon /> : <NegativoIcon />}
-                    </div>
+                </label>
+                <div className="centrar-div">
+                        {esValidoPreinversion === false ?<NegativoIcon />  : esValidoPreinversion && <PositivoIcon /> }
                 </div>
-                <div>
-                    <label className="text-black large bold">
-                        Operación
-                    </label>
-                    <div className="centrar-div" > 
-                            {esValidoOperacion ? <PositivoIcon /> : <NegativoIcon />}
-                    </div>
+            </div>
+             )}
+
+            {esValidoOperacion !== null && (
+             <div>
+                <label className="text-black large bold">
+                    Operación
+                </label>
+                <div className="centrar-div" > 
+                        {esValidoOperacion === false ?   <NegativoIcon /> :  esValidoOperacion && <PositivoIcon />}
                 </div>
+             </div>
+            )}
+            {esValidoInversion !== null && (
                 <div>
                     <label className="text-black large bold">
                         Inversión
                     </label>
                     <div className="centrar-div">
-                            {esValidoInversion ? <PositivoIcon /> : <NegativoIcon />}
+                            {esValidoInversion === false  ?  <NegativoIcon />  : esValidoInversion && <PositivoIcon /> }
                     </div>
                 </div>
-              
+             )}
+   
             </div>
-       
                 
             </>
         );
@@ -286,30 +291,30 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
 
       let activitiesInversion = 0
 
-      projectData.preparation?.activities?.activities?.filter(activity=> activity.stageActivity === 2).forEach(activity => {
+      projectData.preparation?.activities?.activities?.filter(activity=> activity.stageActivity === 3).forEach(activity => {
         activitiesInversion += activity.budgetsMGA.year0.budget + activity.budgetsMGA.year1.budget + activity.budgetsMGA.year2.budget + activity.budgetsMGA.year3.budget + activity.budgetsMGA.year4.budget
       });
     
       // fondos de inversion y suma de años 
 
-        let fundingInversion=0
+      let fundingPreInversion=0
 
       projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding=> sourceFunding.stage === 1).forEach(sourceFunding => {
-        fundingInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
+        fundingPreInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
       });
 
-      
         let fundingOperacion=0
 
       projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding=> sourceFunding.stage === 2).forEach(sourceFunding => {
         fundingOperacion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
       });
 
-      let fundingPreInversion=0
+      let fundingInversion=0
 
       projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding=> sourceFunding.stage === 3).forEach(sourceFunding => {
-        fundingPreInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
+        fundingInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
       });
+
 
         // Llama a validarFormulario cada vez que cambien las variables relevantes
         useEffect(() => {
@@ -321,33 +326,27 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
 
     function validarFormulario() 
     {
+        debugger;
         if (activitiesPreinversion != 0 && fundingPreInversion != 0 && activitiesPreinversion == fundingPreInversion) {
             setEsValidoPreinversion(true); 
-            setEsValido(true)
           }else if(activitiesPreinversion != 0 || fundingPreInversion != 0){
             setEsValidoPreinversion(false); 
-            setEsValido(true)
           }else {
-            setEsValido(false)
+            setEsValidoPreinversion(null); 
           }
-        
           if (activitiesOperacion != 0 && fundingOperacion != 0 && fundingOperacion == activitiesOperacion) {
             setEsValidoOperacion(true);  
-            setEsValido(true)
           }else if(fundingOperacion != 0 || activitiesOperacion != 0){
-            setEsValidoPreinversion(false); 
-            setEsValido(true)
+            setEsValidoOperacion(false); 
           }else{
-            setEsValido(true)
+            setEsValidoOperacion(null); 
           }
           if (activitiesInversion != 0 && fundingInversion != 0 && fundingInversion == activitiesInversion ) {
             setEsValidoInversion(true); 
-            setEsValido(true)
           }else if(activitiesInversion != 0 || fundingInversion != 0){
-            setEsValidoPreinversion(false); 
-            setEsValido(true)
+            setEsValidoInversion(false); 
           }else {
-            setEsValido(true)
+            setEsValidoInversion(null)
           }
     };
     
@@ -375,8 +374,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         </div>
         
         {
-              esValido ? 
-                (
+                
                     <div className="container-validation">
                     <div className="card-table">
             
@@ -392,11 +390,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             
                         </div>
                     </div>
-                ) : 
-                (
-                    <div></div>
-                )
-            
         }
   
         </>
@@ -424,7 +417,7 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
     const { getEntity,getResource } = useEntitiesService();
     const resolver = useYupValidationResolver(EntityValidator);
     const { getListByGrouper } = useGenericListService();
-    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue , setShowCancel} = useContext(ProjectsContext);
     const {
         control,
         register,
@@ -439,14 +432,14 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
             entity: item?.entity ? item.entity : "",
             typeEntity: item?.typeEntity ? item.typeEntity : null,
             year0 : item?.year0 ? item.year0 : null,
-            year1 : item?.year1 ? item.year2 : null,
-            year2 : item?.year2 ? item.year3 : null,
-            year3 : item?.year3 ? item.year4 : null,
+            year1 : item?.year1 ? item.year1 : null,
+            year2 : item?.year2 ? item.year2 : null,
+            year3 : item?.year3 ? item.year3 : null,
             year4 : item?.year4 ? item.year4 : null,
         }
     });
 
-
+console.log(stagesData)
 
     useEffect(() => {
         return () => {

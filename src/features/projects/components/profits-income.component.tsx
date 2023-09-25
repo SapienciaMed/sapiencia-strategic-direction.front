@@ -24,7 +24,7 @@ interface IProps {
 
 function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [ profitsFormData, setProfitsFormData] = useState<IproftisIncomeForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue ,setShowCancel} = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
@@ -124,7 +124,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             onClick: (row) => {
                 setForm(<ProfitsIncomeAddComponent setForm={setForm} returnData={changeProfitsIncome} item={row} view={true}/>);
                 setTextContinue("Aceptar");
-                setActionCancel(() => onCancel);
+                setShowCancel(false);
             }
         },
         {
@@ -576,7 +576,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                     }} className="actions-needs">
                                        <div className="actions-poblations ">
                                        {!view && (
-                                            <> <div>
+                                            <> <div className="container-div">
                                                  <FaTrashAlt className="button grid-button button-delete" />
                                               </div>
                                             </>

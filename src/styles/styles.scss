@@ -29,6 +29,24 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 }
 
 
+.Validation-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px;
+    row-gap: 1rem;
+    column-gap: 1rem;
+    justify-items: center;
+}
+
+.centrar-div {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .crud-page {
     @include generate-flex-container(column);
 }
@@ -79,6 +97,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         display: grid;
         justify-content: center;
         align-items: center;
+      
+        .container-div{
+            margin-top: 1.3rem;
+        }
 
         .button-delete {
             filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
@@ -252,16 +274,17 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 }
 
 .actions-poblations {
-    padding-top: 1.7rem;
     display: flex;
-    justify-content: center;
-
+    flex-direction: column;
+    gap: 22px;
     .button-delete {
         filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
         width: 24px;
         height: 24px;
     }
 }
+
+
 
 .causes-form-container {
     display: grid;
@@ -688,9 +711,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         .actions-needs {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            flex-wrap: wrap;
-            align-content: center;
+            gap: 22px;
+
+            
+        .container-div{
+            margin-top: 0;
+        }
 
             .button-delete {
                 filter: invert(21%) sepia(99%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(117%);
