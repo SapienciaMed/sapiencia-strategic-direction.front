@@ -4,6 +4,7 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import NeedsComponent from "../components/needs.component";
 import ProfitsIncomeComponent from "../components/profits-income.component";
+import SourceFundingComponent from "../components/source-funding.component";
 
 
 function ProgramationPage(): React.JSX.Element {
@@ -29,7 +30,7 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 2,
             name: "Fuentes de financiación",
-            content: <>aqui va tu pagina c:</>
+            content: <SourceFundingComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
         },
         {
             id: 3,

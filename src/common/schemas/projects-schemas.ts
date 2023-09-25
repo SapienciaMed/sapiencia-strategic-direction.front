@@ -284,6 +284,32 @@ export const riskValidator = yup.object({
     risks: yup.array().required("Debe haber almenos un riesgo").min(1, "Debe haber almenos un riesgo")
 });
 
+export const sourceFundingValidator = yup.object({
+    sourceFunding: yup.array().required("Debe haber almenos una entidad").min(1, "Debe haber almenos una entidad")
+});
+
+export const EntityValidator = yup.object({
+    stage: yup.number().required("Debe seleccionar una opción"),
+    typeEntity: yup.number().required("Debe seleccionar una opción"),
+    resource: yup.number().required("Debe seleccionar una opción"),
+    entity: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
+    year0: yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value).nullable()
+    .required("El campo es obligatorio"),
+    year1: yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value).nullable()
+    .required("El campo es obligatorio"),
+    year2: yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value).nullable()
+    .required("El campo es obligatorio"),
+    year3: yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value).nullable()
+    .required("El campo es obligatorio"),
+    year4: yup.number()
+    .transform((value) => Number.isNaN(value) ? null : value).nullable()
+    .required("El campo es obligatorio"),
+});
+
 export const activitiesValidator = yup.object({
     activities: yup.array().required("Debe haber almenos una actividad").min(1, "Debe haber almenos una actividad")
 });

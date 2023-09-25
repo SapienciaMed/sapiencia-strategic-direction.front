@@ -13,6 +13,8 @@ import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { useEntitiesService } from "../hooks/entities-service.hook"
 import { IEntities } from "../interfaces/Entities";
 import { EResponseCodes } from "../../../common/constants/api.enum";
+import { useWidth } from "../../../common/hooks/use-width";
+
 
 interface IProps {
     disableNext: () => void;
@@ -43,6 +45,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
     const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
+    const { width } = useWidth();
     const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
     const {
         getValues,
@@ -61,7 +64,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             description: "¿Deseas cancelar la creación del riesgo?",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
+            cancelTitle: "Cancelar",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
@@ -314,7 +317,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                             Añadir riesgo <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('risks')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('risks')} />}
+                    {getValues('risks')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('risks')} horizontalScroll />}
                 </div>
             </FormComponent>
         </div>

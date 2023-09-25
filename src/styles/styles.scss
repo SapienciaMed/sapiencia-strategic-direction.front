@@ -28,6 +28,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     row-gap: 1.7rem;
 }
 
+
 .crud-page {
     @include generate-flex-container(column);
 }
@@ -52,7 +53,25 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     margin-bottom: 1rem;
 }
 
-.clasification-period-container {
+
+.entity-container {
+    display: grid;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.year-container-1{
+    display: grid;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+}
+.year-container-2{
+    display: grid;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.clasification-period-container{
     display: grid;
     row-gap: 1.3rem;
 
@@ -141,6 +160,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     .div-acciones {
         display: none;
     }
+  }
+
+  .container-validation{
+    margin-top: 1.5rem;
 }
 
 .risk-component {
@@ -704,4 +727,44 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         row-gap: 0.5rem;
     }
+    .entity-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 1rem 0px;
+        row-gap: 1rem;
+        column-gap: 1rem;
+    }
+
+    .Validation-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 1rem 0px;
+        row-gap: 1rem;
+        column-gap: 1rem;
+        justify-items: start;
+    }
+
+    .centrar-div {
+        display: flex;
+        margin-top: 1rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .year-container-1 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 1rem 0px;
+        row-gap: 1rem;
+        column-gap: 1rem;
+    }
+
+    .year-container-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 1rem 0px;
+        row-gap: 1rem;
+        column-gap: 1rem;
+    }
+
 }

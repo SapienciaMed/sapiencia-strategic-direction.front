@@ -35,9 +35,15 @@ export function useEntitiesService() {
         const endpoint: string = "/get-all-impact";
         return get(`${roleUrl}${endpoint}`);
     }
+    async function getEntity(): Promise<ApiResponse<IEntities[]>> {
+        const endpoint: string = "/get-all-entity";
+        return get(`${roleUrl}${endpoint}`);
+    }
+    async function getResource(): Promise<ApiResponse<IEntities[]>> {
+        const endpoint: string = "/get-all-resource";
+        return get(`${roleUrl}${endpoint}`);
+    }
    
 
-
-
-    return { GetEntities, GetEntitiesDependency , GetEntitiesPosition, getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact}
+    return { GetEntities, GetEntitiesDependency , GetEntitiesPosition, getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact,getEntity,getResource}
 }

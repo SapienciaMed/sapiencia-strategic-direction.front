@@ -45,7 +45,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             description: "¿Deseas cancelar la creación del ingreso/beneficio?",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
+            cancelTitle: "Cancelar",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
@@ -66,7 +66,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             description: "¿Deseas cancelar los cambios? ",
             show: true,
             background: true,
-            cancelTitle: "Continuar",
+            cancelTitle: "Cancelar",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});

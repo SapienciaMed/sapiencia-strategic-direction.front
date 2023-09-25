@@ -159,8 +159,25 @@ export interface IprofitsIncome {
   period: Iperiod[];
 }
 
+export interface ISourceFunding {
+  id?: number;
+  stage: number;
+  typeEntity: number;
+  resource: number;
+  entity:string;
+  year0:number;
+  year1:number;
+  year2:number;
+  year3:number;
+  year4:number;
+}
+
 export interface IproftisIncomeForm {
   profitsIncome?: IprofitsIncome[];
+}
+
+export interface ISourceFundingForm {
+  sourceFunding?: ISourceFunding[];
 }
 
 export interface Iperiod {
@@ -248,6 +265,7 @@ export interface IProjectTemp {
   }
   programation?:{
     profitsIncome?:IproftisIncomeForm;
+    sourceFunding?:ISourceFundingForm;
   }
 }
 
