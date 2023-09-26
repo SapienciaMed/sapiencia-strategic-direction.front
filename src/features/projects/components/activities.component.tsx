@@ -794,7 +794,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 <div className="card-table">
                     <div className="title-area">
                         <label className="text-black large bold">
-                            {!view && item ? "Editar actividades detalladas" : "Actividad detallada"}
+                            {!view && item ? "Editar actividades detalladas" : "Actividades detalladas"}
                         </label>
 
                         {!view && <div className="title-button text-main large" onClick={() => {
