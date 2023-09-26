@@ -319,7 +319,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
                     </div>
                 </div>
                 {stagesData.length > 0 && activities.length > 0 && <TableExpansibleComponent widthTable={`${(width * 0.0149) + 40}vw`} actions={activitiesActions} columns={activitiesColumns} data={activities} horizontalScroll />}
-                {stagesData.length > 0 && activities?.length > 0 && <div className="card-table">
+                {stagesData.length > 0 && activities?.length > 0 && budgetsData && <div className="card-table">
                     <div className="strategic-direction-total-cost">
                         <div className="row-budget">
                             <span className="text-black biggest bold text-center">Total presupuesto</span>
