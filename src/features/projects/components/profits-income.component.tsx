@@ -492,7 +492,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                                     id={field.name}
                                                     idInput={field.name}
                                                     value={`${index}`}
-                                                    label="Periodo"
+                                                    label="período"
                                                     className="input-basic background-textArea"
                                                     classNameLabel="text-black biggest bold"
                                                     typeInput={"number"}
