@@ -102,7 +102,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                             let field = properties.length === 2 ? item[properties[0]][properties[1]] : item[properties[0]];
                             return (
                                 <div key={item} className="item-value-container">
-                                    <p className="text-black bold">{column.header}</p>
+                                    <p className="text-black-2 bold">{column.header}</p>
                                     <p className="auto-size-column">
                                         {" "}
                                         {column.renderCell
