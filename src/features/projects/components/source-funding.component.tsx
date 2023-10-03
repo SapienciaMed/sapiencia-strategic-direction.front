@@ -424,7 +424,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
                             Añadir entidad <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('sourceFunding')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns}  widthTable={`${(width * 0.0149) + 40}vw`}  data={getValues('sourceFunding')}  horizontalScroll />}
+                    {getValues('sourceFunding')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns}  widthTable={`${(width * 1.05 * 100)}px`}  data={getValues('sourceFunding')}  horizontalScroll />}
                 </div>
             </FormComponent>
         </div>

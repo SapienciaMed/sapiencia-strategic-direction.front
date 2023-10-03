@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
-import NeedsComponent from "../components/needs.component";
 import ProfitsIncomeComponent from "../components/profits-income.component";
 import SourceFundingComponent from "../components/source-funding.component";
+import LogicFrameComponent from "../components/logicFrame.component";
 
 
 function ProgramationPage(): React.JSX.Element {
@@ -39,7 +39,9 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Matríz de marco lógico",
-            content: <>aqui va tu pagina c:</>},
+            content: <LogicFrameComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
+
+        },
     ];
     const nextStep = () => {
         setStep(3);

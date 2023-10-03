@@ -151,6 +151,20 @@ export interface IRisks {
 }
 
 
+export interface IlogicFrameForm {
+  logicFrame?: IAddLogicFrame[];
+}
+
+export interface IAddLogicFrame {
+  id?: number;
+  resume: number;
+  description:number;
+  indicator:number;
+  meta: number;
+  sourceVerification:string;
+  assumptions:string;
+}
+
 export interface IprofitsIncome {
   id?: number;
   type: string;
@@ -266,6 +280,8 @@ export interface IProjectTemp {
   programation?:{
     profitsIncome?:IproftisIncomeForm;
     sourceFunding?:ISourceFundingForm;
+
+    logicFrame?:IlogicFrameForm;
   }
 }
 
