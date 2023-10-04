@@ -77,6 +77,9 @@ export function SelectComponent({
         dataRes.unshift()
         setSelectData(dataRes);
       }).catch(() => { });
+    } else {
+      const seleccione: IDropdownProps[] = [{ name: placeholder, value: null }];
+      setSelectData(seleccione);
     }
   }, [data, promiseData]);
 

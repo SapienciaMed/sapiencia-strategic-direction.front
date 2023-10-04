@@ -50,7 +50,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                 })
                 setMeasurementData(data);
             }
-        })
+        });
     }, []);
     useEffect(() => {
         if (isValid) {
