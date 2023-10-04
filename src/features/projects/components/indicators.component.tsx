@@ -5,7 +5,7 @@ import { IIndicator, IIndicatorsForm } from "../interfaces/ProjectsInterfaces";
 import { Controller, useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { indicatorValidator, indicatorsFormValidator } from "../../../common/schemas";
-import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
@@ -116,7 +116,23 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
         },
     ];
     const indicatorsActions: ITableAction<IIndicator>[] = [
-
+        {
+            icon: "Detail",
+            onClick: (row) => {
+                setForm(<IndicatorComponent setForm={setForm} returnData={(data: IIndicator, row?: IIndicator) => { }} item={row} view />);
+                setTextContinue("Aceptar");
+                setShowCancel(false);
+                setActionCancel(() => onCancel);
+            }
+        },
+        {
+            icon: "Edit",
+            onClick: (row) => {
+                setForm(<IndicatorComponent setForm={setForm} returnData={changeIndicators} item={row} />);
+                setTextContinue("Guardar y regresar");
+                setActionCancel(() => onCancelEdit);
+            }
+        }
     ];
 
     useEffect(() => {
@@ -134,7 +150,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
 
     useEffect(() => {
         if (indicatorsData) setProjectData(prev => {
-            const programation = prev ? { ...prev.programation, programation: { ...indicatorsData } } : { programation: { ...indicatorsData } };
+            const programation = prev ? { ...prev.programation, indicators: { ...indicatorsData } } : { indicators: { ...indicatorsData } };
             return { ...prev, programation: { ...programation } };
         })
     }, [indicatorsData]);
@@ -145,7 +161,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                 <div>
                     <div className="title-area">
                         <label className="text-black large bold text-required">
-                            Listado de objetivos específicos
+                            Listado de indicadores
                         </label>
 
                         <div className="title-button text-main large" onClick={() => {
@@ -176,6 +192,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue, setShowCancel } = useContext(ProjectsContext);
     const { GetIndicatorDNP, GetIndicatorName, GetIndicatorType, GetIndicatorsComponent, GetProgramation, GetStrategicLine } = useIndicatorsService();
     const { getListByGrouper } = useGenericListService();
+    const [indicatorTypeData, setIndicatorTypeData] = useState<IDropdownProps[]>(null);
     const [strategicLineData, setStrategicLineData] = useState<IDropdownProps[]>(null);
     const [indicatorDNPData, setIndicatorDNPData] = useState<IDropdownProps[]>(null);
     const [componentData, setComponentData] = useState<MasterTable[]>(null);
@@ -195,7 +212,26 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         getValues
     } = useForm<IIndicator>({
         resolver, mode: "all", defaultValues: {
-            type: null, accumulative: 1
+            type: item?.type ? item.type : null,
+            accumulative: item?.accumulative !== undefined && item?.accumulative !== null ? item.accumulative : 1,
+            component: item?.component,
+            developmentPlan: item?.developmentPlan,
+            dpn: item?.dpn,
+            dpnIndicator: item?.dpnIndicator,
+            indicator: item?.indicator,
+            line: item?.line,
+            measurement: item?.measurement,
+            objective: item?.objective,
+            productMGA: item?.productMGA,
+            program: item?.program,
+            staticValue: item?.staticValue,
+            staticValueCode: item?.staticValueCode,
+            total: item?.total,
+            year0: item?.year0,
+            year1: item?.year1,
+            year2: item?.year2,
+            year3: item?.year3,
+            year4: item?.year4
         }
     });
 
@@ -208,7 +244,16 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
 
     const filterData = (data: MasterTable[], filter: string): IDropdownProps[] => {
         if (!filter || !data) return [];
-        const filteredData = data.filter(item => item.description.split(" ")[0].includes(filter.split(" ")[0]));
+        const filteredData = data.filter(item => {
+            let returnData = true;
+            const values = item.description.split(" ")[0].split(".");
+            filter.split(" ")[0].split(".").forEach((filterValue, index) => {
+                if(values[index] !== filterValue && values[index] !== "" && filterValue !== "") {
+                    returnData = false;
+                }
+            });
+            return returnData;
+        });
         return filteredData.map(item => {
             return {
                 name: item.description,
@@ -337,6 +382,17 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                 setIndicatorDNPData(data);
             }
         });
+        GetIndicatorType().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data: IDropdownProps[] = response.data.map(data => {
+                    return {
+                        name: data.description,
+                        value: data.id
+                    }
+                })
+                setIndicatorTypeData(data);
+            }
+        });
         setActionContinue(() => onSubmit);
         return () => {
             setForm(null);
@@ -348,7 +404,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
     }, [isValid]);
 
     useEffect(() => {
-        reset({ type: typeIndicator, accumulative: 1 });
+        reset({ type: typeIndicator, accumulative: item?.accumulative !== undefined && item?.accumulative !== null ? item.accumulative : 1 });
     }, [typeIndicator])
 
     useEffect(() => {
@@ -374,7 +430,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                         className={`select-basic span-width ${view && "background-textArea"}`}
                         label="Tipo de indicador"
                         classNameLabel="text-black biggest bold text-required"
-                        data={[{ name: "Producto (Plan Indicativo)", value: 0 }, { name: "Resultado (Plan Indicativo)", value: 1 }, { name: "Valor Estadístico (Plan Acción)", value: 3 }]}
+                        data={indicatorTypeData}
                         errors={errors}
                         disabled={view}
                     />
