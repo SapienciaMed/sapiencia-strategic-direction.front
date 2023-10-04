@@ -257,6 +257,38 @@ export interface IActivitiesForm {
   activities?: IActivityMGA[];
 }
 
+export interface IIndicator {
+  type: number;
+  
+  //Producto
+  line: number;
+  component: number;
+  program: number;
+  indicator: number;
+  developmentPlan: string;
+
+  //Valor estadistico
+  objective: string;
+  dpnIndicator: number;
+  dpn: number;
+  staticValueCode: string;
+  staticValue: string;
+  total: number;
+  accumulative: number;
+
+  productMGA: string;
+  measurement: number;
+  year0: number;
+  year1: number;
+  year2: number;
+  year3: number;
+  year4: number;
+}
+
+export interface IIndicatorsForm {
+  indicators?: IIndicator[];
+}
+
 export interface IProjectTemp {
   id?: number;
   user: string;
@@ -280,7 +312,7 @@ export interface IProjectTemp {
   programation?:{
     profitsIncome?:IproftisIncomeForm;
     sourceFunding?:ISourceFundingForm;
-
+    indicators?: IIndicatorsForm;
     logicFrame?:IlogicFrameForm;
   }
 }

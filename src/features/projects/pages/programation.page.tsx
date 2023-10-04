@@ -41,9 +41,7 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Matríz de marco lógico",
-            content: <LogicFrameComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
-
-            content: <>aqui va tu pagina c:</>
+            content: <LogicFrameComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />
         },
     ];
     const nextStep = () => {

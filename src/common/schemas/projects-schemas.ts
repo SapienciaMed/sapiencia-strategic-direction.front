@@ -377,3 +377,11 @@ export const logicFrameValidator = yup.object().shape({
     //.required("El campo es obligatorio")
     .max(500, "Solo se permiten 500 caracteres"),
 });
+
+export const indicatorsFormValidator = yup.object({
+    
+});
+
+export const indicatorValidator = yup.object({
+    
+});
