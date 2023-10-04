@@ -354,3 +354,26 @@ export const activityMGAValidator = yup.object({
         }))
     )
 });
+
+export const logicFrameValidator = yup.object().shape({
+    resume : yup 
+    .number(),
+    //.required("Debe seleccionar una opción"),
+    description: yup  
+    .number(),
+    //.required("Debe seleccionar una opción"),
+    // indicator: yup
+    // .number(),
+    //.required("Debe seleccionar una opción"),
+    // meta: yup  
+    // .number(),
+    // .required("Debe seleccionar una opción"),
+    sourceVerification: yup  
+    .string()
+    //.required("El campo es obligatorio")
+    .max(500, "Solo se permiten 500 caracteres"),
+    assumptions: yup  
+    .string()
+    //.required("El campo es obligatorio")
+    .max(500, "Solo se permiten 500 caracteres"),
+});

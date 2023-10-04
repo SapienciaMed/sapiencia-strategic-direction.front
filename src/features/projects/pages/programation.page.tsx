@@ -4,6 +4,7 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import ProfitsIncomeComponent from "../components/profits-income.component";
 import SourceFundingComponent from "../components/source-funding.component";
+import LogicFrameComponent from "../components/logicFrame.component";
 import IndicatorsFormComponent from "../components/indicators.component";
 
 
@@ -40,6 +41,8 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 4,
             name: "Matríz de marco lógico",
+            content: <LogicFrameComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
+
             content: <>aqui va tu pagina c:</>
         },
     ];
