@@ -354,12 +354,12 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
             setValue("description","1");
         } else if (idLevel == 2){
             setDescriptionData(ObjectivesEspecific);
-            if(getValues("description") && item.resume != idLevel){
+            if(getValues("description") && item?.resume != idLevel){
                 setValue("description",null);
             }
         } else if (idLevel == 3) {
             setDescriptionData(activities)
-            if(getValues("description") && item.resume != idLevel){
+            if(getValues("description") && item?.resume != idLevel){
                 setValue("description",null);
             }
         }
