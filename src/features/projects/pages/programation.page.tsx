@@ -26,7 +26,7 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 1,
             name: "Ingresos y beneficios",
-            content: <ProfitsIncomeComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
+            content: <ProfitsIncomeComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} setForm={setPlaneFormComponent} />      
         },
         {
             id: 2,
@@ -36,16 +36,26 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 3,
             name: "Indicadores",
-            content: <IndicatorsFormComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} /> 
+            content: <IndicatorsFormComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} setForm={setPlaneFormComponent} /> 
         },
         {
             id: 4,
             name: "Matríz de marco lógico",
-            content: <LogicFrameComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />
+            content: <LogicFrameComponent
+                disableNext={() => {
+                    setDisableContinue(true);
+                    setActionContinue(() => { });
+                }}
+                enableNext={() => {
+                    setDisableContinue(false);
+                    setActionContinue(() => nextStep);
+                }}
+                setForm={setPlaneFormComponent}
+            />
         },
     ];
     const nextStep = () => {
-        setStep(3);
+        setStep(4);
     }
     useEffect(() => {
         setDisableContinue(true);

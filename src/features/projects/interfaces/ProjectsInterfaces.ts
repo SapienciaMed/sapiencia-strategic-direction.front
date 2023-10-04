@@ -158,7 +158,7 @@ export interface IlogicFrameForm {
 export interface IAddLogicFrame {
   id?: number;
   resume: number;
-  description:number;
+  description:string;
   indicator:number;
   meta: number;
   sourceVerification:string;

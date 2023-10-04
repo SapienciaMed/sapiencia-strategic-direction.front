@@ -176,10 +176,10 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                         return <>{projectData.identification.objectives.generalObjective}</>
               
                     case 2:
-                        const objetives = ObjectivesEspecific.find(item => item.value == row.resume)
+                        const objetives = ObjectivesEspecific.find(item => item.value == row.description)
                         return <>{objetives.name || ""}</>;
                     case 3:
-                        const levelActivities = IndicatorList.find(item => item.value == row.resume)
+                        const levelActivities = IndicatorList.find(item => item.value == row.description)
                         return <>{levelActivities.name || "" }</>;
                     default:
                         return <></>
@@ -291,9 +291,9 @@ interface IPropsAddRisks {
 function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const { setMessage } = useContext(AppContext);
 
-    const [riskData, setRiskData] = useState([]);
+    const [descriptionData, setDescriptionData] = useState([]);
     const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
-    const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
+    const [inidicatorData, setIndicatorData] = useState<IDropdownProps[]>(null);
     const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
     const resolver = useYupValidationResolver(logicFrameValidator);
     const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
@@ -305,16 +305,16 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         handleSubmit,
         formState: { errors, isValid },
         watch,
+        setValue,
+        getValues,
     } = useForm<IAddLogicFrame>({
             resolver, mode: "all", defaultValues: {
             resume: item?.resume ? item.resume : null,
             indicator: item?.indicator ? item.indicator : null,
             meta:item?.meta ? item.meta : null,
-            description: item?.description ? item.description : null,
+            description: item?.description ? item.description : "",
             sourceVerification: item?.sourceVerification ? item?.sourceVerification : "",
             assumptions: item?.assumptions ? item?.assumptions : "",
-            
- 
         }
     });
 
@@ -332,6 +332,14 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
+    // const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
+    //     return {
+    //         name: `${indicator.indicator}. ${indicator.staticValue}`,
+    //         value: index
+    //     }
+    // });
+
+    
     const idLevel = watch("resume")
 
     useEffect(() => {
@@ -339,14 +347,21 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
             const levelObjectives = [
                 {
                     name: projectData.identification.objectives.generalObjective,
-                    value: 1,
+                    value: "1",
                 },
             ];
-            setRiskData(levelObjectives);
+            setDescriptionData(levelObjectives);
+            setValue("description","1");
         } else if (idLevel == 2){
-            setRiskData(ObjectivesEspecific);
+            setDescriptionData(ObjectivesEspecific);
+            if(getValues("description") && item.resume != idLevel){
+                setValue("description",null);
+            }
         } else if (idLevel == 3) {
-            setRiskData(activities)
+            setDescriptionData(activities)
+            if(getValues("description") && item.resume != idLevel){
+                setValue("description",null);
+            }
         }
 
     }, [idLevel]);
@@ -373,33 +388,10 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }).catch(() => { });
     }, [])
 
-    useEffect(() => {
-        getEntitiesTypesRisks().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setTypeRiskData([]);
-            }
-        }).catch(() => { });
-    }, [])
-
-    useEffect(() => {
-        getEntitiesProbability().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setProbabilityData(arrayEntities);
-            }
-        }).catch(() => { });
-    }, [])
 
     const onSubmit = handleSubmit(async (data: IAddLogicFrame) => {
         setMessage({
-            title: item ? "Editar marco lógico" : "Agregar marco lógico",
+            title: item ? "Guardar cambios" : "Crear marco lógico",
             description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar el marco lógico?",
             show: true,
             background: true,
@@ -452,7 +444,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         className="select-basic span-width"
                         label="Descripción"
                         classNameLabel="text-black biggest bold"
-                        data={riskData}
+                        data={descriptionData}
                         errors={errors}
 
                     />

@@ -360,7 +360,7 @@ export const logicFrameValidator = yup.object().shape({
     .number(),
     //.required("Debe seleccionar una opción"),
     description: yup  
-    .number(),
+    .string(),
     //.required("Debe seleccionar una opción"),
     // indicator: yup
     // .number(),
