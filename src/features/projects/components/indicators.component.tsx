@@ -23,8 +23,10 @@ interface IProps {
 }
 
 function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel } = useContext(ProjectsContext);
     const [indicatorsData, setIndicatorsData] = useState<IIndicatorsForm>(null);
+    const [indicatorsTypes, setIndicatorsTypes] = useState<IDropdownProps[]>([]);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel } = useContext(ProjectsContext);
+    const { GetIndicatorType } = useIndicatorsService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(indicatorsFormValidator);
     const {
@@ -101,6 +103,10 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
         {
             header: "Tipo de indicador",
             fieldName: "type",
+            renderCell: (row) => {
+                const indicatorType = indicatorsTypes.find(indicator => indicator.value === row.type);
+                return <>{indicatorType ? indicatorType.name : ""}</>
+            }
         },
         {
             header: "Meta global",
@@ -113,6 +119,10 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
         {
             header: "Tipo de indicador",
             fieldName: "productMGA",
+            renderCell: (row) => {
+                const product = projectData.preparation.activities.activities.find(activity => activity.productMGA === row.productMGA);
+                return <>{product ? `${product.productMGA}. ${product.productDescriptionMGA}` : ""}</>
+            }
         },
     ];
     const indicatorsActions: ITableAction<IIndicator>[] = [
@@ -155,6 +165,21 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
         })
     }, [indicatorsData]);
 
+    useEffect(() => {
+        GetIndicatorType().then(response => {
+            if(response.operation.code === EResponseCodes.OK) {
+                setIndicatorsTypes(response.data.map(data => {
+                    return {
+                        name: data.description,
+                        value: data.id
+                    }
+                }));
+            } else {
+                console.log(response.operation.message);
+            }
+        })
+    }, []);
+
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
@@ -172,7 +197,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                             Añadir objetivo <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('indicators')?.length > 0 && <TableExpansibleComponent actions={indicatorsActions} columns={indicatorsColumns} data={getValues('indicators')} />}
+                    {getValues('indicators')?.length > 0 && indicatorsTypes.length > 0 && <TableExpansibleComponent actions={indicatorsActions} columns={indicatorsColumns} data={getValues('indicators')} />}
                 </div>
             </FormComponent>
         </div>

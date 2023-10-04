@@ -383,5 +383,189 @@ export const indicatorsFormValidator = yup.object({
 });
 
 export const indicatorValidator = yup.object({
-    
+    type: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("Debe seleccionar una opción"),
+    line: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type !== 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    component: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type !== 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    program: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type !== 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    indicator: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type !== 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    developmentPlan: yup
+        .string()
+        .max(300, "Solo se permiten 300 caracteres")
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type !== 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+
+    objective: yup
+        .string()
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    dpnIndicator: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    dpn: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    staticValueCode: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    staticValue: yup
+        .number()
+        .typeError('Debe ser un número')
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    accumulative: yup
+        .number()
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const type = this.parent.type;
+            if (type === 3) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    total: yup
+        .number()
+        .nullable()
+        .test('required', 'El campo es obligatorio', function (value) {
+            const accumulative = this.parent.accumulative;
+            if (accumulative === 0) {
+                if (value === null || value === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+    productMGA: yup
+        .string()
+        .required("El campo es obligatorio"),
+    measurement: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
+    year0: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
+    year1: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
+    year2: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
+    year3: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
+    year4: yup
+        .number()
+        .typeError('Debe ser un número')
+        .required("El campo es obligatorio"),
 });

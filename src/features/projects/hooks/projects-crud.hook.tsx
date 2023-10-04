@@ -220,7 +220,7 @@ export function useProjectsCrudData() {
                 tabsComponentRef.current.goToTab(tabs[step].id);
             }
         }
-        //setStep(3)
+        setStep(3);
     }, [step]);
     const onSaveTemp = async () => {
         if (projectData?.id) {
