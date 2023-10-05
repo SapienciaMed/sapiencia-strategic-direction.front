@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { Controller, useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { logicFrameValidator, riskValidator, risksValidator } from "../../../common/schemas";
+import { logicFrameValidator, logicFrameFormValidator } from "../../../common/schemas";
 import { IAddLogicFrame, IlogicFrameForm } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
@@ -14,6 +14,9 @@ import { useEntitiesService } from "../hooks/entities-service.hook"
 import { IEntities } from "../interfaces/Entities";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useWidth } from "../../../common/hooks/use-width";
+import { useIndicatorsService } from "../hooks/indicators.hook";
+import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
+import { number } from "yup";
 
 
 interface IProps {
@@ -37,16 +40,16 @@ const ResumeData: IDropdownProps[] = [
     }
 ];
 
+
+
 function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
-    const resolver = useYupValidationResolver(riskValidator);
+    const resolver = useYupValidationResolver(logicFrameFormValidator);
     const [LogicFrameData, setLogicFrameData] = useState<IlogicFrameForm>(null);
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
-    const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
-    const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
-    const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
+    const { GetIndicatorName } = useIndicatorsService();
+    const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
     const { width } = useWidth();
-    const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
     const {
         getValues,
         setValue,
@@ -72,6 +75,25 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             value: cause.activityMGA
         }
     });
+
+    const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
+        const matchedData = indicatorsNameData?.find(data => data.id === indicator.indicator);
+        return {
+            name: matchedData ? `${matchedData.description}` : ` ${indicator.staticValue}`,
+            value: index
+        }
+     });
+
+     useEffect(() => {
+        GetIndicatorName().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                setIndicatorsNameData(response.data);
+            } else {
+                console.log(response.operation.message);
+            }
+        });
+    }, []);
+
 
 
     const onCancel = () => {
@@ -116,44 +138,6 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
         })
     }
 
-
-    useEffect(() => {
-        getEntitiesImpact().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setImpactData(arrayEntities);
-            }
-        }).catch(() => { });
-    }, [])
-
-    useEffect(() => {
-        getEntitiesTypesRisks().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setTypeRiskData(arrayEntities);
-            }
-        }).catch(() => { });
-    }, [])
-
-    useEffect(() => {
-        getEntitiesProbability().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setProbabilityData(arrayEntities);
-            }
-        }).catch(() => { });
-    }, [])
-
-
     const objectivesColumns: ITableElement<IAddLogicFrame>[] = [
         {
             fieldName: "resume",
@@ -191,9 +175,9 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             fieldName: "indicador",
             header: "Nombre indicador",
             renderCell: (row) => {
-                if (typeRiskData) {
-                    const typeRisk = typeRiskData.find(item => item.value == row.indicator)
-                    return <>{typeRisk ? typeRisk.name || "" : ""}</>;
+                if (indicators) {
+                    const typeIndicator = indicators.find(item => item.value == row.indicator)
+                    return <>{typeIndicator ? typeIndicator.name || "" : ""}</>;
                 } else {
                     return;
                 }
@@ -248,6 +232,7 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             disableNext();
         }
     }, [isValid]);
+    
     useEffect(() => {
         const subscription = watch((value: IlogicFrameForm) => setLogicFrameData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
@@ -290,11 +275,12 @@ interface IPropsAddRisks {
 
 function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const { setMessage } = useContext(AppContext);
-
+    const { GetIndicatorName } = useIndicatorsService();
     const [descriptionData, setDescriptionData] = useState([]);
-    const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
+    const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
     const [inidicatorData, setIndicatorData] = useState<IDropdownProps[]>(null);
-    const [impactData, setImpactData] = useState<IDropdownProps[]>(null);
+    const [metaValue, setMetaValue] = useState<number>(0);
+
     const resolver = useYupValidationResolver(logicFrameValidator);
     const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
 
@@ -310,13 +296,25 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     } = useForm<IAddLogicFrame>({
             resolver, mode: "all", defaultValues: {
             resume: item?.resume ? item.resume : null,
-            indicator: item?.indicator ? item.indicator : null,
+            indicator: item?.indicatorType ? projectData.programation.indicators.indicators.findIndex(data => JSON.stringify(data) === JSON.stringify(item.indicatorType)): null,
             meta:item?.meta ? item.meta : null,
             description: item?.description ? item.description : "",
             sourceVerification: item?.sourceVerification ? item?.sourceVerification : "",
             assumptions: item?.assumptions ? item?.assumptions : "",
+            indicatorType:item?.indicatorType ? item.indicatorType : null,
         }
     });
+
+    useEffect(() => {
+        GetIndicatorName().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                setIndicatorsNameData(response.data);
+            } else {
+                console.log(response.operation.message);
+            }
+        });
+    }, []);
+
 
     const ObjectivesEspecific : IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
         return {
@@ -332,16 +330,37 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
-    // const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
-    //     return {
-    //         name: `${indicator.indicator}. ${indicator.staticValue}`,
-    //         value: index
-    //     }
-    // });
+     const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
+        const matchedData = indicatorsNameData?.find(data => data.id === indicator.indicator);
+        return {
+            name: matchedData ? `${matchedData.description}`  : ` ${indicator.staticValue}`,
+            value: index
+        }
+     });
 
-    
+     const indicator = watch("indicator");
+    useEffect(() => {
+    if(indicator == null || indicator == undefined){
+        setValue("meta",null)    
+        return
+    }
+        const selectedIndicator = projectData.programation.indicators.indicators[indicator]
+        if (selectedIndicator.total){
+            let meta = selectedIndicator.total
+            setValue("meta",meta)
+            setValue("indicatorType",selectedIndicator)
+            
+        }else{
+            let meta = (selectedIndicator.year0 + selectedIndicator.year1 + selectedIndicator.year2 + selectedIndicator.year3 + selectedIndicator.year4)
+            setValue("meta",meta)
+            setValue("indicatorType",selectedIndicator)
+        }
+    }, [indicator])
+
+
+
+
     const idLevel = watch("resume")
-
     useEffect(() => {
         if (idLevel == 1) {
             const levelObjectives = [
@@ -375,18 +394,6 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         setDisableContinue(!isValid);
     }, [isValid]);
 
-
-    useEffect(() => {
-        getEntitiesImpact().then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                const entities: IEntities[] = response.data;
-                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                    return { name: entity.description, value: entity.id };
-                });
-                setImpactData(arrayEntities);
-            }
-        }).catch(() => { });
-    }, [])
 
 
     const onSubmit = handleSubmit(async (data: IAddLogicFrame) => {
@@ -454,7 +461,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         className="select-basic span-width"
                         label="Nombre de indicador"
                         classNameLabel="text-black biggest bold"
-                        data={typeRiskData}
+                        data={indicators}
                         errors={errors}
 
                     />

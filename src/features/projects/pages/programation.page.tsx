@@ -6,6 +6,7 @@ import ProfitsIncomeComponent from "../components/profits-income.component";
 import SourceFundingComponent from "../components/source-funding.component";
 import LogicFrameComponent from "../components/logicFrame.component";
 import IndicatorsFormComponent from "../components/indicators.component";
+import { profitsIncomeFormValidator, sourceFundingValidator, indicatorsFormValidator, needsValidator, riskValidator, technicalAnalysisValidator, logicFrameFormValidator } from "../../../common/schemas";
 
 
 function ProgramationPage(): React.JSX.Element {
@@ -46,6 +47,7 @@ function ProgramationPage(): React.JSX.Element {
                     setDisableContinue(true);
                     setActionContinue(() => { });
                 }}
+                
                 enableNext={() => {
                     setDisableContinue(false);
                     setActionContinue(() => nextStep);
@@ -58,6 +60,23 @@ function ProgramationPage(): React.JSX.Element {
         setStep(4);
     }
     useEffect(() => {
+            profitsIncomeFormValidator.validate(projectData?.programation?.profitsIncome).then(() => {
+                sourceFundingValidator.validate(projectData?.programation?.sourceFunding).then(() => {
+                    indicatorsFormValidator.validate(projectData?.programation?.indicators).then(() => {
+                        logicFrameFormValidator.validate(projectData?.programation?.logicFrame).then(() => {
+                                disableAccordions([]);
+                                setDisableContinue(false);
+                                setActionContinue(() => nextStep);
+                            }).catch(() => { });
+                    }).catch(() => {
+                        disableAccordions([4]);
+                    });
+                }).catch(() => {
+                    disableAccordions([3,4]);
+                });
+            }).catch(() => {
+                disableAccordions([2, 3, 4,]);
+        });
         setDisableContinue(true);
     }, []);
     return (

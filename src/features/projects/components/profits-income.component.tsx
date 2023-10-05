@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { needsObjectivesValidator, needsValidator, profitsIncomeValidator } from "../../../common/schemas";
+import { profitsIncomeFormValidator, profitsIncomeValidator } from "../../../common/schemas";
 import { INeedObjetive, INeedsForm,IproftisIncomeForm, IprofitsIncome,Iperiod } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
@@ -29,6 +29,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
+    const resolver = useYupValidationResolver(profitsIncomeFormValidator)
     const { width } = useWidth();
     const {
         getValues,
@@ -37,7 +38,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
         watch,
         trigger
     } = useForm<IproftisIncomeForm>({ 
-        mode: "all", defaultValues: {
+        resolver, mode: "all", defaultValues: {
             profitsIncome: projectData?.programation?.profitsIncome?.profitsIncome ? projectData.programation.profitsIncome.profitsIncome : null
         }
     });

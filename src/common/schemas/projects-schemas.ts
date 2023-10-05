@@ -267,6 +267,9 @@ export const risksValidator = yup.object().shape({
     .max(500, "Solo se permiten 500 caracteres"),
 });
 
+export const profitsIncomeFormValidator = yup.object({
+    profitsIncome: yup.array().required("Debe haber almenos un ingreso/beneficio").min(1, "Debe haber almenos un ingreso/beneficio")
+});
 
 export const profitsIncomeValidator = yup.object({
     type: yup.string().required("Debe seleccionar una opción"),
@@ -355,31 +358,30 @@ export const activityMGAValidator = yup.object({
     )
 });
 
+export const logicFrameFormValidator = yup.object({
+    logicFrame: yup.array().required("Debe haber almenos un marco logico").min(1, "Debe haber almenos un marco logico")
+});
+
 export const logicFrameValidator = yup.object().shape({
     resume : yup 
-    .number(),
-    //.required("Debe seleccionar una opción"),
+    .number()
+    .required("Debe seleccionar una opción"),
     description: yup  
-    .string(),
-    //.required("Debe seleccionar una opción"),
-    // indicator: yup
-    // .number(),
-    //.required("Debe seleccionar una opción"),
-    // meta: yup  
-    // .number(),
-    // .required("Debe seleccionar una opción"),
+    .string()
+    .required("Debe seleccionar una opción"),
+     indicator: yup
+     .number()
+    .required("Debe seleccionar una opción"),
     sourceVerification: yup  
     .string()
-    //.required("El campo es obligatorio")
     .max(500, "Solo se permiten 500 caracteres"),
     assumptions: yup  
     .string()
-    //.required("El campo es obligatorio")
     .max(500, "Solo se permiten 500 caracteres"),
 });
 
 export const indicatorsFormValidator = yup.object({
-    
+    indicators: yup.array().required("Debe haber almenos un indicador").min(1, "Debe haber almenos un indicador")
 });
 
 export const indicatorValidator = yup.object({

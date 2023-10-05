@@ -163,6 +163,7 @@ export interface IAddLogicFrame {
   meta: number;
   sourceVerification:string;
   assumptions:string;
+  indicatorType:IIndicator;
 }
 
 export interface IprofitsIncome {

@@ -9,6 +9,7 @@ import PreparationPage from "../pages/preparation.page";
 import { useProjectsService } from "./projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import ProgramationPage from "../pages/programation.page";
+import TransferPage from "../pages/transfer.page";
 
 export function useProjectsCrudData() {
     const tabsComponentRef = useRef(null);
@@ -54,7 +55,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "transfer", title: "5. Transferir", content: <>aqui va tu pagina c:</>, action: () => {
+            id: "transfer", title: "5. Transferir", content: <TransferPage/>, action: () => {
                 setStep(4)
                 setTextContinue(null);
                 setActionCancel(null);
