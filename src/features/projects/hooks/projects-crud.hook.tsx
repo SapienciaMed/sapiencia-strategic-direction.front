@@ -66,7 +66,7 @@ export function useProjectsCrudData() {
     ];
     useEffect(() => {
         if (tabsComponentRef.current) {
-            tabsComponentRef.current.disableTabs(["identification", "programming", "preparation", "transfer"]);
+            tabsComponentRef.current.disableTabs(["identification", "programation", "preparation", "transfer"]);
         }
     }, []);
     useEffect(() => {
