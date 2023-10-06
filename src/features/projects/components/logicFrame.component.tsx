@@ -278,11 +278,8 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     const { GetIndicatorName } = useIndicatorsService();
     const [descriptionData, setDescriptionData] = useState([]);
     const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
-    const [inidicatorData, setIndicatorData] = useState<IDropdownProps[]>(null);
-    const [metaValue, setMetaValue] = useState<number>(0);
 
     const resolver = useYupValidationResolver(logicFrameValidator);
-    const { getEntitiesTypesRisks, getEntitiesProbability, getEntitiesImpact } = useEntitiesService();
 
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
     const {

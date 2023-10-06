@@ -161,8 +161,8 @@ export interface IAddLogicFrame {
   description:string;
   indicator:number;
   meta: number;
-  sourceVerification:string;
-  assumptions:string;
+  sourceVerification?:string;
+  assumptions?:string;
   indicatorType:IIndicator;
 }
 
@@ -224,6 +224,21 @@ export interface IBudgetMGA {
     validity: number;
     budget: number;
   };
+}
+
+
+
+export interface Itransfers{
+  bpin?: string;
+  project?: string;
+  dependency?: string | number;
+  formulation?: string;
+  rol?:string;
+  order?:string;
+  tecniques?: boolean;
+  ambiental?: boolean;
+  sociocultural?: boolean;
+  observations?:string;
 }
 
 export interface IDetailActivity {
@@ -293,7 +308,7 @@ export interface IIndicatorsForm {
 export interface IProjectTemp {
   id?: number;
   user: string;
-  status: boolean;
+  status: number;
   register?: IRegisterForm;
   identification?: {
     problemDescription?: IProblemDescriptionForm;
@@ -316,6 +331,7 @@ export interface IProjectTemp {
     indicators?: IIndicatorsForm;
     logicFrame?:IlogicFrameForm;
   }
+  transfers?:Itransfers;
 }
 
 export interface IDetailedActivityFilter {
@@ -330,10 +346,24 @@ export interface IDetailedActivityPaginated {
   perPage: number; 
 }
 
+//Filtros creados para presupuesto
 export interface IProjectFilters {
   idList?: number[];
   codeList?: string[];
   status?: boolean;
+}
+export interface IProjectPaginated {
+  nameOrCode: string;
+  excludeIds?: number[];
+  page: number;
+  perPage: number; 
+}
+
+//Filtros creados para direccion estrategica
+export interface IProjectFiltersDirection {
+  bpin: string;
+  project: string;
+  status: number;
 }
 
 export interface IActivitiesProject {
@@ -393,7 +423,7 @@ export interface IIndicatorIndicative {
 export interface IProject {
   id: number;
   user: string;
-  status: boolean;
+  status: number;
   bpin: string | null;
   project: string | null;
   dateFrom: string | null;
@@ -441,4 +471,11 @@ export interface IProject {
   sourceFunding:ISourceFunding[] | null;
   indicatorsAction: IIndicatorAction[] | null;
   indicatorsIndicative: IIndicatorIndicative[] | null;
+  formulation: string | null;
+  rol:string | null;
+  order:string | null;
+  tecniques: boolean;
+  ambiental: boolean;
+  sociocultural: boolean;
+  observations:string | null;
 }

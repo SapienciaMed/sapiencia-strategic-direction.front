@@ -1,19 +1,22 @@
 import React from "react";
-import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { useRegisterData } from "../hooks/register.hook";
+import { FormComponent, InputComponent, LabelComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { useTransferData } from "../hooks/transfer.hook";
 import { Controller } from "react-hook-form";
+import { EDirection } from "../../../common/constants/input.enum";
+import { Checkbox } from 'primereact/checkbox';
 
 
 
-function RegisterPage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
+function TransferPage(): React.JSX.Element {
+    const { register, errors, control, onSubmit, bpn, dependency, project, isValid,watch } = useTransferData();
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
                 <div className="card-table">
-                    <div className="project-container">
+                <p className="text-black large bold">Flujo de proyecto</p>
+                    <div className="transfers-container">
                         <Controller
-                            control={controlRegister}
+                            control={control}
                             name={"bpin"}
                             defaultValue={null}
                             render={({ field }) => {
@@ -22,18 +25,19 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Código BPIN"
-                                        className="input-basic"
+                                        label="BPIN"
+                                        className="input-basic background-textArea"
                                         classNameLabel="text-black biggest bold text-required"
                                         typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
-                                        errors={errors} />
+                                        errors={errors} 
+                                        disabled={true}/>
                                 );
                             }}
                         />
                         <Controller
-                            control={controlRegister}
+                            control={control}
                             name={"project"}
                             defaultValue=""
                             render={({ field }) => {
@@ -43,20 +47,20 @@ function RegisterPage(): React.JSX.Element {
                                         idInput={field.name}
                                         value={`${field.value}`}
                                         label="Nombre Proyecto"
-                                        className="input-basic"
+                                        className="input-basic background-textArea"
                                         classNameLabel="text-black biggest bold text-required"
                                         typeInput={"text"}
                                         register={register}
                                         onChange={field.onChange}
-                                        errors={errors} />
+                                        errors={errors} 
+                                        disabled={true} />
                                 );
                             }}
                         />
-                    </div>
-                    <div className="project-dates-container">
-                        <Controller
-                            control={controlRegister}
-                            name={"dateFrom"}
+                    
+                    <Controller
+                            control={control}
+                            name={"dependency"}
                             defaultValue=""
                             render={({ field }) => {
                                 return (
@@ -64,74 +68,21 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Período inicial"
-                                        className="input-basic"
+                                        label="Dependencia"
+                                        className="input-basic background-textArea"
                                         classNameLabel="text-black biggest bold text-required"
-                                        typeInput={"number"}
+                                        typeInput={"text"}
                                         register={register}
                                         onChange={field.onChange}
-                                        errors={errors} />
+                                        errors={errors} 
+                                        disabled={true} />
                                 );
                             }}
                         />
+                    
                         <Controller
-                            control={controlRegister}
-                            name={"dateTo"}
-                            defaultValue=""
-                            render={({ field }) => {
-                                return (
-                                    <InputComponent
-                                        id={field.name}
-                                        idInput={field.name}
-                                        value={`${field.value}`}
-                                        label="Período final"
-                                        className="input-basic"
-                                        classNameLabel="text-black biggest bold text-required"
-                                        typeInput={"number"}
-                                        register={register}
-                                        onChange={field.onChange}
-                                        errors={errors}
-                                        disabled={!watchDateFrom}
-                                    />
-                                );
-                            }}
-                        />
-                    </div>
-
-                    <div className="project-filters-container">
-                        <SelectComponent
-                            idInput="process"
-                            className="select-basic"
-                            control={controlRegister}
-                            errors={errors}
-                            label="Proceso"
-                            classNameLabel="text-black biggest bold text-required"
-                            data={processData}
-                        />
-                        <SelectComponent
-                            idInput="localitation"
-                            className="select-basic"
-                            control={controlRegister}
-                            errors={errors}
-                            label="Localización"
-                            classNameLabel="text-black biggest bold"
-                            data={localitationData}
-                            disabled={true}
-                        />
-                        <SelectComponent
-                            idInput="dependency"
-                            className="select-basic"
-                            control={controlRegister}
-                            errors={errors}
-                            label="Dependencia"
-                            classNameLabel="text-black biggest bold text-required"
-                            data={dependecyData}
-                        />
-                    </div>
-                    <div>
-                        <Controller
-                            control={controlRegister}
-                            name={"object"}
+                            control={control}
+                            name={"formulation"}
                             defaultValue=""
                             render={({ field }) => {
                                 return (
@@ -139,7 +90,7 @@ function RegisterPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Objeto"
+                                        label="Formulador(nombre completo)"
                                         className="text-area-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         rows={4}
@@ -147,16 +98,153 @@ function RegisterPage(): React.JSX.Element {
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
-                                        characters={500}
+                                        characters={100}
                                     ></TextAreaComponent>
                                 );
                             }}
                         />
-                    </div>
-                </div>
-            </FormComponent>
-        </div>
+                        <Controller
+                            control={control}
+                            name={"rol"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Rol"
+                                        className="text-area-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        rows={4}
+                                        placeholder="Escribe aquí"
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                        characters={100}
+                                    ></TextAreaComponent>
+                                );
+                            }}
+                        />
+                        <Controller
+                            control={control}
+                            name={"order"}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label="Ordenador del gasto (nombre completo) "
+                                        className="text-area-basic"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        rows={4}
+                                        placeholder="Escribe aquí"
+                                        register={register}
+                                        onChange={field.onChange}
+                                        errors={errors}
+                                        characters={100}
+                                    ></TextAreaComponent>
+                                );
+                            }}
+                        />
+                        </div>
+                        <div className="div-transfers">
+                            <label className="text-black biggest bold text-required">
+                                Condiciones del proyecto
+                            </label>
+                        </div>
+                        <Controller
+                            control={control}
+                            name="tecniques"
+                            defaultValue={false} 
+                            render={({ field }) => (
+                                <div className="div-transfers">
+                                    <Checkbox
+                                        inputId={field.name}
+                                        name={field.name}
+                                        className="checkbox-basic checkbox-margin"
+                                        checked={field.value}
+                                        onChange={(e) => field.onChange(e.target.checked)}
+                                    />
+                                    <label htmlFor={field.name} className="text-black biggest">
+                                        Técnicas
+                                    </label>
+                                </div>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="ambiental"
+                            defaultValue={false}
+                            render={({ field }) => (
+                                <div className="div-transfers">
+                                    <Checkbox
+                                        inputId={field.name}
+                                        name={field.name}
+                                        className="checkbox-basic checkbox-margin"
+                                        checked={field.value}
+                                        onChange={(e) => field.onChange(e.target.checked)}
+                                    />
+                                    <label htmlFor={field.name} className="text-black biggest ">
+                                        Ambientales
+                                    </label>
+                                </div>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="sociocultural"
+                            defaultValue={false}
+                            render={({ field }) => (
+                                <div className="div-transfers">
+                                    <Checkbox
+                                        inputId={field.name}
+                                        name={field.name}
+                                        className="checkbox-basic checkbox-margin"
+                                        checked={field.value}
+                                        onChange={(e) => field.onChange(e.target.checked)}
+                                    />
+                                    <label htmlFor={field.name} className="text-black biggest">
+                                        Socioculturales
+                                    </label>
+                                </div>
+                            )}
+                            />
+                            {!isValid && !watch("tecniques") && !watch("ambiental") && !watch("sociocultural") && (
+                                <div className="error-message div-validation-check">
+                                    Debes seleccionar al menos una opción. {/* Mensaje de error personalizado */}
+                                </div>
+                            )}
+                                        <Controller
+                                            control={control}
+                                            name={"observations"}
+                                            defaultValue=""
+                                            render={({ field }) => {
+                                                return (
+                                                    <TextAreaComponent
+                                                        id={field.name}
+                                                        idInput={field.name}
+                                                        value={`${field.value}`}
+                                                        label="Observaciones"
+                                                        className="text-area-basic"
+                                                        classNameLabel="text-black biggest bold text-required"
+                                                        rows={4}
+                                                        placeholder="Escribe aquí"
+                                                        register={register}
+                                                        onChange={field.onChange}
+                                                        errors={errors}
+                                                        characters={300}
+                                                    ></TextAreaComponent>
+                                                );
+                                            }}
+                                        />
+                                    
+                                </div>
+                            </FormComponent>
+                        </div>
     )
 }
 
-export default React.memo(RegisterPage);
+export default React.memo(TransferPage);
