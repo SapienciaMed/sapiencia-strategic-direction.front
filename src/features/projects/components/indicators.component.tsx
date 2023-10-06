@@ -146,10 +146,32 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
         {
             icon: "Delete",
             onClick: (row) => {
-                const indicators = getValues("indicators").filter(item => item !== row).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
-                setValue("indicators", indicators);
-                setIndicatorsData(prev => {
-                    return { ...prev, indicators: indicators };
+                setMessage({
+                    title: "Eliminar indicador",
+                    description: "¿Deseas eliminar el indicador?",
+                    show: true,
+                    background: true,
+                    cancelTitle: "Cancelar",
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    onOk: () => {
+                        setMessage({
+                            title: "Indicador",
+                            description: "¡Eliminado exitosamente!",
+                            show: true,
+                            background: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                const indicators = getValues("indicators").filter(item => item !== row).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+                                setValue("indicators", indicators);
+                                setIndicatorsData(prev => {
+                                    return { ...prev, indicators: indicators };
+                                });
+                            }
+                        })
+                    }
                 });
             }
         }
@@ -204,7 +226,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                             setTextContinue("Guardar y regresar");
                             setActionCancel(() => onCancel);
                         }}>
-                            Añadir ingreso/beneficio <AiOutlinePlusCircle />
+                            Añadir indicador <AiOutlinePlusCircle />
                         </div>
                     </div>
                     {getValues('indicators')?.length > 0 && indicatorsTypes.length > 0 && <TableExpansibleComponent actions={indicatorsActions} columns={indicatorsColumns} data={getValues('indicators').sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA))} />}
