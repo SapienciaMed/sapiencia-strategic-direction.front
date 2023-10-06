@@ -605,3 +605,7 @@ export const indicatorValidator = yup.object({
         .typeError('Debe ser un número')
         .required("El campo es obligatorio"),
 });
+
+export const projectsValidator = yup.object({
+    
+});

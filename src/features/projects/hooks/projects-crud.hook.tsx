@@ -233,11 +233,10 @@ export function useProjectsCrudData() {
                 tabsComponentRef.current.goToTab(tabs[step].id);
             }
         }
-        //setStep(3);
     }, [step]);
     const onSaveTemp = async () => {
         if (projectData?.id) {
-            const data = { ...projectData, user: authorization.user.numberDocument, status: false };
+            const data = { ...projectData, user: authorization.user.numberDocument, status: 1 };
             const res = await UpdateProject(projectData.id, data);
             if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
@@ -269,7 +268,7 @@ export function useProjectsCrudData() {
                 });
             }
         } else {
-            const data = { ...projectData, user: authorization.user.numberDocument, status: false };
+            const data = { ...projectData, user: authorization.user.numberDocument, status: 1 };
             const res = await CreateProject(data);
             setProjectData(prev => {
                 return { ...prev, id: res.data.id }

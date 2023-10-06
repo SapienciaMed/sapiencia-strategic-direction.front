@@ -308,7 +308,7 @@ export interface IIndicatorsForm {
 export interface IProjectTemp {
   id?: number;
   user: string;
-  status: boolean;
+  status: number;
   register?: IRegisterForm;
   identification?: {
     problemDescription?: IProblemDescriptionForm;
@@ -346,10 +346,24 @@ export interface IDetailedActivityPaginated {
   perPage: number; 
 }
 
+//Filtros creados para presupuesto
 export interface IProjectFilters {
   idList?: number[];
   codeList?: string[];
   status?: boolean;
+}
+export interface IProjectPaginated {
+  nameOrCode: string;
+  excludeIds?: number[];
+  page: number;
+  perPage: number; 
+}
+
+//Filtros creados para direccion estrategica
+export interface IProjectFiltersDirection {
+  bpin: string;
+  project: string;
+  status: number;
 }
 
 export interface IActivitiesProject {
@@ -409,7 +423,7 @@ export interface IIndicatorIndicative {
 export interface IProject {
   id: number;
   user: string;
-  status: boolean;
+  status: number;
   bpin: string | null;
   project: string | null;
   dateFrom: string | null;
