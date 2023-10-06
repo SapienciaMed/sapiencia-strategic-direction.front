@@ -60,13 +60,13 @@ function TextAreaElement({
       name={idInput}
       className={className}
       placeholder={placeholder}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue !== undefined ? defaultValue : ""}
       disabled={disabled}
       onChange={(event) => {
         onChange(event);
         setCount(event.target.value.length);
       }}
-      value={value}
+      value={value !== undefined ? defaultValue : ""}
       rows={rows}
       cols={cols}
     />

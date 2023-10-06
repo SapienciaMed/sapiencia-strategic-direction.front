@@ -446,22 +446,22 @@ export const indicatorValidator = yup.object({
         .max(300, "Solo se permiten 300 caracteres")
         .nullable()
         .test('required', 'El campo es obligatorio', function (value) {
+            debugger
             const type = this.parent.type;
             if (type !== 3) {
-                if (value === null || value === undefined) {
+                if (!value) {
                     return false;
                 }
             }
             return true;
         }),
-
     objective: yup
         .string()
         .nullable()
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
             if (type === 3) {
-                if (value === null || value === undefined) {
+                if (!value) {
                     return false;
                 }
             }

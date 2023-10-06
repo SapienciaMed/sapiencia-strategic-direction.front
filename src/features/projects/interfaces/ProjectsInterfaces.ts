@@ -262,20 +262,20 @@ export interface IIndicator {
   type: number;
   
   //Producto
-  line: number;
-  component: number;
-  program: number;
-  indicator: number;
-  developmentPlan: string;
+  line?: number;
+  component?: number;
+  program?: number;
+  indicator?: number;
+  developmentPlan?: string;
 
   //Valor estadistico
-  objective: string;
-  dpnIndicator: number;
-  dpn: number;
-  staticValueCode: string;
-  staticValue: string;
-  total: number;
-  accumulative: number;
+  objective?: string;
+  dpnIndicator?: number;
+  dpn?: number;
+  staticValueCode?: number;
+  staticValue?: number;
+  total?: number;
+  accumulative?: number;
 
   productMGA: string;
   measurement: number;
@@ -318,6 +318,24 @@ export interface IProjectTemp {
   }
 }
 
+export interface IDetailedActivityFilter {
+  idList?: number[];
+  description?: string;
+  detail?: string
+}
+
+export interface IDetailedActivityPaginated {
+  detail?: string
+  page: number;
+  perPage: number; 
+}
+
+export interface IProjectFilters {
+  idList?: number[];
+  codeList?: string[];
+  status?: boolean;
+}
+
 export interface IActivitiesProject {
   objectiveSelect?: string;
   objetiveActivity: ICause;
@@ -336,6 +354,40 @@ export interface IActivitiesProject {
   validity: number;
   year: number;
   detailActivities: IDetailActivity[];
+}
+
+export interface IIndicatorAction {
+  type: number;
+  objective?: string;
+  dpnIndicator?: number;
+  dpn?: number;
+  staticValueCode?: number;
+  staticValue?: number;
+  total?: number;
+  accumulative?: number;
+  productMGA: string;
+  measurement: number;
+  year0: number;
+  year1: number;
+  year2: number;
+  year3: number;
+  year4: number;
+}
+
+export interface IIndicatorIndicative {
+  type: number;
+  line?: number;
+  component?: number;
+  program?: number;
+  indicator?: number;
+  developmentPlan?: string;
+  productMGA: string;
+  measurement: number;
+  year0: number;
+  year1: number;
+  year2: number;
+  year3: number;
+  year4: number;
 }
 
 export interface IProject {
@@ -387,4 +439,6 @@ export interface IProject {
   risks:IAddRisks[] | null;
   profitsIncome:IprofitsIncome[] | null;
   sourceFunding:ISourceFunding[] | null;
+  indicatorsAction: IIndicatorAction[] | null;
+  indicatorsIndicative: IIndicatorIndicative[] | null;
 }

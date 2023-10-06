@@ -181,6 +181,9 @@ export function useProjectsCrudData() {
                         sourceFunding: {
                             sourceFunding: projectDataResponse.sourceFunding,
                         },
+                        indicators: {
+                            indicators: projectDataResponse.indicatorsAction.concat(projectDataResponse.indicatorsIndicative)
+                        },
                     }
                 })
             } else if(response.operation.code === EResponseCodes.FAIL) {

@@ -84,16 +84,16 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
 
     const changeIndicators = (data: IIndicator, row?: IIndicator) => {
         if (row) {
-            const indicators = getValues("indicators").filter(item => item !== row).concat(data);
+            const indicators = getValues("indicators").filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators);
             setIndicatorsData(prev => {
-                return { ...prev, activities: indicators };
+                return { ...prev, indicators: indicators };
             });
         } else {
-            const indicators = getValues("indicators");
+            const indicators = getValues("indicators").sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators ? indicators.concat(data) : [data]);
             setIndicatorsData(prev => {
-                return { ...prev, activities: indicators ? indicators.concat(data) : [data] };
+                return { ...prev, indicators: indicators ? indicators.concat(data) : [data] };
             });
         }
         trigger("indicators");
@@ -112,12 +112,12 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
             header: "Meta global",
             fieldName: "total",
             renderCell: (row) => {
-                const total = row.total | (row.year0 + row.year1 + row.year2 + row.year3 + row.year4)
+                const total = row.total || (row.year0 + row.year1 + row.year2 + row.year3 + row.year4)
                 return <>{total}</>
             }
         },
         {
-            header: "Tipo de indicador",
+            header: "Producto MGA",
             fieldName: "productMGA",
             renderCell: (row) => {
                 const product = projectData.preparation.activities.activities.find(activity => activity.productMGA === row.productMGA);
@@ -141,6 +141,16 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                 setForm(<IndicatorComponent setForm={setForm} returnData={changeIndicators} item={row} />);
                 setTextContinue("Guardar y regresar");
                 setActionCancel(() => onCancelEdit);
+            }
+        },
+        {
+            icon: "Delete",
+            onClick: (row) => {
+                const indicators = getValues("indicators").filter(item => item !== row).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+                setValue("indicators", indicators);
+                setIndicatorsData(prev => {
+                    return { ...prev, indicators: indicators };
+                });
             }
         }
     ];
@@ -167,7 +177,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
 
     useEffect(() => {
         GetIndicatorType().then(response => {
-            if(response.operation.code === EResponseCodes.OK) {
+            if (response.operation.code === EResponseCodes.OK) {
                 setIndicatorsTypes(response.data.map(data => {
                     return {
                         name: data.description,
@@ -194,10 +204,10 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                             setTextContinue("Guardar y regresar");
                             setActionCancel(() => onCancel);
                         }}>
-                            Añadir objetivo <AiOutlinePlusCircle />
+                            Añadir ingreso/beneficio <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('indicators')?.length > 0 && indicatorsTypes.length > 0 && <TableExpansibleComponent actions={indicatorsActions} columns={indicatorsColumns} data={getValues('indicators')} />}
+                    {getValues('indicators')?.length > 0 && indicatorsTypes.length > 0 && <TableExpansibleComponent actions={indicatorsActions} columns={indicatorsColumns} data={getValues('indicators').sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA))} />}
                 </div>
             </FormComponent>
         </div>
@@ -273,7 +283,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
             let returnData = true;
             const values = item.description.split(" ")[0].split(".");
             filter.split(" ")[0].split(".").forEach((filterValue, index) => {
-                if(values[index] !== filterValue && values[index] !== "" && filterValue !== "") {
+                if (values[index] !== filterValue && values[index] !== "" && filterValue !== "") {
                     returnData = false;
                 }
             });
@@ -567,7 +577,6 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                         <Controller
                             control={control}
                             name={`staticValueCode`}
-                            defaultValue=""
                             render={({ field }) => {
                                 return (
                                     <TextAreaComponent
@@ -615,7 +624,6 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                         <Controller
                             control={control}
                             name={`staticValue`}
-                            defaultValue=""
                             render={({ field }) => {
                                 return (
                                     <TextAreaComponent
