@@ -169,6 +169,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                                 setIndicatorsData(prev => {
                                     return { ...prev, indicators: indicators };
                                 });
+                                setMessage({});
                             }
                         })
                     }
