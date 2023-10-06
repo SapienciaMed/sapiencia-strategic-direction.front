@@ -236,6 +236,27 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.transfers-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3fr;
+    padding: 1.3rem 0px;
+    row-gap: 1.3rem;
+    column-gap: 1.3rem;
+}
+
+
+.div-transfers {
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 1.5rem; 
+}
+
+
+.checkbox-margin {
+    margin-right: 10px;
+}
+
 
 .div-acciones-mobile {
     display: flex;
