@@ -161,8 +161,8 @@ export interface IAddLogicFrame {
   description:string;
   indicator:number;
   meta: number;
-  sourceVerification:string;
-  assumptions:string;
+  sourceVerification?:string;
+  assumptions?:string;
   indicatorType:IIndicator;
 }
 
@@ -224,6 +224,21 @@ export interface IBudgetMGA {
     validity: number;
     budget: number;
   };
+}
+
+
+
+export interface Itransfers{
+  bpin?: string;
+  project?: string;
+  dependency?: string | number;
+  formulation?: string;
+  rol?:string;
+  order?:string;
+  tecniques?: boolean;
+  ambiental?: boolean;
+  sociocultural?: boolean;
+  observations?:string;
 }
 
 export interface IDetailActivity {
@@ -316,6 +331,7 @@ export interface IProjectTemp {
     indicators?: IIndicatorsForm;
     logicFrame?:IlogicFrameForm;
   }
+  transfers?:Itransfers;
 }
 
 export interface IDetailedActivityFilter {
@@ -441,4 +457,11 @@ export interface IProject {
   sourceFunding:ISourceFunding[] | null;
   indicatorsAction: IIndicatorAction[] | null;
   indicatorsIndicative: IIndicatorIndicative[] | null;
+  formulation: string | null;
+  rol:string | null;
+  order:string | null;
+  tecniques: boolean;
+  ambiental: boolean;
+  sociocultural: boolean;
+  observations:string | null;
 }

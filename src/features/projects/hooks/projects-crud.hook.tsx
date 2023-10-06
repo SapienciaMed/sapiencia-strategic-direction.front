@@ -184,6 +184,15 @@ export function useProjectsCrudData() {
                         indicators: {
                             indicators: projectDataResponse.indicatorsAction.concat(projectDataResponse.indicatorsIndicative)
                         },
+                    },
+                    transfers:{
+                            ambiental: projectDataResponse.ambiental,
+                            formulation: projectDataResponse.formulation,
+                            observations: projectDataResponse.observations,
+                            order: projectDataResponse.order,
+                            rol: projectDataResponse.rol,
+                            sociocultural: projectDataResponse.sociocultural,
+                            tecniques: projectDataResponse.tecniques,
                     }
                 })
             } else if(response.operation.code === EResponseCodes.FAIL) {

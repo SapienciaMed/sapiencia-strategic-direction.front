@@ -267,6 +267,40 @@ export const risksValidator = yup.object().shape({
     .max(500, "Solo se permiten 500 caracteres"),
 });
 
+export const transfersValidator = yup.object().shape({
+   formulation: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(100, "Solo se permiten 100 caracteres"),
+    rol: yup
+    .string()
+    .required("El campo es obligatorio")
+    .max(100, "Solo se permiten 100 caracteres"),
+    order: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(100, "Solo se permiten 100 caracteres"),
+    tecniques: yup
+        .boolean(),
+    ambiental: yup
+        .boolean(),
+    sociocultural: yup
+        .boolean()
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+            const { tecniques, ambiental } = this.parent;
+            debugger;
+            if (tecniques || ambiental || value) {
+                return true; // Al menos una opción está seleccionada, la validación pasa
+            } else {
+                return false; // Ninguna opción está seleccionada, la validación falla
+            }
+        }),
+    observations: yup  
+    .string()
+    .required("El campo es obligatorio")
+    .max(300, "Solo se permiten 300 caracteres"),
+});
+
 export const profitsIncomeFormValidator = yup.object({
     profitsIncome: yup.array().required("Debe haber almenos un ingreso/beneficio").min(1, "Debe haber almenos un ingreso/beneficio")
 });
@@ -369,8 +403,8 @@ export const logicFrameValidator = yup.object().shape({
     description: yup  
     .string()
     .required("Debe seleccionar una opción"),
-     indicator: yup
-     .number()
+    indicator: yup
+    .number()
     .required("Debe seleccionar una opción"),
     sourceVerification: yup  
     .string()
