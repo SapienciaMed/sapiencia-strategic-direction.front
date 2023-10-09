@@ -281,11 +281,32 @@ export const transfersValidator = yup.object().shape({
     .required("El campo es obligatorio")
     .max(100, "Solo se permiten 100 caracteres"),
     tecniques: yup
-        .boolean(),
+        .boolean()
+        .nullable()
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+            const { sociocultural, ambiental } = this.parent;
+            debugger;
+            if (sociocultural || ambiental || value) {
+                return true; // Al menos una opción está seleccionada, la validación pasa
+            } else {
+                return false; // Ninguna opción está seleccionada, la validación falla
+            }
+        }),
     ambiental: yup
-        .boolean(),
+        .boolean()
+        .nullable()
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+            const { tecniques, sociocultural } = this.parent;
+            debugger;
+            if (tecniques || sociocultural || value) {
+                return true; // Al menos una opción está seleccionada, la validación pasa
+            } else {
+                return false; // Ninguna opción está seleccionada, la validación falla
+            }
+        }),
     sociocultural: yup
         .boolean()
+        .nullable()
         .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
             const { tecniques, ambiental } = this.parent;
             debugger;
