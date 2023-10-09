@@ -106,14 +106,20 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                     return { ...prev, causes: newCauses };
                                 })
                                 setValue("causes", newCauses);
-                                if(projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
-                                    return {...prev, preparation: {...prev.preparation, needs: {...prev.preparation.needs, objetives: prev.preparation.needs.objetives.map((obj, index) => {
-                                        if(obj.objetive.consecutive === row.consecutive) {
-                                            return {...obj, objetive: data};
-                                        } else {
-                                            return obj;
+                                if (projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
+                                    return {
+                                        ...prev, preparation: {
+                                            ...prev.preparation, needs: {
+                                                ...prev.preparation.needs, objetives: prev.preparation.needs.objetives.map((obj, index) => {
+                                                    if (obj.objetive.consecutive === row.consecutive) {
+                                                        return { ...obj, objetive: data };
+                                                    } else {
+                                                        return obj;
+                                                    }
+                                                })
+                                            }
                                         }
-                                    })}}};
+                                    };
                                 });
                                 setMessage({
                                     title: "Se editó exitosamente",
@@ -196,10 +202,16 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                             })
                             setValue('causes', newCauses);
                             //Solo si es en la creacion. No deberia aplicar si se esta editando
-                            if(projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
-                                return {...prev, preparation: {...prev.preparation, needs: {...prev.preparation.needs, objetives: prev.preparation.needs.objetives.filter(obj => obj.objetive.consecutive != row.consecutive).map((obj, index) => {
-                                    return {...obj, objetive: {...obj.objetive, consecutive: `${index + 1}`}};
-                                })}}};
+                            if (projectData?.preparation?.needs?.objetives?.length > 0) setProjectData(prev => {
+                                return {
+                                    ...prev, preparation: {
+                                        ...prev.preparation, needs: {
+                                            ...prev.preparation.needs, objetives: prev.preparation.needs.objetives.filter(obj => obj.objetive.consecutive != row.consecutive).map((obj, index) => {
+                                                return { ...obj, objetive: { ...obj.objetive, consecutive: `${index + 1}` } };
+                                            })
+                                        }
+                                    }
+                                };
                             });
                         }
                         setMessage({});
@@ -342,180 +354,181 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
-            <Controller
-                control={control}
-                name={"problemDescription"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Descripción detallada del problema central, sus causas y efectos"
-                            classNameLabel="text-black biggest bold text-required"
-                            className="text-area-basic"
-                            placeholder="Escribe aquí"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                            characters={800}
-                        >
-                        </TextAreaComponent>
-                    );
-                }}
-            />
-            <Controller
-                control={control}
-                name={"magnitude"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Magnitud del problema"
-                            classNameLabel="text-black biggest bold text-required"
-                            className="text-area-basic"
-                            placeholder="Escribe aquí"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                            characters={500}
-                        >
-                        </TextAreaComponent>
-                    );
-                }}
-            />
-            <Controller
-                control={control}
-                name={"centerProblem"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Problema central"
-                            classNameLabel="text-black biggest bold text-required"
-                            className="text-area-basic"
-                            placeholder="Escribe aquí"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                            characters={300}
-                        >
-                        </TextAreaComponent>
-                    );
-                }}
-            />
-            <div>
-                <div className="title-area">
-                    <label className="text-black large bold">
-                        Listado de causas
-                    </label>
+                <Controller
+                    control={control}
+                    name={"problemDescription"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Descripción detallada del problema central, sus causas y efectos"
+                                classNameLabel="text-black biggest bold text-required"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                characters={800}
+                            >
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+                <Controller
+                    control={control}
+                    name={"magnitude"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Magnitud del problema"
+                                classNameLabel="text-black biggest bold text-required"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                characters={500}
+                            >
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+                <Controller
+                    control={control}
+                    name={"centerProblem"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Problema central"
+                                classNameLabel="text-black biggest bold text-required"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                characters={300}
+                            >
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+                <div>
+                    <div className="title-area">
+                        <label className="text-black large bold">
+                            Listado de causas
+                        </label>
 
-                    <div className="title-button text-main large" onClick={() => {
-                        setMessage({
-                            title: "Agregar causas",
-                            description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length + 1 : 1} />,
-                            show: true,
-                            background: true,
-                            OkTitle: "Guardar",
-                            cancelTitle: "Cancelar",
-                            onOk: () => {
-                                if (causesEffectsComponentRef.current) {
-                                    causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
-                                        setProblemDescriptionData(prev => {
-                                            const causes = prev?.causes ? prev.causes.concat(data) : [data];
-                                            return { ...prev, causes: causes };
-                                        })
-                                        setValue('causes', getValues('causes').concat(data));
-                                        setMessage({
-                                            title: "Se guardó exitosamente",
-                                            description: "Se ha agregado una causa exitosamente",
-                                            show: true,
-                                            background: true,
-                                            OkTitle: "Aceptar",
-                                            onOk: () => {
-                                                setMessage({});
-                                            },
-                                            onClose: () => {
-                                                setMessage({});
-                                            },
-                                        });
-                                    })();
-                                }
-                            },
-                            onCancel: () => {
-                                setMessage({});
-                            },
-                            onClose: () => {
-                                setMessage({});
-                            },
-                            style: "causes-effects-modal-size"
-                        });
-                    }}>
-                        Añadir causa <AiOutlinePlusCircle />
+                        <div className="title-button text-main large" onClick={() => {
+                            setMessage({
+                                title: "Agregar causas",
+                                description: <CausesFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.causes ? problemDescriptionData.causes.length + 1 : 1} />,
+                                show: true,
+                                background: true,
+                                OkTitle: "Guardar",
+                                cancelTitle: "Cancelar",
+                                onOk: () => {
+                                    if (causesEffectsComponentRef.current) {
+                                        causesEffectsComponentRef.current.handleSubmit((data: ICause) => {
+                                            setProblemDescriptionData(prev => {
+                                                const causes = prev?.causes ? prev.causes.concat(data) : [data];
+                                                return { ...prev, causes: causes };
+                                            })
+                                            setValue('causes', getValues('causes').concat(data));
+                                            setMessage({
+                                                title: "Se guardó exitosamente",
+                                                description: "Se ha agregado una causa exitosamente",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                },
+                                                onClose: () => {
+                                                    setMessage({});
+                                                },
+                                            });
+                                        })();
+                                    }
+                                },
+                                onCancel: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                },
+                                style: "causes-effects-modal-size"
+                            });
+                        }}>
+                            Añadir causa <AiOutlinePlusCircle />
+                        </div>
                     </div>
+                    {getValues('causes').length > 0 && <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />}
                 </div>
-                {getValues('causes').length > 0 && <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />}
-            </div>
-            <div>
-                <div className="title-area">
-                    <label className="text-black large bold">
-                        Listado de efectos
-                    </label>
+                <div>
+                    <div className="title-area">
+                        <label className="text-black large bold">
+                            Listado de efectos
+                        </label>
 
-                    <div className="title-button text-main large" onClick={() => {
-                        setMessage({
-                            title: "Agregar efectos",
-                            description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length + 1 : 1} />,
-                            show: true,
-                            background: true,
-                            OkTitle: "Guardar",
-                            cancelTitle: "Cancelar",
-                            onOk: () => {
-                                if (causesEffectsComponentRef.current) {
-                                    causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
-                                        setProblemDescriptionData(prev => {
-                                            const effects = prev?.effects ? prev.effects.concat(data) : [data];
-                                            return { ...prev, effects: effects };
-                                        })
-                                        setValue('effects', getValues('effects').concat(data));
-                                        setMessage({
-                                            title: "Se guardó exitosamente",
-                                            description: "Se ha agregado un efecto exitosamente",
-                                            show: true,
-                                            background: true,
-                                            OkTitle: "Aceptar",
-                                            onOk: () => {
-                                                setMessage({});
-                                            },
-                                            onClose: () => {
-                                                setMessage({});
-                                            },
-                                        });
-                                    })();
-                                }
-                            },
-                            onCancel: () => {
-                                setMessage({});
-                            },
-                            onClose: () => {
-                                setMessage({});
-                            },
-                            style: "causes-effects-modal-size"
-                        });
-                    }}>
-                        Añadir efecto <AiOutlinePlusCircle />
+                        <div className="title-button text-main large" onClick={() => {
+                            setMessage({
+                                title: "Agregar efectos",
+                                description: <EffectsFormComponent ref={causesEffectsComponentRef} counter={problemDescriptionData?.effects ? problemDescriptionData.effects.length + 1 : 1} />,
+                                show: true,
+                                background: true,
+                                OkTitle: "Guardar",
+                                cancelTitle: "Cancelar",
+                                onOk: () => {
+                                    if (causesEffectsComponentRef.current) {
+                                        causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
+                                            console.log()
+                                            setProblemDescriptionData(prev => {
+                                                const effects = prev?.effects ? prev.effects.concat(data) : [data];
+                                                return { ...prev, effects: effects };
+                                            })
+                                            setValue('effects', getValues('effects').concat(data));
+                                            setMessage({
+                                                title: "Se guardó exitosamente",
+                                                description: "Se ha agregado un efecto exitosamente",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                },
+                                                onClose: () => {
+                                                    setMessage({});
+                                                },
+                                            });
+                                        })();
+                                    }
+                                },
+                                onCancel: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                },
+                                style: "causes-effects-modal-size"
+                            });
+                        }}>
+                            Añadir efecto <AiOutlinePlusCircle />
+                        </div>
                     </div>
+                    {getValues('effects').length > 0 && <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />}
                 </div>
-                {getValues('effects').length > 0 && <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />}
-            </div>
-        </FormComponent>
+            </FormComponent>
         </div>
     )
 }
@@ -543,7 +556,8 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
         register,
         formState: { errors },
         control,
-        setValue
+        setValue,
+        getValues
     } = useForm<ICause>({ mode: "all", resolver, defaultValues: { consecutive: item ? item.consecutive : counter.toString(), description: item ? item.description : "" } });
     const { fields, append, remove } = useFieldArray({
         control,
@@ -630,16 +644,27 @@ const CausesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, re
                                 fieldArray={true}
                                 disabled={true}
                             />
-                            <InputComponent
-                                idInput={`childrens.${index}.description`}
-                                typeInput="text"
-                                className="input-basic"
-                                label="Descripción causa Indirecta"
-                                classNameLabel="text-black big bold text-required"
-                                register={register}
-                                errors={errors}
-                                fieldArray={true}
-                                disabled={item ? !compareIds(counter, index) : false}
+                            <Controller
+                                control={control}
+                                name={`childrens.${index}.description`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Descripción causa Indirecta"
+                                            className="input-basic"
+                                            classNameLabel="text-black big bold text-required"
+                                            typeInput={"text"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            disabled={item ? !compareIds(counter, index) : false}
+                                            fieldArray
+                                            errors={errors} />
+                                    );
+                                }}
                             />
                             <div onClick={() => { remove(index) }} style={{ paddingTop: '1.8rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />
@@ -746,16 +771,27 @@ const EffectsFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, r
                                 fieldArray={true}
                                 disabled={true}
                             />
-                            <InputComponent
-                                idInput={`childrens.${index}.description`}
-                                typeInput="text"
-                                className="input-basic"
-                                label="Descripción efecto indirecto"
-                                classNameLabel="text-black big bold text-required"
-                                register={register}
-                                errors={errors}
-                                fieldArray={true}
-                                disabled={item ? !compareIds(counter, index) : false}
+                            <Controller
+                                control={control}
+                                name={`childrens.${index}.description`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Descripción efecto indirecto"
+                                            className="input-basic"
+                                            classNameLabel="text-black big bold text-required"
+                                            typeInput={"text"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            disabled={item ? !compareIds(counter, index) : false}
+                                            fieldArray
+                                            errors={errors} />
+                                    );
+                                }}
                             />
                             <div onClick={() => { remove(index) }} style={{ paddingTop: '1.8rem' }}>
                                 <FaTrashAlt className="button grid-button button-delete" />

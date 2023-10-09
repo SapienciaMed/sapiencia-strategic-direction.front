@@ -13,21 +13,29 @@ export interface IProjectFiltersPaginated {
   perPage: number;
   bpin?: number;
   project?: string;
-  status?:number;
+  status?: number;
 }
 
 export interface ICause {
   id?: number;
   consecutive: string;
   description: string;
-  childrens?: ICause[];
+  childrens?: {
+    id?: number;
+    consecutive: string;
+    description: string;
+  }[];
 }
 
 export interface IEffect {
   id?: number;
   consecutive: string;
   description: string;
-  childrens?: IEffect[];
+  childrens?: {
+    id?: number;
+    consecutive: string;
+    description: string;
+  }[];
 }
 
 export interface IObjectivesForm {
@@ -147,13 +155,13 @@ export interface ItechnicalAnalysisForm {
 export interface IAddRisks {
   id?: number;
   level: number;
-  risk:string;
-  typeRisk:number;
+  risk: string;
+  typeRisk: number;
   descriptionRisk: string;
-  probability:number;
-  impact:number;
-  effects:string;
-  mitigation:string;
+  probability: number;
+  impact: number;
+  effects: string;
+  mitigation: string;
 }
 
 export interface IRisks {
@@ -168,13 +176,13 @@ export interface IlogicFrameForm {
 export interface IAddLogicFrame {
   id?: number;
   resume: number;
-  description:string;
-  indicator:number;
+  description: string;
+  indicator: number;
   meta: number;
-  sourceVerification?:string;
-  assumptions?:string;
-  indicatorType:IIndicator;
-  type?:number;
+  sourceVerification?: string;
+  assumptions?: string;
+  indicatorType: IIndicator;
+  type?: number;
 }
 
 export interface IprofitsIncome {
@@ -190,12 +198,12 @@ export interface ISourceFunding {
   stage: number;
   typeEntity: number;
   resource: number;
-  entity:string;
-  year0:number;
-  year1:number;
-  year2:number;
-  year3:number;
-  year4:number;
+  entity: string;
+  year0: number;
+  year1: number;
+  year2: number;
+  year3: number;
+  year4: number;
 }
 
 export interface IproftisIncomeForm {
@@ -209,9 +217,9 @@ export interface ISourceFundingForm {
 export interface Iperiod {
   id?: number;
   period: number;
-  quantity:number;
-  unitValue:number;
-  financialValue:number;
+  quantity: number;
+  unitValue: number;
+  financialValue: number;
 }
 
 export interface IBudgetMGA {
@@ -239,17 +247,17 @@ export interface IBudgetMGA {
 
 
 
-export interface Itransfers{
+export interface Itransfers {
   bpin?: string;
   project?: string;
   dependency?: string | number;
   formulation?: string;
-  rol?:string;
-  order?:string;
+  rol?: string;
+  order?: string;
   tecniques?: boolean;
   ambiental?: boolean;
   sociocultural?: boolean;
-  observations?:string;
+  observations?: string;
 }
 
 export interface IDetailActivity {
@@ -285,9 +293,9 @@ export interface IActivitiesForm {
 }
 
 export interface IIndicator {
-  id?:number;
+  id?: number;
   type: number;
-  
+
   //Producto
   line?: number;
   component?: number;
@@ -335,15 +343,15 @@ export interface IProjectTemp {
     capacity?: ICapacityForm
     enviromentalAnalysis?: IEnvironmentAnalysisForm
     activities?: IActivitiesForm;
-    risks?:IRisks
+    risks?: IRisks
   }
-  programation?:{
-    profitsIncome?:IproftisIncomeForm;
-    sourceFunding?:ISourceFundingForm;
+  programation?: {
+    profitsIncome?: IproftisIncomeForm;
+    sourceFunding?: ISourceFundingForm;
     indicators?: IIndicatorsForm;
-    logicFrame?:IlogicFrameForm;
+    logicFrame?: IlogicFrameForm;
   }
-  transfers?:Itransfers;
+  transfers?: Itransfers;
 }
 
 export interface IDetailedActivityFilter {
@@ -355,7 +363,7 @@ export interface IDetailedActivityFilter {
 export interface IDetailedActivityPaginated {
   detail?: string
   page: number;
-  perPage: number; 
+  perPage: number;
 }
 
 //Filtros creados para presupuesto
@@ -368,7 +376,7 @@ export interface IProjectPaginated {
   nameOrCode: string;
   excludeIds?: number[];
   page: number;
-  perPage: number; 
+  perPage: number;
 }
 
 //Filtros creados para direccion estrategica
@@ -399,7 +407,7 @@ export interface IActivitiesProject {
 }
 
 export interface IIndicatorAction {
-  id?:number;
+  id?: number;
   type: number;
   objective?: string;
   dpnIndicator?: number;
@@ -418,7 +426,7 @@ export interface IIndicatorAction {
 }
 
 export interface IIndicatorIndicative {
-  id?:number;
+  id?: number;
   type: number;
   line?: number;
   component?: number;
@@ -480,20 +488,20 @@ export interface IProject {
   specificObjectives: INeedObjetive[] | null;
   environmentalEffects: IEffectEnviromentForm[] | null;
   activities: IActivitiesProject[] | null;
-  risks:IAddRisks[] | null;
-  profitsIncome:IprofitsIncome[] | null;
-  sourceFunding:ISourceFunding[] | null;
+  risks: IAddRisks[] | null;
+  profitsIncome: IprofitsIncome[] | null;
+  sourceFunding: ISourceFunding[] | null;
   indicatorsAction: IIndicatorAction[] | null;
   indicatorsIndicative: IIndicatorIndicative[] | null;
-  logicFrame:IAddLogicFrame[] | null;
+  logicFrame: IAddLogicFrame[] | null;
   formulation: string | null;
-  rol:string | null;
-  order:string | null;
+  rol: string | null;
+  order: string | null;
   tecniques: boolean;
   ambiental: boolean;
   sociocultural: boolean;
-  observations:string | null;
+  observations: string | null;
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
-  version:string | null;
+  version: string | null;
 }
