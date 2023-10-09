@@ -37,7 +37,7 @@ function ProjectsPage(): React.JSX.Element {
                                             value={`${field.value}`}
                                             label="BPIN"
                                             className="input-basic"
-                                            classNameLabel="text-black biggest bold text-required"
+                                            classNameLabel="text-black biggest bold"
                                             typeInput={"text"}
                                             register={register}
                                             onChange={field.onChange}
@@ -58,7 +58,7 @@ function ProjectsPage(): React.JSX.Element {
                                             value={`${field.value}`}
                                             label="Nombre proyecto"
                                             className="input-basic"
-                                            classNameLabel="text-black biggest bold text-required"
+                                            classNameLabel="text-black biggest bold"
                                             typeInput={"text"}
                                             register={register}
                                             onChange={field.onChange}
@@ -72,7 +72,7 @@ function ProjectsPage(): React.JSX.Element {
                                 idInput={"status"}
                                 className={`select-basic span-width`}
                                 label="Estado"
-                                classNameLabel="text-black biggest bold text-required"
+                                classNameLabel="text-black biggest bold"
                                 data={statusData}
                                 errors={errors}
                             />
@@ -99,6 +99,8 @@ function ProjectsPage(): React.JSX.Element {
                         columns={tableColumns}
                         actions={tableActions}
                         isShowModal={true}
+                        titleMessageModalNoResult="Resultados de búsqueda"
+                        descriptionModalNoResult="No se generó resultado en la búsqueda"
                     />
                 </div>
             </div>

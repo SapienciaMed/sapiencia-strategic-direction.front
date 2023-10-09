@@ -63,7 +63,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
     }
     const onCancelEdit = () => {
         setMessage({
-            title: "Cancelar indicador",
+            title: "Cancelar cambios",
             description: "¿Deseas cancelar los cambios del indicador? ",
             show: true,
             background: true,

@@ -37,6 +37,7 @@ interface IProps<T> {
   searchItems?: object;
   isShowModal: boolean;
   titleMessageModalNoResult?: string;
+  descriptionModalNoResult?: string;
 }
 
 interface IRef {
@@ -52,6 +53,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
     titleMessageModalNoResult,
     isShowModal,
     emptyMessage = "No hay resultados.",
+    descriptionModalNoResult = "No hay resultado para la búsqueda",
   } = props;
 
   // States
@@ -93,7 +95,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         setMessage({
           title: `${titleMessageModalNoResult || ""}`,
           show: true,
-          description: "No hay resultado para la búsqueda",
+          description: descriptionModalNoResult,
           OkTitle: "Aceptar",
           background: true,
         });
