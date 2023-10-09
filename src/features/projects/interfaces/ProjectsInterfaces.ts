@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export interface IProblemDescriptionForm {
   problemDescription?: string;
   magnitude?: string;
@@ -491,4 +493,7 @@ export interface IProject {
   ambiental: boolean;
   sociocultural: boolean;
   observations:string | null;
+  dateCreate?: DateTime | null;
+  dateModify?: Date | null;
+  version:string | null;
 }
