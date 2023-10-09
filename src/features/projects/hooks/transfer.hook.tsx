@@ -113,19 +113,35 @@ export function useTransferData() {
                             }
                         })
                     } else {
-                        setMessage({
-                            title: "Ocurrio un problema...",
-                            description: <p className="text-primary biggest">{res.operation.message}</p>,
-                            background: true,
-                            show: true,
-                            OkTitle: "Cerrar",
-                            onOk: () => {
-                                setMessage({});
-                            },
-                            onClose: () => {
-                                setMessage({});
-                            }
-                        });
+                        if(res.operation.message.includes("BPIN")) {
+                            setMessage({
+                                title: "Validación BPIN.",
+                                description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Cerrar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
+                        }else {
+                            setMessage({
+                                title: "Ocurrio un problema...",
+                                description: <p className="text-primary biggest">{res.operation.message}</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Cerrar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
+                        }
                     }
                 } else {
                     const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
@@ -159,19 +175,35 @@ export function useTransferData() {
                             }
                         });
                     } else {
-                        setMessage({
-                            title: "Ocurrio un problema...",
-                            description: <p className="text-primary biggest">{res.operation.message}</p>,
-                            background: true,
-                            show: true,
-                            OkTitle: "Cerrar",
-                            onOk: () => {
-                                setMessage({});
-                            },
-                            onClose: () => {
-                                setMessage({});
-                            }
-                        });
+                        if(res.operation.message.includes("BPIN")) {
+                            setMessage({
+                                title: "Validación BPIN.",
+                                description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Cerrar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
+                        }else {
+                            setMessage({
+                                title: "Ocurrio un problema...",
+                                description: <p className="text-primary biggest">{res.operation.message}</p>,
+                                background: true,
+                                show: true,
+                                OkTitle: "Cerrar",
+                                onOk: () => {
+                                    setMessage({});
+                                },
+                                onClose: () => {
+                                    setMessage({});
+                                }
+                            });
+                        }
                     }
                 }
             }
