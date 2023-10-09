@@ -261,8 +261,8 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                         </div>
                     </div>
                     {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} horizontalScroll />}
-                </div>
-            </FormComponent>
+                </div>      
+                </FormComponent>
         </div>
     )
 }
@@ -437,7 +437,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         idInput={"resume"}
                         className="select-basic span-width"
                         label="Resumen narrativo"
-                        classNameLabel="text-black biggest bold"
+                        classNameLabel="text-black biggest bold text-required"
                         data={ResumeData}
                         errors={errors}
 
@@ -447,7 +447,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         idInput={"description"}
                         className="select-basic span-width"
                         label="Descripción"
-                        classNameLabel="text-black biggest bold"
+                        classNameLabel="text-black biggest bold text-required"
                         data={descriptionData}
                         errors={errors}
 
@@ -457,7 +457,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         idInput={"indicator"}
                         className="select-basic span-width"
                         label="Nombre de indicador"
-                        classNameLabel="text-black biggest bold"
+                        classNameLabel="text-black biggest bold text-required"
                         data={indicators}
                         errors={errors}
 
