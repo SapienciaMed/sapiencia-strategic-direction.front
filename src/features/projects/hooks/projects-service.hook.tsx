@@ -1,4 +1,5 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
+import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { IProject, IProjectTemp } from "../interfaces/ProjectsInterfaces";
 
@@ -30,5 +31,10 @@ export function useProjectsService() {
         return deleted(`${projectsUrl}${endpoint}`);
     }
 
-    return { GetProjectByUser, CreateProject, UpdateProject, DeleteProject }
+    async function GetAllStatus(): Promise<ApiResponse<MasterTable[]>>{
+        const endpoint: string = `/status/get-all`;
+        return get(`${projectsUrl}${endpoint}`);
+    }
+
+    return { GetProjectByUser, CreateProject, UpdateProject, DeleteProject, GetAllStatus }
 }
