@@ -46,7 +46,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "programation", title: "4. Programación", content: <ProgramationPage/>, action: () => {
+            id: "programation", title: "4. Programación", content: <ProgramationPage />, action: () => {
                 setStep(3)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -55,7 +55,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "transfer", title: "5. Transferir", content: <TransferPage/>, action: () => {
+            id: "transfer", title: "5. Transferir", content: <TransferPage />, action: () => {
                 setStep(4)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -146,35 +146,37 @@ export function useProjectsCrudData() {
                         },
                         activities: {
                             activities: projectDataResponse.activities.map(item => {
-                                return {...item, budgetsMGA: {
-                                    year0: {
-                                        budget: item.budgetsMGA[0].budget,
-                                        validity: item.budgetsMGA[0].validity,
-                                    },
-                                    year1: {
-                                        budget: item.budgetsMGA[1].budget,
-                                        validity: item.budgetsMGA[1].validity,
-                                    },
-                                    year2: {
-                                        budget: item.budgetsMGA[2].budget,
-                                        validity: item.budgetsMGA[2].validity,
-                                    },
-                                    year3: {
-                                        budget: item.budgetsMGA[3].budget,
-                                        validity: item.budgetsMGA[3].validity,
-                                    },
-                                    year4: {
-                                        budget: item.budgetsMGA[4].budget,
-                                        validity: item.budgetsMGA[4].validity,
-                                    },
-                                }}
+                                return {
+                                    ...item, budgetsMGA: {
+                                        year0: {
+                                            budget: item.budgetsMGA[0].budget,
+                                            validity: item.budgetsMGA[0].validity,
+                                        },
+                                        year1: {
+                                            budget: item.budgetsMGA[1].budget,
+                                            validity: item.budgetsMGA[1].validity,
+                                        },
+                                        year2: {
+                                            budget: item.budgetsMGA[2].budget,
+                                            validity: item.budgetsMGA[2].validity,
+                                        },
+                                        year3: {
+                                            budget: item.budgetsMGA[3].budget,
+                                            validity: item.budgetsMGA[3].validity,
+                                        },
+                                        year4: {
+                                            budget: item.budgetsMGA[4].budget,
+                                            validity: item.budgetsMGA[4].validity,
+                                        },
+                                    }
+                                }
                             })
                         },
                         risks: {
                             risks: projectDataResponse.risks,
                         },
                     },
-                    programation:{
+                    programation: {
                         profitsIncome: {
                             profitsIncome: projectDataResponse.profitsIncome,
                         },
@@ -184,18 +186,25 @@ export function useProjectsCrudData() {
                         indicators: {
                             indicators: projectDataResponse.indicatorsAction.concat(projectDataResponse.indicatorsIndicative)
                         },
+                        logicFrame: {
+                            logicFrame: projectDataResponse.logicFrame.map(item => {
+                                return { ...item, indicatorType: item.type === 3 ? projectDataResponse.indicatorsAction.find(indicator => indicator.id == item.indicator) : projectDataResponse.indicatorsIndicative.find(indicator => indicator.id == item.indicator) }
+                            }).map(item => {
+                                return { ...item, indicator: projectDataResponse.indicatorsAction.concat(projectDataResponse.indicatorsIndicative).findIndex(data => JSON.stringify(data) === JSON.stringify(item.indicatorType)) }
+                            }),
+                        }
                     },
-                    transfers:{
-                            ambiental: projectDataResponse.ambiental,
-                            formulation: projectDataResponse.formulation,
-                            observations: projectDataResponse.observations,
-                            order: projectDataResponse.order,
-                            rol: projectDataResponse.rol,
-                            sociocultural: projectDataResponse.sociocultural,
-                            tecniques: projectDataResponse.tecniques,
+                    transfers: {
+                        ambiental: projectDataResponse.ambiental,
+                        formulation: projectDataResponse.formulation,
+                        observations: projectDataResponse.observations,
+                        order: projectDataResponse.order,
+                        rol: projectDataResponse.rol,
+                        sociocultural: projectDataResponse.sociocultural,
+                        tecniques: projectDataResponse.tecniques,
                     }
                 })
-            } else if(response.operation.code === EResponseCodes.FAIL) {
+            } else if (response.operation.code === EResponseCodes.FAIL) {
                 setMessage({
                     title: "No se pudo cargar el proyecto",
                     description: <p className="text-primary biggest">{response.operation.message}</p>,

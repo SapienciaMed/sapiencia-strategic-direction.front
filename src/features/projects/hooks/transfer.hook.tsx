@@ -8,16 +8,19 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { useEntitiesService } from "./entities-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IEntities } from "../interfaces/Entities";
-import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
-
+import { AppContext } from "../../../common/contexts/app.context";
+import { useProjectsCrudData } from "../hooks/projects-crud.hook";
+import { useProjectsService } from "./projects-service.hook";
 
 export function useTransferData() {
     const { GetEntities , GetEntitiesDependency } = useEntitiesService();
     const [ locationData, setLocationData] = useState<IDropdownProps[]>([]);
     const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
     const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
-    const { getListByGrouper, getListByParent } = useGenericListService();
-    const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData } = useContext(ProjectsContext);
+    const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
+    const { setMessage,authorization } = useContext(AppContext);
+    const {  navigate } = useProjectsCrudData();
+    const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData , setTextContinue } = useContext(ProjectsContext);
     const [ charged, setCharged ] = useState<boolean>(false);
     
 
@@ -77,12 +80,103 @@ export function useTransferData() {
         return () => subscription.unsubscribe();
     }, [watch]);
 
+    useEffect(() => {
+        setTextContinue("Enviar");
+    }, [])
+    
+
     const onSubmit = handleSubmit(async (data: Itransfers) => {
-        setStep(1);
+        setMessage({
+            title:  "Formular el proyecto" ,
+            description: "¿Deseas guardar el proyecto como formulado?" ,
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: async () => {
+                if (projectData?.id) {
+                    const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
+                    const res = await UpdateProject(projectData.id, data);
+                    if (res.operation.code === EResponseCodes.OK) {
+                        setMessage({
+                            title: "Proyecto formulado",
+                            description: "¡Guardado exitosamente!",
+                            show: true,
+                            background: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                navigate('./../');
+                                setMessage({});
+                            }
+                        })
+                    } else {
+                        setMessage({
+                            title: "Ocurrio un problema...",
+                            description: <p className="text-primary biggest">{res.operation.message}</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                } else {
+                    const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
+                    const res = await CreateProject(data);
+                    setProjectData(prev => {
+                        return { ...prev, id: res.data.id }
+                    });
+                    if (res.operation.code === EResponseCodes.OK) {
+                        setMessage({
+                            title:  "Formular el proyecto" ,
+                            description: "¿Deseas guardar el proyecto como formulado?" ,
+                            show: true,
+                            background: true,
+                            cancelTitle: "Cancelar",
+                            OkTitle: "Aceptar",
+                            onCancel: () => {
+                                setMessage({});
+                            },
+                            onOk: () => {
+                                setMessage({
+                                    title: "Proyecto formulado",
+                                    description: "¡Guardado exitosamente!",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Cerrar",
+                                    onOk: () => {
+                                        navigate('./../');
+                                        setMessage({});
+                                    }
+                                })
+                            }
+                        });
+                    } else {
+                        setMessage({
+                            title: "Ocurrio un problema...",
+                            description: <p className="text-primary biggest">{res.operation.message}</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                }
+            }
+        });
     });
-
-
-
 
     const bpn = projectData.register.bpin;
     const project = projectData.register.project;
@@ -106,5 +200,5 @@ export function useTransferData() {
     }, [isValid]);
 
 
-    return { register, errors, control, onSubmit, processData, bpn, dependency, project , isValid, watch };
+    return { register, errors, control, onSubmit, processData, bpn, dependency, project , isValid, watch, };
 }
