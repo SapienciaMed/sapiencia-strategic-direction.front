@@ -486,7 +486,7 @@ export function PoblationComponent({
                           errors={errors}
                           characters={100}
                         >
-                          {getValues(`demographic.${index}.infoSource`).length > 100 ? <p className="error-message bold not-margin-padding">Solo se permiten 100 caracteres</p> : <></>}
+                          {getValues(`demographic.${index}.infoSource`)?.length > 100 ? <p className="error-message bold not-margin-padding">Solo se permiten 100 caracteres</p> : <></>}
                         </TextAreaComponent>
                       );
                     }}
