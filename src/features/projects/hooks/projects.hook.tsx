@@ -62,7 +62,7 @@ export function useProjectsData() {
 
     const tableActions: ITableAction<IProject>[] = [
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".download-tooltip" />
@@ -70,7 +70,7 @@ export function useProjectsData() {
                             className="download-tooltip"
                             data-pr-tooltip="Descargar registro"
                             data-pr-position="bottom"
-                            style={{'color': '#D72FD1'}}
+                            style={{ 'color': '#D72FD1' }}
                         >
                             <AiOutlineDownload />
                         </div>
@@ -79,10 +79,11 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 2 || row.status === 4)
         },
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".attach-tooltip" />
@@ -90,7 +91,7 @@ export function useProjectsData() {
                             className="attach-tooltip"
                             data-pr-tooltip="Adjuntar archivos"
                             data-pr-position="bottom"
-                            style={{'color': '#533893'}}
+                            style={{ 'color': '#533893' }}
                         >
                             <AiOutlinePaperClip />
                         </div>
@@ -99,10 +100,11 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 2 || row.status === 3)
         },
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".download-attach-tooltip" />
@@ -110,7 +112,7 @@ export function useProjectsData() {
                             className="download-attach-tooltip"
                             data-pr-tooltip="Descargar adjuntos"
                             data-pr-position="bottom"
-                            style={{'color': '#FF7D06'}}
+                            style={{ 'color': '#FF7D06' }}
                         >
                             <HiOutlineDocument />
                         </div>
@@ -119,10 +121,11 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4)
         },
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".download-file-tooltip" />
@@ -130,7 +133,7 @@ export function useProjectsData() {
                             className="download-file-tooltip"
                             data-pr-tooltip="Descargar ficha"
                             data-pr-position="bottom"
-                            style={{'color': '#058CC1'}}
+                            style={{ 'color': '#058CC1' }}
                         >
                             <AiOutlineEye />
                         </div>
@@ -139,10 +142,11 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 2 || row.status === 4)
         },
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".finish-tooltip" />
@@ -158,18 +162,19 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 2 || row.status === 3)
         },
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
-                        <Tooltip target=".finish-tooltip" />
+                        <Tooltip target=".edit-tooltip" />
                         <div
-                            className="finish-tooltip"
+                            className="edit-tooltip"
                             data-pr-tooltip="Editar proyecto"
                             data-pr-position="bottom"
-                            style={{'color': '#0CA529'}}
+                            style={{ 'color': '#0CA529' }}
                         >
                             <RiPencilLine />
                         </div>
@@ -178,7 +183,8 @@ export function useProjectsData() {
             },
             onClick: (row) => {
 
-            }
+            },
+            hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3)
         },
     ];
 

@@ -159,7 +159,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
               <div key={index} onClick={() => action.onClick(item)}>
                 {action.customIcon ? (
                   <div className="button grid-button button-link">
-                    {action.customIcon()}
+                    {action.customIcon(item)}
                   </div>
                 ) : (
                   getIconElement(action.icon, "src")
@@ -382,23 +382,29 @@ const ActionComponent = (props: {
   row: any;
   actions: ITableAction<any>[];
 }): React.JSX.Element => {
+  const actions = props.actions.filter(action => {
+    return !action.hideRow(props.row)
+  });
   return (
     <div className="spc-table-action-button">
-      {props.actions.map((action, index) => (
-        <div
-          style={{ display: action.hide ? "none" : "block" }}
-          key={index}
-          onClick={() => action.onClick(props.row)}
-        >
-          {action.customIcon ? (
-            <div className="button grid-button button-link">
-              {action.customIcon()}
-            </div>
-          ) : (
-            getIconElement(action.icon, "src")
-          )}
-        </div>
-      ))}
+      {actions.map((action, index) => {
+        if(!action) return;
+        return (
+          <div
+            style={{ display: action.hide ? "none" : "block" }}
+            key={index}
+            onClick={() => action.onClick(props.row)}
+          >
+            {action.customIcon ? (
+              <div className="button grid-button button-link">
+                {action.customIcon(props.row)}
+              </div>
+            ) : (
+              getIconElement(action.icon, "src")
+            )}
+          </div>
+        )
+      })}
     </div>
   );
 };

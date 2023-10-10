@@ -27,6 +27,7 @@ export interface ITableAction<T> {
   icon?: "Detail" | "Edit" | "Delete" | "Link";
   onClick: (row: T) => void;
   customName?: string;
-  customIcon?: () => JSX.Element;
+  customIcon?: (row: T) => JSX.Element;
   hide?: boolean;
+  hideRow?: (row: T) => boolean;
 }
