@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { Controller, useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import {  sourceFundingValidator,EntityValidator } from "../../../common/schemas";
 import { ISourceFundingForm, ISourceFunding } from "../interfaces/ProjectsInterfaces";
@@ -10,12 +10,9 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { ProjectsContext } from "../contexts/projects.context";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { FaTrashAlt } from "react-icons/fa";
-import { RadioButton } from 'primereact/radiobutton';
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { useComponentsService } from "../hooks/components-service.hook";
 import { useStagesService } from "../hooks/stages-service.hook";
 import { useEntitiesService } from "../hooks/entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
@@ -48,8 +45,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
 
     const { getEntity,getResource } = useEntitiesService();
     const { GetStages } = useStagesService();
-    const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { getListByGrouper } = useGenericListService();
     const {
         getValues,
         setValue,
@@ -134,8 +129,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         }).catch(() => { });
 
     }, []);
-
-
 
     const objectivesColumns: ITableElement<ISourceFunding>[] = [
         {

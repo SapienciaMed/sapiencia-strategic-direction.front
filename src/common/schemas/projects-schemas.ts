@@ -285,7 +285,6 @@ export const transfersValidator = yup.object().shape({
         .nullable()
         .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
             const { sociocultural, ambiental } = this.parent;
-            debugger;
             if (sociocultural || ambiental || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
             } else {
@@ -297,7 +296,6 @@ export const transfersValidator = yup.object().shape({
         .nullable()
         .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
             const { tecniques, sociocultural } = this.parent;
-            debugger;
             if (tecniques || sociocultural || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
             } else {
@@ -309,7 +307,6 @@ export const transfersValidator = yup.object().shape({
         .nullable()
         .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
             const { tecniques, ambiental } = this.parent;
-            debugger;
             if (tecniques || ambiental || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
             } else {

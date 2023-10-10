@@ -13,28 +13,13 @@ import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 import { useProjectsService } from "./projects-service.hook";
 
 export function useTransferData() {
-    const { GetEntities , GetEntitiesDependency } = useEntitiesService();
-    const [ locationData, setLocationData] = useState<IDropdownProps[]>([]);
-    const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
-    const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
-    const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
-    const { setMessage,authorization } = useContext(AppContext);
-    const {  navigate } = useProjectsCrudData();
-    const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData , setTextContinue } = useContext(ProjectsContext);
-    const [ charged, setCharged ] = useState<boolean>(false);
-    
-
-    const localitationData: IDropdownProps[] = [
-        {
-            name: "Postsecundaria - SAPIENCIA",
-            value: 1,
-        },
-        {
-            name: " Localizacion 2",
-            value: 2,
-        }
-    ];
-  
+    const { GetEntitiesDependency } = useEntitiesService();
+    const [processData] = useState<IDropdownProps[]>(null);
+    const [dependecyData, setDependencyData] = useState<IDropdownProps[]>(null);
+    const { CreateProject, UpdateProject } = useProjectsService();
+    const { setMessage, authorization } = useContext(AppContext);
+    const { navigate } = useProjectsCrudData();
+    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue } = useContext(ProjectsContext);
 
     const resolver = useYupValidationResolver(transfersValidator);
 
@@ -45,21 +30,45 @@ export function useTransferData() {
         control,
         watch,
         setValue,
-        clearErrors,
-        trigger
-    } = useForm<Itransfers>({ resolver, mode: "all", defaultValues: {
-        bpin: projectData?.transfers?.bpin ? projectData.transfers.bpin : "",
-        project : projectData?.transfers?.project ? projectData.transfers.project  : "" ,
-        dependency: projectData?.transfers?.dependency ? projectData.transfers.dependency : "",
-        formulation: projectData?.transfers?.formulation ? projectData.transfers.formulation : "",
-        rol: projectData?.transfers?.rol ? projectData.transfers.rol : "",
-        order: projectData?.transfers?.order ? projectData.transfers.order : "",
-        tecniques:projectData?.transfers?.tecniques ? projectData.transfers.tecniques : null,
-        ambiental:projectData?.transfers?.ambiental ? projectData.transfers.ambiental : null,
-        sociocultural:projectData?.transfers?.sociocultural ? projectData.transfers.sociocultural : null,
-        observations: projectData?.transfers?.observations ? projectData.transfers.observations : "",
-    }});
+    } = useForm<Itransfers>({
+        resolver, mode: "all", defaultValues: {
+            bpin: projectData?.transfers?.bpin ? projectData.transfers.bpin : "",
+            project: projectData?.transfers?.project ? projectData.transfers.project : "",
+            dependency: projectData?.transfers?.dependency ? projectData.transfers.dependency : "",
+            formulation: projectData?.transfers?.formulation ? projectData.transfers.formulation : "",
+            rol: projectData?.transfers?.rol ? projectData.transfers.rol : "",
+            order: projectData?.transfers?.order ? projectData.transfers.order : "",
+            tecniques: projectData?.transfers?.tecniques ? projectData.transfers.tecniques : null,
+            ambiental: projectData?.transfers?.ambiental ? projectData.transfers.ambiental : null,
+            sociocultural: projectData?.transfers?.sociocultural ? projectData.transfers.sociocultural : null,
+            observations: projectData?.transfers?.observations ? projectData.transfers.observations : "",
+        }
+    });
 
+    const bpn = projectData.register.bpin;
+    const project = projectData.register.project;
+    const dependency = projectData.register.dependency;
+
+    const dependencia = dependecyData?.find(data => data.value === dependency);
+
+    useEffect(() => {
+        setValue("bpin", bpn);
+        setValue("project", project);
+        setValue("dependency", dependencia?.name);
+    }, [bpn, project, dependencia])
+
+    useEffect(() => {
+        setDisableContinue(!isValid);
+        setActionContinue(isValid ? () => onSubmit : () => { });
+        setTextContinue("Enviar")
+    }, [isValid]);
+
+    useEffect(() => {
+        const subscription = watch((value: Itransfers) => setProjectData(prev => {
+            return { ...prev, transfers: { ...value } }
+        }));
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
     useEffect(() => {
         GetEntitiesDependency().then(response => {
@@ -71,24 +80,12 @@ export function useTransferData() {
                 setDependencyData(arrayEntities);
             }
         }).catch(() => { });
-    }, [])
-
-    useEffect(() => {
-        const subscription = watch((value: Itransfers) => setProjectData(prev => {
-            return { ...prev, transfers: { ...value } }
-        }));
-        return () => subscription.unsubscribe();
-    }, [watch]);
-
-    useEffect(() => {
-        setTextContinue("Enviar");
-    }, [])
-    
+    }, []);
 
     const onSubmit = handleSubmit(async (data: Itransfers) => {
         setMessage({
-            title:  "Formular el proyecto" ,
-            description: "¿Deseas guardar el proyecto como formulado?" ,
+            title: "Formular el proyecto",
+            description: "¿Deseas guardar el proyecto como formulado?",
             show: true,
             background: true,
             cancelTitle: "Cancelar",
@@ -113,7 +110,7 @@ export function useTransferData() {
                             }
                         })
                     } else {
-                        if(res.operation.message.includes("BPIN")) {
+                        if (res.operation.message.includes("BPIN")) {
                             setMessage({
                                 title: "Validación BPIN.",
                                 description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
@@ -127,7 +124,7 @@ export function useTransferData() {
                                     setMessage({});
                                 }
                             });
-                        }else {
+                        } else {
                             setMessage({
                                 title: "Ocurrio un problema...",
                                 description: <p className="text-primary biggest">{res.operation.message}</p>,
@@ -151,8 +148,8 @@ export function useTransferData() {
                     });
                     if (res.operation.code === EResponseCodes.OK) {
                         setMessage({
-                            title:  "Formular el proyecto" ,
-                            description: "¿Deseas guardar el proyecto como formulado?" ,
+                            title: "Formular el proyecto",
+                            description: "¿Deseas guardar el proyecto como formulado?",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
@@ -175,7 +172,7 @@ export function useTransferData() {
                             }
                         });
                     } else {
-                        if(res.operation.message.includes("BPIN")) {
+                        if (res.operation.message.includes("BPIN")) {
                             setMessage({
                                 title: "Validación BPIN.",
                                 description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
@@ -189,7 +186,7 @@ export function useTransferData() {
                                     setMessage({});
                                 }
                             });
-                        }else {
+                        } else {
                             setMessage({
                                 title: "Ocurrio un problema...",
                                 description: <p className="text-primary biggest">{res.operation.message}</p>,
@@ -210,27 +207,7 @@ export function useTransferData() {
         });
     });
 
-    const bpn = projectData.register.bpin;
-    const project = projectData.register.project;
-    const dependency = projectData.register.dependency;
-    
-    const dependencia = dependecyData?.find(data =>data.value === dependency);
-
-    useEffect(() => {
-      setValue("bpin",bpn);
-      setValue("project",project);
-      setValue("dependency",dependencia?.name);
-   
-    }, [bpn,project,dependencia])
-    
 
 
-    useEffect(() => {
-        debugger;
-        setDisableContinue(!isValid);
-        setActionContinue(isValid ? () => onSubmit : () => { });
-    }, [isValid]);
-
-
-    return { register, errors, control, onSubmit, processData, bpn, dependency, project , isValid, watch, };
+    return { register, errors, control, onSubmit, processData, bpn, dependency, project, isValid, watch, };
 }

@@ -1,14 +1,13 @@
 import React from "react";
-import { FormComponent, InputComponent, LabelComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { FormComponent, InputComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useTransferData } from "../hooks/transfer.hook";
 import { Controller } from "react-hook-form";
-import { EDirection } from "../../../common/constants/input.enum";
 import { Checkbox } from 'primereact/checkbox';
 
 
 
 function TransferPage(): React.JSX.Element {
-    const { register, errors, control, onSubmit, bpn, dependency, project, isValid,watch } = useTransferData();
+    const { register, errors, control, onSubmit, isValid,watch } = useTransferData();
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>

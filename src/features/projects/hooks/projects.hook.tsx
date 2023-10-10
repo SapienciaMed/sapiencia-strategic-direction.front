@@ -43,7 +43,7 @@ export function useProjectsData() {
             fieldName: "dateCreate",
             header: "Fecha de creación",
             renderCell: (row) => {
-                return <>{DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
+                return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
             }
         },
         {
