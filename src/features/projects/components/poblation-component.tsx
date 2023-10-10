@@ -383,6 +383,7 @@ export function PoblationComponent({
           </div>
         </div>
         {fields.map((fields, index) => {
+          debugger;
           return (
             <div key={fields.id}>
               <div className="poblation-container-3">
@@ -419,17 +420,26 @@ export function PoblationComponent({
                   </SelectComponent>
                 </div>
                 <div>
-                  <InputComponent
-                    id={`demographic.${index}.numPerson`}
-                    idInput={`demographic.${index}.numPerson`}
-                    label="No. de personas"
-                    className="input-basic"
-                    classNameLabel="text-black biggest bold"
-                    typeInput={"number"}
-                    register={register}
-                    errors={errors}
+                <Controller
+                      control={control}
+                      name={`demographic.${index}.numPerson`}
+                      defaultValue= {index} 
+                      render={({ field }) => {
+                          return (
+                              <InputComponent
+                                  id={field.name}
+                                  idInput={field.name}
+                                  value={`${field.value}`}
+                                  label="No. de personas"
+                                  className="input-basic"
+                                  classNameLabel="text-black biggest bold"
+                                  typeInput={"number"}
+                                  register={register}
+                                  onChange={field.onChange}
+                                  errors={errors} />
+                          );
+                      }}
                   />
-
                 </div>
                 <div className="div-acciones">
                   <label className="text-black biggest bold">Acciones</label>
