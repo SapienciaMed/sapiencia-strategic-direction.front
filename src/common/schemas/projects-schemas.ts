@@ -567,7 +567,7 @@ export const indicatorValidator = yup.object({
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
             if (type === 3) {
-                if (value === null || value === undefined) {
+                if (!value) {
                     return false;
                 }
             }
