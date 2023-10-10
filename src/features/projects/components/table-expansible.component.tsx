@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { useWidth } from "../../../common/hooks/use-width";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { DataView } from "primereact/dataview";
-import * as Icons from "react-icons/fa";
+import { FaChevronDown, FaChevronRight, FaLink } from "react-icons/fa";
+import { RiPencilLine } from "react-icons/ri";
+import { PiTrash } from "react-icons/pi";
 import { Paginator, PaginatorCurrentPageReportOptions, PaginatorNextPageLinkOptions, PaginatorPageChangeEvent, PaginatorPageLinksOptions, PaginatorPrevPageLinkOptions, PaginatorRowsPerPageDropdownOptions, PaginatorTemplateOptions } from "primereact/paginator";
 import { Dropdown } from "primereact/dropdown";
 import { classNames } from "primereact/utils";
+import { AiOutlineEye } from "react-icons/ai";
 
 interface IProps<T> {
     columns: ITableElement<T>[];
@@ -74,7 +77,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                     (_expandedRowsMobile[`${item.consecutive}`] = false);
                     setExpandedRowsMobile({ ...expandedRowsMobile, ..._expandedRowsMobile });
                 }}>
-                    <Icons.FaChevronDown />
+                    <FaChevronDown />
                 </div>
             )
         }
@@ -84,7 +87,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                 (_expandedRowsMobile[`${item.consecutive}`] = true);
                 setExpandedRowsMobile({ ...expandedRowsMobile, ..._expandedRowsMobile });
             }}>
-                <Icons.FaChevronRight />
+                <FaChevronRight />
             </div>
         )
     }
@@ -113,9 +116,9 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                             );
                         })}
                     </div>
-                    <div className="card-footer">
+                    <div className="card-footer-strategic-direction">
                         {actions && actions.map((action) => (
-                            <div key={action.icon} onClick={() => action.onClick(item)}>
+                            <div key={action.icon} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
                                 {getIconElement(action.icon, "src")}
                             </div>
                         ))}
@@ -143,7 +146,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                             </div>
                             <div className="card-footer">
                                 {actions && actions.map((action) => (
-                                    <div key={action.icon} onClick={() => action.onClick(item)}>
+                                    <div key={action.icon} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
                                         {getIconElement(action.icon, "src")}
                                     </div>
                                 ))}
@@ -338,33 +341,33 @@ const ActionComponent = (props: {
 // Metodo que retorna el icono o nombre de la accion
 function getIconElement(icon: string, element: "name" | "src") {
     switch (icon) {
-        case "Detail":
-            return element == "name" ? (
-                "Detalle"
-            ) : (
-                <Icons.FaEye className="button grid-button button-detail" />
-            );
-        case "Edit":
-            return element == "name" ? (
-                "Editar"
-            ) : (
-                <Icons.FaPencilAlt className="button grid-button button-edit" />
-            );
-        case "Delete":
-            return element == "name" ? (
-                "Eliminar"
-            ) : (
-                <Icons.FaTrashAlt className="button grid-button button-delete" />
-            );
-        case "Link":
-            return element == "name" ? (
-                "Vincular"
-            ) : (
-                <Icons.FaLink className="button grid-button button-link" />
-            );
-        default:
-            return "";
+      case "Detail":
+        return element == "name" ? (
+          "Detalle"
+        ) : (
+          <AiOutlineEye className="button grid-button button-detail" />
+        );
+      case "Edit":
+        return element == "name" ? (
+          "Editar"
+        ) : (
+          <RiPencilLine className="button grid-button button-edit" />
+        );
+      case "Delete":
+        return element == "name" ? (
+          "Eliminar"
+        ) : (
+          <PiTrash className="button grid-button button-delete" />
+        );
+      case "Link":
+        return element == "name" ? (
+          "Vincular"
+        ) : (
+          <FaLink className="button grid-button button-link" />
+        );
+      default:
+        return "";
     }
-}
+  }
 
 export default React.memo(TableExpansibleComponent);

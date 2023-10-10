@@ -23,10 +23,13 @@ import { IPagingData } from "../utils/api-response";
 import useCrudService from "../hooks/crud-service.hook";
 import { EResponseCodes } from "../constants/api.enum";
 import { classNames } from "primereact/utils";
-import * as Icons from "react-icons/fa";
+import { FaLink } from "react-icons/fa";
+import { RiPencilLine } from "react-icons/ri";
+import { PiTrash } from "react-icons/pi";
 import { Dropdown } from "primereact/dropdown";
 import { useWidth } from "../hooks/use-width";
 import { AppContext } from "../contexts/app.context";
+import { AiOutlineEye } from "react-icons/ai";
 
 interface IProps<T> {
   url: string;
@@ -136,6 +139,9 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
   }, []);
 
   const mobilTemplate = (item) => {
+    const actionsMob = props.actions.filter(action => {
+      return !action.hideRow(item)
+    });
     return (
       <div className="card-grid-item">
         <div className="card-header">
@@ -153,10 +159,10 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
             );
           })}
         </div>
-        <div className="card-footer">
-          {actions.map((action, index) => {
+        <div className="card-footer-strategic-direction">
+          {actionsMob.map((action, index) => {
             return (
-              <div key={index} onClick={() => action.onClick(item)}>
+              <div key={index} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
                 {action.customIcon ? (
                   <div className="button grid-button button-link">
                     {action.customIcon(item)}
@@ -254,25 +260,25 @@ function getIconElement(icon: string, element: "name" | "src") {
       return element == "name" ? (
         "Detalle"
       ) : (
-        <Icons.FaEye className="button grid-button button-detail" />
+        <AiOutlineEye className="button grid-button button-detail" />
       );
     case "Edit":
       return element == "name" ? (
         "Editar"
       ) : (
-        <Icons.FaPencilAlt className="button grid-button button-edit" />
+        <RiPencilLine className="button grid-button button-edit" />
       );
     case "Delete":
       return element == "name" ? (
         "Eliminar"
       ) : (
-        <Icons.FaTrashAlt className="button grid-button button-delete" />
+        <PiTrash className="button grid-button button-delete" />
       );
     case "Link":
       return element == "name" ? (
         "Vincular"
       ) : (
-        <Icons.FaLink className="button grid-button button-link" />
+        <FaLink className="button grid-button button-link" />
       );
     default:
       return "";
