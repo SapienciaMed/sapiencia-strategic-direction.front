@@ -89,7 +89,7 @@ function TransferPage(): React.JSX.Element {
                                         id={field.name}
                                         idInput={field.name}
                                         value={`${field.value}`}
-                                        label="Formulador(nombre completo)"
+                                        label="Formulador (nombre completo)"
                                         className="text-area-basic"
                                         classNameLabel="text-black biggest bold text-required"
                                         rows={4}
