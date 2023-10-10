@@ -383,7 +383,6 @@ export function PoblationComponent({
           </div>
         </div>
         {fields.map((fields, index) => {
-          debugger;
           return (
             <div key={fields.id}>
               <div className="poblation-container-3">
