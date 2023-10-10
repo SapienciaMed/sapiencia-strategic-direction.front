@@ -262,7 +262,8 @@ export function useProjectsCrudData() {
                     }
                 });
             } else {
-                    if(res.operation.message.includes("BPIN")) {
+                console.log(res.operation.message);
+                    if(res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
                         setMessage({
                             title: "Validación BPIN.",
                             description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
@@ -313,7 +314,7 @@ export function useProjectsCrudData() {
                     }
                 });
             } else {
-                if(res.operation.message.includes("BPIN")) {
+                if(res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
                     setMessage({
                         title: "Validación BPIN.",
                         description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
