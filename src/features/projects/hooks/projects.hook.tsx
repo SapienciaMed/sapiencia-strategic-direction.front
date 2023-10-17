@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IProject, IProjectFiltersDirection } from "../interfaces/ProjectsInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
@@ -14,11 +14,19 @@ import { HiOutlineDocument } from "react-icons/hi";
 import { FcCancel } from "react-icons/fc";
 import { Tooltip } from "primereact/tooltip";
 import { DateTime } from "luxon";
+import { AppContext } from "../../../common/contexts/app.context";
+import axios from "axios";
+import { ApiResponse } from "../../../common/utils/api-response";
 
 export function useProjectsData() {
-    const [ready, setReady] = useState<boolean>(false);
-    const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
+    const uploadFilesRef = useRef(null);
     const tableComponentRef = useRef(null);
+    const [ready, setReady] = useState<boolean>(false);
+    const [showDialog, setShowDialog] = useState<boolean>(false);
+    const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
+    const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
+    const [selectedRow, setSelectedRow] = useState<IProject>(null);
+    const { setMessage } = useContext(AppContext);
     const navigate = useNavigate();
     const { GetAllStatus } = useProjectsService();
     const resolver = useYupValidationResolver(projectsValidator);
@@ -99,9 +107,10 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                setShowDialog(true);
+                setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3)
+            hideRow: (row) => (row.status === 2 || row.status === 3)
         },
         {
             customIcon: (row) => {
@@ -182,7 +191,11 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                setMessage({
+                    show: true,
+                    OkTitle: "hola",
+                    cancelTitle: "test"
+                })
             },
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3)
         },
@@ -219,5 +232,53 @@ export function useProjectsData() {
         loadTableData();
     }, [ready]);
 
-    return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors };
+    const uploadFiles = () => {
+        const form = new FormData();
+        const files = filesUploadData;
+        files.forEach(file => {
+            form.append('files', file);
+        });
+        const options = {
+            method: 'POST',
+            url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
+            headers: { 'content-type': 'multipart/form-data' },
+            data: form,
+        };
+        axios.request(options).then(response => {
+            const data: ApiResponse<boolean> = response.data;
+            if (data.operation.code === EResponseCodes.OK) {
+                setFilesUploadData([]);
+                setShowDialog(false);
+                setMessage({
+                    background: true,
+                    show: true,
+                    title: "Adjuntos del proyecto",
+                    description: "¡Archivos guardados exitosamente!",
+                    OkTitle: "Cerrar",
+                });
+            } else {
+                setFilesUploadData([]);
+                setShowDialog(false);
+                setMessage({
+                    background: true,
+                    show: true,
+                    title: "Adjuntos del proyecto",
+                    description: data.operation.message,
+                    OkTitle: "Cerrar"
+                });
+            }
+        }).catch(err => {
+            setShowDialog(false);
+            setMessage({
+                background: true,
+                show: true,
+                title: "Adjuntos del proyecto",
+                description: String(err),
+                OkTitle: "Cerrar"
+            })
+        });
+    }
+
+    return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles };
 }
+

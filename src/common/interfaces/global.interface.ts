@@ -13,7 +13,7 @@ export interface IMessage {
   cancelTitle?: string;
   OkButtonStyle?: string;
   cancelButtonStyle?: string;
-  onOk?: () => void;
+  onOk?: (() => void) | (() => Promise<void>);
   onCancel?: () => void;
   onClose?: () => void;
 }

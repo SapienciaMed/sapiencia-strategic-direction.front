@@ -4,11 +4,36 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useProjectsData } from "../hooks/projects.hook";
 import TableComponent from "../../../common/components/table.component";
 import { Controller } from "react-hook-form";
+import { UploadComponent } from "../../../common/components/upload.component";
 
 function ProjectsPage(): React.JSX.Element {
-    const { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, control, register, statusData, errors } = useProjectsData();
+    const { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, control, register, statusData, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles } = useProjectsData();
     return (
         <div className='main-page'>
+            {showDialog && <div className="modal modal-bg is-open">
+                <div className="modal-container upload-files-modal">
+                    <div className="modal-header"></div>
+                    <div className="modal-content">
+                        <div className="full-width">
+                            <span className="text-black biggest bold" onClick={() => console.log(filesUploadData)}>Adjuntar archivos</span>
+                            <div style={{ marginTop: "20px" }}>
+                                <UploadComponent
+                                    id="fileList"
+                                    setFilesData={setFilesUploadData}
+                                    filesAccept="*"
+                                    maxSize={20971520}
+                                    dropboxMessage="Arrastra y suelta el archivo aquí"
+                                    multiple
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button className="button-cancel medium " style={{ display: filesUploadData.length > 0 ? "" : "none" }} onClick={() => setShowDialog(false)}>Cancelar</button>
+                        <button className="button-ok small" onClick={filesUploadData.length > 0 ? uploadFiles : () => setShowDialog(false)}>{filesUploadData.length > 0 ? "Guardar" : "Cancelar"}</button>
+                    </div>
+                </div>
+            </div>}
             <div className='card-table'>
                 <div className="title-area">
                     <div className="text-black extra-large bold">Proyectos</div>
@@ -107,5 +132,35 @@ function ProjectsPage(): React.JSX.Element {
         </div>
     )
 }
+
+interface IRef {
+    getFilesUploaded: () => File[];
+}
+
+
+/*const UploadFilesComponent = forwardRef<IRef>((_props, ref) => {
+    const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
+    const getFilesUploaded = () => {
+        return filesUploadData;
+    }
+    useImperativeHandle(ref, () => ({
+        getFilesUploaded: getFilesUploaded
+    }));
+    return (
+        <div className="full-width">
+            <span className="text-black biggest bold" onClick={() => console.log(filesUploadData)}>Adjuntar archivos</span>
+            <div style={{ marginTop: "20px" }}>
+                <UploadComponent
+                    id="fileList"
+                    setFilesData={setFilesUploadData}
+                    filesAccept="*"
+                    maxSize={20971520}
+                    dropboxMessage="Arrastra y suelta el archivo aquí"
+                    multiple
+                />
+            </div>
+        </div>
+    )
+});*/
 
 export default React.memo(ProjectsPage);

@@ -252,7 +252,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     margin-bottom: 1.5rem;
 }
 
-.div-validation-check{
+.div-validation-check {
     margin-bottom: 1.3rem;
 }
 
@@ -502,6 +502,55 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     justify-content: center;
     padding: 25px 5%;
     position: relative;
+}
+
+.upload-files-modal {
+    width: 21rem;
+    padding: 1rem;
+}
+
+.upload-files-header {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .progress-size {
+        display: flex;
+        align-items: center;
+
+        .total-size {
+            margin-right: 0.3rem;
+            font-size: 0.7rem;
+        }
+    }
+}
+
+.upload-files-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 0px !important;
+
+    .file-icon {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .file-properties {
+        display: flex;
+        align-items: center;
+        .file-name {
+            font-size: 0.6rem;
+            text-align: center;
+            margin-left: 0.5rem;
+        }
+    }
+
+    .file-size {
+        background-color: $main-color;
+        font-size: 0.6rem;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -861,5 +910,18 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         grid-template-columns: 10rem 10rem;
         justify-content: end;
         column-gap: 0rem;
+    }
+
+    .upload-files-header {
+        .progress-size {
+            .total-size {
+                margin-right: 0.5rem;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    .upload-files-item {
+        padding: 0.5rem 0.5rem;
     }
 }

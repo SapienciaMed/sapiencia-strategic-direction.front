@@ -29,7 +29,7 @@ function useCrudService<T>(baseUrl: string) {
         {} as T,
         EResponseCodes.FAIL,
         JSON.parse(error?.response?.request?.response)?.operation?.message ||
-          errorMessage
+        errorMessage
       );
     }
   };
@@ -56,7 +56,7 @@ function useCrudService<T>(baseUrl: string) {
         {} as T,
         EResponseCodes.FAIL,
         JSON.parse(error?.response?.request?.response)?.operation?.message ||
-          errorMessage
+        errorMessage
       );
     }
   };
@@ -83,7 +83,7 @@ function useCrudService<T>(baseUrl: string) {
         {} as T,
         EResponseCodes.FAIL,
         JSON.parse(error?.response?.request?.response)?.operation?.message ||
-          errorMessage
+        errorMessage
       );
     }
   };
@@ -108,11 +108,34 @@ function useCrudService<T>(baseUrl: string) {
         {} as T,
         EResponseCodes.FAIL,
         JSON.parse(error?.response?.request?.response)?.operation?.message ||
-          errorMessage
+        errorMessage
       );
     }
   };
 
-  return { post, get, put, deleted };
+  const formData = async <T>(
+    endpoint: string,
+    data: object
+  ): Promise<ApiResponse<T>> => {
+    const form = new FormData();
+    Reflect.ownKeys(data).forEach(key => form.append(key.toString(), data[key]));
+    try {
+      return await api({
+        method: "post",
+        headers: { 'content-type': 'multipart/form-data;' },
+        url: `${endpoint}`,
+        data: [form]
+      });
+    } catch (error) {
+      return new ApiResponse(
+        {} as T,
+        EResponseCodes.FAIL,
+        JSON.parse(error?.response?.request?.response)?.operation?.message ||
+        errorMessage
+      );
+    }
+  }
+
+  return { post, get, put, deleted, formData };
 }
 export default useCrudService;
