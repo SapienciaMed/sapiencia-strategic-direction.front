@@ -86,7 +86,8 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`;
+                window.open(pdfUrl, "_blank");
             },
             hideRow: (row) => !(row.status === 2 || row.status === 4)
         },
