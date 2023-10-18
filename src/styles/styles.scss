@@ -507,49 +507,54 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 .upload-files-modal {
     width: 21rem;
     padding: 1rem;
-}
+    max-height: 80vh;
 
-.upload-files-header {
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .progress-size {
+    .upload-files-header {
+        background-color: transparent;
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
-        .total-size {
-            margin-right: 0.3rem;
-            font-size: 0.7rem;
+        .progress-size {
+            display: flex;
+            align-items: center;
+
+            .total-size {
+                margin-right: 0.3rem;
+                font-size: 0.7rem;
+            }
         }
     }
-}
 
-.upload-files-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0px 0px !important;
-
-    .file-icon {
-        height: 2rem;
-        width: 2rem;
-    }
-
-    .file-properties {
+    .upload-files-item {
         display: flex;
         align-items: center;
-        .file-name {
+        justify-content: space-between;
+        padding: 0px 0px !important;
+        margin: 1rem 0px;
+
+        .file-icon {
+            height: 2rem;
+            width: 2rem;
+        }
+
+        .file-properties {
+            display: flex;
+            align-items: center;
+            width: 9rem;
+
+            .file-name {
+                font-size: 0.6rem;
+                text-align: center;
+                margin-left: 0.5rem;
+                width: 100%;
+            }
+        }
+
+        .file-size {
+            background-color: $main-color;
             font-size: 0.6rem;
-            text-align: center;
-            margin-left: 0.5rem;
         }
-    }
-
-    .file-size {
-        background-color: $main-color;
-        font-size: 0.6rem;
     }
 }
 
@@ -912,16 +917,39 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 0rem;
     }
 
-    .upload-files-header {
-        .progress-size {
-            .total-size {
-                margin-right: 0.5rem;
-                font-size: 1rem;
+    .upload-files-modal {
+        width: 37rem;
+        max-height: 70vh;
+        .upload-files-header {
+            .progress-size {
+                .total-size {
+                    margin-right: 0.5rem;
+                    font-size: 1rem;
+                }
+            }
+        }
+
+        .upload-files-item {
+            padding: 0.5rem 0.5rem;
+
+            .file-icon {
+                height: 4rem;
+                width: 4rem;
+            }
+
+            .file-properties {
+                width: 20rem;
+    
+                .file-name {
+                    font-size: 1rem;
+                    margin-left: 0.5rem;
+                }
+            }
+
+            .file-size {
+                font-size: 0.7rem;
             }
         }
     }
 
-    .upload-files-item {
-        padding: 0.5rem 0.5rem;
-    }
 }

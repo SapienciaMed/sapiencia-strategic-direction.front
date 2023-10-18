@@ -6,8 +6,19 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { trashIcon } from "./icons/trash";
 import { clip } from "./icons/clip";
 import { imagesicon } from "./icons/images";
-import { fileIcon } from "./icons/file-icon";
+import { pdfIcon } from "./icons/pdf-icon";
+import { xlsxIcon } from "./icons/xlsx-icon";
+import { xlsIcon } from "./icons/xls-icon";
+import { docxIcon } from "./icons/docx-icon";
 import { Tag } from 'primereact/tag';
+
+const fileIcon = {
+  pdf: pdfIcon,
+  xls: xlsIcon,
+  xlsx: xlsxIcon,
+  docx: docxIcon,
+  doc: docxIcon
+}
 
 interface IProps {
   id: string;
@@ -20,7 +31,8 @@ interface IProps {
     choose: string;
     upload: string;
     cancel: string;
-  }
+  },
+  autoClean?: boolean;
 }
 
 export const UploadComponent = ({
@@ -28,9 +40,10 @@ export const UploadComponent = ({
   setFilesData,
   filesAccept,
   maxSize,
-  multiple = true,
+  multiple = false,
   dropboxMessage = "",
-  buttonsTitle = { choose: "Adjuntar", upload: "Cargar", cancel: "Eliminar" }
+  buttonsTitle = { choose: "Adjuntar", upload: "Cargar", cancel: "Eliminar" },
+  autoClean = false
 }: IProps) => {
   const [totalSize, setTotalSize] = useState(0);
 
@@ -42,8 +55,17 @@ export const UploadComponent = ({
     let _totalSize = totalSize;
     let files = e.files;
     Object.keys(files).forEach((key) => {
-      _totalSize += files[key].size || 0;
-      filesArr.push(files[key]);
+      const fileName = files[key].name.split(".");
+      const extension = fileName[fileName.length - 1];
+      const accepted = filesAccept.split(",");
+      const validateExtension = accepted.find(item => item.trim() === extension);
+      if (validateExtension || filesAccept === "*") {
+        const validateTotal = _totalSize + files[key].size || 0;
+        if (validateTotal <= maxSize) {
+          _totalSize += validateTotal;
+          filesArr.push(files[key]);
+        }
+      };
     });
     setTotalSize(_totalSize);
     setFilesData(filesArr);
@@ -93,12 +115,21 @@ export const UploadComponent = ({
     );
   };
 
-  const itemTemplate = (inFile: object, props: ItemTemplateOptions) => {
+  const itemTemplate = (inFile: any, props: ItemTemplateOptions) => {
     const file = inFile as File;
+    const fileName = file.name.split(".");
+    const extension = fileName[fileName.length - 1];
+    let icon;
+    if (Reflect.ownKeys(fileIcon).includes(extension)) {
+      icon = fileIcon[extension];
+    } else if (extension !== "png" && extension !== "jpg") {
+      onTemplateRemove(file, props.onRemove);
+      return;
+    }
     return (
       <div className="upload-files-item">
         <div className="file-properties">
-          <i>{fileIcon}</i>
+          {extension === "png" || extension === "jpg" ? <img alt={file.name} role="presentation" src={inFile.objectURL} className="file-icon" /> : <i>{icon}</i>}
           <span className="file-name">{file.name}</span>
         </div>
         <Tag value={props.formatSize} className="file-size" />
@@ -155,7 +186,9 @@ export const UploadComponent = ({
 
   useEffect(() => {
     return () => {
-      clearFile();
+      if (autoClean) {
+        clearFile();
+      }
     }
   }, []);
 
@@ -182,6 +215,8 @@ export const UploadComponent = ({
         chooseOptions={chooseOptions}
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
+        invalidFileSizeMessageDetail=""
+        invalidFileSizeMessageSummary="Tamaño de archivo no válido"
       />
     </>
   );

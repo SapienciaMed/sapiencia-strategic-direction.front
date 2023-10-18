@@ -19,7 +19,6 @@ import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
 
 export function useProjectsData() {
-    const uploadFilesRef = useRef(null);
     const tableComponentRef = useRef(null);
     const [ready, setReady] = useState<boolean>(false);
     const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -176,7 +175,7 @@ export function useProjectsData() {
             hideRow: (row) => !(row.status === 2 || row.status === 3)
         },
         {
-            customIcon: (row) => {
+            customIcon: () => {
                 return (
                     <>
                         <Tooltip target=".edit-tooltip" />
@@ -192,11 +191,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                setMessage({
-                    show: true,
-                    OkTitle: "hola",
-                    cancelTitle: "test"
-                })
+
             },
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3)
         },
@@ -234,50 +229,61 @@ export function useProjectsData() {
     }, [ready]);
 
     const uploadFiles = () => {
-        const form = new FormData();
-        const files = filesUploadData;
-        files.forEach(file => {
-            form.append('files', file);
-        });
-        const options = {
-            method: 'POST',
-            url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-            headers: { 'content-type': 'multipart/form-data' },
-            data: form,
-        };
-        axios.request(options).then(response => {
-            const data: ApiResponse<boolean> = response.data;
-            if (data.operation.code === EResponseCodes.OK) {
-                setFilesUploadData([]);
-                setShowDialog(false);
-                setMessage({
-                    background: true,
-                    show: true,
-                    title: "Adjuntos del proyecto",
-                    description: "¡Archivos guardados exitosamente!",
-                    OkTitle: "Cerrar",
+        setShowDialog(false);
+        setMessage({
+            title: "Adjuntar archivos",
+            description: "¿Deseas adjuntar los archivos seleccionados al proyecto?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onOk: () => {
+                const form = new FormData();
+                const files = filesUploadData;
+                files.forEach(file => {
+                    form.append('files', file);
                 });
-            } else {
-                setFilesUploadData([]);
-                setShowDialog(false);
-                setMessage({
-                    background: true,
-                    show: true,
-                    title: "Adjuntos del proyecto",
-                    description: data.operation.message,
-                    OkTitle: "Cerrar"
+                const options = {
+                    method: 'POST',
+                    url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
+                    headers: { 'content-type': 'multipart/form-data' },
+                    data: form,
+                };
+                axios.request(options).then(response => {
+                    const data: ApiResponse<boolean> = response.data;
+                    if (data.operation.code === EResponseCodes.OK) {
+                        setFilesUploadData([]);
+                        setMessage({
+                            background: true,
+                            show: true,
+                            title: "Adjuntos del proyecto",
+                            description: "¡Archivos guardados exitosamente!",
+                            OkTitle: "Cerrar",
+                        });
+                    } else {
+                        setFilesUploadData([]);
+                        setMessage({
+                            background: true,
+                            show: true,
+                            title: "Adjuntos del proyecto",
+                            description: data.operation.message,
+                            OkTitle: "Cerrar"
+                        });
+                    }
+                }).catch(err => {
+                    setMessage({
+                        background: true,
+                        show: true,
+                        title: "Adjuntos del proyecto",
+                        description: String(err),
+                        OkTitle: "Cerrar"
+                    })
                 });
+            },
+            onCancel: () => {
+                setMessage({});
             }
-        }).catch(err => {
-            setShowDialog(false);
-            setMessage({
-                background: true,
-                show: true,
-                title: "Adjuntos del proyecto",
-                description: String(err),
-                OkTitle: "Cerrar"
-            })
-        });
+        })
     }
 
     return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles };
