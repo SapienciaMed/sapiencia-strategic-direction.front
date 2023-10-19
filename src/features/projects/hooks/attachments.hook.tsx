@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { useProjectsService } from "./projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -6,13 +6,16 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { DateTime } from "luxon";
 import { AiOutlineDownload } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 export default function useAttachmentsData(idProject: string) {
     const [bpin, setBPIN] = useState<string>(null);
     const [project, setProject] = useState<string>(null);
     const [tableData, setTableData] = useState<IFiles[]>([]);
+    const [deletedFiles, setDeletedFiles] = useState<string[]>([]);
     const { setMessage, authorization } = useContext(AppContext);
     const { GetProjectById, GetProjectFiles, DeleteFileProject } = useProjectsService();
+    const navigate = useNavigate();
     const tableColumns: ITableElement<IFiles>[] = [
         {
             fieldName: "name",
@@ -90,29 +93,15 @@ export default function useAttachmentsData(idProject: string) {
                         setMessage({});
                     },
                     onOk: () => {
-                        DeleteFileProject(row.path).then(response => {
-                            if (response.operation.code === EResponseCodes.OK) {
-                                setMessage({});
-                                loadTable();
-                            } else {
-                                setMessage({
-                                    title: "Eliminar adjunto",
-                                    description: response.operation.message,
-                                    background: true,
-                                    show: true,
-                                    OkTitle: "Aceptar",
-                                    onOk: () => {
-                                        setMessage({});
-                                    },
-                                    onCancel: () => {
-                                        setMessage({});
-                                    },
-                                })
-                            }
-                        }).catch(err => console.log(err));
+                        if(!deletedFiles.includes(row.path)) setDeletedFiles(prev => {
+                            return prev.concat([row.path]);
+                        })
+                        setTableData(prev => {
+                            return prev.filter(item => item.path !== row.path);
+                        })
+                        setMessage({});
                     }
                 })
-
             }
         }
     ];
@@ -130,6 +119,69 @@ export default function useAttachmentsData(idProject: string) {
                 });
             }
         }).catch(err => console.log(err));
+    }
+    const onCancel = () => {
+        if(deletedFiles.length > 0) {
+            setMessage({
+                title: "Cancelar acción",
+                description: "¿Deseas cancelar la acción?",
+                background: true,
+                show: true,
+                OkTitle: "Aceptar",
+                cancelTitle: "Cancelar",
+                onOk: () => {
+                    navigate("./../..");
+                    setMessage({});
+                },
+                onCancel: () => {
+                    setMessage({});
+                }
+            })
+        } else {
+            navigate("./../..");
+        }
+    }
+    const onSubmit = () => {
+        setMessage({
+            title: "Guardar cambios",
+            description: "¿Deseas guardar los cambios?",
+            background: true,
+            show: true,
+            OkTitle: "Aceptar",
+            cancelTitle: "Cancelar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                DeleteFileProject(deletedFiles).then(response => {
+                    if (response.operation.code === EResponseCodes.OK) {
+                        setMessage({
+                            title: "Guardar cambios",
+                            description: "¡Cambios guardados exitosamente!",
+                            background: true,
+                            show: true,
+                            OkTitle: "Aceptar",
+                            onOk: () => {
+                                setMessage({});
+                                navigate("./../..");
+                            }
+                        })
+                        loadTable();
+                    } else {
+                        setMessage({
+                            title: "Eliminar adjunto",
+                            description: response.operation.message,
+                            background: true,
+                            show: true,
+                            OkTitle: "Aceptar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                        })
+                    }
+                }).catch(err => console.log(err));
+            }
+        })
     }
     useEffect(() => {
         if (!idProject) return;
@@ -149,5 +201,5 @@ export default function useAttachmentsData(idProject: string) {
         }).catch(err => console.log(err));
         loadTable();
     }, [idProject]);
-    return { tableData, tableColumns, tableActions, bpin, project };
+    return { tableData, tableColumns, tableActions, bpin, project, onCancel, onSubmit };
 }

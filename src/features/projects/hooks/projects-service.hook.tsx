@@ -47,9 +47,9 @@ export function useProjectsService() {
         return get(`${projectsUrl}${endpoint}`);
     }
 
-    async function DeleteFileProject(fileName: string): Promise<ApiResponse<boolean>>{
+    async function DeleteFileProject(fileName: string[]): Promise<ApiResponse<boolean>>{
         const endpoint: string = `/files/delete-file`;
-        return post(`${projectsUrl}${endpoint}`, {fileName: fileName});
+        return post(`${projectsUrl}${endpoint}`, {fileName: JSON.stringify(fileName)});
     }
 
     return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject }

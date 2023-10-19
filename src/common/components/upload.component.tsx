@@ -62,7 +62,6 @@ export const UploadComponent = ({
       const validateExtension = accepted.find(item => item.trim() === extension);
       if (validateExtension || filesAccept === "*") {
         _totalSize = _totalSize + files[key].size || 0;
-        debugger
         if (_totalSize <= maxSize) {
           filesArr.push(files[key]);
         } else {
