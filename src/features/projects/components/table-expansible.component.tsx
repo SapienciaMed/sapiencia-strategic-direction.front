@@ -15,7 +15,7 @@ import { AiOutlineEye } from "react-icons/ai";
 interface IProps<T> {
     columns: ITableElement<T>[];
     actions?: ITableAction<T>[];
-    data?: any[];
+    data?: T[];
     widthTable?: string;
     hidePagination?: boolean;
     horizontalScroll?: boolean;

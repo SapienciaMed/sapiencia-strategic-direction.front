@@ -32,7 +32,7 @@ import { AppContext } from "../contexts/app.context";
 import { AiOutlineEye } from "react-icons/ai";
 
 interface IProps<T> {
-  url: string;
+  url?: string;
   emptyMessage?: string;
   title?: string;
   columns: ITableElement<T>[];
@@ -41,6 +41,7 @@ interface IProps<T> {
   isShowModal: boolean;
   titleMessageModalNoResult?: string;
   descriptionModalNoResult?: string;
+  data?: T[];
 }
 
 interface IRef {
@@ -57,6 +58,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
     isShowModal,
     emptyMessage = "No hay resultados.",
     descriptionModalNoResult = "No hay resultado para la búsqueda",
+    data = []
   } = props;
 
   // States
@@ -86,36 +88,39 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
       setSearchCriteria(newSearchCriteria);
     }
     const body = newSearchCriteria || searchCriteria || {};
-    const res = await post<IPagingData<any>>(url, {
-      ...body,
-      page: currentPage || 1,
-      perPage: perPage,
-    });
-    if (res.operation.code === EResponseCodes.OK) {
-      setResultData(res.data);
-
-      if (res.data.array.length <= 0 && isShowModal) {
+    if(url) {
+      const res = await post<IPagingData<any>>(url, {
+        ...body,
+        page: currentPage || 1,
+        perPage: perPage,
+      });
+      if (res.operation.code === EResponseCodes.OK) {
+        setResultData(res.data);
+  
+        if (res.data.array.length <= 0 && isShowModal) {
+          setMessage({
+            title: `${titleMessageModalNoResult || ""}`,
+            show: true,
+            description: descriptionModalNoResult,
+            OkTitle: "Cerrar",
+            background: true,
+          });
+        }
+      } else {
         setMessage({
-          title: `${titleMessageModalNoResult || ""}`,
+          title: `Error en la consulta de datos`,
           show: true,
-          description: descriptionModalNoResult,
+          description: res.operation.message,
           OkTitle: "Cerrar",
           background: true,
+          onOk: () => {
+            setMessage({});
+          },
         });
       }
     } else {
-      setMessage({
-        title: `Error en la consulta de datos`,
-        show: true,
-        description: res.operation.message,
-        OkTitle: "Cerrar",
-        background: true,
-        onOk: () => {
-          setMessage({});
-        },
-      });
+      setResultData(null);
     }
-
     setLoading(false);
   }
 
@@ -196,7 +201,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         template={paginatorHeader}
         first={first}
         rows={perPage}
-        totalRecords={resultData?.meta?.total || 0}
+        totalRecords={resultData?.meta?.total || data?.length ||0}
         onPageChange={onPageChange}
         leftContent={leftContent(title)}
       />
@@ -204,7 +209,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
       {width > 830 ? (
         <DataTable
           className="spc-table full-height"
-          value={resultData?.array || []}
+          value={resultData?.array || [...data].slice(perPage * page, (perPage * page) + perPage) || []}
           loading={loading}
           scrollable={true}
           emptyMessage={emptyMessage}
@@ -233,7 +238,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         </DataTable>
       ) : (
         <DataView
-          value={resultData?.array || []}
+          value={resultData?.array || [...data].slice(perPage * page, (perPage * page) + perPage) || []}
           itemTemplate={mobilTemplate}
           rows={5}
           emptyMessage={emptyMessage}
@@ -244,7 +249,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         template={paginatorFooter}
         first={first}
         rows={perPage}
-        totalRecords={resultData?.meta?.total || 0}
+        totalRecords={resultData?.meta?.total || data?.length || 0}
         onPageChange={onPageChange}
       />
     </div>
@@ -389,7 +394,7 @@ const ActionComponent = (props: {
   actions: ITableAction<any>[];
 }): React.JSX.Element => {
   const actions = props.actions.filter(action => {
-    return !action.hideRow(props.row)
+    return action.hideRow ? !action.hideRow(props.row) : true;
   });
   return (
     <div className="spc-table-action-button">

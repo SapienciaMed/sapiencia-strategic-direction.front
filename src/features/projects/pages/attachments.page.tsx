@@ -6,7 +6,7 @@ import useAttachmentsData from "../hooks/attachments.hook";
 
 function AttachmentsPage(): React.JSX.Element {
     const { id } = useParams();
-    const { tableComponentRef, tableColumns, tableActions } = useAttachmentsData(id);
+    const { tableData, tableColumns, tableActions, bpin, project } = useAttachmentsData(id);
     return (
         <div className='main-page'>
             <div className='card-table'>
@@ -22,29 +22,28 @@ function AttachmentsPage(): React.JSX.Element {
                         </div>
                         <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
                             <InputComponent
-                                id={""}
-                                idInput={""}
-                                value={""}
+                                idInput={"bpin"}
+                                value={bpin}
                                 label="BPIN"
                                 className="input-basic"
                                 classNameLabel="text-black biggest bold"
                                 typeInput={"text"}
+                                disabled
                             />
                             <InputComponent
-                                id={""}
-                                idInput={""}
-                                value={""}
+                                idInput={"project"}
+                                value={project}
                                 label="Nombre del proyecto"
                                 className="input-basic"
                                 classNameLabel="text-black biggest bold"
                                 typeInput={"text"}
+                                disabled
                             />
                         </div>
                     </div>
                     <div className="card-table">
                         <TableComponent
-                            ref={tableComponentRef}
-                            url={`${process.env.urlApiStrategicDirection}/api/v1/project/get-project-paginated`}
+                            data={tableData}
                             columns={tableColumns}
                             actions={tableActions}
                             isShowModal={true}

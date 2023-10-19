@@ -1,5 +1,6 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
+import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { IProject, IProjectTemp } from "../interfaces/ProjectsInterfaces";
 
@@ -10,6 +11,16 @@ export function useProjectsService() {
 
     async function GetProjectByUser(user: string): Promise<ApiResponse<IProject>> {
         const endpoint: string = `/get-by-user/${user}`;
+        return get(`${projectsUrl}${endpoint}`);
+    }
+
+    async function GetProjectById(idProject: string): Promise<ApiResponse<IProject>> {
+        const endpoint: string = `/get-by-id/${idProject}`;
+        return get(`${projectsUrl}${endpoint}`);
+    }
+
+    async function GetProjectFiles(idProject: string): Promise<ApiResponse<IFiles[]>> {
+        const endpoint: string = `/files/get-by-project/${idProject}`;
         return get(`${projectsUrl}${endpoint}`);
     }
 
@@ -36,5 +47,10 @@ export function useProjectsService() {
         return get(`${projectsUrl}${endpoint}`);
     }
 
-    return { GetProjectByUser, CreateProject, UpdateProject, DeleteProject, GetAllStatus }
+    async function DeleteFileProject(fileName: string): Promise<ApiResponse<boolean>>{
+        const endpoint: string = `/files/delete-file`;
+        return post(`${projectsUrl}${endpoint}`, {fileName: fileName});
+    }
+
+    return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject }
 }
