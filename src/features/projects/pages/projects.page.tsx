@@ -133,34 +133,4 @@ function ProjectsPage(): React.JSX.Element {
     )
 }
 
-interface IRef {
-    getFilesUploaded: () => File[];
-}
-
-
-/*const UploadFilesComponent = forwardRef<IRef>((_props, ref) => {
-    const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
-    const getFilesUploaded = () => {
-        return filesUploadData;
-    }
-    useImperativeHandle(ref, () => ({
-        getFilesUploaded: getFilesUploaded
-    }));
-    return (
-        <div className="full-width">
-            <span className="text-black biggest bold" onClick={() => console.log(filesUploadData)}>Adjuntar archivos</span>
-            <div style={{ marginTop: "20px" }}>
-                <UploadComponent
-                    id="fileList"
-                    setFilesData={setFilesUploadData}
-                    filesAccept="*"
-                    maxSize={20971520}
-                    dropboxMessage="Arrastra y suelta el archivo aquí"
-                    multiple
-                />
-            </div>
-        </div>
-    )
-});*/
-
 export default React.memo(ProjectsPage);

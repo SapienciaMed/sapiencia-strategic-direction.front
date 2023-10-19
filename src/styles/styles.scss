@@ -504,6 +504,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     position: relative;
 }
 
+.strategic-direction-attachments-form {
+    display: grid;
+    row-gap: 2rem;
+}
+
 .upload-files-modal {
     width: 21rem;
     padding: 1rem;

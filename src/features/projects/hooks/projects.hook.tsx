@@ -26,9 +26,9 @@ export function useProjectsData() {
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage } = useContext(AppContext);
-    const navigate = useNavigate();
     const { GetAllStatus } = useProjectsService();
     const resolver = useYupValidationResolver(projectsValidator);
+    const navigate = useNavigate();
     const {
         handleSubmit,
         register,
@@ -110,7 +110,7 @@ export function useProjectsData() {
                 setShowDialog(true);
                 setSelectedRow(row);
             },
-            hideRow: (row) => (row.status === 2 || row.status === 3)
+            hideRow: (row) => !(row.status === 2 || row.status === 3)
         },
         {
             customIcon: (row) => {
@@ -129,7 +129,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                navigate(`adjuntos/${row.id}`);
             },
             hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4)
         },

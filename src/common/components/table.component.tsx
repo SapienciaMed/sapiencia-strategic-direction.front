@@ -49,7 +49,7 @@ interface IRef {
 
 const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
   const {
-    title,
+    title = "Resultados de búsqueda",
     columns,
     actions,
     url,
@@ -162,7 +162,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         <div className="card-footer-strategic-direction">
           {actionsMob.map((action, index) => {
             return (
-              <div key={index} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
+              <div key={index} onClick={() => action.onClick(item)} style={{ margin: "0px 0.3rem" }}>
                 {action.customIcon ? (
                   <div className="button grid-button button-link">
                     {action.customIcon(item)}
@@ -191,8 +191,6 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
 
   return (
     <div className="spc-common-table expansible">
-      {title && <div className="spc-table-title">{title}</div>}
-
       <Paginator
         className="between spc-table-paginator"
         template={paginatorHeader}
@@ -200,7 +198,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
         rows={perPage}
         totalRecords={resultData?.meta?.total || 0}
         onPageChange={onPageChange}
-        leftContent={leftContent}
+        leftContent={leftContent(title)}
       />
 
       {width > 830 ? (
@@ -285,11 +283,13 @@ function getIconElement(icon: string, element: "name" | "src") {
   }
 }
 
-const leftContent = (
-  <p className="header-information text-black bold biggest">
-    Resultados de búsqueda
-  </p>
-);
+const leftContent = (title) => {
+  return (
+    <p className="header-information text-black bold biggest">
+      {title}
+    </p>
+  )
+};
 
 const paginatorHeader: PaginatorTemplateOptions = {
   layout: "CurrentPageReport RowsPerPageDropdown",
@@ -394,7 +394,7 @@ const ActionComponent = (props: {
   return (
     <div className="spc-table-action-button">
       {actions.map((action, index) => {
-        if(!action) return;
+        if (!action) return;
         return (
           <div
             style={{ display: action.hide ? "none" : "block" }}

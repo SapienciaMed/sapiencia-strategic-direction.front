@@ -49,6 +49,7 @@ export const UploadComponent = ({
 
   const toast = useRef(null);
   const fileUploadRef = useRef(null);
+  const [filesComponent, setFilesComponent] = useState<File[]>([])
 
   const onTemplateSelect = (e) => {
     const filesArr: File[] = [];
@@ -60,15 +61,18 @@ export const UploadComponent = ({
       const accepted = filesAccept.split(",");
       const validateExtension = accepted.find(item => item.trim() === extension);
       if (validateExtension || filesAccept === "*") {
-        const validateTotal = _totalSize + files[key].size || 0;
-        if (validateTotal <= maxSize) {
-          _totalSize += validateTotal;
+        _totalSize = _totalSize + files[key].size || 0;
+        debugger
+        if (_totalSize <= maxSize) {
           filesArr.push(files[key]);
+        } else {
+          _totalSize = _totalSize - files[key].size || 0;
         }
       };
     });
     setTotalSize(_totalSize);
-    setFilesData(filesArr);
+    setFilesData(filesArr.concat(filesComponent.filter(item => !filesArr.find(fil => fil === item))));
+    setFilesComponent(filesArr.concat(filesComponent.filter(item => !filesArr.find(fil => fil === item))));
   };
 
   const onTemplateUpload = (e) => {
@@ -124,6 +128,9 @@ export const UploadComponent = ({
       icon = fileIcon[extension];
     } else if (extension !== "png" && extension !== "jpg") {
       onTemplateRemove(file, props.onRemove);
+      return;
+    }
+    if(!filesComponent.find(item => item === file)) {
       return;
     }
     return (
@@ -216,7 +223,7 @@ export const UploadComponent = ({
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
         invalidFileSizeMessageDetail=""
-        invalidFileSizeMessageSummary="Tamaño de archivo no válido"
+        invalidFileSizeMessageSummary="Tamaño del archivo. El archivo seleccionado excede el tamaño permitido, por favor verifique."
       />
     </>
   );
