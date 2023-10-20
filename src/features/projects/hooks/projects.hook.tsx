@@ -119,7 +119,7 @@ export function useProjectsData() {
                         <Tooltip target=".download-attach-tooltip" />
                         <div
                             className="download-attach-tooltip"
-                            data-pr-tooltip="Descargar adjuntos"
+                            data-pr-tooltip="Descargar ficha"
                             data-pr-position="bottom"
                             style={{ 'color': '#FF7D06' }}
                         >
@@ -129,9 +129,9 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                navigate(`adjuntos/${row.id}`);
+
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4)
+            hideRow: (row) => !(row.status === 2 || row.status === 4)
         },
         {
             customIcon: (row) => {
@@ -140,7 +140,7 @@ export function useProjectsData() {
                         <Tooltip target=".download-file-tooltip" />
                         <div
                             className="download-file-tooltip"
-                            data-pr-tooltip="Descargar ficha"
+                            data-pr-tooltip="Descargar adjuntos"
                             data-pr-position="bottom"
                             style={{ 'color': '#058CC1' }}
                         >
@@ -150,9 +150,9 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                navigate(`adjuntos/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4)
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4)
         },
         {
             customIcon: (row) => {
