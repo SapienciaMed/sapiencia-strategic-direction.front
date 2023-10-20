@@ -8,8 +8,8 @@ import LogicFrameComponent from "../components/logicFrame.component";
 import IndicatorsFormComponent from "../components/indicators.component";
 import { profitsIncomeFormValidator, sourceFundingValidator, indicatorsFormValidator, needsValidator, riskValidator, technicalAnalysisValidator, logicFrameFormValidator } from "../../../common/schemas";
 
-
 function ProgramationPage(): React.JSX.Element {
+    
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)

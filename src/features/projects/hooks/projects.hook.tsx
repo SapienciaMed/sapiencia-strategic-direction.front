@@ -191,7 +191,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                navigate(`./edit/${row.id}`);
             },
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3)
         },

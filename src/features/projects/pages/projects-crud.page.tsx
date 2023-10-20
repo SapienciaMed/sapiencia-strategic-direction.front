@@ -4,7 +4,20 @@ import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-    const { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel } = useProjectsCrudData();
+
+    const { tabs, 
+            tabsComponentRef, 
+            disableContinue, 
+            actionContinue, 
+            onSaveTemp, 
+            setMessage, 
+            navigate, 
+            actionCancel, 
+            textContinue, 
+            DeleteProject, 
+            projectData, 
+            showCancel } = useProjectsCrudData();
+            
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">

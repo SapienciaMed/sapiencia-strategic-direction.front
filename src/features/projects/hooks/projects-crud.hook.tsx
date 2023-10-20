@@ -12,6 +12,7 @@ import ProgramationPage from "../pages/programation.page";
 import TransferPage from "../pages/transfer.page";
 
 export function useProjectsCrudData() {
+
     const tabsComponentRef = useRef(null);
     const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue, setTextContinue, setActionCancel, setActionContinue, showCancel } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
@@ -19,7 +20,7 @@ export function useProjectsCrudData() {
     const navigate = useNavigate();
     const tabs: ITabsMenuTemplate[] = [
         {
-            id: "register", title: "1. Registro", content: <RegisterPage />, action: () => {
+            id: "register", title: "1. Registro", content: <RegisterPage/>, action: () => {
                 setStep(0);
                 setTextContinue(null);
                 setActionCancel(null);
@@ -28,7 +29,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "identification", title: "2. Identificación", content: <IdentificationPage />, action: () => {
+            id: "identification", title: "2. Identificación", content: <IdentificationPage/>, action: () => {
                 setStep(1)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -37,7 +38,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "preparation", title: "3. Preparación", content: <PreparationPage />, action: () => {
+            id: "preparation", title: "3. Preparación", content: <PreparationPage/>, action: () => {
                 setStep(2)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -46,7 +47,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "programation", title: "4. Programación", content: <ProgramationPage />, action: () => {
+            id: "programation", title: "4. Programación", content: <ProgramationPage/>, action: () => {
                 setStep(3)
                 setTextContinue(null);
                 setActionCancel(null);
@@ -55,7 +56,7 @@ export function useProjectsCrudData() {
             }
         },
         {
-            id: "transfer", title: "5. Flujo del proyecto", content: <TransferPage />, action: () => {
+            id: "transfer", title: "5. Flujo del proyecto", content: <TransferPage/>, action: () => {
                 setStep(4)
                 setTextContinue(null);
                 setActionCancel(null);

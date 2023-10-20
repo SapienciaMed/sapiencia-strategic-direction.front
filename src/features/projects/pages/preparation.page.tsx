@@ -11,6 +11,7 @@ import RisksComponent from "../components/risks.component";
 import { activitiesValidator, capacityValidator, environmentalAnalysisValidator, needsValidator, riskValidator, technicalAnalysisValidator } from "../../../common/schemas";
 
 function PreparationPage(): React.JSX.Element {
+    
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)

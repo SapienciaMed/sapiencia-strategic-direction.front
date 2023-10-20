@@ -36,9 +36,9 @@ function App() {
               <Route path={"/direccion-estrategica/*"} element={<HomePage />} />;
               <Route path={"/direccion-estrategica/proyectos"} element={<ProjectsPage />} />;
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
-              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsContextProvider><ProjectsCrud action = "new" /></ProjectsContextProvider>} />;
+              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>} />;
               <Route path={"/direccion-estrategica/proyectos/adjuntos/:id"} element={<AttachmentsPage />} />;
-              <Route path={"/direccion-estrategica/proyectos/edit/:id"} element={<ProjectsContextProvider><ProjectsCrud action = "edit" /></ProjectsContextProvider>} />;
+              <Route path={"/direccion-estrategica/proyectos/edit/:id"} element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>} />;
             </Routes>
           </Suspense>
         </Router>

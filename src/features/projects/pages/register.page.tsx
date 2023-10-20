@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useRegisterData } from "../hooks/register.hook";
 import { Controller } from "react-hook-form";
-
-
+import { ProjectsContext } from "../contexts/projects.context";
 
 function RegisterPage(): React.JSX.Element {
     const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
+    const { formContext } = useContext(ProjectsContext);
+    
+    console.log('formContext: ', formContext );
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>

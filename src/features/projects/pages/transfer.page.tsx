@@ -4,10 +4,10 @@ import { useTransferData } from "../hooks/transfer.hook";
 import { Controller } from "react-hook-form";
 import { Checkbox } from 'primereact/checkbox';
 
-
-
 function TransferPage(): React.JSX.Element {
+
     const { register, errors, control, onSubmit, isValid,watch } = useTransferData();
+    
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>

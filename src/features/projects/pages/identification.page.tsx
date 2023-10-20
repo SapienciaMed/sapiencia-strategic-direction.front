@@ -11,8 +11,8 @@ import PoblationComponent from "../components/poblation-component";
 import { actorsValidator, objectivesValidator, planDevelopmentValidator, poblationValidator, problemDescriptionValidator } from "../../../common/schemas";
 
 
-
 function IdentificationPage(): React.JSX.Element {
+
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const disableAccordions = (ids: number[] | string[]) => {
