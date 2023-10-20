@@ -145,7 +145,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
 
   const mobilTemplate = (item) => {
     const actionsMob = props.actions.filter(action => {
-      return !action.hideRow(item)
+      return action.hideRow ? !action.hideRow(item) : true;
     });
     return (
       <div className="card-grid-item">

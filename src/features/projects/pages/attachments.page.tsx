@@ -64,7 +64,7 @@ function AttachmentsPage(): React.JSX.Element {
                     </span>
                     <ButtonComponent
                         className={`button-main huge hover-three button-save`}
-                        value={"Continuar"}
+                        value={"Guardar y regresar"}
                         type="button"
                         action={onSubmit}
                     />
