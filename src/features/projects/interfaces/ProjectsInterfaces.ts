@@ -394,13 +394,7 @@ export interface IActivitiesProject {
   activityMGA: string;
   productDescriptionMGA: string;
   activityDescriptionMGA: string;
-  budgetsMGA: {
-    id?: number;
-    activityId?: number;
-    year: number;
-    validity: number;
-    budget: number;
-  }[];
+  budgetsMGA: IBudgetMGA;
   validity: number;
   year: number;
   detailActivities: IDetailActivity[];

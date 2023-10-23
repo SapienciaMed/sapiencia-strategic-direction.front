@@ -227,8 +227,9 @@ export function ActorCreateComponent({
   useEffect(() => {
     if ( !loadedAccordionsOnEdit.includes("ActorCreateComponent") && projectDataOnEdit ) {
         const { actors } = projectDataOnEdit;
-        setValue("actors", actors );
         setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ActorCreateComponent" ]);
+        setValue("actors", actors );
+        trigger("actors");
     }
   }, [projectDataOnEdit]);
 

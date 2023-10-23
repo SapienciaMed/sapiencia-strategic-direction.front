@@ -30,7 +30,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext, setLoaded
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch
+        watch,
+        trigger
     } = useForm<IProblemDescriptionForm>({
         resolver, mode: "all", defaultValues: {
             problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
@@ -367,6 +368,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext, setLoaded
             setValue('centerProblem', centerProblem);
             setValue('causes', causes);
             setValue('effects', effects);
+            trigger();
         }
     }, [projectDataOnEdit]);
 

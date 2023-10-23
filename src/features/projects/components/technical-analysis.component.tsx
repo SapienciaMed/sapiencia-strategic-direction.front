@@ -34,7 +34,7 @@ export function TechnicalAnalysisComponent({
   loadedAccordionsOnEdit
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(technicalAnalysisValidator);
 
   const {
@@ -42,6 +42,8 @@ export function TechnicalAnalysisComponent({
     watch,
     register,
     control,
+    setValue,
+    trigger
   } = useForm<ItechnicalAnalysisForm>({
     resolver,
     mode: "all",
@@ -61,7 +63,7 @@ export function TechnicalAnalysisComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid) {
+    if (isValid || loadedAccordionsOnEdit.includes("TechnicalAnalysisComponent")) {
       enableNext();
     } else {
       disableNext();
@@ -79,6 +81,18 @@ export function TechnicalAnalysisComponent({
         return { ...prev, preparation: { ...preparation } };
       });
   }, [technicalAnalysisData]);
+
+  useEffect(() => {
+    if (!loadedAccordionsOnEdit.includes("TechnicalAnalysisComponent") && projectDataOnEdit ) {
+        const { alternative,
+                resumeAlternative 
+              } = projectDataOnEdit;
+        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "TechnicalAnalysisComponent" ])
+        setValue('alternative', alternative);
+        setValue('resumeAlternative', resumeAlternative);
+        trigger();
+    }
+  }, [projectDataOnEdit]);
 
   return (
     <FormComponent

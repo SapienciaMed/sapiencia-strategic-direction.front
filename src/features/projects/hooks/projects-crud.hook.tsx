@@ -14,7 +14,19 @@ import TransferPage from "../pages/transfer.page";
 export function useProjectsCrudData() {
 
     const tabsComponentRef = useRef(null);
-    const { step, disableContinue, actionContinue, projectData, setProjectData, setStep, actionCancel, textContinue, setTextContinue, setActionCancel, setActionContinue, showCancel } = useContext(ProjectsContext);
+    const { step, 
+            disableContinue, 
+            actionContinue, 
+            projectData, 
+            setProjectData, 
+            setStep, 
+            actionCancel, 
+            textContinue, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            showCancel,
+            formAction } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject } = useProjectsService();
     const navigate = useNavigate();
@@ -66,7 +78,7 @@ export function useProjectsCrudData() {
         }
     ];
     useEffect(() => {
-        if (tabsComponentRef.current) {
+        if (tabsComponentRef.current && formAction === "new" ) {
             tabsComponentRef.current.disableTabs(["identification", "programation", "preparation", "transfer"]);
         }
     }, []);

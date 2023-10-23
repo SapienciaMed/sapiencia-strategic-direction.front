@@ -30,7 +30,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [activitiesData, setActivitiesData] = useState<IActivitiesForm>(null);
     const [budgetsData, setBudgetsData] = useState(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel, projectDataOnEdit } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
@@ -46,7 +46,6 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
             activities: projectData?.preparation?.activities?.activities ? projectData.preparation.activities.activities : null
         }
     });
-
     const onCancel = () => {
         setMessage({
             title: "Cancelar actividad",
@@ -276,8 +275,39 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
                 year4: budget4,
             });
         }
-    }, [activities])
-
+    }, [activities]);
+    useEffect(() => {
+        if (!loadedAccordionsOnEdit.includes("ActivitiesComponent") && projectDataOnEdit ) {
+            const { activities } = projectDataOnEdit;
+            const activityData = activities.map( activity => {
+                return { ...activity, budgetsMGA: {
+                    year0: {
+                        validity: activity.budgetsMGA[0].validity || 0,
+                        budget: activity.budgetsMGA[0].budget || 0,
+                    },
+                    year1: {
+                        validity: activity.budgetsMGA[1].validity || 0,
+                        budget: activity.budgetsMGA[1].budget || 0,
+                    },
+                    year2: {
+                        validity: activity.budgetsMGA[2].validity || 0,
+                        budget: activity.budgetsMGA[2].budget || 0,
+                    },
+                    year3: {
+                        validity: activity.budgetsMGA[3].validity || 0,
+                        budget: activity.budgetsMGA[3].budget || 0,
+                    },
+                    year4: {
+                        validity: activity.budgetsMGA[4].validity || 0,
+                        budget: activity.budgetsMGA[4].budget || 0,
+                    },
+                }}
+            });
+            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ActivitiesComponent" ])
+            setValue('activities', activityData );
+            trigger();
+        }
+    }, [projectDataOnEdit]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

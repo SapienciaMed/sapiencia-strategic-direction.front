@@ -33,7 +33,8 @@ export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordio
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch
+        watch,
+        trigger
     } = useForm<IObjectivesForm>({
         resolver, mode: "all", defaultValues: {
             generalObjective: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
@@ -214,11 +215,13 @@ export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordio
 
     useEffect(() => {
         if ( !loadedAccordionsOnEdit.includes("ObjectivesComponent") && projectDataOnEdit ) {
-            const { measurement, indicators, goal } = projectDataOnEdit;
+            const { measurement, indicators, goal, centerProblem } = projectDataOnEdit;
             setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ObjectivesComponent" ]);
+            setValue("generalObjective", centerProblem );
             setValue("measurement", measurement );
             setValue("indicators", indicators );
             setValue("goal", goal );
+            trigger();
         }
     }, [projectDataOnEdit]);
 

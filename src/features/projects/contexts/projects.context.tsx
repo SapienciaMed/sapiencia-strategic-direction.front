@@ -98,7 +98,7 @@ export function ProjectsContextProvider({ children }: IProps) {
       formAction,
       projectDataOnEdit
     };
-  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel]);
+  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel, projectDataOnEdit, formAction]);
 
   return <ProjectsContext.Provider value={values}>{children}</ProjectsContext.Provider>;
 }

@@ -19,7 +19,7 @@ interface IProps {
 
 export function CapacityComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
@@ -28,6 +28,8 @@ export function CapacityComponent({ disableNext, enableNext, setLoadedAccordions
     register,
     watch,
     formState: { errors, isValid },
+    setValue,
+    trigger
   } = useForm<ICapacityForm>({
     resolver,
     mode: "all",
@@ -76,8 +78,21 @@ export function CapacityComponent({ disableNext, enableNext, setLoadedAccordions
       }
     })
   }, []);
-
-
+  useEffect(() => {
+    if (!loadedAccordionsOnEdit.includes("CapacityComponent") && projectDataOnEdit ) {
+        const { alternative, 
+                descriptionCapacity, 
+                unitCapacity, 
+                capacityGenerated 
+              } = projectDataOnEdit;
+        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "CapacityComponent" ])
+        setValue('alternativeCapacity', alternative);
+        setValue('descriptionCapacity', descriptionCapacity);
+        setValue('unitCapacity', unitCapacity);
+        setValue('capacityGenerated', capacityGenerated);
+        trigger();
+    }
+  }, [projectDataOnEdit]);
   return (
     <div className="full-height capacity-page card-table">
       <FormComponent action={undefined} className="">

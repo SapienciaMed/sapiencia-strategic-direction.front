@@ -13,13 +13,9 @@ function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep, formAction } = useContext(ProjectsContext);
     const disableAccordions = (ids: number[] | string[]) => {
-
-        if( accordionsComponentRef.current && formAction === "edit" ) return;
-
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
         }
-        
     }
     const enableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
@@ -104,6 +100,7 @@ function IdentificationPage(): React.JSX.Element {
     const nextStep = () => {
         setStep(2);
     }
+
     useEffect(() => {
         planDevelopmentValidator.validate(projectData?.identification?.planDevelopment).then(() => {
             problemDescriptionValidator.validate(projectData?.identification?.problemDescription).then(() => {

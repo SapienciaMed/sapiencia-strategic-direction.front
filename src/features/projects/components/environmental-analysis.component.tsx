@@ -23,14 +23,15 @@ interface IProps {
 export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
   const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const {
     control,
     register,
     watch,
     formState: { errors, isValid },
     setValue,
-    getValues
+    getValues,
+    trigger
   } = useForm<IEnvironmentAnalysisForm>({
     resolver, mode: "all",
     defaultValues: {
@@ -250,7 +251,15 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccord
       },
     },
   ];
-
+  useEffect(() => {
+    if (!loadedAccordionsOnEdit.includes("EnvironmentalAnalysisComponent") && projectDataOnEdit ) {
+        const { environmentDiagnosis, environmentalEffects } = projectDataOnEdit;
+        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "EnvironmentalAnalysisComponent" ])
+        setValue('environmentDiagnosis', environmentDiagnosis);
+        setValue('effects', environmentalEffects );
+        trigger();
+    }
+  }, [projectDataOnEdit]);
   return (
     <div className="environmental-analysis-page full-height card-table">
       <FormComponent action={undefined} className="">

@@ -35,6 +35,7 @@ export function PlanDevelopmentComponent({
     clearErrors,
     formState: { errors, isValid },
     watch,
+    trigger
   } = useForm<IPlanDevelopmentForm>({
     resolver,
     mode: "all",
@@ -60,7 +61,7 @@ export function PlanDevelopmentComponent({
     } else {
       disableNext();
     }
-  }, [isValid]);
+  }, [isValid ]);
 
   useEffect(() => {
     if (planDevelopmentData)
@@ -154,6 +155,7 @@ export function PlanDevelopmentComponent({
           setValue("pdi_linea", pdi_linea );
           setValue("pdi_componentes", pdi_componentes );
           setValue("pdi_programa", pdi_programa );
+          trigger();
       }
     }, [projectDataOnEdit]);
 

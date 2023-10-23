@@ -63,6 +63,7 @@ export function PoblationComponent({
     setValue,
     getValues,
     control,
+    trigger
   } = useForm<IPoblationForm>({
     resolver,
     mode: "all",
@@ -235,6 +236,7 @@ export function PoblationComponent({
         setValue("shelter", shelter );
         setValue("demographic", classifications );
         setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "PoblationComponent" ]);
+        trigger();
     }
   }, [projectDataOnEdit]);
 

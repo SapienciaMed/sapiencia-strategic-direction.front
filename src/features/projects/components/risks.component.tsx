@@ -42,7 +42,7 @@ const LevelData: IDropdownProps[] = [
 function RisksComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(riskValidator);
     const [RisksData, setRisksData] = useState<IRisks>(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, projectDataOnEdit } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
@@ -325,6 +325,14 @@ function RisksComponent({ disableNext, enableNext, setForm, setLoadedAccordionsO
             return { ...prev, preparation: { ...preparation } };
         })
     }, [RisksData]);
+    useEffect(() => {
+        if (!loadedAccordionsOnEdit.includes("RisksComponent") && projectDataOnEdit ) {
+            const { risks } = projectDataOnEdit;
+            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "RisksComponent" ])
+            setValue('risks', risks);
+            trigger();
+        }
+    }, [projectDataOnEdit]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
