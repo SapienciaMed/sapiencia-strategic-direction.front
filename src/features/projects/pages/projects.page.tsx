@@ -5,9 +5,10 @@ import { useProjectsData } from "../hooks/projects.hook";
 import TableComponent from "../../../common/components/table.component";
 import { Controller } from "react-hook-form";
 import { UploadComponent } from "../../../common/components/upload.component";
+import { Messages } from 'primereact/messages';
 
 function ProjectsPage(): React.JSX.Element {
-    const { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, control, register, statusData, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles } = useProjectsData();
+    const { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, control, register, statusData, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles, msgs, setErrores } = useProjectsData();
     return (
         <div className='main-page'>
             {showDialog && <div className="modal modal-bg is-open">
@@ -15,12 +16,14 @@ function ProjectsPage(): React.JSX.Element {
                     <div className="modal-header"></div>
                     <div className="modal-content">
                         <div className="full-width">
-                            <span className="text-black biggest bold" onClick={() => console.log(filesUploadData)}>Adjuntar archivos</span>
+                            <span className="text-black biggest bold" onClick={() => setErrores("test")}>Adjuntar archivos</span>
+                            <Messages ref={msgs} />
                             <div style={{ marginTop: "20px" }}>
                                 <UploadComponent
                                     id="fileList"
                                     setFilesData={setFilesUploadData}
-                                    filesAccept="*"
+                                    setErrores={setErrores}
+                                    filesAccept="png, jpg, pdf, docx, xls, xlsx"
                                     maxSize={20971520}
                                     dropboxMessage="Arrastra y suelta el archivo aquí"
                                     multiple

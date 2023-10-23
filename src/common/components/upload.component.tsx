@@ -23,6 +23,7 @@ const fileIcon = {
 interface IProps {
   id: string;
   setFilesData: Dispatch<SetStateAction<File[]>>;
+  setErrores?: Dispatch<SetStateAction<string>>;
   filesAccept?: string;
   maxSize?: number;
   multiple?: boolean;
@@ -38,6 +39,7 @@ interface IProps {
 export const UploadComponent = ({
   id,
   setFilesData,
+  setErrores,
   filesAccept,
   maxSize,
   multiple = false,
@@ -52,6 +54,7 @@ export const UploadComponent = ({
   const [filesComponent, setFilesComponent] = useState<File[]>([])
 
   const onTemplateSelect = (e) => {
+    setErrores("");
     const filesArr: File[] = [];
     let _totalSize = totalSize;
     let files = e.files;
@@ -60,13 +63,17 @@ export const UploadComponent = ({
       const extension = fileName[fileName.length - 1];
       const accepted = filesAccept.split(",");
       const validateExtension = accepted.find(item => item.trim() === extension);
+      debugger
       if (validateExtension || filesAccept === "*") {
         _totalSize = _totalSize + files[key].size || 0;
         if (_totalSize <= maxSize) {
           filesArr.push(files[key]);
         } else {
           _totalSize = _totalSize - files[key].size || 0;
+          setErrores("La suma de los archivos excede el tamaño permitido, por favor verifique.");
         }
+      } else {
+        setErrores(`${files[key].name}: Extensión del archivo. La extensión del archivo no es permitida, por favor verifique.`);
       };
     });
     setTotalSize(_totalSize);
@@ -222,7 +229,7 @@ export const UploadComponent = ({
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
         invalidFileSizeMessageDetail=""
-        invalidFileSizeMessageSummary="Tamaño del archivo. El archivo seleccionado excede el tamaño permitido, por favor verifique."
+        invalidFileSizeMessageSummary=""
       />
     </>
   );
