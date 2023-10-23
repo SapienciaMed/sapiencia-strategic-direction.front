@@ -53,6 +53,17 @@ function AttachmentsPage(): React.JSX.Element {
                                 title="Listado de archivos adjuntos"
                             />
                         </div>
+                        <div className="mobile-actions">
+                            <span className="bold text-center button" onClick={onCancel}>
+                                Cancelar
+                            </span>
+                            <ButtonComponent
+                                className={`button-main huge hover-three button-save`}
+                                value={"Guardar y regresar"}
+                                type="button"
+                                action={onSubmit}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

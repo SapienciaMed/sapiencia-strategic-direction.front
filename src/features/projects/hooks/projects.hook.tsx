@@ -20,6 +20,8 @@ import { ApiResponse } from "../../../common/utils/api-response";
 
 export function useProjectsData() {
     const tableComponentRef = useRef(null);
+    const msgs = useRef(null);
+    const [errores, setErrores] = useState<string>(null);
     const [ready, setReady] = useState<boolean>(false);
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
@@ -228,6 +230,15 @@ export function useProjectsData() {
         loadTableData();
     }, [ready]);
 
+    useEffect(() => {
+        msgs.current?.clear();
+        if(errores) {
+            msgs.current?.show([
+                { severity: 'error', summary: 'Error', detail: errores, sticky: true, closable: false }
+            ]);
+        }
+    }, [errores]);
+
     const uploadFiles = () => {
         setShowDialog(false);
         setMessage({
@@ -286,6 +297,6 @@ export function useProjectsData() {
         })
     }
 
-    return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles };
+    return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles, msgs, setErrores };
 }
 
