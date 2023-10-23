@@ -16,9 +16,11 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
+    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+    loadedAccordionsOnEdit: string[];
 }
 
-function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+function NeedsComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
     const [needsData, setNeedsData] = useState<INeedsForm>(null)
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);

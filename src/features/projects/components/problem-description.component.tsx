@@ -14,12 +14,14 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
     disableNext: () => void;
     enableNext: () => void;
+    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+    loadedAccordionsOnEdit: string[];
 }
 
-export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
+export function ProblemDescriptionComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit}: IProps): React.JSX.Element {
     const causesEffectsComponentRef = useRef(null);
     const [problemDescriptionData, setProblemDescriptionData] = useState<IProblemDescriptionForm>(null)
-    const { setProjectData, projectData } = useContext(ProjectsContext);
+    const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(problemDescriptionValidator);
     const {
@@ -351,6 +353,23 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
             },
         }
     ];
+
+    useEffect(() => {
+        if (!loadedAccordionsOnEdit.includes("ProblemDescriptionComponent") && projectDataOnEdit ) {
+            const { causes, 
+                    effects, 
+                    problemDescription, 
+                    magnitude, 
+                    centerProblem } = projectDataOnEdit;
+            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ProblemDescriptionComponent" ])
+            setValue('problemDescription', problemDescription);
+            setValue('magnitude', magnitude);
+            setValue('centerProblem', centerProblem);
+            setValue('causes', causes);
+            setValue('effects', effects);
+        }
+    }, [projectDataOnEdit]);
+
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
@@ -492,7 +511,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onOk: () => {
                                     if (causesEffectsComponentRef.current) {
                                         causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
-                                            console.log()
                                             setProblemDescriptionData(prev => {
                                                 const effects = prev?.effects ? prev.effects.concat(data) : [data];
                                                 return { ...prev, effects: effects };

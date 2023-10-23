@@ -37,17 +37,21 @@ import { AppContext } from "../../../common/contexts/app.context";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
 export function PoblationComponent({
   disableNext,
   enableNext,
+  setLoadedAccordionsOnEdit,
+  loadedAccordionsOnEdit
 }: IProps): React.JSX.Element {
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
   const [deparmentList, setDeparmentList] = useState([]);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(poblationValidator);
   const { setMessage } = useContext(AppContext);
   const { getListByGrouper, getListByParent } = useGenericListService();
@@ -174,8 +178,6 @@ export function PoblationComponent({
   }, [idDepartament]);
 
 
-
-
   useEffect(() => {
     const subscription = watch((value: IPoblationForm) =>
       setPoblationData((prev) => {
@@ -206,8 +208,6 @@ export function PoblationComponent({
     }
   }
 
-
-
   useEffect(() => {
     if (PoblationData)
       setProjectData((prev) => {
@@ -217,6 +217,26 @@ export function PoblationComponent({
         return { ...prev, identification: { ...identification } };
       });
   }, [PoblationData]);
+
+  useEffect(() => {
+    if ( !loadedAccordionsOnEdit.includes("PoblationComponent") && projectDataOnEdit ) {
+        const { objectivePeople,
+                informationSource,
+                region,
+                departament,
+                district,
+                shelter,
+                classifications } = projectDataOnEdit;
+        setValue("objectivePeople", objectivePeople );
+        setValue("informationSource", informationSource );
+        setValue("region", region );
+        setValue("departament", departament );
+        setValue("district", district );
+        setValue("shelter", shelter );
+        setValue("demographic", classifications );
+        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "PoblationComponent" ]);
+    }
+  }, [projectDataOnEdit]);
 
   return (
     <FormComponent

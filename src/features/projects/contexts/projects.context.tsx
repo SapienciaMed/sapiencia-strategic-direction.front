@@ -5,9 +5,13 @@ import {
   Dispatch,
   SetStateAction,
   useState,
+  useEffect,
 } from "react";
 import { useLocation } from 'react-router-dom';
-import { IProjectTemp } from "../interfaces/ProjectsInterfaces";
+import { IProjectTemp, IProject } from "../interfaces/ProjectsInterfaces";
+import { useProjectsService } from "../hooks/projects-service.hook";
+import { useParams } from "react-router-dom";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 interface IProjectsContext {
   step: number;
@@ -24,7 +28,8 @@ interface IProjectsContext {
   setActionCancel: Dispatch<SetStateAction<() => void>>;
   showCancel: boolean;
   setShowCancel: Dispatch<SetStateAction<boolean>>;
-  formContext: "new" | "edit";
+  formAction: "new" | "edit";
+  projectDataOnEdit: IProject;
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -45,19 +50,34 @@ export const ProjectsContext = createContext<IProjectsContext>({
   setActionCancel: () => {},
   showCancel: true,
   setShowCancel: () => {},
-  formContext: null
+  formAction: null,
+  projectDataOnEdit: null
 });
 
 export function ProjectsContextProvider({ children }: IProps) {
   const location = useLocation();
+  const { id } = useParams();
   const [step, setStep] = useState<number>(0);
+  const { GetProjectById } = useProjectsService();
   const [disableContinue, setDisableContinue] = useState<boolean>(true);
   const [projectData, setProjectData] = useState<IProjectTemp>(null);
   const [textContinue, setTextContinue] = useState<string>(null);
   const [actionContinue, setActionContinue] = useState<() => void>(() => {});
   const [actionCancel, setActionCancel] = useState<() => void>(() => {});
   const [showCancel, setShowCancel] = useState<boolean>(true);
-  const formContext = location.pathname.includes('/edit/') ? "edit" : "new";
+  const [ projectDataOnEdit, setProjectDataOnEdit] = useState<IProject>()
+  const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
+
+  useEffect(() => {
+    if (Number(id) && !projectDataOnEdit ) {
+        GetProjectById(id).then(response => {
+          if (response.operation.code === EResponseCodes.OK) {
+              setProjectDataOnEdit(response.data);
+          }
+        })
+    }
+  }, [id]);
+
 
   const values = useMemo<IProjectsContext>(() => {
     return {
@@ -75,7 +95,8 @@ export function ProjectsContextProvider({ children }: IProps) {
       setActionCancel,
       showCancel,
       setShowCancel,
-      formContext
+      formAction,
+      projectDataOnEdit
     };
   }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel]);
 

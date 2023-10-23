@@ -13,9 +13,11 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
-export function CapacityComponent({ disableNext, enableNext, }: IProps): React.JSX.Element {
+export function CapacityComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
   const { setProjectData, projectData } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();

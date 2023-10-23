@@ -43,15 +43,19 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
 export function ActorCreateComponent({
   disableNext,
   enableNext,
+  setLoadedAccordionsOnEdit,
+  loadedAccordionsOnEdit
 }: IProps): React.JSX.Element {
   const ActorCreateComponentRef = useRef(null);
   const [ActorCreateData, setActorCreateData] = useState<IActorsForm>();
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const { setMessage } = useContext(AppContext);
   const { GetEntitiesPosition } = useEntitiesService();
   const resolver = useYupValidationResolver(actorsValidator);
@@ -219,6 +223,15 @@ export function ActorCreateComponent({
       },
     },
   ];
+  
+  useEffect(() => {
+    if ( !loadedAccordionsOnEdit.includes("ActorCreateComponent") && projectDataOnEdit ) {
+        const { actors } = projectDataOnEdit;
+        setValue("actors", actors );
+        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ActorCreateComponent" ]);
+    }
+  }, [projectDataOnEdit]);
+
   return (
     <div className="main-page">
       <FormComponent

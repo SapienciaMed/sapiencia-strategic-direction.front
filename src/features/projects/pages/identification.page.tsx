@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import ProblemDescriptionComponent from "../components/problem-description.component";
@@ -7,49 +7,89 @@ import PlanDevelopmentComponent from "../components/plan-development.component";
 import ObjectivesComponent from "../components/objectives.component";
 import ActorCreateComponent from "../components/actor-create.component";
 import PoblationComponent from "../components/poblation-component";
-
 import { actorsValidator, objectivesValidator, planDevelopmentValidator, poblationValidator, problemDescriptionValidator } from "../../../common/schemas";
 
-
 function IdentificationPage(): React.JSX.Element {
-
     const accordionsComponentRef = useRef(null);
-    const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
+    const { projectData, setDisableContinue, setActionContinue, setStep, formAction } = useContext(ProjectsContext);
     const disableAccordions = (ids: number[] | string[]) => {
+
+        if( accordionsComponentRef.current && formAction === "edit" ) return;
+
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
         }
+        
     }
     const enableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.enableAccordions(ids);
         }
     }
+    const [ loadedAccordionsOnEdit , setLoadedAccordionsOnEdit ] = useState<string[]>([]);
     const accordionsData: IAccordionTemplate[] = [
         {
             id: 1,
             name: "Plan de desarrollo",
-            content: <PlanDevelopmentComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
+            content: <PlanDevelopmentComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
+                disableNext={() => { 
+                        disableAccordions([2]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([2]) 
+                }} 
+            />
         },
         {
             id: 2,
             name: "Descripción del problema",
-            content: <ProblemDescriptionComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} />
+            content: <ProblemDescriptionComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
+                disableNext={() => { 
+                        disableAccordions([3]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([3]) 
+                }} 
+            />
         },
         {
             id: 3,
             name: "Objetivos",
-            content: <ObjectivesComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} />
+            content: <ObjectivesComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
+                disableNext={() => { 
+                        disableAccordions([4]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([4]) 
+                }} 
+            />
         },
         {
             id: 4,
             name: "Actores participantes",
-            content: <ActorCreateComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+            content: <ActorCreateComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
+                disableNext={() => { 
+                        disableAccordions([5]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([5]) 
+                }} 
+            />
         },
         {
             id: 5,
             name: "Población",
             content: <PoblationComponent
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => {
                     setDisableContinue(true);
                     setActionContinue(() => { });

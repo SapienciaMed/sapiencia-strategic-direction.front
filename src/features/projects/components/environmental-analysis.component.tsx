@@ -16,9 +16,11 @@ import { IEffectEnviromentForm, IEnvironmentAnalysisForm } from "../interfaces/P
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
-export function EnvironmentalAnalysis({ disableNext, enableNext, }: IProps): React.JSX.Element {
+export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
   const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
   const { setProjectData, projectData } = useContext(ProjectsContext);

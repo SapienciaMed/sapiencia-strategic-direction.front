@@ -25,36 +25,81 @@ function PreparationPage(): React.JSX.Element {
             accordionsComponentRef.current.enableAccordions(ids);
         }
     }
+    const [ loadedAccordionsOnEdit , setLoadedAccordionsOnEdit ] = useState<string[]>([]);
     const accordionsData: IAccordionTemplate[] = [
         {
             id: 1,
             name: "Análisis Técnico",
-            content: <TechnicalAnalysisComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
+            content: <TechnicalAnalysisComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
+                disableNext={() => { 
+                        disableAccordions([2]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([2]) 
+                }} 
+            />
         },
         {
             id: 2,
             name: "Necesidades",
-            content: <NeedsComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />
+            content: <NeedsComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
+                disableNext={() => { 
+                        disableAccordions([3]) 
+                }} enableNext={() => { 
+                        enableAccordions([3]) 
+                }} setForm={setPlaneFormComponent} 
+            />
         },
         {
             id: 3,
             name: "Capacidad",
-            content: <CapacityComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} />
+            content: <CapacityComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
+                disableNext={() => { 
+                        disableAccordions([4]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([4]) 
+                }} 
+            />
         },
         {
             id: 4,
             name: "Análisis Ambiental",
-            content: <EnvironmentalAnalysisComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+            content: <EnvironmentalAnalysisComponent 
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
+                disableNext={() => { 
+                        disableAccordions([5]) 
+                }} enableNext={() => { 
+                        enableAccordions([5]) 
+                }} 
+            />
         },
         {
             id: 5,
             name: "Actividades",
-            content: <ActivitiesComponent disableNext={() => { disableAccordions([6]) }} enableNext={() => { enableAccordions([6]) }} setForm={setPlaneFormComponent} />
+            content: <ActivitiesComponent
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
+                disableNext={() => { 
+                        disableAccordions([6]) 
+                }} enableNext={() => { 
+                        enableAccordions([6]) 
+                }} 
+                setForm={setPlaneFormComponent} />
         },
         {
             id: 6,
             name: "Riesgos",
             content: <RisksComponent
+                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
+                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => {
                     setDisableContinue(true);
                     setActionContinue(() => { });

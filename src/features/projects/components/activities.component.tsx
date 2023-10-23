@@ -22,9 +22,11 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
+    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+    loadedAccordionsOnEdit: string[];
 }
 
-function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [activitiesData, setActivitiesData] = useState<IActivitiesForm>(null);
     const [budgetsData, setBudgetsData] = useState(null);

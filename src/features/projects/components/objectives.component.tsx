@@ -16,12 +16,14 @@ import { InputNumberComponent } from "../../../common/components/Form/input-numb
 interface IProps {
     disableNext: () => void;
     enableNext: () => void;
+    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+    loadedAccordionsOnEdit: string[];
 }
-export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
+export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData } = useContext(ProjectsContext);
+    const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { getListByGrouper } = useGenericListService();
     const resolver = useYupValidationResolver(objectivesValidator);
@@ -209,6 +211,17 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
             }
         }
     ];
+
+    useEffect(() => {
+        if ( !loadedAccordionsOnEdit.includes("ObjectivesComponent") && projectDataOnEdit ) {
+            const { measurement, indicators, goal } = projectDataOnEdit;
+            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ObjectivesComponent" ]);
+            setValue("measurement", measurement );
+            setValue("indicators", indicators );
+            setValue("goal", goal );
+        }
+    }, [projectDataOnEdit]);
+
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

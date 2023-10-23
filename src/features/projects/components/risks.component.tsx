@@ -20,6 +20,8 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
+    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+    loadedAccordionsOnEdit: string[];
 }
 
 const LevelData: IDropdownProps[] = [
@@ -37,7 +39,7 @@ const LevelData: IDropdownProps[] = [
     }
 ];
 
-function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+function RisksComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(riskValidator);
     const [RisksData, setRisksData] = useState<IRisks>(null);
     const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);

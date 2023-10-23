@@ -12,7 +12,7 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 import { useProjectsService } from "./projects-service.hook";
 
-export function useTransferData() {
+export function useTransferData( id:string ) {
     const { GetEntitiesDependency } = useEntitiesService();
     const [processData] = useState<IDropdownProps[]>(null);
     const [dependecyData, setDependencyData] = useState<IDropdownProps[]>(null);

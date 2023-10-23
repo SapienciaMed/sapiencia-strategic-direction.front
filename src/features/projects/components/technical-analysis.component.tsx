@@ -23,11 +23,15 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
 export function TechnicalAnalysisComponent({
   disableNext,
   enableNext,
+  setLoadedAccordionsOnEdit,
+  loadedAccordionsOnEdit
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
   const { setProjectData, projectData } = useContext(ProjectsContext);

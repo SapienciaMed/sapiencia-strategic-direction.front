@@ -263,7 +263,6 @@ export function useProjectsCrudData() {
                     }
                 });
             } else {
-                console.log(res.operation.message);
                     if(res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
                         setMessage({
                             title: "Validación BPIN.",

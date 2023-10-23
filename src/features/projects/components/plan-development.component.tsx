@@ -15,14 +15,18 @@ import { planDevelopmentValidator } from "../../../common/schemas/projects-schem
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
+  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
+  loadedAccordionsOnEdit: string[];
 }
 
 export function PlanDevelopmentComponent({
   disableNext,
   enableNext,
+  setLoadedAccordionsOnEdit,
+  loadedAccordionsOnEdit
 }: IProps): React.JSX.Element {
   const [planDevelopmentData, setPlanDevelopment] = useState<IPlanDevelopmentForm>(null);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(planDevelopmentValidator);
   const {
     control,
@@ -127,6 +131,32 @@ export function PlanDevelopmentComponent({
       );
     }
   }, []);
+
+
+  useEffect(() => {
+      if ( !loadedAccordionsOnEdit.includes("PlanDevelopmentComponent") && projectDataOnEdit ) {
+          const { pnd_pacto, 
+                    pnd_linea,
+                    pnd_programa, 
+                    pdd_linea,
+                    pdd_componentes,
+                    pdd_programa,
+                    pdi_linea,
+                    pdi_componentes, 
+                    pdi_programa } = projectDataOnEdit;
+          setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "PlanDevelopmentComponent" ]);
+          setValue("pnd_pacto", pnd_pacto );
+          setValue("pnd_linea", pnd_linea );
+          setValue("pnd_programa", pnd_programa );
+          setValue("pdd_linea", pdd_linea );
+          setValue("pdd_componentes", pdd_componentes );
+          setValue("pdd_programa", pdd_programa );
+          setValue("pdi_linea", pdi_linea );
+          setValue("pdi_componentes", pdi_componentes );
+          setValue("pdi_programa", pdi_programa );
+      }
+    }, [projectDataOnEdit]);
+
 
   return (
     <div className="crud-page full-height">

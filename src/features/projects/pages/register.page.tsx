@@ -5,10 +5,10 @@ import { Controller } from "react-hook-form";
 import { ProjectsContext } from "../contexts/projects.context";
 
 function RegisterPage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
-    const { formContext } = useContext(ProjectsContext);
+
+    const { formAction, projectDataOnEdit } = useContext(ProjectsContext);
+    const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData(projectDataOnEdit);
     
-    console.log('formContext: ', formContext );
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
