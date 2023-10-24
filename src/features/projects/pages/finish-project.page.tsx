@@ -75,7 +75,7 @@ function FinishProjectPage(): React.JSX.Element {
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                characters={500}
+                                                characters={300}
                                             ></TextAreaComponent>
                                         );
                                     }}
