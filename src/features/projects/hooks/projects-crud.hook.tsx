@@ -439,7 +439,7 @@ export function useProjectsCrudData() {
             if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
-                    description: <p className="text-primary biggest">Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                    description: <p className="text-primary biggest"> Podrás continuar la  { formAction === "new" ? "creación": "modificación"} del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
                     OkTitle: "Cerrar",
