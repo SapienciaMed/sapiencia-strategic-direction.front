@@ -502,6 +502,7 @@ export interface IProject {
   observations: string | null;
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
+  tempTab?: string;
   version: string | null;
   projectObservation: string | null;
 }
