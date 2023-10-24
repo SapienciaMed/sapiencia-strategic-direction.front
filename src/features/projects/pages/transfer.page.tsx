@@ -3,12 +3,10 @@ import { FormComponent, InputComponent, TextAreaComponent } from "../../../commo
 import { useTransferData } from "../hooks/transfer.hook";
 import { Controller } from "react-hook-form";
 import { Checkbox } from 'primereact/checkbox';
-import { useParams } from 'react-router-dom';
 
 function TransferPage(): React.JSX.Element {
 
-    const { id } = useParams();
-    const { register, errors, control, onSubmit, isValid,watch } = useTransferData(id);
+    const { register, errors, control, onSubmit, isValid,watch } = useTransferData();
     
     return (
         <div className="crud-page full-height">

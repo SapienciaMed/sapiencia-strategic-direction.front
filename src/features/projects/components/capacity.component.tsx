@@ -13,13 +13,11 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
-  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-  loadedAccordionsOnEdit: string[];
 }
 
-export function CapacityComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
+export function CapacityComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
-  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
@@ -42,10 +40,15 @@ export function CapacityComponent({ disableNext, enableNext, setLoadedAccordions
   });
 
   useEffect(() => {
-    if (isValid) {
+    if ( isValid && formAction === "new" ) {
       enableNext();
-    } else {
-      disableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -78,21 +81,6 @@ export function CapacityComponent({ disableNext, enableNext, setLoadedAccordions
       }
     })
   }, []);
-  useEffect(() => {
-    if (!loadedAccordionsOnEdit.includes("CapacityComponent") && projectDataOnEdit ) {
-        const { alternative, 
-                descriptionCapacity, 
-                unitCapacity, 
-                capacityGenerated 
-              } = projectDataOnEdit;
-        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "CapacityComponent" ])
-        setValue('alternativeCapacity', alternative);
-        setValue('descriptionCapacity', descriptionCapacity);
-        setValue('unitCapacity', unitCapacity);
-        setValue('capacityGenerated', capacityGenerated);
-        trigger();
-    }
-  }, [projectDataOnEdit]);
   return (
     <div className="full-height capacity-page card-table">
       <FormComponent action={undefined} className="">

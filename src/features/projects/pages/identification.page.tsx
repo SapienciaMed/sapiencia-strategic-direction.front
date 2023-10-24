@@ -11,7 +11,7 @@ import { actorsValidator, objectivesValidator, planDevelopmentValidator, poblati
 
 function IdentificationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
-    const { projectData, setDisableContinue, setActionContinue, setStep, formAction } = useContext(ProjectsContext);
+    const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
@@ -22,14 +22,11 @@ function IdentificationPage(): React.JSX.Element {
             accordionsComponentRef.current.enableAccordions(ids);
         }
     }
-    const [ loadedAccordionsOnEdit , setLoadedAccordionsOnEdit ] = useState<string[]>([]);
     const accordionsData: IAccordionTemplate[] = [
         {
             id: 1,
             name: "Plan de desarrollo",
             content: <PlanDevelopmentComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => { 
                         disableAccordions([2]) 
                 }} 
@@ -42,8 +39,6 @@ function IdentificationPage(): React.JSX.Element {
             id: 2,
             name: "Descripción del problema",
             content: <ProblemDescriptionComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => { 
                         disableAccordions([3]) 
                 }} 
@@ -56,8 +51,6 @@ function IdentificationPage(): React.JSX.Element {
             id: 3,
             name: "Objetivos",
             content: <ObjectivesComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => { 
                         disableAccordions([4]) 
                 }} 
@@ -70,8 +63,6 @@ function IdentificationPage(): React.JSX.Element {
             id: 4,
             name: "Actores participantes",
             content: <ActorCreateComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => { 
                         disableAccordions([5]) 
                 }} 
@@ -84,8 +75,6 @@ function IdentificationPage(): React.JSX.Element {
             id: 5,
             name: "Población",
             content: <PoblationComponent
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit } 
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => {
                     setDisableContinue(true);
                     setActionContinue(() => { });

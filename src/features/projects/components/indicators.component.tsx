@@ -25,7 +25,7 @@ interface IProps {
 function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [indicatorsData, setIndicatorsData] = useState<IIndicatorsForm>(null);
     const [indicatorsTypes, setIndicatorsTypes] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel, setDisableContinue, formAction } = useContext(ProjectsContext);
     const { GetIndicatorType } = useIndicatorsService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(indicatorsFormValidator);
@@ -179,10 +179,15 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
     ];
 
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
 
@@ -212,7 +217,6 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
             }
         })
     }, []);
-
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

@@ -13,10 +13,9 @@ import { useProjectsService } from "../hooks/projects-service.hook";
 import { IProject } from "../interfaces/ProjectsInterfaces";
 
 
-export function useRegisterData( projectDataOnEdit:IProject ) {
+export function useRegisterData() {
 
     const { GetEntities , GetEntitiesDependency } = useEntitiesService();
-    const { GetProjectById } = useProjectsService();
     const [ locationData, setLocationData] = useState<IDropdownProps[]>([]);
     const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
     const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
@@ -131,30 +130,6 @@ export function useRegisterData( projectDataOnEdit:IProject ) {
             trigger("localitation");
         }
     }, [projectData]);
-
-
-    useEffect(() => {
-        if (projectDataOnEdit) {
-            const { bpin, 
-                    dateFrom,
-                    dateTo, 
-                    dependency,
-                    object,
-                    process,
-                    project,
-                    localitation } = projectDataOnEdit;
-            setValue("bpin", bpin);
-            setValue("dateFrom", dateFrom);
-            setValue("dateTo", dateTo);
-            setValue("dependency", dependency);
-            setValue("object", object);
-            setValue("process", process);
-            setValue("project", project);
-            setValue("localitation", localitation);
-        }
-    }, [projectDataOnEdit]);
-
-
 
     return { register, errors, controlRegister, onSubmit, processData, dependecyData, localitationData , watchDateFrom };
 }

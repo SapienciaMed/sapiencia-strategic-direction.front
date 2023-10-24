@@ -10,13 +10,10 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { ProjectsContext } from "../contexts/projects.context";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { useEntitiesService } from "../hooks/entities-service.hook"
-import { IEntities } from "../interfaces/Entities";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useWidth } from "../../../common/hooks/use-width";
 import { useIndicatorsService } from "../hooks/indicators.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
-import { number } from "yup";
 
 
 interface IProps {
@@ -40,12 +37,10 @@ const ResumeData: IDropdownProps[] = [
     }
 ];
 
-
-
 function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(logicFrameFormValidator);
     const [LogicFrameData, setLogicFrameData] = useState<IlogicFrameForm>(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, formAction, setDisableContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { GetIndicatorName } = useIndicatorsService();
     const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
@@ -69,7 +64,7 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
         }
     });
 
-      const IndicatorList : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const IndicatorList : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
@@ -93,8 +88,6 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             }
         });
     }, []);
-
-
 
     const onCancel = () => {
         setMessage({
@@ -226,10 +219,15 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
     };
 
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     

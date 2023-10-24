@@ -25,7 +25,14 @@ interface IProps {
 
 function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [ profitsFormData, setProfitsFormData] = useState<IproftisIncomeForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue ,setShowCancel} = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue ,
+            setShowCancel,  
+            setDisableContinue, 
+            formAction } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
@@ -191,10 +198,15 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
         trigger("profitsIncome");
     };
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     useEffect(() => {
@@ -362,7 +374,6 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
             setAddedPeriod(false);
         }
     }, [addedPeriod]);
-
     return (
         
         <FormComponent action={undefined} className="card-form-development">

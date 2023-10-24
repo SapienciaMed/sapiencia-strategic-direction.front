@@ -24,14 +24,11 @@ function PreparationPage(): React.JSX.Element {
             accordionsComponentRef.current.enableAccordions(ids);
         }
     }
-    const [ loadedAccordionsOnEdit , setLoadedAccordionsOnEdit ] = useState<string[]>([]);
     const accordionsData: IAccordionTemplate[] = [
         {
             id: 1,
             name: "Análisis Técnico",
             content: <TechnicalAnalysisComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => { 
                         disableAccordions([2]) 
                 }} 
@@ -44,8 +41,6 @@ function PreparationPage(): React.JSX.Element {
             id: 2,
             name: "Necesidades",
             content: <NeedsComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => { 
                         disableAccordions([3]) 
                 }} enableNext={() => { 
@@ -57,8 +52,6 @@ function PreparationPage(): React.JSX.Element {
             id: 3,
             name: "Capacidad",
             content: <CapacityComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => { 
                         disableAccordions([4]) 
                 }} 
@@ -71,8 +64,6 @@ function PreparationPage(): React.JSX.Element {
             id: 4,
             name: "Análisis Ambiental",
             content: <EnvironmentalAnalysisComponent 
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => { 
                         disableAccordions([5]) 
                 }} enableNext={() => { 
@@ -84,8 +75,6 @@ function PreparationPage(): React.JSX.Element {
             id: 5,
             name: "Actividades",
             content: <ActivitiesComponent
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit } 
                 disableNext={() => { 
                         disableAccordions([6]) 
                 }} enableNext={() => { 
@@ -97,8 +86,6 @@ function PreparationPage(): React.JSX.Element {
             id: 6,
             name: "Riesgos",
             content: <RisksComponent
-                setLoadedAccordionsOnEdit = { setLoadedAccordionsOnEdit }
-                loadedAccordionsOnEdit = { loadedAccordionsOnEdit }
                 disableNext={() => {
                     setDisableContinue(true);
                     setActionContinue(() => { });

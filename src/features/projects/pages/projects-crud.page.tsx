@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ButtonComponent } from "../../../common/components/Form";
 import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-
     const { tabs, 
             tabsComponentRef, 
             disableContinue, 
@@ -16,8 +15,9 @@ function ProjectsCrudPage(): React.JSX.Element {
             textContinue, 
             DeleteProject, 
             projectData, 
-            showCancel } = useProjectsCrudData();
-            
+            showCancel,
+            formAction } = useProjectsCrudData();
+    if (!projectData?.status && formAction === "edit") { return <p>Loading...</p>; }
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -102,7 +102,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={textContinue || "Continuar"}
+                        value={ textContinue || "Continuar" }
                         type="button"
                         action={actionContinue || (() => { })}
                         disabled={disableContinue}

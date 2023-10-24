@@ -16,14 +16,12 @@ import { InputNumberComponent } from "../../../common/components/Form/input-numb
 interface IProps {
     disableNext: () => void;
     enableNext: () => void;
-    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-    loadedAccordionsOnEdit: string[];
 }
-export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
+export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
+    const { setProjectData, projectData, formAction, setDisableContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { getListByGrouper } = useGenericListService();
     const resolver = useYupValidationResolver(objectivesValidator);
@@ -56,10 +54,15 @@ export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordio
         });
     }, []);
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     useEffect(() => {
@@ -212,18 +215,6 @@ export function ObjectivesComponent({ disableNext, enableNext, setLoadedAccordio
             }
         }
     ];
-
-    useEffect(() => {
-        if ( !loadedAccordionsOnEdit.includes("ObjectivesComponent") && projectDataOnEdit ) {
-            const { measurement, indicators, goal, centerProblem } = projectDataOnEdit;
-            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ObjectivesComponent" ]);
-            setValue("generalObjective", centerProblem );
-            setValue("measurement", measurement );
-            setValue("indicators", indicators );
-            setValue("goal", goal );
-            trigger();
-        }
-    }, [projectDataOnEdit]);
 
     return (
         <div className="card-table">

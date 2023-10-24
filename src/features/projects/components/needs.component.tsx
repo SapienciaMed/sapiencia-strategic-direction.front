@@ -16,13 +16,11 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
-    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-    loadedAccordionsOnEdit: string[];
 }
 
-function NeedsComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
+function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [needsData, setNeedsData] = useState<INeedsForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, projectDataOnEdit } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsValidator);
     const {
@@ -160,10 +158,15 @@ function NeedsComponent({ disableNext, enableNext, setForm, setLoadedAccordionsO
         trigger("objetives");
     };
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     useEffect(() => {
@@ -176,19 +179,6 @@ function NeedsComponent({ disableNext, enableNext, setForm, setLoadedAccordionsO
             return { ...prev, preparation: { ...preparation } };
         })
     }, [needsData]);
-    useEffect(() => {
-        if (!loadedAccordionsOnEdit.includes("NeedsComponent") && projectDataOnEdit ) {
-            const { alternative,
-                    specificObjectives,
-                    descriptionCapacity
-                 } = projectDataOnEdit;
-            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "NeedsComponent" ])
-            setValue('alternative', alternative);
-            setValue('generalObjetive', descriptionCapacity );
-            setValue('objetives', specificObjectives)
-            trigger();
-        }
-    }, [projectDataOnEdit]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

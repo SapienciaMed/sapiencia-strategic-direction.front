@@ -23,18 +23,14 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
-  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-  loadedAccordionsOnEdit: string[];
 }
 
 export function TechnicalAnalysisComponent({
   disableNext,
-  enableNext,
-  setLoadedAccordionsOnEdit,
-  loadedAccordionsOnEdit
+  enableNext
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
-  const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(technicalAnalysisValidator);
 
   const {
@@ -63,10 +59,15 @@ export function TechnicalAnalysisComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid || loadedAccordionsOnEdit.includes("TechnicalAnalysisComponent")) {
-      enableNext();
-    } else {
-      disableNext();
+    if ( isValid && formAction === "new" ) {
+        enableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -81,18 +82,6 @@ export function TechnicalAnalysisComponent({
         return { ...prev, preparation: { ...preparation } };
       });
   }, [technicalAnalysisData]);
-
-  useEffect(() => {
-    if (!loadedAccordionsOnEdit.includes("TechnicalAnalysisComponent") && projectDataOnEdit ) {
-        const { alternative,
-                resumeAlternative 
-              } = projectDataOnEdit;
-        setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "TechnicalAnalysisComponent" ])
-        setValue('alternative', alternative);
-        setValue('resumeAlternative', resumeAlternative);
-        trigger();
-    }
-  }, [projectDataOnEdit]);
 
   return (
     <FormComponent

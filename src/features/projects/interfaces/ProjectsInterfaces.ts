@@ -329,6 +329,7 @@ export interface IProjectTemp {
   id?: number;
   user: string;
   status: number;
+  tempTab?: string;
   register?: IRegisterForm;
   identification?: {
     problemDescription?: IProblemDescriptionForm;
@@ -497,5 +498,6 @@ export interface IProject {
   observations: string | null;
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
+  tempTab?: string;
   version: string | null;
 }
