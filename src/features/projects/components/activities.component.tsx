@@ -22,15 +22,20 @@ interface IProps {
     disableNext: () => void;
     enableNext: () => void;
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
-    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-    loadedAccordionsOnEdit: string[];
 }
 
-function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
+function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [activitiesData, setActivitiesData] = useState<IActivitiesForm>(null);
     const [budgetsData, setBudgetsData] = useState(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setShowCancel } = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            setShowCancel, 
+            setDisableContinue, 
+            formAction } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
@@ -46,7 +51,6 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
             activities: projectData?.preparation?.activities?.activities ? projectData.preparation.activities.activities : null
         }
     });
-
     const onCancel = () => {
         setMessage({
             title: "Cancelar actividad",
@@ -222,10 +226,15 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
     ];
 
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
 
@@ -276,8 +285,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm, setLoadedAccord
                 year4: budget4,
             });
         }
-    }, [activities])
-
+    }, [activities]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

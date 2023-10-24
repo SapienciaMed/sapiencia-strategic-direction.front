@@ -27,17 +27,41 @@ function ProgramationPage(): React.JSX.Element {
         {
             id: 1,
             name: "Ingresos y beneficios",
-            content: <ProfitsIncomeComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} setForm={setPlaneFormComponent} />      
+            content: <ProfitsIncomeComponent
+                disableNext={() => { 
+                        disableAccordions([2]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([2]) 
+                }} 
+                setForm={setPlaneFormComponent} 
+            />      
         },
         {
             id: 2,
             name: "Fuentes de financiación",
-            content: <SourceFundingComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />      
+            content: <SourceFundingComponent 
+                disableNext={() => { 
+                        disableAccordions([3]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([3]) 
+                }} 
+                setForm={setPlaneFormComponent} 
+            />      
         },
         {
             id: 3,
             name: "Indicadores",
-            content: <IndicatorsFormComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} setForm={setPlaneFormComponent} /> 
+            content: <IndicatorsFormComponent 
+                disableNext={() => { 
+                        disableAccordions([4]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([4]) 
+                }} 
+                setForm={setPlaneFormComponent} 
+            /> 
         },
         {
             id: 4,

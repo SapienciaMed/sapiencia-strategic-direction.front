@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ButtonComponent } from "../../../common/components/Form";
 import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-
     const { tabs, 
             tabsComponentRef, 
             disableContinue, 
@@ -16,14 +15,15 @@ function ProjectsCrudPage(): React.JSX.Element {
             textContinue, 
             DeleteProject, 
             projectData, 
-            showCancel } = useProjectsCrudData();
-            
+            showCancel,
+            formAction } = useProjectsCrudData();
+    if (!projectData?.status && formAction === "edit") { return <p>Loading...</p>; }
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Crear proyecto</div>
+                        <div className="text-black extra-large bold">{ formAction === "new" ? "Crear proyecto" : "Editar proyecto"}</div>
                     </div>
                     <TabListComponent tabs={tabs} ref={tabsComponentRef} />
                     <div className="projects-footer-mobile mobile">
@@ -72,7 +72,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                 {actionCancel ? <div></div> :
                     <ButtonComponent
                         className="button-main huge hover-three"
-                        value="Guardar temporalmente"
+                        value={ formAction === "new" ? "Guardar temporalmente" : "Actualizar estado"}
                         type="button"
                         action={onSaveTemp}
                     />
@@ -102,7 +102,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={textContinue || "Continuar"}
+                        value={ textContinue || "Continuar" }
                         type="button"
                         action={actionContinue || (() => { })}
                         disabled={disableContinue}

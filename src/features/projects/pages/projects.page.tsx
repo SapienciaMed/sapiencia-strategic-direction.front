@@ -8,7 +8,23 @@ import { UploadComponent } from "../../../common/components/upload.component";
 import { Messages } from 'primereact/messages';
 
 function ProjectsPage(): React.JSX.Element {
-    const { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, control, register, statusData, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles, msgs, setErrores } = useProjectsData();
+    const { navigate, 
+            tableComponentRef, 
+            tableColumns, 
+            tableActions, 
+            onSubmit, 
+            reset, 
+            control, 
+            register, 
+            statusData, 
+            errors, 
+            showDialog, 
+            setShowDialog, 
+            filesUploadData, 
+            setFilesUploadData, 
+            uploadFiles, 
+            msgs, 
+            setErrores } = useProjectsData();
     return (
         <div className='main-page'>
             {showDialog && <div className="modal modal-bg is-open">

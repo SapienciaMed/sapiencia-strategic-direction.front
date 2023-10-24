@@ -16,21 +16,20 @@ import { IEffectEnviromentForm, IEnvironmentAnalysisForm } from "../interfaces/P
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
-  setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-  loadedAccordionsOnEdit: string[];
 }
 
-export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit }: IProps): React.JSX.Element {
+export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): React.JSX.Element {
   const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const {
     control,
     register,
     watch,
     formState: { errors, isValid },
     setValue,
-    getValues
+    getValues,
+    trigger
   } = useForm<IEnvironmentAnalysisForm>({
     resolver, mode: "all",
     defaultValues: {
@@ -64,10 +63,15 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccord
   ];
 
   useEffect(() => {
-    if (isValid) {
+    if ( isValid && formAction === "new" ) {
       enableNext();
-    } else {
-      disableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -250,7 +254,6 @@ export function EnvironmentalAnalysis({ disableNext, enableNext, setLoadedAccord
       },
     },
   ];
-
   return (
     <div className="environmental-analysis-page full-height card-table">
       <FormComponent action={undefined} className="">

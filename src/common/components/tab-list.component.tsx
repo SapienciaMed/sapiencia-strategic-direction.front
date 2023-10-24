@@ -59,7 +59,6 @@ const TabListComponent = forwardRef<IRef, IAppProps>((props, ref) => {
     useEffect(() => {
         if (selectedTab) if (selectedTab.action) selectedTab.action();
     }, [selectedTab])
-
     return (
         <div className={`tabs-component ${className || ""}`}>
             <div className="tabs-selection">

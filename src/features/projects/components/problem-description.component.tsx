@@ -14,14 +14,12 @@ import { ProjectsContext } from "../contexts/projects.context";
 interface IProps {
     disableNext: () => void;
     enableNext: () => void;
-    setLoadedAccordionsOnEdit: React.Dispatch<React.SetStateAction<string[]>>;
-    loadedAccordionsOnEdit: string[];
 }
 
-export function ProblemDescriptionComponent({ disableNext, enableNext, setLoadedAccordionsOnEdit, loadedAccordionsOnEdit}: IProps): React.JSX.Element {
+export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const causesEffectsComponentRef = useRef(null);
     const [problemDescriptionData, setProblemDescriptionData] = useState<IProblemDescriptionForm>(null)
-    const { setProjectData, projectData, projectDataOnEdit } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(problemDescriptionValidator);
     const {
@@ -30,7 +28,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext, setLoaded
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch
+        watch,
+        trigger
     } = useForm<IProblemDescriptionForm>({
         resolver, mode: "all", defaultValues: {
             problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
@@ -51,10 +50,15 @@ export function ProblemDescriptionComponent({ disableNext, enableNext, setLoaded
     }, [watch]);
 
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
 
@@ -353,22 +357,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext, setLoaded
             },
         }
     ];
-
-    useEffect(() => {
-        if (!loadedAccordionsOnEdit.includes("ProblemDescriptionComponent") && projectDataOnEdit ) {
-            const { causes, 
-                    effects, 
-                    problemDescription, 
-                    magnitude, 
-                    centerProblem } = projectDataOnEdit;
-            setLoadedAccordionsOnEdit([ ...loadedAccordionsOnEdit, "ProblemDescriptionComponent" ])
-            setValue('problemDescription', problemDescription);
-            setValue('magnitude', magnitude);
-            setValue('centerProblem', centerProblem);
-            setValue('causes', causes);
-            setValue('effects', effects);
-        }
-    }, [projectDataOnEdit]);
 
     return (
         <div className="card-table">
