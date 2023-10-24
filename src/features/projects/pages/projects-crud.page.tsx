@@ -72,7 +72,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                 {actionCancel ? <div></div> :
                     <ButtonComponent
                         className="button-main huge hover-three"
-                        value="Guardar temporalmente"
+                        value={ formAction === "new" ? "Guardar temporalmente" : "Actualizar estado"}
                         type="button"
                         action={onSaveTemp}
                     />
