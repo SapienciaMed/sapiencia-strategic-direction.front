@@ -70,7 +70,6 @@ export function useProjectsCrudData() {
         {
             id: "transfer", title: "5. Flujo del proyecto", content: <TransferPage/>, action: () => {
                 setStep(4)
-                setTextContinue(null);
                 setActionCancel(null);
                 setActionContinue(null);
                 setMessage({});
