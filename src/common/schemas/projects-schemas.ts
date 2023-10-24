@@ -631,4 +631,5 @@ export const finishProjectValidator = yup.object({
     observations: yup
         .string()
         .required("El campo es obligatorio")
+        .max(300, "Solo se permiten 300 caracteres")
 });
