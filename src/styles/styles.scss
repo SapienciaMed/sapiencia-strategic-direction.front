@@ -563,6 +563,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.strategic-direction-finish-project-name{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -925,6 +931,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     .upload-files-modal {
         width: 37rem;
         max-height: 70vh;
+
         .upload-files-header {
             .progress-size {
                 .total-size {
@@ -944,7 +951,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
             .file-properties {
                 width: 20rem;
-    
+
                 .file-name {
                     font-size: 1rem;
                     margin-left: 0.5rem;
@@ -956,7 +963,13 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
             }
         }
     }
+
     .mobile-actions {
         display: none;
+    }
+
+    .strategic-direction-finish-project-name{
+        grid-template-columns: 1fr 2fr;
+        column-gap: 1rem;
     }
 }

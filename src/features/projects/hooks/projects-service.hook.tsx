@@ -2,7 +2,7 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
-import { IProject, IProjectTemp } from "../interfaces/ProjectsInterfaces";
+import { IFinishProjectForm, IProject, IProjectTemp } from "../interfaces/ProjectsInterfaces";
 
 export function useProjectsService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
@@ -52,5 +52,13 @@ export function useProjectsService() {
         return post(`${projectsUrl}${endpoint}`, {fileName: JSON.stringify(fileName)});
     }
 
-    return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject }
+    async function FinishProject(
+        id: string,
+        data: IFinishProjectForm
+    ): Promise<ApiResponse<IProject>> {
+        const endpoint: string = `/finish-project/${id}`;
+        return put(`${projectsUrl}${endpoint}`, data);
+    }
+
+    return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject, FinishProject }
 }

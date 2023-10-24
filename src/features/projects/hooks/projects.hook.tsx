@@ -171,7 +171,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-
+                navigate(`finalizar-proyecto/${row.id}`);
             },
             hideRow: (row) => !(row.status === 2 || row.status === 3)
         },

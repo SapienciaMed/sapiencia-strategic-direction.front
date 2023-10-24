@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const registerValidator = yup.object({
     bpin: yup
         .string()
-        .transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
+        .transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio")
         .test('len', "Solo se permiten 20 caracteres", val => val.length <= 20),
     project: yup
         .string()
@@ -126,7 +126,7 @@ export const capacityValidator = yup.object({
     unitCapacity: yup
         .string()
         .required("El campo es obligatorio"),
-    capacityGenerated: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
+    capacityGenerated: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio")
 });
 
 export const environmentalFffectsValidator = yup.object({
@@ -146,22 +146,22 @@ export const environmentalAnalysisValidator = yup.object({
 });
 
 
-export const actorsFormValidator = yup.object({ 
-    actor : yup 
-    .string()
-    .required("El campo es obligatorio")
-    .max(100, "Solo se permiten 100 caracteres"),
-    expectation: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(300, "Solo se permiten 300 caracteres"),
+export const actorsFormValidator = yup.object({
+    actor: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(100, "Solo se permiten 100 caracteres"),
+    expectation: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(300, "Solo se permiten 300 caracteres"),
     position: yup
-    .string()
-    .required("Debe seleccionar una opción"),
-    contribution: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(300, "Solo se permiten 300 caracteres"),
+        .string()
+        .required("Debe seleccionar una opción"),
+    contribution: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(300, "Solo se permiten 300 caracteres"),
 });
 
 export const actorsValidator = yup.object({
@@ -174,7 +174,7 @@ export const objectivesValidator = yup.object({
     purposes: yup.array().required("El campo es obligatorio").min(1, "El campo es obligatorio"),
     indicators: yup.string().required("El campo es obligatorio").max(500, "Solo se permiten 500 caracteres"),
     measurement: yup.string().required("El campo es obligatorio"),
-    goal: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio")
+    goal: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio")
 });
 
 export const needsValidator = yup.object({
@@ -184,7 +184,7 @@ export const needsValidator = yup.object({
 export const needsObjectivesValidator = yup.object({
     objectiveSelect: yup.string().required("El campo es obligatorio"),
     interventionActions: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
-    quantification: yup.number().transform((value) => Number.isNaN(value) ? null : value ).nullable().required("El campo es obligatorio").min(0, "El número tiene que ser positivo"),
+    quantification: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio").min(0, "El número tiene que ser positivo"),
     estatesService: yup.array().required("Debe haber al menos un bien y/o servicio").min(1, "Debe haber al menos un bien y/o servicio").of(
         yup.object(({
             description: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
@@ -193,97 +193,97 @@ export const needsObjectivesValidator = yup.object({
 });
 
 export const poblationValidator = yup.object().shape({
-    objectivePeople : yup 
-    .number()
-    .required("El campo es obligatorio"),
-    informationSource: yup  
-    .string()
-    .max(100, "Solo se permiten 100 caracteres")
-    .required("El campo es obligatorio"),
+    objectivePeople: yup
+        .number()
+        .required("El campo es obligatorio"),
+    informationSource: yup
+        .string()
+        .max(100, "Solo se permiten 100 caracteres")
+        .required("El campo es obligatorio"),
     region: yup
-    .number()
-    .required("Debe seleccionar una opción"),
-    departament: yup  
-    .number()
-    .required("Debe seleccionar una opción"),
-    district: yup  
-    .number()
-    .required("Debe seleccionar una opción"),
-    shelter:yup
-    .string()
-    .max(100, "Solo se permiten 100 caracteres"),
+        .number()
+        .required("Debe seleccionar una opción"),
+    departament: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    district: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    shelter: yup
+        .string()
+        .max(100, "Solo se permiten 100 caracteres"),
     demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
         yup.object().shape(({
-            clasification:yup
-            .number()
-            .required("Debe seleccionar una opción"),
-            detail:yup
-            .number()
-            .required("Debe seleccionar una opción"),
-            infoSource:yup
-            .string()
-            .max(100, "Solo se permiten 100 caracteres"),
+            clasification: yup
+                .number()
+                .required("Debe seleccionar una opción"),
+            detail: yup
+                .number()
+                .required("Debe seleccionar una opción"),
+            infoSource: yup
+                .string()
+                .max(100, "Solo se permiten 100 caracteres"),
         }))
     ),
 })
 
 export const technicalAnalysisValidator = yup.object({
     alternative: yup.string()
-    .required("El campo es obligatorio")
-    .max(300, "Solo se permiten 300 caracteres"),
-    resumeAlternative :yup.string()
-    .required("El campo es obligatorio")
-    .max(5000, "Solo se permiten 5000 caracteres"),
+        .required("El campo es obligatorio")
+        .max(300, "Solo se permiten 300 caracteres"),
+    resumeAlternative: yup.string()
+        .required("El campo es obligatorio")
+        .max(5000, "Solo se permiten 5000 caracteres"),
 });
 
 
 export const risksValidator = yup.object().shape({
-    level : yup 
-    .number()
-    .required("Debe seleccionar una opción"),
-    risk: yup  
-    .string()
-    .required("Debe seleccionar una opción"),
+    level: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    risk: yup
+        .string()
+        .required("Debe seleccionar una opción"),
     typeRisk: yup
-    .number()
-    .required("Debe seleccionar una opción"),
-    descriptionRisk: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(500, "Solo se permiten 500 caracteres"),
-    probability: yup  
-    .number()
-    .required("Debe seleccionar una opción"),
-    impact: yup  
-    .number()
-    .required("Debe seleccionar una opción"),
-    effects: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(500, "Solo se permiten 500 caracteres"),
-    mitigation: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(500, "Solo se permiten 500 caracteres"),
+        .number()
+        .required("Debe seleccionar una opción"),
+    descriptionRisk: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    probability: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    impact: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    effects: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
+    mitigation: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(500, "Solo se permiten 500 caracteres"),
 });
 
 export const transfersValidator = yup.object().shape({
-   formulation: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(100, "Solo se permiten 100 caracteres"),
+    formulation: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(100, "Solo se permiten 100 caracteres"),
     rol: yup
-    .string()
-    .required("El campo es obligatorio")
-    .max(100, "Solo se permiten 100 caracteres"),
-    order: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(100, "Solo se permiten 100 caracteres"),
+        .string()
+        .required("El campo es obligatorio")
+        .max(100, "Solo se permiten 100 caracteres"),
+    order: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(100, "Solo se permiten 100 caracteres"),
     tecniques: yup
         .boolean()
         .nullable()
-        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function (value) {
             const { sociocultural, ambiental } = this.parent;
             if (sociocultural || ambiental || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
@@ -294,7 +294,7 @@ export const transfersValidator = yup.object().shape({
     ambiental: yup
         .boolean()
         .nullable()
-        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function (value) {
             const { tecniques, sociocultural } = this.parent;
             if (tecniques || sociocultural || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
@@ -305,7 +305,7 @@ export const transfersValidator = yup.object().shape({
     sociocultural: yup
         .boolean()
         .nullable()
-        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function(value) {
+        .test('atLeastOneSelected', 'Debe seleccionar al menos una opción', function (value) {
             const { tecniques, ambiental } = this.parent;
             if (tecniques || ambiental || value) {
                 return true; // Al menos una opción está seleccionada, la validación pasa
@@ -313,10 +313,10 @@ export const transfersValidator = yup.object().shape({
                 return false; // Ninguna opción está seleccionada, la validación falla
             }
         }),
-    observations: yup  
-    .string()
-    .required("El campo es obligatorio")
-    .max(300, "Solo se permiten 300 caracteres"),
+    observations: yup
+        .string()
+        .required("El campo es obligatorio")
+        .max(300, "Solo se permiten 300 caracteres"),
 });
 
 export const profitsIncomeFormValidator = yup.object({
@@ -349,20 +349,20 @@ export const EntityValidator = yup.object({
     resource: yup.number().required("Debe seleccionar una opción"),
     entity: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
     year0: yup.number()
-    .transform((value) => Number.isNaN(value) ? null : value).nullable()
-    .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
     year1: yup.number()
-    .transform((value) => Number.isNaN(value) ? null : value).nullable()
-    .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
     year2: yup.number()
-    .transform((value) => Number.isNaN(value) ? null : value).nullable()
-    .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
     year3: yup.number()
-    .transform((value) => Number.isNaN(value) ? null : value).nullable()
-    .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
     year4: yup.number()
-    .transform((value) => Number.isNaN(value) ? null : value).nullable()
-    .required("El campo es obligatorio"),
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .required("El campo es obligatorio"),
 });
 
 export const activitiesValidator = yup.object({
@@ -415,21 +415,21 @@ export const logicFrameFormValidator = yup.object({
 });
 
 export const logicFrameValidator = yup.object().shape({
-    resume : yup 
-    .number()
-    .required("Debe seleccionar una opción"),
-    description: yup  
-    .string()
-    .required("Debe seleccionar una opción"),
+    resume: yup
+        .number()
+        .required("Debe seleccionar una opción"),
+    description: yup
+        .string()
+        .required("Debe seleccionar una opción"),
     indicator: yup
-    .number()
-    .required("Debe seleccionar una opción"),
-    sourceVerification: yup  
-    .string()
-    .max(500, "Solo se permiten 500 caracteres"),
-    assumptions: yup  
-    .string()
-    .max(500, "Solo se permiten 500 caracteres"),
+        .number()
+        .required("Debe seleccionar una opción"),
+    sourceVerification: yup
+        .string()
+        .max(500, "Solo se permiten 500 caracteres"),
+    assumptions: yup
+        .string()
+        .max(500, "Solo se permiten 500 caracteres"),
 });
 
 export const indicatorsFormValidator = yup.object({
@@ -624,5 +624,11 @@ export const indicatorValidator = yup.object({
 });
 
 export const projectsValidator = yup.object({
-    
+
+});
+
+export const finishProjectValidator = yup.object({
+    observations: yup
+        .string()
+        .required("El campo es obligatorio")
 });

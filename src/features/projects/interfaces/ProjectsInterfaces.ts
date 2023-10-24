@@ -308,7 +308,7 @@ export interface IIndicator {
   dpnIndicator?: number;
   dpn?: number;
   staticValueCode?: number;
-  staticValue?: number;
+  staticValue?: string;
   total?: number;
   accumulative?: number;
 
@@ -323,6 +323,10 @@ export interface IIndicator {
 
 export interface IIndicatorsForm {
   indicators?: IIndicator[];
+}
+
+export interface IFinishProjectForm {
+  observations: string;
 }
 
 export interface IProjectTemp {
@@ -408,7 +412,7 @@ export interface IIndicatorAction {
   dpnIndicator?: number;
   dpn?: number;
   staticValueCode?: number;
-  staticValue?: number;
+  staticValue?: string;
   total?: number;
   accumulative?: number;
   productMGA: string;
@@ -498,6 +502,6 @@ export interface IProject {
   observations: string | null;
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
-  tempTab?: string;
   version: string | null;
+  projectObservation: string | null;
 }
