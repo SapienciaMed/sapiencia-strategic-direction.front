@@ -9,17 +9,17 @@ import { useEntitiesService } from "./entities-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IEntities } from "../interfaces/Entities";
 import { AppContext } from "../../../common/contexts/app.context";
-import { useProjectsCrudData } from "../hooks/projects-crud.hook";
 import { useProjectsService } from "./projects-service.hook";
+import { useNavigate } from "react-router-dom";
 
 export function useTransferData() {
     const { GetEntitiesDependency } = useEntitiesService();
+    const navigate = useNavigate();
     const [processData] = useState<IDropdownProps[]>(null);
     const [dependecyData, setDependencyData] = useState<IDropdownProps[]>(null);
     const { CreateProject, UpdateProject } = useProjectsService();
     const { setMessage, authorization } = useContext(AppContext);
-    const { navigate } = useProjectsCrudData();
-    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue } = useContext(ProjectsContext);
+    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue, formAction } = useContext(ProjectsContext);
 
     const resolver = useYupValidationResolver(transfersValidator);
 
@@ -29,7 +29,7 @@ export function useTransferData() {
         formState: { errors, isValid },
         control,
         watch,
-        setValue,
+        setValue
     } = useForm<Itransfers>({
         resolver, mode: "all", defaultValues: {
             bpin: projectData?.transfers?.bpin ? projectData.transfers.bpin : "",
@@ -58,12 +58,6 @@ export function useTransferData() {
     }, [bpn, project, dependencia])
 
     useEffect(() => {
-        setDisableContinue(!isValid);
-        setActionContinue(isValid ? () => onSubmit : () => { });
-        setTextContinue("Enviar")
-    }, [isValid]);
-
-    useEffect(() => {
         const subscription = watch((value: Itransfers) => setProjectData(prev => {
             return { ...prev, transfers: { ...value } }
         }));
@@ -81,6 +75,12 @@ export function useTransferData() {
             }
         }).catch(() => { });
     }, []);
+
+    useEffect(() => {
+        setDisableContinue(!isValid);
+        setActionContinue(isValid ? () => onSubmit : () => { });
+        setTextContinue("Enviar");
+    }, [isValid]);
 
     const onSubmit = handleSubmit(async (data: Itransfers) => {
         setMessage({
@@ -105,7 +105,7 @@ export function useTransferData() {
                             background: true,
                             OkTitle: "Cerrar",
                             onOk: () => {
-                                navigate('./../');
+                                navigate('/direccion-estrategica/proyectos/');
                                 setMessage({});
                             }
                         })
@@ -165,7 +165,7 @@ export function useTransferData() {
                                     background: true,
                                     OkTitle: "Cerrar",
                                     onOk: () => {
-                                        navigate('./../');
+                                        navigate('/direccion-estrategica/proyectos/');
                                         setMessage({});
                                     }
                                 })
@@ -206,8 +206,6 @@ export function useTransferData() {
             }
         });
     });
-
-
-
+    
     return { register, errors, control, onSubmit, processData, bpn, dependency, project, isValid, watch, };
 }

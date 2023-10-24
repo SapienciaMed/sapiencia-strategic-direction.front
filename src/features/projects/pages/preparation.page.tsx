@@ -11,7 +11,6 @@ import RisksComponent from "../components/risks.component";
 import { activitiesValidator, capacityValidator, environmentalAnalysisValidator, needsValidator, riskValidator, technicalAnalysisValidator } from "../../../common/schemas";
 
 function PreparationPage(): React.JSX.Element {
-    
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
     const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
@@ -29,27 +28,59 @@ function PreparationPage(): React.JSX.Element {
         {
             id: 1,
             name: "Análisis Técnico",
-            content: <TechnicalAnalysisComponent disableNext={() => { disableAccordions([2]) }} enableNext={() => { enableAccordions([2]) }} />
+            content: <TechnicalAnalysisComponent 
+                disableNext={() => { 
+                        disableAccordions([2]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([2]) 
+                }} 
+            />
         },
         {
             id: 2,
             name: "Necesidades",
-            content: <NeedsComponent disableNext={() => { disableAccordions([3]) }} enableNext={() => { enableAccordions([3]) }} setForm={setPlaneFormComponent} />
+            content: <NeedsComponent 
+                disableNext={() => { 
+                        disableAccordions([3]) 
+                }} enableNext={() => { 
+                        enableAccordions([3]) 
+                }} setForm={setPlaneFormComponent} 
+            />
         },
         {
             id: 3,
             name: "Capacidad",
-            content: <CapacityComponent disableNext={() => { disableAccordions([4]) }} enableNext={() => { enableAccordions([4]) }} />
+            content: <CapacityComponent 
+                disableNext={() => { 
+                        disableAccordions([4]) 
+                }} 
+                enableNext={() => { 
+                        enableAccordions([4]) 
+                }} 
+            />
         },
         {
             id: 4,
             name: "Análisis Ambiental",
-            content: <EnvironmentalAnalysisComponent disableNext={() => { disableAccordions([5]) }} enableNext={() => { enableAccordions([5]) }} />
+            content: <EnvironmentalAnalysisComponent 
+                disableNext={() => { 
+                        disableAccordions([5]) 
+                }} enableNext={() => { 
+                        enableAccordions([5]) 
+                }} 
+            />
         },
         {
             id: 5,
             name: "Actividades",
-            content: <ActivitiesComponent disableNext={() => { disableAccordions([6]) }} enableNext={() => { enableAccordions([6]) }} setForm={setPlaneFormComponent} />
+            content: <ActivitiesComponent
+                disableNext={() => { 
+                        disableAccordions([6]) 
+                }} enableNext={() => { 
+                        enableAccordions([6]) 
+                }} 
+                setForm={setPlaneFormComponent} />
         },
         {
             id: 6,

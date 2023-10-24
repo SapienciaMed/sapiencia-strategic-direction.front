@@ -51,7 +51,7 @@ export function ActorCreateComponent({
 }: IProps): React.JSX.Element {
   const ActorCreateComponentRef = useRef(null);
   const [ActorCreateData, setActorCreateData] = useState<IActorsForm>();
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const { setMessage } = useContext(AppContext);
   const { GetEntitiesPosition } = useEntitiesService();
   const resolver = useYupValidationResolver(actorsValidator);
@@ -88,10 +88,15 @@ export function ActorCreateComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid) {
+    if ( isValid && formAction === "new" ) {
       enableNext();
-    } else {
-      disableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -219,6 +224,7 @@ export function ActorCreateComponent({
       },
     },
   ];
+  
   return (
     <div className="main-page">
       <FormComponent

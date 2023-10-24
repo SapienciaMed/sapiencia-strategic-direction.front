@@ -22,7 +22,7 @@ export function PlanDevelopmentComponent({
   enableNext,
 }: IProps): React.JSX.Element {
   const [planDevelopmentData, setPlanDevelopment] = useState<IPlanDevelopmentForm>(null);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(planDevelopmentValidator);
   const {
     control,
@@ -31,6 +31,7 @@ export function PlanDevelopmentComponent({
     clearErrors,
     formState: { errors, isValid },
     watch,
+    trigger
   } = useForm<IPlanDevelopmentForm>({
     resolver,
     mode: "all",
@@ -51,10 +52,15 @@ export function PlanDevelopmentComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid) {
+    if ( isValid && formAction === "new" ) {
       enableNext();
-    } else {
+    } else if( !isValid && formAction === "new" ) {
       disableNext();
+    } else if( isValid && formAction === "edit" ) {
+      enableNext();
+      setDisableContinue(false);
+    } else {      
+      setDisableContinue(true);
     }
   }, [isValid]);
 

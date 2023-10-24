@@ -15,9 +15,9 @@ interface IProps {
   enableNext: () => void;
 }
 
-export function CapacityComponent({ disableNext, enableNext, }: IProps): React.JSX.Element {
+export function CapacityComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
@@ -26,6 +26,8 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
     register,
     watch,
     formState: { errors, isValid },
+    setValue,
+    trigger
   } = useForm<ICapacityForm>({
     resolver,
     mode: "all",
@@ -38,10 +40,15 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
   });
 
   useEffect(() => {
-    if (isValid) {
+    if ( isValid && formAction === "new" ) {
       enableNext();
-    } else {
-      disableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -74,8 +81,6 @@ export function CapacityComponent({ disableNext, enableNext, }: IProps): React.J
       }
     })
   }, []);
-
-
   return (
     <div className="full-height capacity-page card-table">
       <FormComponent action={undefined} className="">

@@ -27,10 +27,10 @@ interface IProps {
 
 export function TechnicalAnalysisComponent({
   disableNext,
-  enableNext,
+  enableNext
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(technicalAnalysisValidator);
 
   const {
@@ -38,6 +38,8 @@ export function TechnicalAnalysisComponent({
     watch,
     register,
     control,
+    setValue,
+    trigger
   } = useForm<ItechnicalAnalysisForm>({
     resolver,
     mode: "all",
@@ -57,10 +59,15 @@ export function TechnicalAnalysisComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid) {
-      enableNext();
-    } else {
-      disableNext();
+    if ( isValid && formAction === "new" ) {
+        enableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 

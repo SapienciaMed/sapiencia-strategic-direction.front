@@ -41,13 +41,13 @@ interface IProps {
 
 export function PoblationComponent({
   disableNext,
-  enableNext,
+  enableNext
 }: IProps): React.JSX.Element {
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
   const [deparmentList, setDeparmentList] = useState([]);
-  const { setProjectData, projectData } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(poblationValidator);
   const { setMessage } = useContext(AppContext);
   const { getListByGrouper, getListByParent } = useGenericListService();
@@ -59,6 +59,7 @@ export function PoblationComponent({
     setValue,
     getValues,
     control,
+    trigger
   } = useForm<IPoblationForm>({
     resolver,
     mode: "all",
@@ -174,8 +175,6 @@ export function PoblationComponent({
   }, [idDepartament]);
 
 
-
-
   useEffect(() => {
     const subscription = watch((value: IPoblationForm) =>
       setPoblationData((prev) => {
@@ -186,10 +185,15 @@ export function PoblationComponent({
   }, [watch]);
 
   useEffect(() => {
-    if (isValid) {
-      enableNext();
-    } else {
-      disableNext();
+    if ( isValid && formAction === "new" ) {
+        enableNext();
+    } else if( !isValid && formAction === "new" ) {
+        disableNext();
+    } else if( isValid && formAction === "edit" ) {
+        enableNext();
+        setDisableContinue(false);
+    } else {      
+        setDisableContinue(true);
     }
   }, [isValid]);
 
@@ -199,14 +203,12 @@ export function PoblationComponent({
     if (response.operation.code === EResponseCodes.OK) {
       const data: IDropdownProps[] = response.data.map(data => {
         return { name: data.itemDescription, value: Number(data.id) }
-      });
+    });
       return data;
     } else {
       return [];
     }
   }
-
-
 
   useEffect(() => {
     if (PoblationData)

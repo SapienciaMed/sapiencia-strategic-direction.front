@@ -5,6 +5,7 @@ import {
   Dispatch,
   SetStateAction,
   useState,
+  useEffect,
 } from "react";
 import { useLocation } from 'react-router-dom';
 import { IProjectTemp } from "../interfaces/ProjectsInterfaces";
@@ -24,7 +25,7 @@ interface IProjectsContext {
   setActionCancel: Dispatch<SetStateAction<() => void>>;
   showCancel: boolean;
   setShowCancel: Dispatch<SetStateAction<boolean>>;
-  formContext: "new" | "edit";
+  formAction: "new" | "edit";
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -45,7 +46,7 @@ export const ProjectsContext = createContext<IProjectsContext>({
   setActionCancel: () => {},
   showCancel: true,
   setShowCancel: () => {},
-  formContext: null
+  formAction: null
 });
 
 export function ProjectsContextProvider({ children }: IProps) {
@@ -57,7 +58,7 @@ export function ProjectsContextProvider({ children }: IProps) {
   const [actionContinue, setActionContinue] = useState<() => void>(() => {});
   const [actionCancel, setActionCancel] = useState<() => void>(() => {});
   const [showCancel, setShowCancel] = useState<boolean>(true);
-  const formContext = location.pathname.includes('/edit/') ? "edit" : "new";
+  const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
 
   const values = useMemo<IProjectsContext>(() => {
     return {
@@ -75,9 +76,9 @@ export function ProjectsContextProvider({ children }: IProps) {
       setActionCancel,
       showCancel,
       setShowCancel,
-      formContext
+      formAction
     };
-  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel]);
+  }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel, formAction]);
 
   return <ProjectsContext.Provider value={values}>{children}</ProjectsContext.Provider>;
 }

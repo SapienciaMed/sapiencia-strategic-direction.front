@@ -21,7 +21,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData } = useContext(ProjectsContext);
+    const { setProjectData, projectData, formAction, setDisableContinue } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { getListByGrouper } = useGenericListService();
     const resolver = useYupValidationResolver(objectivesValidator);
@@ -31,7 +31,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch
+        watch,
+        trigger
     } = useForm<IObjectivesForm>({
         resolver, mode: "all", defaultValues: {
             generalObjective: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
@@ -53,10 +54,15 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         });
     }, []);
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     useEffect(() => {
@@ -209,6 +215,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
             }
         }
     ];
+
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">

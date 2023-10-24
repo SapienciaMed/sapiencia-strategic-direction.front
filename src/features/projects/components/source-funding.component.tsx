@@ -30,7 +30,7 @@ interface IProps {
 
 function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [ sourceFundingFormData, setsourceFundingFormData] = useState<ISourceFundingForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const  resolver = useYupValidationResolver(sourceFundingValidator)
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
@@ -257,10 +257,15 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         trigger("sourceFunding");
     };
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
     useEffect(() => {
@@ -398,7 +403,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             setEsValidoInversion(null)
           }
     };
-    
 
     return (
         <><div className="card-table">

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, Suspense } from "react";
 import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useRegisterData } from "../hooks/register.hook";
 import { Controller } from "react-hook-form";
@@ -6,9 +6,8 @@ import { ProjectsContext } from "../contexts/projects.context";
 
 function RegisterPage(): React.JSX.Element {
     const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
-    const { formContext } = useContext(ProjectsContext);
-    
-    console.log('formContext: ', formContext );
+    const { formAction, projectData } = useContext(ProjectsContext);
+    const statusForDisabledInputs = [2,3];
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
@@ -30,7 +29,9 @@ function RegisterPage(): React.JSX.Element {
                                         typeInput={"number"}
                                         register={register}
                                         onChange={field.onChange}
-                                        errors={errors} />
+                                        errors={errors}
+                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                                    />
                                 );
                             }}
                         />
@@ -50,7 +51,9 @@ function RegisterPage(): React.JSX.Element {
                                         typeInput={"text"}
                                         register={register}
                                         onChange={field.onChange}
-                                        errors={errors} />
+                                        errors={errors}
+                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                                    />
                                 );
                             }}
                         />
@@ -99,7 +102,6 @@ function RegisterPage(): React.JSX.Element {
                             }}
                         />
                     </div>
-
                     <div className="project-filters-container">
                         <SelectComponent
                             idInput="process"
@@ -109,6 +111,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Proceso"
                             classNameLabel="text-black biggest bold text-required"
                             data={processData}
+                            disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
                         />
                         <SelectComponent
                             idInput="localitation"
@@ -150,6 +153,7 @@ function RegisterPage(): React.JSX.Element {
                                         onChange={field.onChange}
                                         errors={errors}
                                         characters={500}
+                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
                                     ></TextAreaComponent>
                                 );
                             }}

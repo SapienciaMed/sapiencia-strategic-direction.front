@@ -19,7 +19,7 @@ interface IProps {
 export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const causesEffectsComponentRef = useRef(null);
     const [problemDescriptionData, setProblemDescriptionData] = useState<IProblemDescriptionForm>(null)
-    const { setProjectData, projectData } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(problemDescriptionValidator);
     const {
@@ -28,7 +28,8 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch
+        watch,
+        trigger
     } = useForm<IProblemDescriptionForm>({
         resolver, mode: "all", defaultValues: {
             problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
@@ -49,10 +50,15 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
     }, [watch]);
 
     useEffect(() => {
-        if (isValid) {
+        if ( isValid && formAction === "new" ) {
             enableNext();
-        } else {
+        } else if( !isValid && formAction === "new" ) {
             disableNext();
+        } else if( isValid && formAction === "edit" ) {
+            enableNext();
+            setDisableContinue(false);
+        } else {      
+            setDisableContinue(true);
         }
     }, [isValid]);
 
@@ -351,6 +357,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
             },
         }
     ];
+
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
@@ -492,7 +499,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 onOk: () => {
                                     if (causesEffectsComponentRef.current) {
                                         causesEffectsComponentRef.current.handleSubmit((data: IEffect) => {
-                                            console.log()
                                             setProblemDescriptionData(prev => {
                                                 const effects = prev?.effects ? prev.effects.concat(data) : [data];
                                                 return { ...prev, effects: effects };
