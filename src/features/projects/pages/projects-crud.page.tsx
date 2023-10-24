@@ -23,7 +23,7 @@ function ProjectsCrudPage(): React.JSX.Element {
             <div className="main-page full-height">
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Crear proyecto</div>
+                        <div className="text-black extra-large bold">{ formAction === "new" ? "Crear proyecto" : "Editar proyecto"}</div>
                     </div>
                     <TabListComponent tabs={tabs} ref={tabsComponentRef} />
                     <div className="projects-footer-mobile mobile">
