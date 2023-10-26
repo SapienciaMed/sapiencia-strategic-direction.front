@@ -26,7 +26,8 @@ export function useProjectsCrudData() {
             setActionCancel, 
             setActionContinue, 
             showCancel,
-            formAction } = useContext(ProjectsContext);
+            formAction,
+            setDisableContinue } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject, GetProjectById } = useProjectsService();
     const navigate = useNavigate();
@@ -82,14 +83,14 @@ export function useProjectsCrudData() {
         }
     }, []);
     useEffect(()=>{
-        if(projectData?.tempTab){
+        if(projectData?.tempTab && projectData?.status == 1 ){
             const startIndex = tabs.findIndex( tab => tab.id === projectData?.tempTab );
             const idsAfterTempTab  = tabs
                                     .slice(startIndex + 1)
                                     .map( tab  => tab.id);
             tabsComponentRef.current.disableTabs(idsAfterTempTab);
         }
-    }, [ projectData?.tempTab ])
+    }, [ projectData?.tempTab, projectData?.status ])
     useEffect(() => {
         if (authorization?.user?.numberDocument && formAction === "new" ) GetProjectByUser(authorization.user.numberDocument).then((response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -431,7 +432,85 @@ export function useProjectsCrudData() {
             }
         }
     }, [step]);
+
+    const onUpdateStatus = () => {
+
+        setMessage({
+            title:  "Guardar cambios",
+            description: "El proyecto se guardará en Actualización, ¿Deseas continuar?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                updateStatus()
+                setTextContinue(null);
+                setActionCancel(null);
+                setActionContinue(null);
+                setMessage({});
+                setDisableContinue(true);   
+            }
+        });
+
+    }
+
+    const updateStatus = async () => {
+
+        const data = { ...projectData, user: authorization.user.numberDocument, status: 3, tempTab: String( tabs[step].id )};
+        const res = await UpdateProject(projectData.id, data);
+
+        if (res.operation.code === EResponseCodes.OK) {
+            setMessage({
+                title: "Proyecto en actualización",
+                description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,
+                background: true,
+                show: true,
+                OkTitle: "Cerrar",
+                onOk: () => {
+                    setMessage({});
+                },
+                onClose: () => {
+                    setMessage({});
+                }
+            });
+        } else {
+            if(res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                setMessage({
+                    title: "Validación BPIN.",
+                    description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                    background: true,
+                    show: true,
+                    OkTitle: "Cerrar",
+                    onOk: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
+                        setMessage({});
+                    }
+                });
+            }else {
+                setMessage({
+                    title: "Ocurrio un problema...",
+                    description: <p className="text-primary biggest">{res.operation.message}</p>,
+                    background: true,
+                    show: true,
+                    OkTitle: "Cerrar",
+                    onOk: () => {
+                        setMessage({});
+                    },
+                    onClose: () => {
+                        setMessage({});
+                    }
+                });
+            }
+        }  
+    }
+
     const onSaveTemp = async () => {
+
         if (projectData?.id) {
             const data = { ...projectData, user: authorization.user.numberDocument, status: 1, tempTab: String( tabs[step].id )};
             const res = await UpdateProject(projectData.id, data);
@@ -535,5 +614,5 @@ export function useProjectsCrudData() {
 
     }
 
-    return { tabs, tabsComponentRef, disableContinue, actionContinue, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel, formAction }
+    return { tabs, step, tabsComponentRef, disableContinue, actionContinue, onUpdateStatus, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel, formAction }
 }
