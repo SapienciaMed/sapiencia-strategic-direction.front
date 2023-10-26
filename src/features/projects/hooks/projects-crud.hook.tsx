@@ -457,28 +457,15 @@ export function useProjectsCrudData() {
 
     }
 
-    const updateStatus = async () => {
+    const updateStatus = async ():Promise<void> => {
 
         const data = { ...projectData, user: authorization.user.numberDocument, status: 3, tempTab: String( tabs[step].id )};
         const res = await UpdateProject(projectData.id, data);
 
-        if (res.operation.code === EResponseCodes.OK) {
-            setMessage({
-                title: "Proyecto en actualización",
-                description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,
-                background: true,
-                show: true,
-                OkTitle: "Cerrar",
-                onOk: () => {
-                    setMessage({});
-                },
-                onClose: () => {
-                    setMessage({});
-                }
-            });
-        } else {
+        if (res.operation.code !== EResponseCodes.OK) {
+
             if(res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
-                setMessage({
+                return setMessage({
                     title: "Validación BPIN.",
                     description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                     background: true,
@@ -491,22 +478,37 @@ export function useProjectsCrudData() {
                         setMessage({});
                     }
                 });
-            }else {
-                setMessage({
-                    title: "Ocurrio un problema...",
-                    description: <p className="text-primary biggest">{res.operation.message}</p>,
-                    background: true,
-                    show: true,
-                    OkTitle: "Cerrar",
-                    onOk: () => {
-                        setMessage({});
-                    },
-                    onClose: () => {
-                        setMessage({});
-                    }
-                });
             }
-        }  
+
+            return setMessage({
+                title: "Ocurrio un problema...",
+                description: <p className="text-primary biggest">{res.operation.message}</p>,
+                background: true,
+                show: true,
+                OkTitle: "Cerrar",
+                onOk: () => {
+                    setMessage({});
+                },
+                onClose: () => {
+                    setMessage({});
+                }
+            });
+        } 
+
+        setMessage({
+            title: "Proyecto en actualización",
+            description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,
+            background: true,
+            show: true,
+            OkTitle: "Cerrar",
+            onOk: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            }
+        });
+
     }
 
     const onSaveTemp = async () => {

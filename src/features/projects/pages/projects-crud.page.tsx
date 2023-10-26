@@ -19,9 +19,9 @@ function ProjectsCrudPage(): React.JSX.Element {
             showCancel,
             step,
             formAction } = useProjectsCrudData();
-    const textBtnUpdateStatus = projectData?.status == 2 || projectData?.status == 3 ? "Actualizar estado" : "Guardar temporalmente" ;
-    if (!projectData?.status && formAction === "edit") { return <p>Loading...</p>; }
-    console.log('projectData?.status: ', projectData?.status );
+    const formEditStatusValidation = projectData?.status == 2 || projectData?.status == 3;
+    const textBtnUpdateStatus = formEditStatusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
+    if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -36,7 +36,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 className="button-main huge hover-three button-save"
                                 value={ textBtnUpdateStatus }
                                 type="button"
-                                action={ projectData?.status == 2 || projectData?.status == 3 ? onUpdateStatus : onSaveTemp }
+                                action={ formEditStatusValidation ? onUpdateStatus : onSaveTemp }
                             />
                         </div>}
                         <div className="mobile-actions">
@@ -53,7 +53,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                     },
                                     onOk: () => {
                                         localStorage.removeItem('create_project_data');
-                                        navigate('./../');
+                                        navigate('/direccion-estrategica/proyectos/');
                                         setMessage({});
                                     }
                                 })
@@ -61,11 +61,11 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>}
                             <ButtonComponent
-                                value={ textContinue || (  projectData?.status == 2 ? "Guardar" : "Continuar" ) }
+                                value={ textContinue || (  formEditStatusValidation ? "Guardar" : "Continuar" ) }
                                 className="button-main huge hover-three"
                                 type="button"
                                 action={ actionContinue || (() => { })}
-                                disabled={ disableContinue || projectData?.status == 2 }
+                                disabled={disableContinue || ( formEditStatusValidation && tabs[step]?.id != 'transfer' ) }
                             />
                         </div>
                     </div>
@@ -78,14 +78,14 @@ function ProjectsCrudPage(): React.JSX.Element {
                         className="button-main huge hover-three"
                         value={ textBtnUpdateStatus }
                         type="button"
-                        action={ projectData?.status == 2 || projectData?.status == 3 ? onUpdateStatus : onSaveTemp }
+                        action={ formEditStatusValidation ? onUpdateStatus : onSaveTemp }
                     />
                 }
                 <div className="buttons-bot">
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
-                            title: "Cancelar creación de proyecto",
-                            description: "¿Deseas cancelar la creación? No se guardarán los datos",
+                            title: formEditStatusValidation ? "Cancelar la acción" : "Cancelar creación de proyecto",
+                            description: formEditStatusValidation ? "¿Desea cancelar los cambios?" : "¿Deseas cancelar la creación? No se guardarán los datos",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
@@ -97,7 +97,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 if (projectData.id) {
                                     DeleteProject(projectData.id);
                                 }
-                                navigate('./../');
+                                navigate('/direccion-estrategica/proyectos/');
                                 setMessage({});
                             }
                         })
@@ -106,10 +106,10 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={ textContinue || (  projectData?.status == 2 ? "Guardar" : "Continuar" )}
+                        value={ textContinue || (  formEditStatusValidation ? "Guardar" : "Continuar" )}
                         type="button"
                         action={ actionContinue || (() => { })}
-                        disabled={disableContinue || ( projectData?.status == 2 && tabs[step]?.id != 'transfer' ) }
+                        disabled={disableContinue || ( formEditStatusValidation && tabs[step]?.id != 'transfer' ) }
                     />
                 </div>
             </div>
