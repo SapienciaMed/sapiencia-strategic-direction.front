@@ -8,7 +8,8 @@ function ProjectsCrudPage(): React.JSX.Element {
             tabsComponentRef, 
             disableContinue, 
             actionContinue, 
-            onSaveTemp, 
+            onSaveTemp,
+            onUpdateStatus,
             setMessage, 
             navigate, 
             actionCancel, 
@@ -16,8 +17,11 @@ function ProjectsCrudPage(): React.JSX.Element {
             DeleteProject, 
             projectData, 
             showCancel,
+            step,
             formAction } = useProjectsCrudData();
+    const textBtnUpdateStatus = projectData?.status == 2 || projectData?.status == 3 ? "Actualizar estado" : "Guardar temporalmente" ;
     if (!projectData?.status && formAction === "edit") { return <p>Loading...</p>; }
+    console.log('projectData?.status: ', projectData?.status );
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
@@ -30,9 +34,9 @@ function ProjectsCrudPage(): React.JSX.Element {
                         {!actionCancel && <div className="save-temp">
                             <ButtonComponent
                                 className="button-main huge hover-three button-save"
-                                value="Guardar temporalmente"
+                                value={ textBtnUpdateStatus }
                                 type="button"
-                                action={onSaveTemp}
+                                action={ projectData?.status == 2 || projectData?.status == 3 ? onUpdateStatus : onSaveTemp }
                             />
                         </div>}
                         <div className="mobile-actions">
@@ -57,11 +61,11 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>}
                             <ButtonComponent
-                                value={textContinue || "Continuar"}
+                                value={ textContinue || (  projectData?.status == 2 ? "Guardar" : "Continuar" ) }
                                 className="button-main huge hover-three"
                                 type="button"
-                                action={actionContinue || (() => { })}
-                                disabled={disableContinue}
+                                action={ actionContinue || (() => { })}
+                                disabled={ disableContinue || projectData?.status == 2 }
                             />
                         </div>
                     </div>
@@ -72,9 +76,9 @@ function ProjectsCrudPage(): React.JSX.Element {
                 {actionCancel ? <div></div> :
                     <ButtonComponent
                         className="button-main huge hover-three"
-                        value="Guardar temporalmente"
+                        value={ textBtnUpdateStatus }
                         type="button"
-                        action={onSaveTemp}
+                        action={ projectData?.status == 2 || projectData?.status == 3 ? onUpdateStatus : onSaveTemp }
                     />
                 }
                 <div className="buttons-bot">
@@ -102,10 +106,10 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={ textContinue || "Continuar" }
+                        value={ textContinue || (  projectData?.status == 2 ? "Guardar" : "Continuar" )}
                         type="button"
-                        action={actionContinue || (() => { })}
-                        disabled={disableContinue}
+                        action={ actionContinue || (() => { })}
+                        disabled={disableContinue || ( projectData?.status == 2 && tabs[step]?.id != 'transfer' ) }
                     />
                 </div>
             </div>

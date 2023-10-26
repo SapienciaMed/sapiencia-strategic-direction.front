@@ -79,7 +79,7 @@ export function useTransferData() {
     useEffect(() => {
         setDisableContinue(!isValid);
         setActionContinue(isValid ? () => onSubmit : () => { });
-        setTextContinue("Enviar");
+        setTextContinue(projectData?.status == 2 ? "Guardar" : "Enviar");
     }, [isValid]);
 
     const onSubmit = handleSubmit(async (data: Itransfers) => {

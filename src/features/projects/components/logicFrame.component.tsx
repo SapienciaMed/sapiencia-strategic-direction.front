@@ -225,10 +225,8 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             disableNext();
         } else if( isValid && formAction === "edit" ) {
             enableNext();
-            setDisableContinue(false);
-        } else {      
-            setDisableContinue(true);
-        }
+        }      
+        setDisableContinue(isValid);
     }, [isValid]);
     
     useEffect(() => {
