@@ -432,9 +432,7 @@ export function useProjectsCrudData() {
             }
         }
     }, [step]);
-
     const onUpdateStatus = () => {
-
         setMessage({
             title:  "Guardar cambios",
             description: "El proyecto se guardará en Actualización, ¿Deseas continuar?",
@@ -454,10 +452,8 @@ export function useProjectsCrudData() {
                 setDisableContinue(true);   
             }
         });
-
     }
-
-    const updateStatus = async ():Promise<void> => {
+    const updateStatus = async () => {
 
         const data = { ...projectData, user: authorization.user.numberDocument, status: 3, tempTab: String( tabs[step].id )};
         const res = await UpdateProject(projectData.id, data);
@@ -495,7 +491,7 @@ export function useProjectsCrudData() {
             });
         } 
 
-        setMessage({
+        return setMessage({
             title: "Proyecto en actualización",
             description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,
             background: true,
@@ -613,7 +609,6 @@ export function useProjectsCrudData() {
                 }
             }
         }
-
     }
 
     return { tabs, step, tabsComponentRef, disableContinue, actionContinue, onUpdateStatus, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel, formAction }

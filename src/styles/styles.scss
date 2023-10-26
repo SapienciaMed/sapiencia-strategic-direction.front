@@ -973,3 +973,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 1rem;
     }
 }
+
+
+@media (max-width: 390px) {
+    .project-filters-container {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+}
