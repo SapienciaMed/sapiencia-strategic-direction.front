@@ -19,8 +19,8 @@ function ProjectsCrudPage(): React.JSX.Element {
             showCancel,
             step,
             formAction } = useProjectsCrudData();
-    const formEditStatusValidation = projectData?.status == 2 || projectData?.status == 3;
-    const textBtnUpdateStatus = formEditStatusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
+    const statusValidation = projectData?.status == 2 || projectData?.status == 3;
+    const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
@@ -36,7 +36,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 className="button-main huge hover-three button-save"
                                 value={ textBtnUpdateStatus }
                                 type="button"
-                                action={ formEditStatusValidation ? onUpdateStatus : onSaveTemp }
+                                action={ statusValidation ? onUpdateStatus : onSaveTemp }
                             />
                         </div>}
                         <div className="mobile-actions">
@@ -61,11 +61,11 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>}
                             <ButtonComponent
-                                value={ textContinue || (  formEditStatusValidation ? "Guardar" : "Continuar" ) }
+                                value={ textContinue || (  statusValidation ? "Guardar" : "Continuar" ) }
                                 className="button-main huge hover-three"
                                 type="button"
                                 action={ actionContinue || (() => { })}
-                                disabled={disableContinue || ( formEditStatusValidation && tabs[step]?.id != 'transfer' ) }
+                                disabled={disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' ) }
                             />
                         </div>
                     </div>
@@ -78,14 +78,14 @@ function ProjectsCrudPage(): React.JSX.Element {
                         className="button-main huge hover-three"
                         value={ textBtnUpdateStatus }
                         type="button"
-                        action={ formEditStatusValidation ? onUpdateStatus : onSaveTemp }
+                        action={ statusValidation ? onUpdateStatus : onSaveTemp }
                     />
                 }
                 <div className="buttons-bot">
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
-                            title: formEditStatusValidation ? "Cancelar la acción" : "Cancelar creación de proyecto",
-                            description: formEditStatusValidation ? "¿Desea cancelar los cambios?" : "¿Deseas cancelar la creación? No se guardarán los datos",
+                            title: statusValidation ? "Cancelar la acción" : "Cancelar creación de proyecto",
+                            description: statusValidation ? "¿Desea cancelar los cambios?" : "¿Deseas cancelar la creación? No se guardarán los datos",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
@@ -106,10 +106,10 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={ textContinue || (  formEditStatusValidation ? "Guardar" : "Continuar" )}
+                        value={ textContinue || (  statusValidation ? "Guardar" : "Continuar" )}
                         type="button"
                         action={ actionContinue || (() => { })}
-                        disabled={disableContinue || ( formEditStatusValidation && tabs[step]?.id != 'transfer' ) }
+                        disabled={disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' ) }
                     />
                 </div>
             </div>
