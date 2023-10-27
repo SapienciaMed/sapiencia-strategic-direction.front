@@ -64,6 +64,8 @@
 
 .p-disabled, .p-component:disabled {
   opacity: 0.8;
+  background-color: #fafafa !important;
+  border: 1px solid #b5bac5 !important;
 }
 
 .p-error {
