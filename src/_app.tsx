@@ -10,7 +10,7 @@ import useAppCominicator from "./common/hooks/app-communicator.hook";
 import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
 
 function App() {
-  const HomePage = lazy(() => import("./features/home/home.page"));
+  const HomePage = lazy(() => import("./features/home/pages/home.page"));
   const ProjectsPage = lazy(() => import("./features/projects/pages/projects.page"));
   const TestPage = lazy(() => import("./features/home/test.page"));
   const ProjectsCrud = lazy(() => import("./features/projects/pages/projects-crud.page"));

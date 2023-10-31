@@ -12,7 +12,7 @@ function FinishProjectPage(): React.JSX.Element {
             <div className='main-page full-height'>
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Proyectos</div>
+                        <div className="text-black extra-large bold">Finalizar Proyecto</div>
                     </div>
                     <div className="strategic-direction-attachments-form">
                         <div className="card-table">
