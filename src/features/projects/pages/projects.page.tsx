@@ -119,6 +119,7 @@ function ProjectsPage(): React.JSX.Element {
                                 classNameLabel="text-black biggest bold"
                                 data={statusData}
                                 errors={errors}
+                                filter={true}
                             />
                         </div>
                     </div>

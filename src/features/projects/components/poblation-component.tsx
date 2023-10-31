@@ -299,6 +299,7 @@ export function PoblationComponent({
                     classNameLabel="text-black biggest bold text-required"
                     data={regionData}
                     errors={errors}
+                    filter={true}
                   />
                 );
               }}
@@ -318,6 +319,7 @@ export function PoblationComponent({
                     classNameLabel="text-black biggest bold text-required"
                     data={deparmentList}
                     errors={errors}
+                    filter={true}
                   />
                 );
               }}
@@ -337,6 +339,7 @@ export function PoblationComponent({
                     classNameLabel="text-black biggest bold text-required"
                     data={districtList}
                     errors={errors}
+                    filter={true}
                   />
                 );
               }}
@@ -401,6 +404,7 @@ export function PoblationComponent({
                       setValue(`demographic.${index}.detail`, null);
                     }}
                     fieldArray
+                    filter={true}
                   >
                     {getValues(`demographic.${index}.clasification`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
                   </SelectComponent>
@@ -415,6 +419,7 @@ export function PoblationComponent({
                     promiseData={getSelectsData(demographicFieldArray[index]?.clasification).then(response => response)}
                     errors={errors}
                     fieldArray
+                    filter={true}
                   >
                     {getValues(`demographic.${index}.detail`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
 

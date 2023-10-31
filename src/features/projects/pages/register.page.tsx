@@ -128,6 +128,7 @@ function RegisterPage(): React.JSX.Element {
                             classNameLabel="text-black biggest bold"
                             data={localitationData}
                             disabled={true}
+                            filter={true}
                         />
                         <SelectComponent
                             idInput="dependency"
@@ -137,6 +138,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Dependencia"
                             classNameLabel="text-black biggest bold text-required"
                             data={dependecyData}
+                            filter={true}
                         />
                     </div>
                     <div>

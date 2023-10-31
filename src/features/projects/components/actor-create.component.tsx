@@ -401,6 +401,7 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
               label="Posición"
               classNameLabel="text-black biggest bold text-required"
               data={positionData}
+              filter={true}
             />
           );
         }}

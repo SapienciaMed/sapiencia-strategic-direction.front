@@ -495,6 +495,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                         data={indicatorTypeData}
                         errors={errors}
                         disabled={view}
+                        filter={true}
                     />
                     {typeIndicator !== null && <>
                         {typeIndicator === staticValue ?
@@ -507,6 +508,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={objectivesData}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             /> :
                             <SelectComponent
                                 control={control}
@@ -517,6 +519,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={strategicLineData}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             />}
                         {typeIndicator === staticValue ?
                             <SelectComponent
@@ -528,6 +531,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={productMGAData}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             /> :
                             <SelectComponent
                                 control={control}
@@ -538,6 +542,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={filterData(componentData, strategicLineData?.find(item => item.value === strategicLine)?.name)}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             />
                         }
                     </>}
@@ -553,6 +558,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 classNameLabel="text-black biggest bold text-required"
                                 data={indicatorDNPData}
                                 errors={errors}
+                                filter={true}
                                 disabled={view}
                             /> :
                             <SelectComponent
@@ -564,6 +570,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={filterData(programData, componentData?.find(item => item.id === component)?.description)}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             />
                         }
                         {typeIndicator === staticValue ?
@@ -587,6 +594,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 data={filterData(indicatorsNameData, programData?.find(item => item.id === program)?.description)}
                                 errors={errors}
                                 disabled={view}
+                                filter={true}
                             />
                         }
                         <SelectComponent
@@ -598,6 +606,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                             data={measurementData}
                             errors={errors}
                             disabled={view}
+                            filter={true}
                         />
                     </div>
                     {typeIndicator === staticValue ?
@@ -679,6 +688,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                             data={productsData}
                             errors={errors}
                             disabled={view}
+                            filter={true}
                         />
                     }
                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
@@ -758,6 +768,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 errors={errors}
                                 disabled={view}
                                 onChange={onChangeYears}
+                                filter={true}
                             />
                             <InputNumberComponent
                                 idInput={`total`}

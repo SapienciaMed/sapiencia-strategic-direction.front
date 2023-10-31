@@ -688,6 +688,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         classNameLabel="text-black biggest bold text-required"
                         data={objectives}
                         errors={errors}
+                        filter={true}
                         disabled={view}
                     />
                     <SelectComponent
@@ -698,6 +699,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         classNameLabel="text-black biggest bold text-required"
                         data={stagesData}
                         errors={errors}
+                        filter={true}
                         disabled={view}
                     />
                     <Controller
@@ -853,6 +855,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                 classNameLabel="text-black biggest bold text-required"
                                 data={yearsData}
                                 errors={errors}
+                                filter={true}
                                 disabled={view}
                             />
                         </div>
@@ -919,6 +922,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             data={componentsData}
                                             errors={errors}
                                             fieldArray
+                                            filter={true}
                                             disabled={view}
                                         />
                                         <SelectComponent
@@ -930,6 +934,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             data={measurementData}
                                             errors={errors}
                                             fieldArray
+                                            filter={true}
                                             disabled={view}
                                         />
                                         <InputNumberComponent
@@ -998,6 +1003,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             data={testData}
                                             errors={errors}
                                             fieldArray
+                                            filter={true}
                                             disabled={view}
                                         />
                                     </div>
@@ -1034,6 +1040,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             data={testData}
                                             errors={errors}
                                             disabled
+                                            filter={true}
                                             fieldArray
                                         />
                                         <Controller
