@@ -298,6 +298,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         classNameLabel="text-black biggest bold text-required"
                         data={measurementData}
                         errors={errors}
+                        filter={true}
                     />
                     <InputNumberComponent
                         idInput="goal"

@@ -420,6 +420,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Tipo de impacto"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
+                filter={true}
                 data={types}
               />
             );
@@ -469,6 +470,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Clasificación"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
+                filter={true}
                 data={ratings}
               />
             );
@@ -489,6 +491,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 label="Nivel de impacto"
                 classNameLabel="text-black big bold"
                 direction={EDirection.column}
+                filter={true}
                 data={levels}
               />
             );

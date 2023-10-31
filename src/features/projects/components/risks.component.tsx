@@ -514,6 +514,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={LevelData}
                         errors={errors}
+                        filter={true}
 
                     />
                     <SelectComponent
@@ -524,6 +525,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={riskData}
                         errors={errors}
+                        filter={true}
 
                     />
                     <SelectComponent
@@ -534,6 +536,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={typeRiskData}
                         errors={errors}
+                        filter={true}
 
                     />
                     <div className="grid-span-3-columns">
@@ -570,6 +573,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         label="Probabilidad"
                         classNameLabel="text-black biggest bold text-required"
                         data={probabilityData}
+                        filter={true}
                         errors={errors}
 
                     />
@@ -581,6 +585,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={impactData}
                         errors={errors}
+                        filter={true}
 
                     />
                     <div className="grid-span-2-columns">

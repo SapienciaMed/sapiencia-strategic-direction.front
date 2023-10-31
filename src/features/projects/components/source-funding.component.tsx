@@ -596,6 +596,7 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
                         classNameLabel="text-black biggest bold text-required"
                         data={stagesData}
                         errors={errors}
+                        filter={true}
                     />
                        <SelectComponent
                         control={control}
@@ -605,6 +606,7 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
                         classNameLabel="text-black biggest bold text-required"
                         data={entityData}
                         errors={errors}
+                        filter={true}
                         
                     />
                        <SelectComponent
@@ -615,6 +617,7 @@ function EntityAddComponent({ returnData, setForm, item , view }: IPropsEntity) 
                         classNameLabel="text-black biggest bold text-required"
                         data={resourceData}
                         errors={errors}
+                        filter={true}
                         
                     />
                 </div>

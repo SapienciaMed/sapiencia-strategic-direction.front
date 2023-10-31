@@ -436,6 +436,8 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={ResumeData}
                         errors={errors}
+                        filter={true}
+                        
 
                     />
                     <SelectComponent
@@ -446,6 +448,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={descriptionData}
                         errors={errors}
+                        filter={true}
 
                     />
                     <SelectComponent
@@ -456,6 +459,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         classNameLabel="text-black biggest bold text-required"
                         data={indicators}
                         errors={errors}
+                        filter={true}
 
                     />
                 </div>

@@ -111,6 +111,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Proceso"
                             classNameLabel="text-black biggest bold text-required"
                             data={processData}
+                            filter={true}
                             disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
                         />
                         <SelectComponent
@@ -122,6 +123,7 @@ function RegisterPage(): React.JSX.Element {
                             classNameLabel="text-black biggest bold"
                             data={localitationData}
                             disabled={true}
+                            filter={true}
                         />
                         <SelectComponent
                             idInput="dependency"
@@ -131,6 +133,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Dependencia"
                             classNameLabel="text-black biggest bold text-required"
                             data={dependecyData}
+                            filter={true}
                         />
                     </div>
                     <div>

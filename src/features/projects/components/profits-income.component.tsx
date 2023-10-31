@@ -467,6 +467,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                         data={measurementData}
                         errors={errors}
                         disabled={view ? true : false }
+                        filter={true}
                     />
                 </div>
                 </div>

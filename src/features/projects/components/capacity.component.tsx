@@ -134,6 +134,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
                 classNameLabel="text-black big bold text-required"
                 direction={EDirection.column}
                 placeholder="Seleccionar"
+                filter={true}
                 data={measurementData}
               />
 
