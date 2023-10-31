@@ -8,18 +8,12 @@ import { ProjectsContext } from "../contexts/projects.context";
 import { useEntitiesService } from "./entities-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IEntities } from "../interfaces/Entities";
-import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
-import { useProjectsService } from "../hooks/projects-service.hook";
-import { IProject } from "../interfaces/ProjectsInterfaces";
-
 
 export function useRegisterData() {
 
     const { GetEntities , GetEntitiesDependency } = useEntitiesService();
-    const [ locationData, setLocationData] = useState<IDropdownProps[]>([]);
     const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
     const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
-    const { getListByGrouper, getListByParent } = useGenericListService();
     const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData } = useContext(ProjectsContext);
     const [ charged, setCharged ] = useState<boolean>(false);
     

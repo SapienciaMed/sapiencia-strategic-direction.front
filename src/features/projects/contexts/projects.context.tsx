@@ -26,6 +26,9 @@ interface IProjectsContext {
   showCancel: boolean;
   setShowCancel: Dispatch<SetStateAction<boolean>>;
   formAction: "new" | "edit";
+  statusesForDisabledInputs: number[];
+  setStatusForDisabledInputs: Dispatch<SetStateAction<number[]>>;
+  isADisabledInput: boolean;
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -46,7 +49,10 @@ export const ProjectsContext = createContext<IProjectsContext>({
   setActionCancel: () => {},
   showCancel: true,
   setShowCancel: () => {},
-  formAction: null
+  formAction: null,
+  statusesForDisabledInputs: [],
+  setStatusForDisabledInputs: () => {},
+  isADisabledInput: false
 });
 
 export function ProjectsContextProvider({ children }: IProps) {
@@ -58,7 +64,9 @@ export function ProjectsContextProvider({ children }: IProps) {
   const [actionContinue, setActionContinue] = useState<() => void>(() => {});
   const [actionCancel, setActionCancel] = useState<() => void>(() => {});
   const [showCancel, setShowCancel] = useState<boolean>(true);
+  const [statusesForDisabledInputs, setStatusForDisabledInputs] = useState<number[]>([2,3]);
   const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
+  const isADisabledInput = statusesForDisabledInputs.includes(projectData?.status) && formAction === "edit";
 
   const values = useMemo<IProjectsContext>(() => {
     return {
@@ -76,7 +84,10 @@ export function ProjectsContextProvider({ children }: IProps) {
       setActionCancel,
       showCancel,
       setShowCancel,
-      formAction
+      formAction,
+      isADisabledInput,
+      statusesForDisabledInputs,
+      setStatusForDisabledInputs
     };
   }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel, formAction]);
 

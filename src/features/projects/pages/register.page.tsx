@@ -5,9 +5,15 @@ import { Controller } from "react-hook-form";
 import { ProjectsContext } from "../contexts/projects.context";
 
 function RegisterPage(): React.JSX.Element {
-    const { register, errors, controlRegister, onSubmit, localitationData, dependecyData, processData,watchDateFrom } = useRegisterData();
-    const { formAction, projectData } = useContext(ProjectsContext);
-    const statusForDisabledInputs = [2,3];
+    const { register, 
+            errors, 
+            controlRegister, 
+            onSubmit, 
+            localitationData, 
+            dependecyData, 
+            processData,
+            watchDateFrom } = useRegisterData();
+    const { isADisabledInput } = useContext(ProjectsContext);
     return (
         <div className="crud-page full-height">
             <FormComponent action={onSubmit}>
@@ -30,7 +36,7 @@ function RegisterPage(): React.JSX.Element {
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
-                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                                        disabled={ isADisabledInput }
                                     />
                                 );
                             }}
@@ -52,7 +58,7 @@ function RegisterPage(): React.JSX.Element {
                                         register={register}
                                         onChange={field.onChange}
                                         errors={errors}
-                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                                        disabled={ isADisabledInput }
                                     />
                                 );
                             }}
@@ -111,7 +117,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Proceso"
                             classNameLabel="text-black biggest bold text-required"
                             data={processData}
-                            disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                            disabled={ isADisabledInput }
                         />
                         <SelectComponent
                             idInput="localitation"
@@ -153,7 +159,7 @@ function RegisterPage(): React.JSX.Element {
                                         onChange={field.onChange}
                                         errors={errors}
                                         characters={500}
-                                        disabled={ statusForDisabledInputs.includes(projectData?.status) && formAction === "edit" }
+                                        disabled={ isADisabledInput }
                                     ></TextAreaComponent>
                                 );
                             }}

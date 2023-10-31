@@ -21,7 +21,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData, formAction, setDisableContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, formAction, setDisableContinue, isADisabledInput } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { getListByGrouper } = useGenericListService();
     const resolver = useYupValidationResolver(objectivesValidator);
@@ -31,8 +31,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         getValues,
         setValue,
         formState: { errors, isValid },
-        watch,
-        trigger
+        watch
     } = useForm<IObjectivesForm>({
         resolver, mode: "all", defaultValues: {
             generalObjective: projectData?.identification?.problemDescription?.centerProblem ? projectData.identification.problemDescription.centerProblem : "",
@@ -142,7 +141,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                     },
                     style: "causes-effects-modal-size"
                 });
-            }
+            },
+            hide: isADisabledInput
         }
     ];
     const purposesColumns: ITableElement<IEffect>[] = [
@@ -212,7 +212,8 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                     },
                     style: "causes-effects-modal-size"
                 });
-            }
+            },
+            hide: isADisabledInput
         }
     ];
 
@@ -237,6 +238,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 onChange={field.onChange}
                                 errors={errors}
                                 characters={300}
+                                disabled={ isADisabledInput }
                             >
                             </TextAreaComponent>
                         );
@@ -284,6 +286,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                                 onChange={field.onChange}
                                 errors={errors}
                                 characters={500}
+                                disabled={ isADisabledInput }
                             >
                             </TextAreaComponent>
                         );
@@ -298,6 +301,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         classNameLabel="text-black biggest bold text-required"
                         data={measurementData}
                         errors={errors}
+                        disabled={ isADisabledInput }
                     />
                     <InputNumberComponent
                         idInput="goal"
@@ -310,6 +314,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         currency="COP"
                         locale="es-CO"
                         minFractionDigits={0}
+                        disabled={ isADisabledInput }
                     />
                 </div>
             </FormComponent>
