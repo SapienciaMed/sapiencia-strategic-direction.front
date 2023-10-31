@@ -93,6 +93,9 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
     }
     const mobilTemplate = (item) => {
         const childrens = item.childrens;
+        const actionsMob = actions.filter(action => {
+            return action.hideRow ? !action.hideRow(item) : true;
+        });
         return (
             <>
                 <div className="card-grid-item">
@@ -117,7 +120,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                         })}
                     </div>
                     <div className="card-footer-strategic-direction">
-                        {actions && actions.map((action) => (
+                        {actionsMob && actionsMob.map((action) => (
                             <div key={action.icon} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
                                 {getIconElement(action.icon, "src")}
                             </div>
@@ -327,9 +330,12 @@ const ActionComponent = (props: {
     row: any;
     actions: ITableAction<any>[];
 }): React.JSX.Element => {
+    const actions = props.actions.filter(action => {
+        return action.hideRow ? !action.hideRow(props.row) : true;
+    });
     return (
         <div className="spc-table-action-button">
-            {props.actions.map((action) => (
+            {actions.map((action) => (
                 <div key={action.icon} onClick={() => action.onClick(props.row)}>
                     {getIconElement(action.icon, "src")}
                 </div>
