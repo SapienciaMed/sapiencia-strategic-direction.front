@@ -6,8 +6,14 @@ import TableComponent from "../../../common/components/table.component";
 import { Controller } from "react-hook-form";
 import { UploadComponent } from "../../../common/components/upload.component";
 import { Messages } from 'primereact/messages';
+import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function ProjectsPage(): React.JSX.Element {
+    useBreadCrumb({
+        isPrimaryPage: true,
+        name: "Gestionar proyectos",
+        url: "/direccion-estrategica/proyectos/",
+      });
     const { navigate, 
             tableComponentRef, 
             tableColumns, 
@@ -64,7 +70,7 @@ function ProjectsPage(): React.JSX.Element {
                                 Consultar Proyecto
                             </label>
                             <div className="title-button text-three large">
-                                <span style={{ marginRight: '0.5em' }} onClick={() => { navigate('./crear-proyecto') }}> Crear proyecto</span>
+                                <span style={{ marginRight: '0.5em' }} onClick={() => { navigate('./crear-proyecto') }}> Formular proyecto</span>
                                 {<AiOutlinePlusCircle size={20} color="533893" />}
                             </div>
                         </div>

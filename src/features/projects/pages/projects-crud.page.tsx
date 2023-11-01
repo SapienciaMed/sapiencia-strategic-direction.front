@@ -2,8 +2,11 @@ import React, { useContext } from "react";
 import { ButtonComponent } from "../../../common/components/Form";
 import TabListComponent from "../../../common/components/tab-list.component";
 import { useProjectsCrudData } from "../hooks/projects-crud.hook";
+import { useParams } from "react-router-dom";
+import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
+  
     const { tabs, 
             tabsComponentRef, 
             disableContinue, 
@@ -19,6 +22,15 @@ function ProjectsCrudPage(): React.JSX.Element {
             showCancel,
             step,
             formAction } = useProjectsCrudData();
+
+    const { id: idProyect } = useParams();
+
+    useBreadCrumb({
+        isPrimaryPage: false,
+        name: formAction == "edit" ? "Editar Proyecto" : "Formular proyecto",
+        url: formAction == "edit" ? "/direccion-estrategica/proyectos/edit" : "/direccion-estrategica/proyectos/crear-proyecto",
+        extraParams: formAction == "edit" ? `/${idProyect}` : undefined,
+    });
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
     const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
@@ -27,7 +39,7 @@ function ProjectsCrudPage(): React.JSX.Element {
             <div className="main-page full-height">
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">{ formAction === "new" ? "Crear proyecto" : "Editar proyecto"}</div>
+                        <div className="text-black extra-large bold">{ formAction === "new" ? "Formular proyecto" : "Editar proyecto"}</div>
                     </div>
                     <TabListComponent tabs={tabs} ref={tabsComponentRef} />
                     <div className="projects-footer-mobile mobile">
