@@ -47,7 +47,7 @@ export function PoblationComponent({
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
   const [deparmentList, setDeparmentList] = useState([]);
-  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(poblationValidator);
   const { setMessage } = useContext(AppContext);
   const { getListByGrouper, getListByParent } = useGenericListService();
@@ -300,6 +300,7 @@ export function PoblationComponent({
                     data={regionData}
                     errors={errors}
                     filter={true}
+                    disabled={isADisabledInput}
                   />
                 );
               }}
@@ -320,6 +321,7 @@ export function PoblationComponent({
                     data={deparmentList}
                     errors={errors}
                     filter={true}
+                    disabled={isADisabledInput}
                   />
                 );
               }}
@@ -340,6 +342,7 @@ export function PoblationComponent({
                     data={districtList}
                     errors={errors}
                     filter={true}
+                    disabled={isADisabledInput}
                   />
                 );
               }}
@@ -365,6 +368,7 @@ export function PoblationComponent({
                     onChange={field.onChange}
                     errors={errors}
                     characters={100}
+                    disabled={isADisabledInput}
                   >
                   </TextAreaComponent>
                 );

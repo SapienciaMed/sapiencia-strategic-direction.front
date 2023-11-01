@@ -142,7 +142,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                     style: "causes-effects-modal-size"
                 });
             },
-            hide: isADisabledInput
+            hideRow: () => isADisabledInput
         }
     ];
     const purposesColumns: ITableElement<IEffect>[] = [
@@ -213,7 +213,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                     style: "causes-effects-modal-size"
                 });
             },
-            hide: isADisabledInput
+            hideRow: () => isADisabledInput
         }
     ];
 

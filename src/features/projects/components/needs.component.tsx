@@ -257,7 +257,7 @@ interface IPropsNeedsObjectives {
 function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjectives) {
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsObjectivesValidator);
-    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue } = useContext(ProjectsContext);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue, isADisabledInput } = useContext(ProjectsContext);
     const {
         control,
         register,

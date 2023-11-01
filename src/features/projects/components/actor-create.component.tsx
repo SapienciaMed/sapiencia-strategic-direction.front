@@ -51,7 +51,7 @@ export function ActorCreateComponent({
 }: IProps): React.JSX.Element {
   const ActorCreateComponentRef = useRef(null);
   const [ActorCreateData, setActorCreateData] = useState<IActorsForm>();
-  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
   const { setMessage } = useContext(AppContext);
   const { GetEntitiesPosition } = useEntitiesService();
   const resolver = useYupValidationResolver(actorsValidator);
@@ -192,6 +192,7 @@ export function ActorCreateComponent({
           style: "causes-effects-modal-size",
         });
       },
+      hideRow: () => isADisabledInput
     },
     {
       icon: "Delete",
@@ -222,6 +223,7 @@ export function ActorCreateComponent({
           },
         });
       },
+      hideRow: () => isADisabledInput
     },
   ];
   
@@ -288,7 +290,7 @@ export function ActorCreateComponent({
                 });
               }}
             >
-              Añadir Actores <AiOutlinePlusCircle />
+              { !isADisabledInput && ( <div> Añadir actores <AiOutlinePlusCircle /> </div> ) }
             </div>
           </div>
           {
