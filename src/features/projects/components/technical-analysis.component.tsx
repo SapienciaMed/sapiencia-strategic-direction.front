@@ -30,16 +30,14 @@ export function TechnicalAnalysisComponent({
   enableNext
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
-  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(technicalAnalysisValidator);
 
   const {
     formState: { errors, isValid },
     watch,
     register,
-    control,
-    setValue,
-    trigger
+    control
   } = useForm<ItechnicalAnalysisForm>({
     resolver,
     mode: "all",
@@ -112,6 +110,7 @@ export function TechnicalAnalysisComponent({
                     onChange={field.onChange}
                     errors={errors}
                     characters={300}
+                    disabled={isADisabledInput}
                   >
                   </TextAreaComponent>
                 );
@@ -138,6 +137,7 @@ export function TechnicalAnalysisComponent({
                     onChange={field.onChange}
                     errors={errors}
                     characters={5000}
+                    disabled={isADisabledInput}
                   >
                   </TextAreaComponent>
                 );

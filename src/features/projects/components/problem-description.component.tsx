@@ -19,7 +19,7 @@ interface IProps {
 export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const causesEffectsComponentRef = useRef(null);
     const [problemDescriptionData, setProblemDescriptionData] = useState<IProblemDescriptionForm>(null)
-    const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(problemDescriptionValidator);
     const {
@@ -477,7 +477,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 style: "causes-effects-modal-size"
                             });
                         }}>
-                            Añadir causa <AiOutlinePlusCircle />
+                            { !isADisabledInput && ( <div> Añadir causa <AiOutlinePlusCircle /> </div> ) }
                         </div>
                     </div>
                     {getValues('causes').length > 0 && <TableExpansibleComponent actions={causesActions} columns={causesColumns} data={getValues('causes')} />}
@@ -529,7 +529,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 style: "causes-effects-modal-size"
                             });
                         }}>
-                            Añadir efecto <AiOutlinePlusCircle />
+                            { !isADisabledInput && ( <div> Añadir efecto <AiOutlinePlusCircle /> </div> ) }
                         </div>
                     </div>
                     {getValues('effects').length > 0 && <TableExpansibleComponent actions={effectsActions} columns={effectsColumns} data={getValues('effects')} />}
