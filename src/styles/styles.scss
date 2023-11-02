@@ -287,12 +287,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 }
 
 .project-filters-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    padding: 1rem 0px;
+    display: flex;
+    flex-direction: column;
     row-gap: 1rem;
-    column-gap: 1rem;
+    padding: 0px 0px 1rem;
 }
 
 .p-datatable-row-expansion {
@@ -972,12 +970,4 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         grid-template-columns: 1fr 2fr;
         column-gap: 1rem;
     }
-}
-
-
-@media (max-width: 390px) {
-    .project-filters-container {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
 }

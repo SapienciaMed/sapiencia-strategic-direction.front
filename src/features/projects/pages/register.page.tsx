@@ -117,6 +117,7 @@ function RegisterPage(): React.JSX.Element {
                             label="Proceso"
                             classNameLabel="text-black biggest bold text-required"
                             data={processData}
+                            filter={true}
                             disabled={ isADisabledInput }
                         />
                         <SelectComponent
