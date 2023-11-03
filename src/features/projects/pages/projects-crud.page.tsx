@@ -54,8 +54,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                         <div className="mobile-actions">
                             {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
-                                    title: "Cancelar creación de proyecto",
-                                    description: "¿Deseas cancelar la creación? No se guardarán los datos",
+                                    title: "Cancelar acción",
+                                    description: "¿Desea cancelar la acción y regresar a la opción de consulta?",
                                     show: true,
                                     background: true,
                                     cancelTitle: "Cancelar",
@@ -96,8 +96,8 @@ function ProjectsCrudPage(): React.JSX.Element {
                 <div className="buttons-bot">
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
-                            title: statusValidation ? "Cancelar la acción" : "Cancelar creación de proyecto",
-                            description: statusValidation ? "¿Desea cancelar los cambios?" : "¿Deseas cancelar la creación? No se guardarán los datos",
+                            title: "Cancelar acción",
+                            description: "¿Desea cancelar la acción y regresar a la opción de consulta?",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
