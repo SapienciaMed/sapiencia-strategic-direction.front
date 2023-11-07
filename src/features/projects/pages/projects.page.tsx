@@ -13,7 +13,7 @@ function ProjectsPage(): React.JSX.Element {
         isPrimaryPage: true,
         name: "Gestionar proyectos",
         url: "/direccion-estrategica/proyectos/",
-      });
+    });
     const { navigate, 
             tableComponentRef, 
             tableColumns, 

@@ -407,6 +407,12 @@ export interface IProjectFiltersDirection {
   status: number;
 }
 
+export interface IProjectFiltersHistorical {
+  bpin: string;
+  project: string;
+  validity: string;
+}
+
 export interface IActivitiesProject {
   objectiveSelect?: string;
   objetiveActivity: ICause;

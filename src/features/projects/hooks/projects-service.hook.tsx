@@ -60,5 +60,10 @@ export function useProjectsService() {
         return put(`${projectsUrl}${endpoint}`, data);
     }
 
-    return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject, FinishProject }
+    async function GetAllHistorical(): Promise<ApiResponse<IProject[]>>{
+        const endpoint: string = `/get-all-historical`;
+        return get(`${projectsUrl}${endpoint}`);
+    }
+
+    return { GetProjectByUser, GetProjectById, GetProjectFiles, CreateProject, UpdateProject, DeleteProject, GetAllStatus, DeleteFileProject, FinishProject, GetAllHistorical }
 }

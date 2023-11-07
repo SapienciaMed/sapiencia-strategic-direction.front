@@ -19,9 +19,10 @@ interface IProps<T> {
     widthTable?: string;
     hidePagination?: boolean;
     horizontalScroll?: boolean;
+    title?: string;
 }
 
-const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagination = false, horizontalScroll = false }: IProps<any>): React.JSX.Element => {
+const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagination = false, horizontalScroll = false, title = "" }: IProps<any>): React.JSX.Element => {
     const [first, setFirst] = useState<number>(0);
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(0);
@@ -120,11 +121,19 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                         })}
                     </div>
                     <div className="card-footer-strategic-direction">
-                        {actionsMob && actionsMob.map((action) => (
-                            <div key={action.icon} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
-                                {getIconElement(action.icon, "src")}
-                            </div>
-                        ))}
+                        {actionsMob && actionsMob.map((action, index) => {
+                            return (
+                                <div key={index} onClick={() => action.onClick(item)} style={{ margin: "0px 0.3rem" }}>
+                                    {action.customIcon ? (
+                                        <div className="button grid-button button-link">
+                                            {action.customIcon(item)}
+                                        </div>
+                                    ) : (
+                                        getIconElement(action.icon, "src")
+                                    )}
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
                 {expandedRowsMobile[`${item.consecutive}`] && childrens ? childrens.map((children) => {
@@ -148,11 +157,19 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                                 })}
                             </div>
                             <div className="card-footer">
-                                {actions && actions.map((action) => (
-                                    <div key={action.icon} onClick={() => action.onClick(item)} style={{margin:"0px 0.3rem"}}>
-                                        {getIconElement(action.icon, "src")}
-                                    </div>
-                                ))}
+                                {actions && actions.map((action, index) => {
+                                    return (
+                                        <div key={index} onClick={() => action.onClick(item)} style={{ margin: "0px 0.3rem" }}>
+                                            {action.customIcon ? (
+                                                <div className="button grid-button button-link">
+                                                    {action.customIcon(item)}
+                                                </div>
+                                            ) : (
+                                                getIconElement(action.icon, "src")
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
                     )
@@ -162,14 +179,14 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
     };
     let expansibleCount = 0;
     data.forEach(item => {
-        if(item.childrens?.length > 0) expansibleCount++;
+        if (item.childrens?.length > 0) expansibleCount++;
     })
     return (
         <div className="spc-common-table expansible card-table">
             {!hidePagination && <Paginator
                 className="between spc-table-paginator"
                 template={paginatorHeader}
-                leftContent={width > 830 ? leftContent : null}
+                leftContent={width > 830 ? leftContent(title) : null}
                 first={first}
                 rows={perPage}
                 totalRecords={data?.length || 0}
@@ -183,7 +200,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                     dataKey="consecutive"
                     onRowToggle={(e) => setExpandedRows(e.data)}
                     scrollable={true}
-                    style={{maxWidth: widthTable}}
+                    style={{ maxWidth: widthTable }}
                     emptyMessage={" "}
                 >
                     {expansibleCount > 0 && <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />}
@@ -229,10 +246,13 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
     )
 }
 
-const leftContent = (
-    <p className="header-information text-black bold biggest">
-    </p>
-  );
+const leftContent = (title) => {
+    return (
+        <p className="header-information text-black bold biggest">
+            {title}
+        </p>
+    )
+};
 
 const paginatorHeader: PaginatorTemplateOptions = {
     layout: "CurrentPageReport RowsPerPageDropdown",
@@ -275,56 +295,56 @@ const paginatorHeader: PaginatorTemplateOptions = {
 const paginatorFooter: PaginatorTemplateOptions = {
     layout: "PrevPageLink PageLinks NextPageLink",
     PrevPageLink: (options: PaginatorPrevPageLinkOptions) => {
-      return (
-        <button
-          type="button"
-          className={classNames(options.className, "border-round")}
-          onClick={options.onClick}
-          disabled={options.disabled}
-        >
-          <span className="p-3 table-previus"></span>
-        </button>
-      );
+        return (
+            <button
+                type="button"
+                className={classNames(options.className, "border-round")}
+                onClick={options.onClick}
+                disabled={options.disabled}
+            >
+                <span className="p-3 table-previus"></span>
+            </button>
+        );
     },
     NextPageLink: (options: PaginatorNextPageLinkOptions) => {
-      return (
-        <button
-          type="button"
-          className={classNames(options.className, "border-round")}
-          onClick={options.onClick}
-          disabled={options.disabled}
-        >
-          <span className="p-3 table-next"></span>
-        </button>
-      );
+        return (
+            <button
+                type="button"
+                className={classNames(options.className, "border-round")}
+                onClick={options.onClick}
+                disabled={options.disabled}
+            >
+                <span className="p-3 table-next"></span>
+            </button>
+        );
     },
     PageLinks: (options: PaginatorPageLinksOptions) => {
-      if (
-        (options.view.startPage === options.page &&
-          options.view.startPage !== 0) ||
-        (options.view.endPage === options.page &&
-          options.page + 1 !== options.totalPages)
-      ) {
-        const className = classNames(options.className, { "p-disabled": true });
-  
+        if (
+            (options.view.startPage === options.page &&
+                options.view.startPage !== 0) ||
+            (options.view.endPage === options.page &&
+                options.page + 1 !== options.totalPages)
+        ) {
+            const className = classNames(options.className, { "p-disabled": true });
+
+            return (
+                <span className={className} style={{ userSelect: "none" }}>
+                    ...
+                </span>
+            );
+        }
+
         return (
-          <span className={className} style={{ userSelect: "none" }}>
-            ...
-          </span>
+            <button
+                type="button"
+                className={options.className}
+                onClick={options.onClick}
+            >
+                {options.page + 1}
+            </button>
         );
-      }
-  
-      return (
-        <button
-          type="button"
-          className={options.className}
-          onClick={options.onClick}
-        >
-          {options.page + 1}
-        </button>
-      );
     },
-  };
+};
 
 const ActionComponent = (props: {
     row: any;
@@ -335,11 +355,24 @@ const ActionComponent = (props: {
     });
     return (
         <div className="spc-table-action-button">
-            {actions.map((action) => (
-                <div key={action.icon} onClick={() => action.onClick(props.row)}>
-                    {getIconElement(action.icon, "src")}
-                </div>
-            ))}
+            {actions.map((action, index) => {
+                if (!action) return;
+                return (
+                    <div
+                        style={{ display: action.hide ? "none" : "block" }}
+                        key={index}
+                        onClick={() => action.onClick(props.row)}
+                    >
+                        {action.customIcon ? (
+                            <div className="button grid-button button-link">
+                                {action.customIcon(props.row)}
+                            </div>
+                        ) : (
+                            getIconElement(action.icon, "src")
+                        )}
+                    </div>
+                )
+            })}
         </div>
     );
 };
@@ -347,33 +380,33 @@ const ActionComponent = (props: {
 // Metodo que retorna el icono o nombre de la accion
 function getIconElement(icon: string, element: "name" | "src") {
     switch (icon) {
-      case "Detail":
-        return element == "name" ? (
-          "Detalle"
-        ) : (
-          <AiOutlineEye className="button grid-button button-detail" />
-        );
-      case "Edit":
-        return element == "name" ? (
-          "Editar"
-        ) : (
-          <RiPencilLine className="button grid-button button-edit" />
-        );
-      case "Delete":
-        return element == "name" ? (
-          "Eliminar"
-        ) : (
-          <PiTrash className="button grid-button button-delete" />
-        );
-      case "Link":
-        return element == "name" ? (
-          "Vincular"
-        ) : (
-          <FaLink className="button grid-button button-link" />
-        );
-      default:
-        return "";
+        case "Detail":
+            return element == "name" ? (
+                "Detalle"
+            ) : (
+                <AiOutlineEye className="button grid-button button-detail" />
+            );
+        case "Edit":
+            return element == "name" ? (
+                "Editar"
+            ) : (
+                <RiPencilLine className="button grid-button button-edit" />
+            );
+        case "Delete":
+            return element == "name" ? (
+                "Eliminar"
+            ) : (
+                <PiTrash className="button grid-button button-delete" />
+            );
+        case "Link":
+            return element == "name" ? (
+                "Vincular"
+            ) : (
+                <FaLink className="button grid-button button-link" />
+            );
+        default:
+            return "";
     }
-  }
+}
 
 export default React.memo(TableExpansibleComponent);

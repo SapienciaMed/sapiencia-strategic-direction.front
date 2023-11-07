@@ -27,7 +27,7 @@ export function useProjectsData() {
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
-    const { setMessage, validateActionAccess, authorization } = useContext(AppContext);
+    const { setMessage } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();

@@ -40,7 +40,7 @@ const ResumeData: IDropdownProps[] = [
 function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(logicFrameFormValidator);
     const [LogicFrameData, setLogicFrameData] = useState<IlogicFrameForm>(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, formAction, setDisableContinue } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, formAction, setDisableContinue, isADisabledInput } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { GetIndicatorName } = useIndicatorsService();
     const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
@@ -198,7 +198,8 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                 setForm(<AddLogicFrameComponent setForm={setForm} returnData={changeLogicFrame} item={row} />);
                 setTextContinue("Guardar y regresar");
                 setActionCancel(() => onCancelEdit);
-            }
+            },
+            hideRow: () => isADisabledInput
         },
     ];
     const changeLogicFrame = (data: IAddLogicFrame, row?: IAddLogicFrame) => {
