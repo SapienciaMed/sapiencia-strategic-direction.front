@@ -306,6 +306,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         }
     }, []);
     useEffect(() => {
+        console.log(isValid)
         setDisableContinue(!isValid);
     }, [isValid]);
 
@@ -406,7 +407,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                             value="Ingreso"
                             onChange={(e) => field.onChange(e.value)}
                             checked={field.value === 'Ingreso'}
-                            disabled={view ? true : false }
+                            disabled={!!view }
                             />
                         </div>
                         )}
@@ -426,7 +427,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                             value="Beneficio"
                             onChange={(e) => field.onChange(e.value)}
                             checked={field.value === 'Beneficio'}
-                            disabled={view ? true : false }
+                            disabled={!!view }
                             />
                             
                         </div>
@@ -452,7 +453,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                 onChange={field.onChange}
                                 errors={errors}
                                 characters={600}
-                                disabled={view ? true : false }
+                                disabled={!!view }
                             >
                             </TextAreaComponent>
                         );
@@ -466,7 +467,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                         classNameLabel="text-black biggest bold text-required"
                         data={measurementData}
                         errors={errors}
-                        disabled={view ? true : false }
+                        disabled={!!view }
                         filter={true}
                     />
                 </div>
@@ -544,7 +545,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                             setValue(`period.${index}.financialValue`,  getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
                                         }}
                                         minFractionDigits={2}
-                                        disabled={view ? true : false }
+                                        disabled={!!view }
                                 />
                                    <InputNumberComponent
                                         idInput={`period.${index}.financialValue`}
@@ -561,9 +562,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                     />
                                     <div className="actions-needs">
                                          {!view && (
-                                            <>
-                                              <label className="text-black biggest bold">Acciones</label>
-                                            </>
+                                            <label className="text-black biggest bold">Acciones</label>
                                         )}
                                     <div onClick={() => {
                                         setMessage({

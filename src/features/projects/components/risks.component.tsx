@@ -358,6 +358,7 @@ interface IPropsAddRisks {
 }
 
 function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
+    console.log(item)
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(risksValidator);
 
@@ -408,7 +409,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
             const levelObjectives = [
                 {
                     name: projectData.identification.objectives.generalObjective,
-                    value: 1,
+                    value: "1",
                 },
             ];
             setRiskData(levelObjectives);

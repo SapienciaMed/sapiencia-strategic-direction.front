@@ -16,6 +16,15 @@ export interface IProjectFiltersPaginated {
   status?: number;
 }
 
+export interface IHistoricalFiltersPaginated {
+  page: number;
+  perPage: number;
+  bpin: number;
+  project?: string;
+  status?: number;
+}
+
+
 export interface ICause {
   id?: number;
   consecutive: string;
@@ -46,8 +55,6 @@ export interface IObjectivesForm {
   measurement?: number;
   goal?: number;
 }
-
-
 
 export interface IRegisterForm {
   bpin?: string;
@@ -408,7 +415,13 @@ export interface IActivitiesProject {
   activityMGA: string;
   productDescriptionMGA: string;
   activityDescriptionMGA: string;
-  budgetsMGA: IBudgetMGA;
+  budgetsMGA: {
+    id?: number;
+    activityId?: number;
+    year: number;
+    validity: number;
+    budget: number;
+  }[];
   validity: number;
   year: number;
   detailActivities: IDetailActivity[];
@@ -454,6 +467,7 @@ export interface IProject {
   id: number;
   user: string;
   status: number;
+  tempTab: string;
   bpin: string | null;
   project: string | null;
   dateFrom: string | null;
@@ -511,7 +525,6 @@ export interface IProject {
   observations: string | null;
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
-  tempTab?: string;
   version: string | null;
   projectObservation: string | null;
 }
