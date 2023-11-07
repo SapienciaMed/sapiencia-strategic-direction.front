@@ -47,6 +47,8 @@ export interface IObjectivesForm {
   goal?: number;
 }
 
+
+
 export interface IRegisterForm {
   bpin?: string;
   project?: string;
@@ -221,6 +223,13 @@ export interface Iperiod {
   unitValue: number;
   financialValue: number;
 }
+
+
+export interface IBudgetMGAYear {
+  validity: number;
+  budget: number;
+}
+
 
 export interface IBudgetMGA {
   year0: {

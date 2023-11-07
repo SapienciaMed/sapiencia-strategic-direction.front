@@ -332,9 +332,11 @@ export function useProjectsCrudData() {
             show: true,
             OkTitle: "Cerrar",
             onOk: () => {
+                navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
                 setMessage({});
             },
             onClose: () => {
+                navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
                 setMessage({});
             }
         });

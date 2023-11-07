@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { useContext, useEffect, useState } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { Itransfers } from "../interfaces/ProjectsInterfaces";
+import { Itransfers, IBudgetMGAYear } from "../interfaces/ProjectsInterfaces";
 import { transfersValidator } from "../../../common/schemas";
 import { ProjectsContext } from "../contexts/projects.context";
 import { useEntitiesService } from "./entities-service.hook";
@@ -11,6 +11,8 @@ import { IEntities } from "../interfaces/Entities";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useProjectsService } from "./projects-service.hook";
 import { useNavigate } from "react-router-dom";
+import { IActivityMGA } from "../interfaces/ProjectsInterfaces";
+
 
 export function useTransferData() {
     const { GetEntitiesDependency } = useEntitiesService();
@@ -94,6 +96,7 @@ export function useTransferData() {
                 setMessage({});
             },
             onOk: async () => {
+
                 if (projectData?.id) {
                     const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
                     const res = await UpdateProject(projectData.id, data);
@@ -207,5 +210,7 @@ export function useTransferData() {
         });
     });
     
+
+
     return { register, errors, control, onSubmit, processData, bpn, dependency, project, isValid, watch, };
 }
