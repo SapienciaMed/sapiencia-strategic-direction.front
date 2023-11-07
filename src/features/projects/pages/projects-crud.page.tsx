@@ -33,6 +33,7 @@ function ProjectsCrudPage(): React.JSX.Element {
     });
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
     const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
+    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && textContinue != "Guardar y regresar");
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
@@ -77,7 +78,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 className="button-main huge hover-three"
                                 type="button"
                                 action={ actionContinue || (() => { })}
-                                disabled={disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' ) }
+                                disabled={ btnContinueDisableValidation }
                             />
                         </div>
                     </div>
@@ -121,7 +122,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         value={ textContinue || (  statusValidation ? "Guardar" : "Continuar" )}
                         type="button"
                         action={ actionContinue || (() => { })}
-                        disabled={disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' ) }
+                        disabled={ btnContinueDisableValidation }
                     />
                 </div>
             </div>

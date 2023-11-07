@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../common/contexts/app.context";
-import { IActivitiesForm, IActivityMGA } from "../interfaces/ProjectsInterfaces";
+import { IActivitiesForm, IActivityMGA, IBudgetMGAYear } from "../interfaces/ProjectsInterfaces";
 import { ProjectsContext } from "../contexts/projects.context";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { activitiesValidator, activityMGAValidator } from "../../../common/schemas";
@@ -459,6 +459,39 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     ];
 
     const onSubmit = handleSubmit(async (data: IActivityMGA) => {
+
+        const { validationResult, 
+                validityOfOffBudget,
+                yearOfOffBudget,
+                validationType,
+                budgetForValidityYear } = validateActivitiesBudget( data );
+
+        if( validationResult ) {
+            return setMessage({
+                title: "Validación presupuestos",
+                description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${ validationType == "major" ? "mayor" : "menor" } que los de la actividad MGA.`,
+                show: true,
+                background: true,
+                OkTitle: "Cerrar",
+                onOk: () => {
+                    setMessage({});
+                }
+            })
+        }
+
+        if( !budgetForValidityYear ) {
+            return setMessage({
+                title: "Validación presupuestos",
+                description: `No existe un año con la vigencia ${validityOfOffBudget} en la actividad MGA.`,
+                show: true,
+                background: true,
+                OkTitle: "Cerrar",
+                onOk: () => {
+                    setMessage({});
+                }
+            })
+        }
+
         if (view) {
             setForm(null);
             setTextContinue(null);
@@ -500,6 +533,28 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         }
 
     });
+
+    const validateActivitiesBudget = ( activity: IActivityMGA ) => {
+        let yearOfOffBudget : number;
+        let budgetForValidityYear: IBudgetMGAYear;
+        let validationType: "minor" | "major";
+        let validationResult = false;
+        const validityOfOffBudget = activity?.validity;
+        for( let i in activity.budgetsMGA ) {
+            if ( activity.budgetsMGA[i].validity === validityOfOffBudget ){
+                budgetForValidityYear = activity.budgetsMGA[i]
+                yearOfOffBudget = Number(i.replace("year",""));
+            }
+        }
+        activity.detailActivities.forEach( detailActivitie => {
+            const totalCost = detailActivitie.unitCost * detailActivitie.amount;
+            if ( totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget ) {
+                validationResult = true;
+                validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
+            }
+        });
+        return { budgetForValidityYear, validationResult, validationType, validityOfOffBudget, yearOfOffBudget };
+    }
 
     const budgetsYears = {
         0: "budgetsMGA.year0.budget",
