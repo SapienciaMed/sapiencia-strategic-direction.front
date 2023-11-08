@@ -479,6 +479,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             })
         }
 
+        
         if( !budgetForValidityYear ) {
             return setMessage({
                 title: "Validación presupuestos",
@@ -541,7 +542,8 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         let validationResult = false;
         const validityOfOffBudget = activity?.validity;
         for( let i in activity.budgetsMGA ) {
-            if ( activity.budgetsMGA[i].validity === validityOfOffBudget ){
+            if ( Number(activity.budgetsMGA[i].validity) === validityOfOffBudget ){
+                console.log('entro');
                 budgetForValidityYear = activity.budgetsMGA[i]
                 yearOfOffBudget = Number(i.replace("year",""));
             }
