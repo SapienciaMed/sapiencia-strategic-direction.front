@@ -373,6 +373,8 @@ export interface IProjectTemp {
     logicFrame?: IlogicFrameForm;
   }
   transfers?: Itransfers;
+  createHistory?: boolean;
+  oldStatus?: number;
 }
 
 export interface IDetailedActivityFilter {

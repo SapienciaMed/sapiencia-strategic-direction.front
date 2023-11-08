@@ -306,7 +306,6 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         }
     }, []);
     useEffect(() => {
-        console.log(isValid)
         setDisableContinue(!isValid);
     }, [isValid]);
 
