@@ -98,7 +98,11 @@ export function useTransferData() {
             onOk: async () => {
 
                 if (projectData?.id) {
-                    const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
+                    const data = { ...projectData, 
+                                   user: authorization.user.numberDocument, 
+                                   status: 2,
+                                   createHistory: true,
+                                   oldStatus: projectData.status };
                     const res = await UpdateProject(projectData.id, data);
                     if (res.operation.code === EResponseCodes.OK) {
                         setMessage({

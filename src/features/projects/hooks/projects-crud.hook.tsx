@@ -289,7 +289,14 @@ export function useProjectsCrudData() {
     }
     const updateStatus = async () => {
 
-        const data = { ...projectData, user: authorization.user.numberDocument, status: 3, tempTab: String( tabs[step].id )};
+        const data = { ...projectData, 
+                       user: authorization.user.numberDocument, 
+                       status: 3, 
+                       tempTab: String( tabs[step].id ), 
+                       createHistory: false, 
+                       oldStatus: projectData.status 
+                    };
+                    
         const res = await UpdateProject(projectData.id, data);
 
         if (res.operation.code !== EResponseCodes.OK) {
