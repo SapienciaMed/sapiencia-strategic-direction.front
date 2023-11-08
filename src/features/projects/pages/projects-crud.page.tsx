@@ -56,7 +56,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                             {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                                 setMessage({
                                     title: "Cancelar acción",
-                                    description: "¿Desea cancelar la acción y regresar a la opción de consulta?",
+                                    description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
                                     show: true,
                                     background: true,
                                     cancelTitle: "Cancelar",
@@ -98,7 +98,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
                         setMessage({
                             title: "Cancelar acción",
-                            description: "¿Desea cancelar la acción y regresar a la opción de consulta?",
+                            description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
                             show: true,
                             background: true,
                             cancelTitle: "Cancelar",
