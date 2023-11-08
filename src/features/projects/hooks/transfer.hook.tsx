@@ -21,7 +21,7 @@ export function useTransferData() {
     const [dependecyData, setDependencyData] = useState<IDropdownProps[]>(null);
     const { CreateProject, UpdateProject } = useProjectsService();
     const { setMessage, authorization } = useContext(AppContext);
-    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue, formAction } = useContext(ProjectsContext);
+    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue } = useContext(ProjectsContext);
 
     const resolver = useYupValidationResolver(transfersValidator);
 
@@ -31,7 +31,7 @@ export function useTransferData() {
         formState: { errors, isValid },
         control,
         watch,
-        setValue
+        setValue,
     } = useForm<Itransfers>({
         resolver, mode: "all", defaultValues: {
             bpin: projectData?.transfers?.bpin ? projectData.transfers.bpin : "",
@@ -50,7 +50,6 @@ export function useTransferData() {
     const bpn = projectData.register.bpin;
     const project = projectData.register.project;
     const dependency = projectData.register.dependency;
-
     const dependencia = dependecyData?.find(data => data.value === dependency);
 
     useEffect(() => {
@@ -60,6 +59,7 @@ export function useTransferData() {
     }, [bpn, project, dependencia])
 
     useEffect(() => {
+        console.log('entro transfer');
         const subscription = watch((value: Itransfers) => setProjectData(prev => {
             return { ...prev, transfers: { ...value } }
         }));
@@ -96,14 +96,14 @@ export function useTransferData() {
                 setMessage({});
             },
             onOk: async () => {
-
                 if (projectData?.id) {
-                    const data = { ...projectData, 
+                    const formData = { ...projectData,
+                                   transfers: data,
                                    user: authorization.user.numberDocument, 
                                    status: 2,
                                    createHistory: true,
                                    oldStatus: projectData.status };
-                    const res = await UpdateProject(projectData.id, data);
+                    const res = await UpdateProject(projectData.id, formData );
                     if (res.operation.code === EResponseCodes.OK) {
                         setMessage({
                             title: "Proyecto formulado",
@@ -148,8 +148,8 @@ export function useTransferData() {
                         }
                     }
                 } else {
-                    const data = { ...projectData, user: authorization.user.numberDocument, status: 2 };
-                    const res = await CreateProject(data);
+                    const formData = { ...projectData, user: authorization.user.numberDocument, status: 2 };
+                    const res = await CreateProject(formData);
                     setProjectData(prev => {
                         return { ...prev, id: res.data.id }
                     });
