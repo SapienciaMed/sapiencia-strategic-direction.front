@@ -346,6 +346,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                     data={objectives}
                     errors={errors}
                     filter={true}
+                    disabled={isADisabledInput}
                 />
                 <Controller
                     control={control}
@@ -365,6 +366,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                 onChange={field.onChange}
                                 errors={errors}
                                 characters={300}
+                                disabled={isADisabledInput}
                             >
                             </TextAreaComponent>
                         );
