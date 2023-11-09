@@ -34,7 +34,7 @@ function ProjectsCrudPage(): React.JSX.Element {
     });
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
     const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
-    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && textContinue != "Guardar y regresar");
+    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && textContinue != "Guardar y regresar" && textContinue != "Aceptar");
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
