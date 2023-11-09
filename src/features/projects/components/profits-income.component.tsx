@@ -3,7 +3,7 @@ import { FormComponent, InputComponent, SelectComponent, TextAreaComponent } fro
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { profitsIncomeFormValidator, profitsIncomeValidator } from "../../../common/schemas";
-import { INeedObjetive, INeedsForm,IproftisIncomeForm, IprofitsIncome,Iperiod } from "../interfaces/ProjectsInterfaces";
+import { INeedObjetive, INeedsForm, IproftisIncomeForm, IprofitsIncome, Iperiod } from "../interfaces/ProjectsInterfaces";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "./table-expansible.component";
 import { AppContext } from "../../../common/contexts/app.context";
@@ -24,16 +24,16 @@ interface IProps {
 }
 
 function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
-    const [ profitsFormData, setProfitsFormData] = useState<IproftisIncomeForm>(null)
-    const { setProjectData, 
-            projectData, 
-            setTextContinue, 
-            setActionCancel, 
-            setActionContinue ,
-            setShowCancel,  
-            setDisableContinue, 
-            formAction,
-            setDisableStatusUpdate } = useContext(ProjectsContext);
+    const [profitsFormData, setProfitsFormData] = useState<IproftisIncomeForm>(null)
+    const { setProjectData,
+        projectData,
+        setTextContinue,
+        setActionCancel,
+        setActionContinue,
+        setShowCancel,
+        setDisableContinue,
+        formAction,
+        setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
@@ -45,7 +45,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
         formState: { errors, isValid },
         watch,
         trigger
-    } = useForm<IproftisIncomeForm>({ 
+    } = useForm<IproftisIncomeForm>({
         resolver, mode: "all", defaultValues: {
             profitsIncome: projectData?.programation?.profitsIncome?.profitsIncome ? projectData.programation.profitsIncome.profitsIncome : null
         }
@@ -119,21 +119,21 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             fieldName: "unit",
             header: "Unidad de medida",
             renderCell: (row) => {
-                if(measurementData){
-                    const typeRisk = measurementData.find( item => item.value == row.unit)
+                if (measurementData) {
+                    const typeRisk = measurementData.find(item => item.value == row.unit)
                     return <>{typeRisk ? typeRisk.name || "" : ""}</>;
-                }else {
+                } else {
                     return;
                 }
             },
         },
-        
+
     ];
     const objectivesActions: ITableAction<IprofitsIncome>[] = [
         {
             icon: "Detail",
             onClick: (row) => {
-                setForm(<ProfitsIncomeAddComponent setForm={setForm} returnData={changeProfitsIncome} item={row} view={true}/>);
+                setForm(<ProfitsIncomeAddComponent setForm={setForm} returnData={changeProfitsIncome} item={row} view={true} />);
                 setTextContinue("Aceptar");
                 setShowCancel(false);
                 setActionCancel(() => onCancel);
@@ -199,14 +199,14 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
         trigger("profitsIncome");
     };
     useEffect(() => {
-        if ( isValid && formAction === "new" ) {
+        if (isValid && formAction === "new") {
             enableNext();
-        } else if( !isValid && formAction === "new" ) {
+        } else if (!isValid && formAction === "new") {
             disableNext();
-        } else if( isValid && formAction === "edit" ) {
+        } else if (isValid && formAction === "edit") {
             enableNext();
             setDisableContinue(false);
-        } else {      
+        } else {
             setDisableContinue(true);
         }
         setDisableStatusUpdate(!isValid);
@@ -238,7 +238,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
                             Añadir ingreso/beneficio <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('profitsIncome')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns}  widthTable={`${(width * 0.0149) + 40}vw`}  data={getValues('profitsIncome')}  horizontalScroll/>}
+                    {getValues('profitsIncome')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} widthTable={`${(width * 0.0149) + 40}vw`} data={getValues('profitsIncome')} horizontalScroll />}
                 </div>
             </FormComponent>
         </div>
@@ -249,18 +249,18 @@ interface IPropsProfitsIncome {
     returnData: (data: IprofitsIncome, item?: IprofitsIncome) => void;
     setForm: (value: React.SetStateAction<React.JSX.Element>) => void;
     item?: IprofitsIncome;
-    view?:boolean;
+    view?: boolean;
 }
 let render = 0;
 
-function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsProfitsIncome) {
+function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsProfitsIncome) {
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const resolver = useYupValidationResolver(profitsIncomeValidator);
     const { getListByGrouper } = useGenericListService();
     const [addedPeriod, setAddedPeriod] = useState(false); // Nuevo estado local
-    const [periodCounter, setPeriodCounter] = useState(0); 
-    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue,setShowCancel } = useContext(ProjectsContext);
+    const [periodCounter, setPeriodCounter] = useState(0);
+    const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue, setShowCancel } = useContext(ProjectsContext);
     const {
         control,
         register,
@@ -281,25 +281,25 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         name: "period",
     });
 
-  const watchedValues = useWatch({
-    control,
-    name: 'period', // Observa el campo 'period'
-  });
-
-  // Función para calcular y asignar el valor total
-  const calculateTotal = (index) => {
-    const quantity = watchedValues[index]?.quantity || 0;
-    const unitValue = watchedValues[index]?.unitValue || 0;
-    const total = quantity * unitValue;
-    //setValue(`period[${index}].financialValue`, total);// Asigna el total al campo 'financialValue'
-  };
-  
-  useEffect(() => {
-    // Recalcula el valor total cada vez que cambian 'quantity' o 'unitValue' en cualquier período
-    fields.forEach((_, index) => {
-      calculateTotal(index);
+    const watchedValues = useWatch({
+        control,
+        name: 'period', // Observa el campo 'period'
     });
-  }, [watchedValues]);
+
+    // Función para calcular y asignar el valor total
+    const calculateTotal = (index) => {
+        const quantity = watchedValues[index]?.quantity || 0;
+        const unitValue = watchedValues[index]?.unitValue || 0;
+        const total = quantity * unitValue;
+        //setValue(`period[${index}].financialValue`, total);// Asigna el total al campo 'financialValue'
+    };
+
+    useEffect(() => {
+        // Recalcula el valor total cada vez que cambian 'quantity' o 'unitValue' en cualquier período
+        fields.forEach((_, index) => {
+            calculateTotal(index);
+        });
+    }, [watchedValues]);
 
 
     useEffect(() => {
@@ -322,10 +322,10 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         })
     }, []);
 
-   
+
 
     const onSubmit = handleSubmit(async (data: IprofitsIncome) => {
-        if(view) {
+        if (view) {
             setForm(null);
             setTextContinue(null);
             setActionCancel(null);
@@ -333,7 +333,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
             setMessage({});
             setDisableContinue(true);
             setShowCancel(true);
-        }else {
+        } else {
             setMessage({
                 title: item ? "Guardar cambios" : "Crear Ingreso/Beneficio",
                 description: item ? "¿Deseas guardar los cambios?" : "¿Deseas guardar el registro?",
@@ -377,88 +377,92 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
         }
     }, [addedPeriod]);
     return (
-        
+
         <FormComponent action={undefined} className="card-form-development">
             <div className="card-table">
-            <p className="text-black large bold">
-                {
-                    view ? (
-                        "Detalle ingreso/beneficio"
-                    ) : (
-                        item ? "Editar ingreso/beneficio" : "Agregar ingreso/beneficio"
-                    )
-                }
-            </p>
-            <div className="container-profits">
-                <div className="type-container">
-                <label className="text-black large bold text-required">
+                <p className="text-black large bold">
+                    {
+                        view ? (
+                            "Detalle ingreso/beneficio"
+                        ) : (
+                            item ? "Editar ingreso/beneficio" : "Agregar ingreso/beneficio"
+                        )
+                    }
+                </p>
+                <div className="container-profits">
+                    <div className="type-container">
+                        <label className="text-black large bold text-required">
                             Tipo:
-                </label>    
-                     <Controller
-                        control={control}
-                        name="type"
-                        defaultValue={null}
-                        render={({ field }) => (
-                        <div>
-                             <label htmlFor={field.name} className="text-black biggest bold">
-                                Ingreso: </label>
-                            <RadioButton
-                            inputId={field.name}
-                            name={field.name}
-                            value="Ingreso"
-                            onChange={(e) => field.onChange(e.value)}
-                            checked={field.value === 'Ingreso'}
-                            />
-                        </div>
-                        )}
-                    />
+                        </label>
+                        <Controller
+                            control={control}
+                            name="type"
+                            defaultValue={null}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <label htmlFor={field.name} className="text-black biggest bold">
+                                            Ingreso: </label>
+                                        <RadioButton
+                                            inputId={field.name}
+                                            name={field.name}
+                                            value="Ingreso"
+                                            onChange={(e) => field.onChange(e.value)}
+                                            checked={field.value === 'Ingreso'}
+                                            disabled={field.value !== 'Ingreso'}
+                                        />
+                                    </div>
+                                )
+                            }}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="type"
+                            defaultValue={null}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <label htmlFor={field.name} className="text-black biggest bold">
+                                            Beneficio: </label>
+                                        <RadioButton
+                                            inputId={field.name}
+                                            name={field.name}
+                                            value="Beneficio"
+                                            onChange={(e) => field.onChange(e.value)}
+                                            checked={field.value === 'Beneficio'}
+                                            disabled={field.value !== 'Beneficio'}
+                                        />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </div>
 
                     <Controller
                         control={control}
-                        name="type"
-                        defaultValue={null}
-                        render={({ field }) => (
-                        <div>
-                        <label htmlFor={field.name} className="text-black biggest bold">
-                            Beneficio: </label>
-                            <RadioButton
-                            inputId={field.name}
-                            name={field.name}
-                            value="Beneficio"
-                            onChange={(e) => field.onChange(e.value)}
-                            checked={field.value === 'Beneficio'}
-                            disabled={!!view }
-                            />
-                            
-                        </div>
-                        )}
+                        name={"description"}
+                        defaultValue=""
+                        render={({ field }) => {
+                            return (
+                                <TextAreaComponent
+                                    id={field.name}
+                                    idInput={field.name}
+                                    value={`${field.value}`}
+                                    label="Descripción"
+                                    classNameLabel="text-black biggest bold text-required"
+                                    className="text-area-basic"
+                                    placeholder="Escribe aquí"
+                                    register={register}
+                                    onChange={field.onChange}
+                                    errors={errors}
+                                    characters={600}
+                                    disabled={!!view}
+                                >
+                                </TextAreaComponent>
+                            );
+                        }}
                     />
-                    </div>
-                
-                <Controller
-                    control={control}
-                    name={"description"}
-                    defaultValue=""
-                    render={({ field }) => {
-                        return (
-                            <TextAreaComponent
-                                id={field.name}
-                                idInput={field.name}
-                                value={`${field.value}`}
-                                label="Descripción"
-                                classNameLabel="text-black biggest bold text-required"
-                                className="text-area-basic"
-                                placeholder="Escribe aquí"
-                                register={register}
-                                onChange={field.onChange}
-                                errors={errors}
-                                characters={600}
-                                disabled={!!view }
-                            >
-                            </TextAreaComponent>
-                        );
-                    }}
-                />
                     <SelectComponent
                         control={control}
                         idInput={"unit"}
@@ -467,12 +471,12 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                         classNameLabel="text-black biggest bold text-required"
                         data={measurementData}
                         errors={errors}
-                        disabled={!!view }
+                        disabled={!!view}
                         filter={true}
                     />
                 </div>
-                </div>
-                <div className="card-table">
+            </div>
+            <div className="card-table">
                 <div>
                     <div className="title-area">
                         <label className="text-black large bold text-required">
@@ -480,13 +484,13 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                         </label>
 
                         <div className="title-button text-main large" onClick={() => {
-                         if (!view) { 
-                            append({ period: periodCounter, quantity: null, unitValue: null, financialValue: null });
-                            setAddedPeriod(true); // Marcar que se agregó un período
-                            setPeriodCounter(periodCounter + 1); // Incrementar el contador de períodos
-                        }
-                       }}>
-                          {!view && (<> Añadir período <AiOutlinePlusCircle /></>)}
+                            if (!view) {
+                                append({ period: periodCounter, quantity: null, unitValue: null, financialValue: null });
+                                setAddedPeriod(true); // Marcar que se agregó un período
+                                setPeriodCounter(periodCounter + 1); // Incrementar el contador de períodos
+                            }
+                        }}>
+                            {!view && (<> Añadir período <AiOutlinePlusCircle /></>)}
                         </div>
                     </div>
                     <label className="text-main big error-message bold">
@@ -496,10 +500,10 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                         {fields.map((field, index) => {
                             return (
                                 <div key={field.id} className="clasification-period-container">
-                                     <Controller
+                                    <Controller
                                         control={control}
                                         name={`period.${index}.period`}
-                                        defaultValue= {index} 
+                                        defaultValue={index}
                                         render={({ field }) => {
                                             return (
                                                 <InputComponent
@@ -518,7 +522,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         }}
                                     />
 
-                                <InputNumberComponent
+                                    <InputNumberComponent
                                         idInput={`period.${index}.quantity`}
                                         control={control}
                                         label="Cantidad"
@@ -526,12 +530,12 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         classNameLabel="text-black biggest bold text-required"
                                         className="inputNumber-basic"
                                         onChange={() => {
-                                            setValue(`period.${index}.financialValue`,  getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
+                                            setValue(`period.${index}.financialValue`, getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
                                         }}
-                                        disabled={view ? true : false }
-                                />
+                                        disabled={view ? true : false}
+                                    />
 
-                                <InputNumberComponent
+                                    <InputNumberComponent
                                         idInput={`period.${index}.unitValue`}
                                         control={control}
                                         label="Valor unitario"
@@ -542,12 +546,12 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         currency="COP"
                                         locale="es-CO"
                                         onChange={() => {
-                                            setValue(`period.${index}.financialValue`,  getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
+                                            setValue(`period.${index}.financialValue`, getValues(`period.${index}.quantity`) * getValues(`period.${index}.unitValue`))
                                         }}
                                         minFractionDigits={2}
-                                        disabled={!!view }
-                                />
-                                   <InputNumberComponent
+                                        disabled={!!view}
+                                    />
+                                    <InputNumberComponent
                                         idInput={`period.${index}.financialValue`}
                                         control={control}
                                         label="Valor total financiero"
@@ -561,51 +565,51 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                                         minFractionDigits={2}
                                     />
                                     <div className="actions-needs">
-                                         {!view && (
+                                        {!view && (
                                             <label className="text-black biggest bold">Acciones</label>
                                         )}
-                                    <div onClick={() => {
-                                        setMessage({
-                                            title: "Eliminar registro",
-                                            description: "¿Deseas continuar?",
-                                            show: true,
-                                            background: true,
-                                            OkTitle: "Aceptar",
-                                            cancelTitle: "Cancelar",
-                                            onOk: () => {
-                                                remove(index);
-                                                setMessage({
-                                                    title: "Registro eliminado",
-                                                    description: "¡Eliminado exitosamente!",
-                                                    show: true,
-                                                    background: true,
-                                                    OkTitle: "Cerrar",
-                                                    onOk: () => {
-                                                        setMessage({});
-                                                    }
-                                                });
-                                            },
-                                            onCancel: () => {
-                                                setMessage({});
-                                            }
-                                        })
-                                    }} className="actions-needs">
-                                       <div className="actions-poblations ">
-                                       {!view && (
-                                            <> <div className="container-div">
-                                                 <FaTrashAlt className="button grid-button button-delete" />
-                                              </div>
-                                            </>
-                                        )}
+                                        <div onClick={() => {
+                                            setMessage({
+                                                title: "Eliminar registro",
+                                                description: "¿Deseas continuar?",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                cancelTitle: "Cancelar",
+                                                onOk: () => {
+                                                    remove(index);
+                                                    setMessage({
+                                                        title: "Registro eliminado",
+                                                        description: "¡Eliminado exitosamente!",
+                                                        show: true,
+                                                        background: true,
+                                                        OkTitle: "Cerrar",
+                                                        onOk: () => {
+                                                            setMessage({});
+                                                        }
+                                                    });
+                                                },
+                                                onCancel: () => {
+                                                    setMessage({});
+                                                }
+                                            })
+                                        }} className="actions-needs">
+                                            <div className="actions-poblations ">
+                                                {!view && (
+                                                    <> <div className="container-div">
+                                                        <FaTrashAlt className="button grid-button button-delete" />
+                                                    </div>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
                             )
                         })}
                     </div>
                 </div>
-              </div>
+            </div>
         </FormComponent>
     )
 }
