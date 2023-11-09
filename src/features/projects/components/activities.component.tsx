@@ -545,7 +545,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         const validityOfOffBudget = activity?.validity;
         for( let i in activity.budgetsMGA ) {
             if ( Number(activity.budgetsMGA[i].validity) === validityOfOffBudget ){
-                console.log('entro');
                 budgetForValidityYear = activity.budgetsMGA[i]
                 yearOfOffBudget = Number(i.replace("year",""));
             }

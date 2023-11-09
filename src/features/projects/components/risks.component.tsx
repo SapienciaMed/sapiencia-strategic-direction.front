@@ -366,7 +366,6 @@ interface IPropsAddRisks {
 }
 
 function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
-    console.log(item)
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(risksValidator);
 

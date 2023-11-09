@@ -458,14 +458,6 @@ export function useProjectsCrudData() {
         }
     }
 
-    async function validation () {
-       const resolver  = useYupValidationResolver(riskValidator);
-       const { values, errors } = await resolver(projectData.preparation.risks);
-       console.log('values: ', values, " errors ", errors );
-    }
-
-    validation();
-
     return { tabs, 
              step, 
              tabsComponentRef, 

@@ -32,7 +32,6 @@ function ProjectsCrudPage(): React.JSX.Element {
         url: formAction == "edit" ? "/direccion-estrategica/proyectos/edit" : "/direccion-estrategica/proyectos/crear-proyecto",
         extraParams: formAction == "edit" ? `/${idProyect}` : undefined,
     });
-    console.log('textContinue:', textContinue );
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
     const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
     const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && !textContinue );
