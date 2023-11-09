@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { IProject, IProjectFiltersHistorical } from "../interfaces/ProjectsInterfaces";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { Tooltip } from "primereact/tooltip";
 import { AiOutlineDownload } from "react-icons/ai";
@@ -8,6 +8,7 @@ import { useProjectsService } from "./projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { DateTime } from "luxon";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
+import { AppContext } from "../../../common/contexts/app.context";
 
 export default function useHistoricalProjects() {
     useBreadCrumb({
@@ -16,8 +17,9 @@ export default function useHistoricalProjects() {
         url: "/direccion-estrategica/proyectos-historicos/",
     });
     const { GetAllHistorical } = useProjectsService();
+    const { setMessage } = useContext(AppContext)
     const [showTable, setShowTable] = useState<boolean>(false);
-    const [dataTable, setDataTable] = useState([]);
+    const [dataTable, setDataTable] = useState(null);
     const {
         handleSubmit,
         register,
@@ -26,7 +28,7 @@ export default function useHistoricalProjects() {
         control
     } = useForm<IProjectFiltersHistorical>();
     const onSubmit = handleSubmit(async (data: IProjectFiltersHistorical) => {
-        GetAllHistorical().then(response => {
+        GetAllHistorical(data).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const groupedData = response.data.reduce((result, current, index) => {
                     const existingGroup = result.find(group => group.bpin === current.bpin);
@@ -41,8 +43,7 @@ export default function useHistoricalProjects() {
             } else {
                 console.log(response.operation.message)
             }
-        }).catch(err => console.log(err))
-        setShowTable(true);
+        }).catch(err => console.log(err));
     });
     const clear = () => {
         reset();
@@ -91,5 +92,23 @@ export default function useHistoricalProjects() {
             }
         }
     ];
+    useEffect(() => {
+        if(!dataTable) return;
+        if(dataTable.length > 0) {
+            setShowTable(true);
+        } else {
+            setShowTable(false);
+            setMessage({
+                title: "Resultados de búsqueda",
+                description: "No se generó resultado en la búsqueda",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onOk: () => {
+                    setMessage({});
+                }
+            })
+        }
+    }, [dataTable]);
     return { register, errors, control, showTable, onSubmit, clear, dataTable, tableColumns, tableActions }
 }
