@@ -255,7 +255,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                             {errors.specificObjectives}
                         </div>
                     </div>
-                    {getValues('specificObjectives').length > 0 && <TableExpansibleComponent actions={specificObjectivesActions} columns={specificObjectivesColumns} data={getValues('specificObjectives')} />}
+                    {getValues('specificObjectives').length > 0 && <TableExpansibleComponent actions={specificObjectivesActions} columns={specificObjectivesColumns} data={getValues('specificObjectives')} hideActions={isADisabledInput}/>}
                 </div>
                 <div>
                     <div className="title-area">
@@ -267,7 +267,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                             {errors.purposes}
                         </div>
                     </div>
-                    {getValues('purposes').length > 0 && <TableExpansibleComponent actions={purposesActions} columns={purposesColumns} data={getValues('purposes')} />}
+                    {getValues('purposes').length > 0 && <TableExpansibleComponent actions={purposesActions} columns={purposesColumns} data={getValues('purposes')} hideActions={isADisabledInput} />}
                 </div>
                 <Controller
                     control={control}
