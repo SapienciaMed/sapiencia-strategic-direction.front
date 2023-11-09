@@ -64,7 +64,6 @@ export function useTransferData() {
     }, [bpn, project, dependencia])
 
     useEffect(() => {
-        console.log('entro transfer');
         const subscription = watch((value: Itransfers) => setProjectData(prev => {
             return { ...prev, transfers: { ...value } }
         }));
