@@ -32,7 +32,8 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
             setActionContinue ,
             setShowCancel,  
             setDisableContinue, 
-            formAction } = useContext(ProjectsContext);
+            formAction,
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
@@ -208,6 +209,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: IproftisIncomeForm) => setProfitsFormData(prev => { return { ...prev, ...value } }));

@@ -21,7 +21,7 @@ interface IProps {
 export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): React.JSX.Element {
   const [environmentalAnalysisData, setEnvironmentalAnalysisData] = useState<IEnvironmentAnalysisForm>();
   const resolver = useYupValidationResolver(environmentalAnalysisValidator);
-  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, setDisableStatusUpdate } = useContext(ProjectsContext);
   const {
     control,
     register,
@@ -73,6 +73,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
     } else {      
         setDisableContinue(true);
     }
+    setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
   const [levels, setLevels] = useState<IDropdownProps[]>([]);

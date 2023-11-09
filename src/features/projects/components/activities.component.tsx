@@ -35,7 +35,8 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             setActionContinue, 
             setShowCancel, 
             setDisableContinue, 
-            formAction } = useContext(ProjectsContext);
+            formAction, 
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
@@ -236,6 +237,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
 
     useEffect(() => {
@@ -543,7 +545,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         const validityOfOffBudget = activity?.validity;
         for( let i in activity.budgetsMGA ) {
             if ( Number(activity.budgetsMGA[i].validity) === validityOfOffBudget ){
-                console.log('entro');
                 budgetForValidityYear = activity.budgetsMGA[i]
                 yearOfOffBudget = Number(i.replace("year",""));
             }

@@ -30,7 +30,7 @@ export function TechnicalAnalysisComponent({
   enableNext
 }: IProps): React.JSX.Element {
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<ItechnicalAnalysisForm>();
-  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput, setDisableStatusUpdate } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(technicalAnalysisValidator);
 
   const {
@@ -67,6 +67,7 @@ export function TechnicalAnalysisComponent({
     } else {      
         setDisableContinue(true);
     }
+    setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
 

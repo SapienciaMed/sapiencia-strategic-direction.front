@@ -62,6 +62,27 @@ function HistoricalProjectsPage(): React.JSX.Element {
                                     );
                                 }}
                             />
+                            <Controller
+                                control={control}
+                                name={"validity"}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Vigencia"
+                                            className="input-basic"
+                                            classNameLabel="text-black biggest bold"
+                                            typeInput={"number"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            errors={errors}
+                                        />
+                                    );
+                                }}
+                            />
                         </div>
                     </div>
                     <div className="strategic-direction-search-buttons">
@@ -76,7 +97,7 @@ function HistoricalProjectsPage(): React.JSX.Element {
                     </div>
                 </FormComponent>
                 {showTable && <div className="card-table">
-                    <TableExpansibleComponent actions={tableActions} columns={tableColumns} data={dataTable} title="Resultados de búsqueda" />
+                    <TableExpansibleComponent actions={tableActions} columns={tableColumns} data={dataTable || []} title="Resultados de búsqueda" />
                 </div>}
             </div>
         </div>

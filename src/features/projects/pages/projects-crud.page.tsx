@@ -21,7 +21,8 @@ function ProjectsCrudPage(): React.JSX.Element {
             projectData, 
             showCancel,
             step,
-            formAction } = useProjectsCrudData();
+            formAction,
+            disableStatusUpdate } = useProjectsCrudData();
 
     const { id: idProyect } = useParams();
 
@@ -33,7 +34,7 @@ function ProjectsCrudPage(): React.JSX.Element {
     });
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
     const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
-    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && textContinue != "Guardar y regresar");
+    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && !textContinue );
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
@@ -50,6 +51,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 value={ textBtnUpdateStatus }
                                 type="button"
                                 action={ statusValidation ? onUpdateStatus : onSaveTemp }
+                                disabled={ statusValidation && disableStatusUpdate }
                             />
                         </div>}
                         <div className="mobile-actions">
@@ -92,6 +94,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         value={ textBtnUpdateStatus }
                         type="button"
                         action={ statusValidation ? onUpdateStatus : onSaveTemp }
+                        disabled={ statusValidation && disableStatusUpdate }
                     />
                 }
                 <div className="buttons-bot">

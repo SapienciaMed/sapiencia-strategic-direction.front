@@ -17,7 +17,7 @@ interface IProps {
 
 export function CapacityComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
   const resolver = useYupValidationResolver(capacityValidator);
-  const { setProjectData, projectData, setDisableContinue, formAction } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, setDisableStatusUpdate } = useContext(ProjectsContext);
   const [capacityData, setCapacityData] = useState<ICapacityForm>();
   const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
   const { get } = useCrudService(process.env.urlApiStrategicDirection);
@@ -50,6 +50,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
     } else {      
         setDisableContinue(true);
     }
+    setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
   useEffect(() => {

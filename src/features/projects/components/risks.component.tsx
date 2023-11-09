@@ -40,7 +40,14 @@ const LevelData: IDropdownProps[] = [
 function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(riskValidator);
     const [RisksData, setRisksData] = useState<IRisks>(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction } = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            setDisableContinue, 
+            formAction,
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
@@ -316,6 +323,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: IRisks) => setRisksData(prev => { return { ...prev, ...value } }));
@@ -358,7 +366,6 @@ interface IPropsAddRisks {
 }
 
 function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
-    console.log(item)
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(risksValidator);
 
@@ -395,7 +402,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
-      const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
