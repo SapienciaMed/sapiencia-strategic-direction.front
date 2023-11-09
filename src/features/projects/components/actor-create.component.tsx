@@ -121,7 +121,7 @@ export function ActorCreateComponent({
             setPositionData(arrayEntities);
         }
     }).catch(() => { });
-}, [])
+  }, [])
 
 
   const actorColumns: ITableElement<IParticipatingActors>[] = [

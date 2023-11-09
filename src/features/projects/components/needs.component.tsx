@@ -20,7 +20,15 @@ interface IProps {
 
 function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [needsData, setNeedsData] = useState<INeedsForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction, setDisableStatusUpdate } = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            setDisableContinue, 
+            formAction, 
+            setDisableStatusUpdate,
+            isADisabledInput } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsValidator);
     const {
@@ -138,7 +146,8 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                         });
                     }
                 });
-            }
+            },
+            hideRow: (row) => isADisabledInput
         }
     ];
     const changeObjetives = (data: INeedObjetive, row?: INeedObjetive) => {
@@ -239,7 +248,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                             setTextContinue("Guardar y regresar");
                             setActionCancel(() => onCancel);
                         }}>
-                            Añadir objetivo <AiOutlinePlusCircle />
+                           { !isADisabledInput && ( <div> Añadir objetivo <AiOutlinePlusCircle /> </div> ) }
                         </div>
                     </div>
                     {getValues('objetives')?.length > 0 && <TableExpansibleComponent actions={objectivesActions} columns={objectivesColumns} data={getValues('objetives')} />}
