@@ -20,14 +20,16 @@ interface IProps<T> {
     hidePagination?: boolean;
     horizontalScroll?: boolean;
     title?: string;
+    hideActions?: boolean;
 }
 
-const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagination = false, horizontalScroll = false, title = "" }: IProps<any>): React.JSX.Element => {
+const TableExpansibleComponent = ({ columns, actions, data, widthTable, hideActions, hidePagination = false, horizontalScroll = false, title = "" }: IProps<any>): React.JSX.Element => {
     const [first, setFirst] = useState<number>(0);
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(0);
     const { width } = useWidth();
-    const widthColumns = width / ((columns.length + 1) * 2);
+    const activeColumns = columns.filter( column => !column.hideColumn );
+    const widthColumns = width / ((activeColumns.length + 1) * 2);
     const [expandedRows, setExpandedRows] = useState(null);
     const [expandedRowsMobile, setExpandedRowsMobile] = useState({});
     const allowExpansion = (rowData) => {
@@ -46,7 +48,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                     return (
                         <tr key={item} style={{ background: "transparent" }}>
                             <td style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }}></td>
-                            {columns.map((column) => {
+                            {activeColumns.map((column) => {
                                 const properties = column.fieldName.split(".");
                                 let field = properties.length === 2 ? item[properties[0]][properties[1]] : item[properties[0]];
                                 return (
@@ -58,7 +60,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                                     </td>
                                 );
                             })}
-                            {actions && (
+                            { ( actions && !hideActions ) && (
                                 <td className="spc-table-actions" style={{ maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}>
                                     <ActionComponent row={item} actions={actions} />
                                 </td>
@@ -104,7 +106,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                         {!item.childrens ? <></> :
                             getExpansible(item)
                         }
-                        {columns.map((column) => {
+                        {activeColumns.map((column) => {
                             const properties = column.fieldName.split(".");
                             let field = properties.length === 2 ? item[properties[0]][properties[1]] : item[properties[0]];
                             return (
@@ -140,7 +142,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                     return (
                         <div className="card-grid-item" key={children}>
                             <div className="card-header">
-                                {columns.map((column) => {
+                                {activeColumns.map((column) => {
                                     const properties = column.fieldName.split(".");
                                     let field = properties.length === 2 ? children[properties[0]][properties[1]] : children[properties[0]];
                                     return (
@@ -204,7 +206,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                     emptyMessage={" "}
                 >
                     {expansibleCount > 0 && <Column expander={allowExpansion} style={{ maxWidth: `50px`, minHeight: `50px`, width: `50px` }} />}
-                    {columns.map((col) => (
+                    {activeColumns.map((col) => (
                         <Column
                             key={col.fieldName}
                             field={col.fieldName}
@@ -215,7 +217,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hidePagi
                         />
                     ))}
 
-                    {actions && (
+                    { (actions && !hideActions) && (
                         <Column style={horizontalScroll ? {} : { maxWidth: `${widthColumns}px`, minHeight: `${widthColumns}px`, width: `${widthColumns}px` }}
                             className="spc-table-actions"
                             header={

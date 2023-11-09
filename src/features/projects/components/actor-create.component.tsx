@@ -299,6 +299,7 @@ export function ActorCreateComponent({
               actions={actorActions}
               columns={actorColumns}
               data={getValues("actors")}
+              hideActions={isADisabledInput}
             />
           }
         </div>
