@@ -462,6 +462,21 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
     const onSubmit = handleSubmit(async (data: IActivityMGA) => {
         
+        const { validityOfOffBudget, budgetForValidityYear } = validateActivitiesBudget( data );
+
+        if( !budgetForValidityYear ) {
+            return setMessage({
+                title: "Validación presupuestos",
+                description: `No existe un año con la vigencia ${validityOfOffBudget} en la actividad MGA.`,
+                show: true,
+                background: true,
+                OkTitle: "Cerrar",
+                onOk: () => {
+                    setMessage({});
+                }
+            })
+        }
+
         if (view) {
             setForm(null);
             setTextContinue(null);
@@ -526,7 +541,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         });
 
         if(validationResult){
-            return setMessage({
+            setMessage({
                 title: "Validación presupuestos",
                 description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${ validationType == "major" ? "mayor" : "menor" } que los de la actividad MGA.`,
                 show: true,
@@ -537,6 +552,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 }
             })
         }
+
+        return { budgetForValidityYear, validationResult, validationType, validityOfOffBudget, yearOfOffBudget };
+
     }
 
     const budgetsYears = {
