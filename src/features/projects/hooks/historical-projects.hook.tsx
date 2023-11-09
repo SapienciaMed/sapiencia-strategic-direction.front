@@ -78,7 +78,7 @@ export default function useHistoricalProjects() {
                         <Tooltip target=".download-tooltip" />
                         <div
                             className="download-tooltip"
-                            data-pr-tooltip="Descargar registro"
+                            data-pr-tooltip="Descargar PDF"
                             data-pr-position="bottom"
                             style={{ 'color': '#D72FD1' }}
                         >
