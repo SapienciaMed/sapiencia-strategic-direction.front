@@ -6,23 +6,26 @@ import { useParams } from "react-router-dom";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function ProjectsCrudPage(): React.JSX.Element {
-  
-    const { tabs, 
-            tabsComponentRef, 
-            disableContinue, 
-            actionContinue, 
-            onSaveTemp,
-            onUpdateStatus,
-            setMessage, 
-            navigate, 
-            actionCancel, 
-            textContinue, 
-            DeleteProject, 
-            projectData, 
-            showCancel,
-            step,
-            formAction,
-            disableStatusUpdate } = useProjectsCrudData();
+
+    const {
+        tabs,
+        tabsComponentRef,
+        disableContinue,
+        actionContinue,
+        onSaveTemp,
+        onUpdateStatus,
+        setMessage,
+        navigate,
+        actionCancel,
+        textContinue,
+        DeleteProject,
+        projectData,
+        showCancel,
+        step,
+        formAction,
+        disableStatusUpdate,
+        dirty
+    } = useProjectsCrudData();
 
     const { id: idProyect } = useParams();
 
@@ -33,29 +36,30 @@ function ProjectsCrudPage(): React.JSX.Element {
         extraParams: formAction == "edit" ? `/${idProyect}` : undefined,
     });
     const statusValidation = projectData?.status == 2 || projectData?.status == 3;
-    const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente" ;
-    const btnContinueDisableValidation = disableContinue || ( statusValidation && tabs[step]?.id != 'transfer' && !textContinue );
+    const textBtnUpdateStatus = statusValidation ? "Actualizar estado" : "Guardar temporalmente";
+    const btnContinueDisableValidation = disableContinue || (statusValidation && tabs[step]?.id != 'transfer' && !textContinue);
     if (!projectData?.status && formAction === "edit") { return <p>Cargando...</p>; }
     return (
         <div className='crud-page full-height'>
             <div className="main-page full-height">
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">{ formAction === "new" ? "Formular proyecto" : "Editar proyecto"}</div>
+                        <div className="text-black extra-large bold">{formAction === "new" ? "Formular proyecto" : "Editar proyecto"}</div>
                     </div>
                     <TabListComponent tabs={tabs} ref={tabsComponentRef} />
                     <div className="projects-footer-mobile mobile">
                         {!actionCancel && <div className="save-temp">
                             <ButtonComponent
                                 className="button-main huge hover-three button-save"
-                                value={ textBtnUpdateStatus }
+                                value={textBtnUpdateStatus}
                                 type="button"
-                                action={ statusValidation ? onUpdateStatus : onSaveTemp }
-                                disabled={ statusValidation && disableStatusUpdate }
+                                action={statusValidation ? onUpdateStatus : onSaveTemp}
+                                disabled={statusValidation && disableStatusUpdate}
                             />
                         </div>}
                         <div className="mobile-actions">
                             {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
+                                if(!dirty) return navigate('/direccion-estrategica/proyectos/');
                                 setMessage({
                                     title: "Cancelar acción",
                                     description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
@@ -76,11 +80,11 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 Cancelar
                             </span>}
                             <ButtonComponent
-                                value={ textContinue || (  statusValidation ? "Guardar" : "Continuar" ) }
+                                value={textContinue || (statusValidation ? "Guardar" : "Continuar")}
                                 className="button-main huge hover-three"
                                 type="button"
-                                action={ actionContinue || (() => { })}
-                                disabled={ btnContinueDisableValidation }
+                                action={actionContinue || (() => { })}
+                                disabled={btnContinueDisableValidation}
                             />
                         </div>
                     </div>
@@ -91,14 +95,16 @@ function ProjectsCrudPage(): React.JSX.Element {
                 {actionCancel ? <div></div> :
                     <ButtonComponent
                         className="button-main huge hover-three"
-                        value={ textBtnUpdateStatus }
+                        value={textBtnUpdateStatus}
                         type="button"
-                        action={ statusValidation ? onUpdateStatus : onSaveTemp }
-                        disabled={ statusValidation && disableStatusUpdate }
+                        action={statusValidation ? onUpdateStatus : onSaveTemp}
+                        disabled={statusValidation && disableStatusUpdate}
                     />
                 }
                 <div className="buttons-bot">
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
+                        console.log(dirty)
+                        if(!dirty) return navigate('/direccion-estrategica/proyectos/');
                         setMessage({
                             title: "Cancelar acción",
                             description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
@@ -122,10 +128,10 @@ function ProjectsCrudPage(): React.JSX.Element {
                     </span>}
                     <ButtonComponent
                         className={`button-main ${textContinue?.length > 10 ? "extra_extra_large" : "huge"} hover-three button-save`}
-                        value={ textContinue || (  statusValidation ? "Guardar" : "Continuar" )}
+                        value={textContinue || (statusValidation ? "Guardar" : "Continuar")}
                         type="button"
-                        action={ actionContinue || (() => { })}
-                        disabled={ btnContinueDisableValidation }
+                        action={actionContinue || (() => { })}
+                        disabled={btnContinueDisableValidation}
                     />
                 </div>
             </div>

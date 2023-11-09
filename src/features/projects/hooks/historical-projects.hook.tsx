@@ -103,7 +103,7 @@ export default function useHistoricalProjects() {
                 description: "No se generó resultado en la búsqueda",
                 show: true,
                 background: true,
-                OkTitle: "Aceptar",
+                OkTitle: "Cerrar",
                 onOk: () => {
                     setMessage({});
                 }

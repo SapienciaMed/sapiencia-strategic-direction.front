@@ -408,7 +408,6 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item , view }: IPropsP
                             value="Ingreso"
                             onChange={(e) => field.onChange(e.value)}
                             checked={field.value === 'Ingreso'}
-                            disabled={!!view }
                             />
                         </div>
                         )}

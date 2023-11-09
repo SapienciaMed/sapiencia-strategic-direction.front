@@ -258,13 +258,13 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                             Matriz de marco lógico
                         </label>
 
-                        <div className="title-button text-main large" onClick={() => {
+                        {!isADisabledInput && <div className="title-button text-main large" onClick={() => {
                             setForm(<AddLogicFrameComponent setForm={setForm} returnData={changeLogicFrame} />);
                             setTextContinue("Guardar y regresar");
                             setActionCancel(() => onCancel);
                         }}>
                             Añadir marco lógico <AiOutlinePlusCircle />
-                        </div>
+                        </div>}
                     </div>
                     {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} horizontalScroll />}
                 </div>      
