@@ -35,7 +35,8 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             setActionContinue, 
             setShowCancel, 
             setDisableContinue, 
-            formAction } = useContext(ProjectsContext);
+            formAction, 
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
@@ -236,6 +237,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
 
     useEffect(() => {

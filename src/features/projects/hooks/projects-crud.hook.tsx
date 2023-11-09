@@ -11,6 +11,9 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 import ProgramationPage from "../pages/programation.page";
 import TransferPage from "../pages/transfer.page";
 import { useParams } from "react-router-dom";
+import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
+import { riskValidator } from "../../../common/schemas";
+
 export function useProjectsCrudData() {
     const { id } = useParams();
     const tabsComponentRef = useRef(null);
@@ -27,7 +30,8 @@ export function useProjectsCrudData() {
             setActionContinue, 
             showCancel,
             formAction,
-            setDisableContinue } = useContext(ProjectsContext);
+            setDisableContinue,
+            disableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreateProject, GetProjectByUser, UpdateProject, DeleteProject, GetProjectById } = useProjectsService();
     const navigate = useNavigate();
@@ -454,5 +458,28 @@ export function useProjectsCrudData() {
         }
     }
 
-    return { tabs, step, tabsComponentRef, disableContinue, actionContinue, onUpdateStatus, onSaveTemp, setMessage, navigate, actionCancel, textContinue, DeleteProject, projectData, showCancel, formAction }
+    async function validation () {
+       const resolver  = useYupValidationResolver(riskValidator);
+       const { values, errors } = await resolver(projectData.preparation.risks);
+       console.log('values: ', values, " errors ", errors );
+    }
+
+    validation();
+
+    return { tabs, 
+             step, 
+             tabsComponentRef, 
+             disableContinue, 
+             actionContinue, 
+             onUpdateStatus, 
+             onSaveTemp, 
+             setMessage, 
+             navigate, 
+             actionCancel, 
+             textContinue, 
+             DeleteProject, 
+             projectData, 
+             showCancel, 
+             formAction,
+             disableStatusUpdate }
 }

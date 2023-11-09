@@ -30,7 +30,14 @@ interface IProps {
 
 function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [ sourceFundingFormData, setsourceFundingFormData] = useState<ISourceFundingForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction } = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            setDisableContinue, 
+            formAction,
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const  resolver = useYupValidationResolver(sourceFundingValidator)
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
@@ -267,6 +274,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: ISourceFundingForm) => setsourceFundingFormData(prev => { return { ...prev, ...value } }));

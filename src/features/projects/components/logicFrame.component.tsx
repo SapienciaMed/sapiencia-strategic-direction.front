@@ -40,7 +40,15 @@ const ResumeData: IDropdownProps[] = [
 function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(logicFrameFormValidator);
     const [LogicFrameData, setLogicFrameData] = useState<IlogicFrameForm>(null);
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, formAction, setDisableContinue, isADisabledInput } = useContext(ProjectsContext);
+    const { setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setActionCancel, 
+            setActionContinue, 
+            formAction, 
+            setDisableContinue, 
+            isADisabledInput,
+            setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { GetIndicatorName } = useIndicatorsService();
     const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
@@ -228,6 +236,7 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
             enableNext();
         }      
         setDisableContinue(isValid);
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     
     useEffect(() => {

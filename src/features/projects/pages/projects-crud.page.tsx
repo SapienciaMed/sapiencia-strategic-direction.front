@@ -21,7 +21,8 @@ function ProjectsCrudPage(): React.JSX.Element {
             projectData, 
             showCancel,
             step,
-            formAction } = useProjectsCrudData();
+            formAction,
+            disableStatusUpdate } = useProjectsCrudData();
 
     const { id: idProyect } = useParams();
 
@@ -50,6 +51,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 value={ textBtnUpdateStatus }
                                 type="button"
                                 action={ statusValidation ? onUpdateStatus : onSaveTemp }
+                                disabled={ statusValidation && disableStatusUpdate }
                             />
                         </div>}
                         <div className="mobile-actions">
@@ -92,6 +94,7 @@ function ProjectsCrudPage(): React.JSX.Element {
                         value={ textBtnUpdateStatus }
                         type="button"
                         action={ statusValidation ? onUpdateStatus : onSaveTemp }
+                        disabled={ statusValidation && disableStatusUpdate }
                     />
                 }
                 <div className="buttons-bot">

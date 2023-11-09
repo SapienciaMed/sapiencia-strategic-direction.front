@@ -21,7 +21,12 @@ export function useTransferData() {
     const [dependecyData, setDependencyData] = useState<IDropdownProps[]>(null);
     const { CreateProject, UpdateProject } = useProjectsService();
     const { setMessage, authorization } = useContext(AppContext);
-    const { setDisableContinue, setActionContinue, setProjectData, projectData, setTextContinue } = useContext(ProjectsContext);
+    const { setDisableContinue, 
+            setActionContinue, 
+            setProjectData, 
+            projectData, 
+            setTextContinue, 
+            setDisableStatusUpdate } = useContext(ProjectsContext);
 
     const resolver = useYupValidationResolver(transfersValidator);
 
@@ -82,6 +87,7 @@ export function useTransferData() {
         setDisableContinue(!isValid);
         setActionContinue(isValid ? () => onSubmit : () => { });
         setTextContinue(projectData?.status == 2 || projectData?.status == 3 ? "Guardar" : "Enviar");
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
 
     const onSubmit = handleSubmit(async (data: Itransfers) => {

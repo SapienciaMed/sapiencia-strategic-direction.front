@@ -20,7 +20,7 @@ interface IProps {
 
 function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const [needsData, setNeedsData] = useState<INeedsForm>(null)
-    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setTextContinue, setActionCancel, setActionContinue, setDisableContinue, formAction, setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(needsValidator);
     const {
@@ -168,6 +168,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: INeedsForm) => setNeedsData(prev => { return { ...prev, ...value } }));

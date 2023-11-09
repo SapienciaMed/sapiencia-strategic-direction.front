@@ -29,6 +29,8 @@ interface IProjectsContext {
   statusesForDisabledInputs: number[];
   setStatusForDisabledInputs: Dispatch<SetStateAction<number[]>>;
   isADisabledInput: boolean;
+  disableStatusUpdate: boolean;
+  setDisableStatusUpdate:  Dispatch<SetStateAction<boolean>>;
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -52,13 +54,16 @@ export const ProjectsContext = createContext<IProjectsContext>({
   formAction: null,
   statusesForDisabledInputs: [],
   setStatusForDisabledInputs: () => {},
-  isADisabledInput: false
+  isADisabledInput: false,
+  disableStatusUpdate: true,
+  setDisableStatusUpdate:  () => {}
 });
 
 export function ProjectsContextProvider({ children }: IProps) {
   const location = useLocation();
   const [step, setStep] = useState<number>(0);
   const [disableContinue, setDisableContinue] = useState<boolean>(true);
+  const [disableStatusUpdate, setDisableStatusUpdate] = useState<boolean>(true);
   const [projectData, setProjectData] = useState<IProjectTemp>(null);
   const [textContinue, setTextContinue] = useState<string>(null);
   const [actionContinue, setActionContinue] = useState<() => void>(() => {});
@@ -87,7 +92,9 @@ export function ProjectsContextProvider({ children }: IProps) {
       formAction,
       isADisabledInput,
       statusesForDisabledInputs,
-      setStatusForDisabledInputs
+      setStatusForDisabledInputs,
+      disableStatusUpdate,
+      setDisableStatusUpdate
     };
   }, [step, disableContinue, projectData, textContinue, actionContinue, actionCancel, showCancel, formAction]);
 

@@ -47,7 +47,7 @@ export function PoblationComponent({
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
   const [deparmentList, setDeparmentList] = useState([]);
-  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput, setDisableStatusUpdate } = useContext(ProjectsContext);
   const resolver = useYupValidationResolver(poblationValidator);
   const { setMessage } = useContext(AppContext);
   const { getListByGrouper, getListByParent } = useGenericListService();
@@ -195,6 +195,7 @@ export function PoblationComponent({
     } else {      
         setDisableContinue(true);
     }
+    setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
   const getSelectsData = async (clasificationSelected: number): Promise<IDropdownProps[]> => {

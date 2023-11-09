@@ -51,7 +51,7 @@ export function ActorCreateComponent({
 }: IProps): React.JSX.Element {
   const ActorCreateComponentRef = useRef(null);
   const [ActorCreateData, setActorCreateData] = useState<IActorsForm>();
-  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
+  const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput, setDisableStatusUpdate } = useContext(ProjectsContext);
   const { setMessage } = useContext(AppContext);
   const { GetEntitiesPosition } = useEntitiesService();
   const resolver = useYupValidationResolver(actorsValidator);
@@ -98,6 +98,7 @@ export function ActorCreateComponent({
     } else {      
         setDisableContinue(true);
     }
+    setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
   useEffect(() => {

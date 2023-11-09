@@ -21,7 +21,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
-    const { setProjectData, projectData, formAction, setDisableContinue, isADisabledInput } = useContext(ProjectsContext);
+    const { setProjectData, projectData, formAction, setDisableContinue, isADisabledInput, setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { getListByGrouper } = useGenericListService();
     const resolver = useYupValidationResolver(objectivesValidator);
@@ -63,6 +63,7 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
     useEffect(() => {
         const subscription = watch((value: IObjectivesForm) => setObjectivesData(prev => { return { ...prev, ...value } }));

@@ -19,7 +19,7 @@ interface IProps {
 export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
     const causesEffectsComponentRef = useRef(null);
     const [problemDescriptionData, setProblemDescriptionData] = useState<IProblemDescriptionForm>(null)
-    const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput } = useContext(ProjectsContext);
+    const { setProjectData, projectData, setDisableContinue, formAction, isADisabledInput, setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(problemDescriptionValidator);
     const {
@@ -60,6 +60,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         } else {      
             setDisableContinue(true);
         }
+        setDisableStatusUpdate(!isValid);
     }, [isValid]);
 
     useEffect(() => {
