@@ -386,7 +386,7 @@ export function PoblationComponent({
             </label>
 
             <div className="title-button text-main large" onClick={() => {
-              append({ clasification: null, detail: null });
+              append({ clasification: null, detail: null, numPerson: null });
             }}>
               Añadir clasificación <AiOutlinePlusCircle />
             </div>
