@@ -6,6 +6,7 @@ export interface ITableElement<T> {
   dataList?: IListTableElement[];
   renderCell?: (row: T) => JSX.Element;
   width?: string | number;
+  hideColumn?: boolean;
 }
 
 export interface IGroupTableElement<T> {

@@ -144,7 +144,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
             renderCell: (row) => {
                 const stage = stagesData.find(stage => stage.value === row.stage) || null;
                 return <>{stage ? stage.name || "" : ""}</>
-            }
+            },
         },
         {
             fieldName: "typeEntity",
