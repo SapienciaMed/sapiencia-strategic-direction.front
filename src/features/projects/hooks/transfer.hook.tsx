@@ -91,8 +91,6 @@ export function useTransferData() {
         }, 10)
     }, [isValid]);
 
-    console.log('isValid: ', isValid );
-
     const onSubmit = handleSubmit(async (data: Itransfers) => {
         setMessage({
             title: "Formular el proyecto",
