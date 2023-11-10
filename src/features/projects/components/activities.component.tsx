@@ -272,7 +272,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             let budget2 = 0;
             let budget3 = 0;
             let budget4 = 0;
-            activities.forEach(activity => {
+            activities?.forEach(activity => {
                 budget0 += activity.budgetsMGA.year0.budget;
                 budget1 += activity.budgetsMGA.year1.budget;
                 budget2 += activity.budgetsMGA.year2.budget;
