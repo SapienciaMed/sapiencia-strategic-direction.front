@@ -106,7 +106,6 @@ export function useRegisterData() {
     });
 
     useEffect(() => {
-        console.log('entro');
         setDisableContinue(!isValid);
         setDisableStatusUpdate(!isValid)
         setActionContinue(isValid ? () => onSubmit : () => { });

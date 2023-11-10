@@ -103,7 +103,6 @@ function ProjectsCrudPage(): React.JSX.Element {
                 }
                 <div className="buttons-bot">
                     {!showCancel ? <span></span> : <span className="bold text-center button" onClick={actionCancel || (() => {
-                        console.log(dirty)
                         if(!dirty) return navigate('/direccion-estrategica/proyectos/');
                         setMessage({
                             title: "Cancelar acción",
