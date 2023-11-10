@@ -409,7 +409,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                                             value="Ingreso"
                                             onChange={(e) => field.onChange(e.value)}
                                             checked={field.value === 'Ingreso'}
-                                            disabled={field.value !== 'Ingreso'}
+                                            disabled={view && field.value !== 'Ingreso'}
                                         />
                                     </div>
                                 )
@@ -431,7 +431,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                                             value="Beneficio"
                                             onChange={(e) => field.onChange(e.value)}
                                             checked={field.value === 'Beneficio'}
-                                            disabled={field.value !== 'Beneficio'}
+                                            disabled={view && field.value !== 'Beneficio'}
                                         />
                                     </div>
                                 )
