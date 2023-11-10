@@ -116,9 +116,6 @@ function ProjectsCrudPage(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                if (projectData.id) {
-                                    DeleteProject(projectData.id);
-                                }
                                 navigate('/direccion-estrategica/proyectos/');
                                 setMessage({});
                             }

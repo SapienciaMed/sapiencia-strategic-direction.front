@@ -88,7 +88,17 @@ export default function useHistoricalProjects() {
                 )
             },
             onClick: (row) => {
-
+                const project = dataTable.find(project => project.bpin == row.bpin) 
+                const projectIndex = project.childrens.findIndex(item => item == row)
+                if (projectIndex == -1){
+                    const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${project.childrens[0].id}/generate-pdf-historic`;
+                    window.open(pdfUrl, "_blank");
+                }else {
+                    const oldVersion = project.childrens[projectIndex + 1];
+                    const oldId = oldVersion?.bpin == row.bpin ? oldVersion.id : 0;
+                    const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${oldId}/generate-pdf-historic`;
+                    window.open(pdfUrl, "_blank");
+                }
             }
         }
     ];
