@@ -84,10 +84,14 @@ export function useTransferData() {
 
     useEffect(() => {
         setDisableContinue(!isValid);
-        setActionContinue(isValid ? () => onSubmit : () => { });
         setTextContinue(projectData?.status == 2 || projectData?.status == 3 ? "Guardar" : "Enviar");
         setDisableStatusUpdate(!isValid);
+        setTimeout( () => {
+            setActionContinue(isValid ? () => onSubmit : () => { });
+        }, 10)
     }, [isValid]);
+
+    console.log('isValid: ', isValid );
 
     const onSubmit = handleSubmit(async (data: Itransfers) => {
         setMessage({
