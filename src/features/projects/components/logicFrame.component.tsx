@@ -266,7 +266,7 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                             Añadir marco lógico <AiOutlinePlusCircle />
                         </div>}
                     </div>
-                    {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} horizontalScroll />}
+                    {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} hideActions={isADisabledInput} horizontalScroll />}
                 </div>      
                 </FormComponent>
         </div>
