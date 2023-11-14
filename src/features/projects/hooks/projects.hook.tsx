@@ -27,7 +27,7 @@ export function useProjectsData() {
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
-    const { setMessage } = useContext(AppContext);
+    const { setMessage, validateActionAccess  } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
@@ -89,7 +89,7 @@ export function useProjectsData() {
                 const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`;
                 window.open(pdfUrl, "_blank");
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4)
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -111,7 +111,7 @@ export function useProjectsData() {
                 setShowDialog(true);
                 setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3)
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_CARGA")
         },
         {
             customIcon: (row) => {
@@ -133,7 +133,7 @@ export function useProjectsData() {
                 const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`;
                 window.open(pdfUrl, "_blank");
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4)
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -154,7 +154,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`adjuntos/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4)
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -174,7 +174,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`finalizar-proyecto/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3)
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_FINALIZAR")
         },
         {
             customIcon: () => {
@@ -195,7 +195,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`./edit/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3)
+            hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
 
@@ -297,6 +297,23 @@ export function useProjectsData() {
         })
     }
 
-    return { navigate, tableComponentRef, tableColumns, tableActions, onSubmit, reset, statusData, control, register, errors, showDialog, setShowDialog, filesUploadData, setFilesUploadData, uploadFiles, msgs, setErrores };
+    return { navigate, 
+             tableComponentRef, 
+             tableColumns, 
+             tableActions, 
+             onSubmit, 
+             reset, 
+             statusData, 
+             control, 
+             register, 
+             errors, 
+             showDialog, 
+             setShowDialog, 
+             filesUploadData, 
+             setFilesUploadData, 
+             uploadFiles, 
+             msgs, 
+             setErrores,
+             validateActionAccess };
 }
 

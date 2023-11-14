@@ -8,6 +8,7 @@ import ModalMessageComponent from "./common/components/modal-message.component";
 import ApplicationProvider from "./application-provider";
 import useAppCominicator from "./common/hooks/app-communicator.hook";
 import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
+import PrivateRoute from "./common/utils/auth-private-guard";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -18,7 +19,7 @@ function App() {
   const FinishProjectPage = lazy(() => import("./features/projects/pages/finish-project.page"));
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const { publish } = useAppCominicator();
-
+ 
   // Effect que cominica la aplicacion actual
   useEffect(() => {
     localStorage.setItem("currentAplication", process.env.aplicationId);
@@ -36,13 +37,61 @@ function App() {
           <Suspense fallback={<p>Loading...</p>}>
             <Routes>
               <Route path={"/direccion-estrategica/*"} element={<HomePage />} />;
-              <Route path={"/direccion-estrategica/proyectos"} element={<ProjectsPage />} />;
+              <Route
+                path={"/direccion-estrategica/proyectos"}
+                element={
+                  <PrivateRoute
+                    element={<ProjectsPage/>}
+                    allowedAction={"PROYECTO_CONSULTAR"}
+                  />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/proyectos/crear-proyecto"}
+                element={
+                  <PrivateRoute
+                    element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>}
+                    allowedAction={"PROYECTO_CREAR"}
+                  />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/proyectos/adjuntos/:id"}
+                element={
+                  <PrivateRoute
+                    element={<AttachmentsPage />}
+                    allowedAction={"PROYECTO_DESCARGAR"}
+                  />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/proyectos/edit/:id"}
+                element={
+                  <PrivateRoute
+                    element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>}
+                    allowedAction={"PROYECTO_EDITAR"}
+                  />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/proyectos/finalizar-proyecto/:id"}
+                element={
+                  <PrivateRoute
+                    element={<FinishProjectPage/>}
+                    allowedAction={"PROYECTO_FINALIZAR"}
+                  />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/proyectos-historicos"}
+                element={
+                  <PrivateRoute
+                    element={<HistoricalProjectsPage/>}
+                    allowedAction={"PROYECTO_HISTORICOS"}
+                  />
+                }
+              />
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
-              <Route path={"/direccion-estrategica/proyectos/crear-proyecto"} element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>} />;
-              <Route path={"/direccion-estrategica/proyectos/adjuntos/:id"} element={<AttachmentsPage />} />;
-              <Route path={"/direccion-estrategica/proyectos/edit/:id"} element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>} />;
-              <Route path={"/direccion-estrategica/proyectos/finalizar-proyecto/:id"} element={<FinishProjectPage />} />;
-              <Route path={"/direccion-estrategica/proyectos-historicos"} element={<HistoricalProjectsPage />} />;
             </Routes>
           </Suspense>
         </Router>
