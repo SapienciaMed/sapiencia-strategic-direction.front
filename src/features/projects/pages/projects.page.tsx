@@ -30,7 +30,8 @@ function ProjectsPage(): React.JSX.Element {
             setFilesUploadData, 
             uploadFiles, 
             msgs, 
-            setErrores } = useProjectsData();
+            setErrores,
+            validateActionAccess } = useProjectsData();
     return (
         <div className='main-page'>
             {showDialog && <div className="modal modal-bg is-open">
@@ -69,10 +70,12 @@ function ProjectsPage(): React.JSX.Element {
                             <label className="text-black large bold">
                                 Consultar Proyecto
                             </label>
-                            <div className="title-button text-three large">
-                                <span style={{ marginRight: '0.5em' }} onClick={() => { navigate('./crear-proyecto') }}> Formular proyecto</span>
-                                {<AiOutlinePlusCircle size={20} color="533893" />}
-                            </div>
+                            { validateActionAccess("PROYECTO_CREAR") && 
+                                <div className="title-button text-three large">
+                                    <span style={{ marginRight: '0.5em' }} onClick={() => { navigate('./crear-proyecto') }}> Formular proyecto</span>
+                                    {<AiOutlinePlusCircle size={20} color="533893" />}
+                                </div>
+                            }
                         </div>
                         <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
                             <Controller
