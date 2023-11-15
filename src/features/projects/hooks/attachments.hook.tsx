@@ -48,12 +48,14 @@ export default function useAttachmentsData(idProject: string) {
                 );
             },
             onClick: (row) => {
+                const token = localStorage.getItem("token");
                 fetch(`${process.env.urlApiStrategicDirection}/api/v1/project/files/get-file`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
                         permissions: authorization.encryptedAccess,
+                        authorization: `Bearer ${token}`
                     },
                     body: JSON.stringify({fileName: row.path})
                 }).then(async response => {
