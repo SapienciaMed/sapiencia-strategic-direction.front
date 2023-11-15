@@ -2,14 +2,13 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AppContext } from "../contexts/app.context";
 const PrivateRoute = ({ element, allowedAction }) => {
-  const { authorization, setMessage } = useContext(AppContext);
+  const { authorization, setMessage, validateActionAccess } = useContext(AppContext);
 
   if (!authorization?.allowedActions) {
     return <div>Loading...</div>;
   }
-
   if (
-    authorization?.allowedActions?.findIndex((i) => i == allowedAction) >= 0
+    validateActionAccess(allowedAction)
   ) {
     return element;
   } else {
