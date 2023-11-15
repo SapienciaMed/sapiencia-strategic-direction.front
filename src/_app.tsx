@@ -60,7 +60,7 @@ function App() {
                 element={
                   <PrivateRoute
                     element={<AttachmentsPage />}
-                    allowedAction={"PROYECTO_DESCARGAR"}
+                    allowedAction={"PROYECTO_DESCARGA"}
                   />
                 }
               />
