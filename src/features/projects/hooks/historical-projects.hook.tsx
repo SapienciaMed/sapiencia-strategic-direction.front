@@ -105,7 +105,7 @@ export default function useHistoricalProjects() {
                     }).then(async response => {
                         const blob = await response.blob();
                         const url = window.URL.createObjectURL(blob);
-                        window.open(url, "_blank").focus(); // window.open + focus
+                        window.open(url, "_blank")
 
                     }).catch(err => {
                         setMessage({
