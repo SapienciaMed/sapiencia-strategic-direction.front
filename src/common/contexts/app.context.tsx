@@ -35,6 +35,7 @@ export function AppContextProvider({ children }: IProps) {
     {} as IAuthorization
   )
 
+  console.log('authorization: ', authorization );
   // Metodo que verifica si el usuario posee permisos sobre un accion
   function validateActionAccess(indicator: string): boolean {
     return authorization.allowedActions?.findIndex((i) => i === indicator) >= 0;

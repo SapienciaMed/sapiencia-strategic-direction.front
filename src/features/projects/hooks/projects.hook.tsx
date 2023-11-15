@@ -115,7 +115,7 @@ export function useProjectsData() {
                     })
                 })
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -137,7 +137,7 @@ export function useProjectsData() {
                 setShowDialog(true);
                 setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_CARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
         },
         {
             customIcon: (row) => {
@@ -183,7 +183,7 @@ export function useProjectsData() {
                     })
                 })
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -204,7 +204,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`adjuntos/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -224,7 +224,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`finalizar-proyecto/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_FINALIZAR")
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_FINALIZAR"))
         },
         {
             customIcon: () => {
