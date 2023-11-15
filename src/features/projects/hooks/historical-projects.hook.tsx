@@ -105,8 +105,38 @@ export default function useHistoricalProjects() {
                     }).then(async response => {
                         const blob = await response.blob();
                         const url = window.URL.createObjectURL(blob);
-                        window.open(url, "_blank")
-
+                        try {
+                            window.open(url, "_blank").focus();
+                        } catch {
+                            setMessage({
+                                title: "Permisos faltantes",
+                                description: "Por favor aceptar los permisos solicitados por el navegador para visualidar el pdf",
+                                show: true,
+                                background: true,
+                                OkTitle: "Aceptar",
+                                cancelTitle: "Cancelar",
+                                onOk: () => {
+                                    try {
+                                        window.open(url, "_blank").focus();
+                                        setMessage({});
+                                    } catch {
+                                        setMessage({
+                                            title: "Permisos faltantes",
+                                            description: "No se han aceptado correctamente los permisos solicitados por el navegador",
+                                            show: true,
+                                            background: true,
+                                            OkTitle: "Aceptar",
+                                            onOk: () => {
+                                                setMessage({});
+                                            }
+                                        });
+                                    }
+                                },
+                                onCancel: () => {
+                                    setMessage({});
+                                }
+                            })
+                        }
                     }).catch(err => {
                         setMessage({
                             title: "Ha ocurrido un error...",
@@ -133,8 +163,38 @@ export default function useHistoricalProjects() {
                         }).then(async response => {
                             const blob = await response.blob();
                             const url = window.URL.createObjectURL(blob);
-                            window.open(url, "_blank").focus(); // window.open + focus
-    
+                            try {
+                                window.open(url, "_blank").focus();
+                            } catch {
+                                setMessage({
+                                    title: "Permisos faltantes",
+                                    description: "Por favor aceptar los permisos solicitados por el navegador para visualidar el pdf",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Aceptar",
+                                    cancelTitle: "Cancelar",
+                                    onOk: () => {
+                                        try {
+                                            window.open(url, "_blank").focus();
+                                            setMessage({});
+                                        } catch {
+                                            setMessage({
+                                                title: "Permisos faltantes",
+                                                description: "No se han aceptado correctamente los permisos solicitados por el navegador",
+                                                show: true,
+                                                background: true,
+                                                OkTitle: "Aceptar",
+                                                onOk: () => {
+                                                    setMessage({});
+                                                }
+                                            });
+                                        }
+                                    },
+                                    onCancel: () => {
+                                        setMessage({});
+                                    }
+                                })
+                            }
                         }).catch(err => {
                             setMessage({
                                 title: "Ha ocurrido un error...",
