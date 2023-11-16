@@ -38,7 +38,7 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
             formAction, 
             setDisableStatusUpdate } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
-    const { setMessage } = useContext(AppContext);
+    const { setMessage, authorization } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
     const { width } = useWidth();
     const {
@@ -299,10 +299,13 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
 
                     <div className={activities?.length > 0 && "strategic-direction-grid-1 strategic-direction-grid-2-web"} style={{ justifyItems: "end" }}>
                         {activities?.length > 0 && <div className="title-button text-main large" onClick={async () => {
+                            const token = localStorage.getItem("token");
                             const response = await fetch(`${process.env.urlApiStrategicDirection}/api/v1/activities/generate-consolidated`, {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
+                                    permissions: authorization.encryptedAccess,
+                                    authorization: `Bearer ${token}`
                                 },
                                 body: JSON.stringify(getValues())
                             });
