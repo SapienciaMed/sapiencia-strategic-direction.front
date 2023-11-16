@@ -16,7 +16,6 @@ export default function useHistoricalProjects() {
         name: "Proyectos Históricos",
         url: "/direccion-estrategica/proyectos-historicos/",
     });
-    const { authorization } = useContext(AppContext);
     const { GetAllHistorical } = useProjectsService();
     const { setMessage } = useContext(AppContext)
     const [showTable, setShowTable] = useState<boolean>(false);
@@ -91,123 +90,15 @@ export default function useHistoricalProjects() {
             onClick: (row) => {
                 const project = dataTable.find(project => project.bpin == row.bpin) 
                 const projectIndex = project.childrens.findIndex(item => item == row)
-                const token = localStorage.getItem("token");
-                  
                 if (projectIndex == -1){
-                    fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${project.childrens[0].id}/generate-pdf-historic`, {
-                        method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                        headers: new Headers({
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                            Permissions: authorization.encryptedAccess,
-                            authorization: `Bearer ${token}`
-                        }),
-                    }).then(async response => {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        try {
-                            window.open(url, "_blank").focus();
-                        } catch {
-                            setMessage({
-                                title: "Permisos faltantes",
-                                description: "Por favor aceptar los permisos solicitados por el navegador para visualidar el pdf",
-                                show: true,
-                                background: true,
-                                OkTitle: "Aceptar",
-                                cancelTitle: "Cancelar",
-                                onOk: () => {
-                                    try {
-                                        window.open(url, "_blank").focus();
-                                        setMessage({});
-                                    } catch {
-                                        setMessage({
-                                            title: "Permisos faltantes",
-                                            description: "No se han aceptado correctamente los permisos solicitados por el navegador",
-                                            show: true,
-                                            background: true,
-                                            OkTitle: "Aceptar",
-                                            onOk: () => {
-                                                setMessage({});
-                                            }
-                                        });
-                                    }
-                                },
-                                onCancel: () => {
-                                    setMessage({});
-                                }
-                            })
-                        }
-                    }).catch(err => {
-                        setMessage({
-                            title: "Ha ocurrido un error...",
-                            description: String(err),
-                            show: true,
-                            background: true,
-                            OkTitle: "Aceptar",
-                            onOk: () => {
-                                setMessage({});
-                            }
-                        })
-                    })
-                    } else {
-                        const oldVersion = project.childrens[projectIndex + 1];
-                        const oldId = oldVersion?.bpin == row.bpin ? oldVersion.id : 0;
-                        fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${oldId}/generate-pdf-historic`, {
-                            method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                            headers: new Headers({
-                                "Content-Type": "application/json",
-                                Accept: "application/json",
-                                Permissions: authorization.encryptedAccess,
-                                authorization: `Bearer ${token}`
-                            }),
-                        }).then(async response => {
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            try {
-                                window.open(url, "_blank").focus();
-                            } catch {
-                                setMessage({
-                                    title: "Permisos faltantes",
-                                    description: "Por favor aceptar los permisos solicitados por el navegador para visualidar el pdf",
-                                    show: true,
-                                    background: true,
-                                    OkTitle: "Aceptar",
-                                    cancelTitle: "Cancelar",
-                                    onOk: () => {
-                                        try {
-                                            window.open(url, "_blank").focus();
-                                            setMessage({});
-                                        } catch {
-                                            setMessage({
-                                                title: "Permisos faltantes",
-                                                description: "No se han aceptado correctamente los permisos solicitados por el navegador",
-                                                show: true,
-                                                background: true,
-                                                OkTitle: "Aceptar",
-                                                onOk: () => {
-                                                    setMessage({});
-                                                }
-                                            });
-                                        }
-                                    },
-                                    onCancel: () => {
-                                        setMessage({});
-                                    }
-                                })
-                            }
-                        }).catch(err => {
-                            setMessage({
-                                title: "Ha ocurrido un error...",
-                                description: String(err),
-                                show: true,
-                                background: true,
-                                OkTitle: "Aceptar",
-                                onOk: () => {
-                                    setMessage({});
-                                }
-                            })
-                        })
-                    }
+                    const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${project.childrens[0].id}/generate-pdf-historic`;
+                    window.open(pdfUrl, "_blank");
+                }else {
+                    const oldVersion = project.childrens[projectIndex + 1];
+                    const oldId = oldVersion?.bpin == row.bpin ? oldVersion.id : 0;
+                    const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${oldId}/generate-pdf-historic`;
+                    window.open(pdfUrl, "_blank");
+                }
             }
         }
     ];

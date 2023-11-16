@@ -19,7 +19,6 @@ import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
 
 export function useProjectsData() {
-    const { authorization } = useContext(AppContext);
     const tableComponentRef = useRef(null);
     const msgs = useRef(null);
     const [errores, setErrores] = useState<string>(null);
@@ -30,7 +29,6 @@ export function useProjectsData() {
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess  } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
-
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
     const {
@@ -88,34 +86,10 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                const token = localStorage.getItem("token");
-                  
-                  fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {
-                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                    headers: new Headers({
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Permissions: authorization.encryptedAccess,
-                        authorization: `Bearer ${token}`
-                    }),
-                  }).then(async response => {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, "_blank")
-                  }).catch(err => {
-                    setMessage({
-                        title: "Ha ocurrido un error...",
-                        description: String(err),
-                        show: true,
-                        background: true,
-                        OkTitle: "Aceptar",
-                        onOk: () => {
-                            setMessage({});
-                        }
-                    })
-                })
+                const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`;
+                window.open(pdfUrl, "_blank");
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -137,7 +111,7 @@ export function useProjectsData() {
                 setShowDialog(true);
                 setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_CARGA")
         },
         {
             customIcon: (row) => {
@@ -156,34 +130,10 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                const token = localStorage.getItem("token");
-                  
-                fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`, {
-                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                    headers: new Headers({
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Permissions: authorization.encryptedAccess,
-                        authorization: `Bearer ${token}`
-                    }),
-                  }).then(async response => {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, "_blank")
-                  }).catch(err => {
-                    setMessage({
-                        title: "Ha ocurrido un error...",
-                        description: String(err),
-                        show: true,
-                        background: true,
-                        OkTitle: "Aceptar",
-                        onOk: () => {
-                            setMessage({});
-                        }
-                    })
-                })
+                const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`;
+                window.open(pdfUrl, "_blank");
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -204,7 +154,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`adjuntos/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
         },
         {
             customIcon: (row) => {
@@ -224,7 +174,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`finalizar-proyecto/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_FINALIZAR"))
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_FINALIZAR")
         },
         {
             customIcon: () => {
@@ -304,11 +254,10 @@ export function useProjectsData() {
                 files.forEach(file => {
                     form.append('files', file);
                 });
-                const token = localStorage.getItem("token");
                 const options = {
                     method: 'POST',
                     url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-                    headers: { 'content-type': 'multipart/form-data', Permissions: authorization.encryptedAccess, authorization: `Bearer ${token}` },
+                    headers: { 'content-type': 'multipart/form-data' },
                     data: form,
                 };
                 axios.request(options).then(response => {
