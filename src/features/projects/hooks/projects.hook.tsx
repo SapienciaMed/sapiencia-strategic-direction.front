@@ -305,10 +305,11 @@ export function useProjectsData() {
                 files.forEach(file => {
                     form.append('files', file);
                 });
+                const token = localStorage.getItem("token");
                 const options = {
                     method: 'POST',
                     url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-                    headers: { 'content-type': 'multipart/form-data' },
+                    headers: { 'content-type': 'multipart/form-data', Permissions: authorization.encryptedAccess, authorization: `Bearer ${token}` },
                     data: form,
                 };
                 axios.request(options).then(response => {
