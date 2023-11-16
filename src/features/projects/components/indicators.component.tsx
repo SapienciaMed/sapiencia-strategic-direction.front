@@ -593,6 +593,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 className={`inputNumber-basic ${view && "background-textArea"}`}
                                 disabled={view}
                                 onChange={onChangeYears}
+                                useGrouping={false}
                             /> :
                             <SelectComponent
                                 control={control}

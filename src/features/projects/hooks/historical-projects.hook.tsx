@@ -106,7 +106,7 @@ export default function useHistoricalProjects() {
                         const blob = await response.blob();
                         const url = window.URL.createObjectURL(blob);
                         window.open(url, "_blank")
-
+                        console.log('url: ', url );
                     }).catch(err => {
                         setMessage({
                             title: "Ha ocurrido un error...",
