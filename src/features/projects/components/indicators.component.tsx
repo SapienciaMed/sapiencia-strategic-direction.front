@@ -455,7 +455,13 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         });
         GetIndicatorType().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                const data: IDropdownProps[] = response.data.map(data => {
+                const indicators: IIndicator[] = projectData?.programation?.indicators?.indicators;
+                const savedIndicators: number[] = indicators.length > 0 ? indicators.map( savedIndicator => {
+                    return savedIndicator.type;
+                }) : [] ; 
+                const data: IDropdownProps[] = response.data
+                .filter( data => !savedIndicators.includes(data.id))
+                .map( data => {
                     return {
                         name: data.description,
                         value: data.id

@@ -533,7 +533,6 @@ export const indicatorValidator = yup.object({
         }),
     dpn: yup
         .number()
-        .max(20, "Solo se permiten 20 caracteres")
         .nullable()
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
