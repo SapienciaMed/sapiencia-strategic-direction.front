@@ -88,6 +88,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
+
                 const token = localStorage.getItem("token");
                   
                   fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {

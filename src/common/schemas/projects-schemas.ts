@@ -533,7 +533,7 @@ export const indicatorValidator = yup.object({
         }),
     dpn: yup
         .number()
-        .typeError('Debe ser un número')
+        .max(20, "Solo se permiten 20 caracteres")
         .nullable()
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
@@ -546,8 +546,9 @@ export const indicatorValidator = yup.object({
         }),
     staticValueCode: yup
         .string()
-        .matches(/^[0-9]+$/, "Debe ser un número")
+        .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten caracteres alfanuméricos")
         .nullable()
+        .max(8, "Solo se permiten 8 caracteres")
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
             if (type === 3) {
