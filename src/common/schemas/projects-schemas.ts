@@ -381,13 +381,13 @@ export const activityMGAValidator = yup.object({
         .required("El campo es obligatorio")
         .max(500, "Solo se permiten 500 caracteres"),
     budgetsMGA: yup.object(),
-    validity: yup.number()
-        .transform((value) => Number.isNaN(value) ? null : value).nullable()
-        .required("El campo es obligatorio"),
-    year: yup.number()
-        .required("Debe seleccionar una opción"),
     detailActivities: yup.array().of(
         yup.object().shape(({
+            validity: yup.number()
+                .transform((value) => Number.isNaN(value) ? null : value).nullable()
+                .required("El campo es obligatorio"),
+            year: yup.number()
+                .required("Debe seleccionar una opción"),
             detailActivity: yup
                 .string()
                 .required("Debe seleccionar una opción")
