@@ -18,6 +18,7 @@ function App() {
   const AttachmentsPage = lazy(() => import("./features/projects/pages/attachments.page"));
   const FinishProjectPage = lazy(() => import("./features/projects/pages/finish-project.page"));
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
+  const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
   const { publish } = useAppCominicator();
  
   // Effect que cominica la aplicacion actual
@@ -89,6 +90,16 @@ function App() {
                     element={<HistoricalProjectsPage/>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
+                }
+              />
+              <Route
+                path={"/direccion-estrategica/pai/cronogramas"}
+                element={
+                  <SchedulesPAIPage/>
+                  /*<PrivateRoute
+                    element={<SchedulesPAIPage/>}
+                    allowedAction={"PROYECTO_HISTORICOS"}
+                  />*/
                 }
               />
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;

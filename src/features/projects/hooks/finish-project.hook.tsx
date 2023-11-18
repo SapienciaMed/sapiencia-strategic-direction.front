@@ -71,7 +71,7 @@ export default function useFinishProjectData(idProject: string) {
                         });
                     } else {
                         setMessage({
-                            title: "Ha ocurrido un error...",
+                            title: "¡Ha ocurrido un error!",
                             background: true,
                             OkTitle: "Aceptar",
                             show: true,
@@ -102,7 +102,7 @@ export default function useFinishProjectData(idProject: string) {
                 }).catch(err => console.log(err));
             } else {
                 setMessage({
-                    title: "Ha ocurrido un problema...",
+                    title: "¡Ha ocurrido un error!",
                     description: response.operation.message,
                     show: true,
                     background: true,

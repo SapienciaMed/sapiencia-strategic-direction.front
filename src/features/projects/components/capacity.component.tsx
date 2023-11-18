@@ -92,7 +92,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
               className="input-basic background-textArea"
               register={register}
               label="Nombre de la alternativa"
-              classNameLabel="text-black big bold"
+              classNameLabel="text-black biggest bold"
               direction={EDirection.column}
               errors={errors}
               disabled={true}
@@ -111,7 +111,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
                   value={`${field.value}`}
                   label="Descripción técnica de la capacidad"
                   className="text-area-basic"
-                  classNameLabel="text-black big bold text-required label-development"
+                  classNameLabel="text-black biggest bold text-required label-development"
                   rows={1}
                   placeholder="Escribe aquí"
                   register={register}
@@ -132,7 +132,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
                 control={control}
                 errors={errors}
                 label="Unidad de medida de la capacidad"
-                classNameLabel="text-black big bold text-required"
+                classNameLabel="text-black biggest bold text-required"
                 direction={EDirection.column}
                 placeholder="Seleccionar"
                 filter={true}
@@ -153,7 +153,7 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
                       value={`${field.value}`}
                       label="Capacidad generada"
                       className="input-basic"
-                      classNameLabel="text-black big bold text-required"
+                      classNameLabel="text-black biggest bold text-required"
                       direction={EDirection.column}
                       typeInput={"number"}
                       register={register}
