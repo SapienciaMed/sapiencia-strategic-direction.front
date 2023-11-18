@@ -105,7 +105,7 @@ export function useProjectsData() {
                     window.open(url, "_blank")
                   }).catch(err => {
                     setMessage({
-                        title: "Ha ocurrido un error...",
+                        title: "¡Ha ocurrido un error!",
                         description: String(err),
                         show: true,
                         background: true,
@@ -173,7 +173,7 @@ export function useProjectsData() {
                     window.open(url, "_blank")
                   }).catch(err => {
                     setMessage({
-                        title: "Ha ocurrido un error...",
+                        title: "¡Ha ocurrido un error!",
                         description: String(err),
                         show: true,
                         background: true,

@@ -1,7 +1,8 @@
 import React from "react";
+import { DateTime } from "luxon";
 import { EDirection } from "../../constants/input.enum";
 import { LabelComponent } from "./label.component";
-import { Controller, Control } from "react-hook-form";
+import { Controller, Control, useController } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import { IoCalendarOutline } from "react-icons/io5";
 
@@ -17,9 +18,15 @@ interface IDateProps<T> {
   children?: React.JSX.Element | React.JSX.Element[];
   errors?: any;
   disabled?: boolean;
+  disabledDays?: number[];
+  disabledDates?: Date[];
   maxDate?: Date;
   minDate?: Date;
   fieldArray?: boolean;
+  optionsRegister?: {};
+  shouldUnregister?: boolean;
+  view?: "date" | "month" | "year";
+  onChange?: (e: any) => void;
 }
 
 function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
@@ -41,35 +48,35 @@ export function DatePickerComponent({
   classNameLabel = "text-main",
   direction = EDirection.column,
   children,
-  errors = {},
+  // errors = {},
   maxDate,
   minDate,
   fieldArray,
   control,
   dateFormat,
   disabled,
+  disabledDates,
+  disabledDays,
+  optionsRegister,
+  shouldUnregister,
+  view = "date",
+  onChange,
 }: IDateProps<any>): React.JSX.Element {
-  const messageError = () => {
-    const keysError = idInput.split(".");
-    let errs = errors;
-    if (fieldArray) {
-      const errorKey = `${keysError[0]}[${keysError[1]}].${keysError[2]}`;
-      return errors[errorKey]?.message;
-    } else {
-      for (let key of keysError) {
-        errs = errs?.[key];
-        if (!errs) {
-          break;
-        }
-      }
-      return errs?.message ?? null;
-    }
-  };
+  const {
+    field,
+    fieldState: { error, invalid },
+    formState: {},
+  } = useController({
+    name: idInput,
+    control,
+    shouldUnregister,
+    rules: optionsRegister,
+  });
 
   return (
     <div
       className={
-        messageError() ? `${direction} container-icon_error` : direction
+        error?.message ? `${direction} container-icon_error` : direction
       }
     >
       <LabelElement
@@ -78,38 +85,44 @@ export function DatePickerComponent({
         classNameLabel={classNameLabel}
       />
       <div>
-        <Controller
-          name={idInput}
-          control={control}
-          render={({ field }) => (
-            <Calendar
-              id={field.name}
-              mask="99/99/9999"
-              dateFormat={dateFormat}
-              placeholder={placeholder}
-              className={`${className} ${messageError() ? "p-invalid" : ""}`}
-              showIcon
-              icon={
-                <span>
-                  <IoCalendarOutline />
-                </span>
-              }
-              showButtonBar
-              value={field.value && new Date(field.value)}
-              onChange={(e) => field.onChange(e.value)}
-              inputStyle={{ borderRight: "none" }}
-              minDate={minDate}
-              maxDate={maxDate}
-              disabled={disabled}
-            />
-          )}
-        />
+        <Calendar
+          id={field.name}
+          name={field.name}
+          inputId={field.name}
+          mask="99/99/9999"
+          dateFormat={dateFormat}
+          placeholder={placeholder}
+          className={`${className} ${error?.message ? "p-invalid" : ""}`}
+          showIcon
+          icon={
+            <span>
+              <IoCalendarOutline />
+            </span>
+          }
+          showButtonBar
+          value={field.value && new Date(field.value)}
+          onChange={(e) => {
+            const formattedDate = DateTime.fromJSDate(e.value).toFormat(
+              "yyyy/MM/dd"
+            );
 
-        {messageError() && <span className="icon-error"></span>}
+            field.onChange(formattedDate);
+            if (onChange) onChange(e);
+          }}
+          onBlur={(e) => field.onBlur()}
+          inputStyle={{ borderRight: "none" }}
+          minDate={minDate}
+          maxDate={maxDate}
+          disabledDates={disabledDates}
+          disabledDays={disabledDays}
+          disabled={disabled}
+          view={view}
+        />
+        {error?.message && <span className="icon-error"></span>}
       </div>
-      {messageError() && (
+      {error?.message && (
         <p className="error-message bold not-margin-padding">
-          {messageError()}
+          {error?.message}
         </p>
       )}
       {children}
