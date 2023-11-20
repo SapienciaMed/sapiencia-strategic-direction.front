@@ -547,19 +547,19 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
         for (let i = 0; i  < activities.length; i ++) {
             const year = "year"+`${i}`;
-            const totalCost = activities[i].unitCost * activities[i].amount;
-            validityOfOffBudget = [ ...validityOfOffBudget, activities[i].validity ];
-            if (validityOfOffBudget.includes(Number(activity.budgetsMGA[year].validity))){
-                budgetForValidityYear.push(activity.budgetsMGA[year]);
+            const totalCost = activities[i]?.unitCost * activities[i]?.amount;
+            validityOfOffBudget = [ ...validityOfOffBudget, activities[i]?.validity ];
+            if (validityOfOffBudget.includes(Number(activity.budgetsMGA[year]?.validity))){
+                budgetForValidityYear.push(activity?.budgetsMGA[year]);
                 yearsOfOffBudget.push(i);
             }
             if(!budgetForValidityYear[i]){
-                nonExistentValidity = activities[i].validity;
+                nonExistentValidity = activities[i]?.validity;
                 break;
             }
-            if ( totalCost > budgetForValidityYear[i].budget || totalCost < budgetForValidityYear[i]?.budget ) {
+            if ( totalCost > budgetForValidityYear[i]?.budget || totalCost < budgetForValidityYear[i]?.budget ) {
                 validationResult = true;
-                validationType = totalCost > budgetForValidityYear[i].budget ? "major" : "minor";
+                validationType = totalCost > budgetForValidityYear[i]?.budget ? "major" : "minor";
                 validationYear = activities[i]?.year;
                 validationValidity = validityOfOffBudget[i];
             }
