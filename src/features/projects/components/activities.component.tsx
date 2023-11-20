@@ -541,35 +541,30 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         let nonExistentValidity: number;
         let yearWithDifferentValidity: number;
         let yearsOfOffBudget : number[] = [];
+        let validityOfOffBudget: number[] = [];
         let budgetForValidityYear: IBudgetMGAYear[] = [];
         const activities = activity?.detailActivities;
-        const validityOfOffBudget: number[] = activities.length > 0 ? activities.map( activity => {
-            return activity.validity;
-        }) : [] ;
-        activities.forEach((detailActivity, index) => {
-            let savedYearOnDetailActivity = "year"+`${detailActivity?.year}`;
-            const year = "year"+`${index}`;
-            const totalCost = detailActivity.unitCost * detailActivity.amount;
+
+        for (let i = 0; i  < activities.length; i ++) {
+            const year = "year"+`${i}`;
+            const totalCost = activities[i].unitCost * activities[i].amount;
+            validityOfOffBudget = [ ...validityOfOffBudget, activities[i].validity ];
             if (validityOfOffBudget.includes(Number(activity.budgetsMGA[year].validity))){
                 budgetForValidityYear.push(activity.budgetsMGA[year]);
-                yearsOfOffBudget.push(index);
+                yearsOfOffBudget.push(i);
             }
-            if(!budgetForValidityYear[index]){
-                nonExistentValidity = detailActivity.validity;
-                return;
+            if(!budgetForValidityYear[i]){
+                nonExistentValidity = activities[i].validity;
+                break;
             }
-            if(activity.budgetsMGA[savedYearOnDetailActivity].validity != detailActivity.validity){
-                yearWithDifferentValidity = detailActivity?.year;
-                validationYear = detailActivity.validity;
-                return;
-            }
-            if ( totalCost > budgetForValidityYear[index].budget || totalCost < budgetForValidityYear[index]?.budget ) {
+            if ( totalCost > budgetForValidityYear[i].budget || totalCost < budgetForValidityYear[i]?.budget ) {
                 validationResult = true;
-                validationType = totalCost > budgetForValidityYear[index].budget ? "major" : "minor";
-                validationYear = detailActivity?.year;
-                validationValidity = validityOfOffBudget[index];
+                validationType = totalCost > budgetForValidityYear[i].budget ? "major" : "minor";
+                validationYear = activities[i]?.year;
+                validationValidity = validityOfOffBudget[i];
             }
-        });
+        }
+
         if(validationResult){
             setMessage({
                 title: "Validación presupuestos",
