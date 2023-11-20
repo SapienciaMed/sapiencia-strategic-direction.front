@@ -305,19 +305,28 @@ export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.
                         filter={true}
                         disabled={ isADisabledInput }
                     />
-                    <InputNumberComponent
-                        idInput="goal"
+                    <Controller
                         control={control}
-                        label="Meta"
-                        errors={errors}
-                        classNameLabel="text-black biggest bold text-required"
-                        className="inputNumber-basic"
-                        mode="currency"
-                        currency="COP"
-                        locale="es-CO"
-                        minFractionDigits={0}
-                        disabled={ isADisabledInput }
+                        name={"goal"}
+                        render={({ field }) => {
+                            return (
+                                <InputComponent
+                                    id={field.name}
+                                    idInput={field.name}
+                                    value={`${field.value}`}
+                                    label="Meta"
+                                    className="input-basic"
+                                    classNameLabel="text-black biggest bold text-required"
+                                    typeInput={"number"}
+                                    register={register}
+                                    onChange={field.onChange}
+                                    errors={errors}
+                                    disabled={ isADisabledInput }
+                                />
+                            );
+                        }}
                     />
+                    
                 </div>
             </FormComponent>
         </div>
