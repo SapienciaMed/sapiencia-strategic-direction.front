@@ -3536,6 +3536,7 @@
   margin: 0px;
   transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 3px;
+  padding: 0.5rem;
 }
 .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
 .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,

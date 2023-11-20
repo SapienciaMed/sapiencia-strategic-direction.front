@@ -193,9 +193,7 @@ export const needsObjectivesValidator = yup.object({
 });
 
 export const poblationValidator = yup.object().shape({
-    objectivePeople: yup
-        .number()
-        .required("El campo es obligatorio"),
+    objectivePeople: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio"),
     informationSource: yup
         .string()
         .max(100, "Solo se permiten 100 caracteres")
