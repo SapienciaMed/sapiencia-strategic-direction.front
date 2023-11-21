@@ -103,16 +103,6 @@ function App() {
                 }
               />
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
-              
-              <Route
-                path={"/direccion-estrategica/pai"}
-                element={
-                  <PrivateRoute
-                    element={<HistoricalProjectsPage/>}
-                    allowedAction={"PROYECTO_HISTORICOS"}
-                  />
-                }
-              />
             </Routes>
           </Suspense>
         </Router>
