@@ -58,8 +58,7 @@ export function PoblationComponent({
     register,
     setValue,
     getValues,
-    control,
-    trigger
+    control
   } = useForm<IPoblationForm>({
     resolver,
     mode: "all",
@@ -186,12 +185,16 @@ export function PoblationComponent({
 
   useEffect(() => {
     if ( isValid && formAction === "new" ) {
-        enableNext();
+      setTimeout( () => {
+          enableNext();
+      }, 500)
     } else if( !isValid && formAction === "new" ) {
         disableNext();
     } else if( isValid && formAction === "edit" ) {
-        enableNext();
-        setDisableContinue(false);
+        setTimeout( () => {
+            enableNext();
+            setDisableContinue(false);
+        }, 500)
     } else {      
         setDisableContinue(true);
     }

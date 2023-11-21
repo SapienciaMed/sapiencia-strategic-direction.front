@@ -99,7 +99,7 @@ function IdentificationPage(): React.JSX.Element {
                             disableAccordions([]);
                             setDisableContinue(false);
                             setActionContinue(() => nextStep);
-                        }).catch(() => { });
+                        }).catch(( ) => {});
                     }).catch(() => {
                         disableAccordions([5]);
                     })

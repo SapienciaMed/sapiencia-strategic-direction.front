@@ -95,7 +95,7 @@ export function ActorCreateComponent({
     } else if( isValid && formAction === "edit" ) {
         enableNext();
         setDisableContinue(false);
-    } else {      
+    } else {
         setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);

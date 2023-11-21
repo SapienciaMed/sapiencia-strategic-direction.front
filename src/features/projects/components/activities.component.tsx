@@ -411,10 +411,12 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             productDescriptionMGA: item?.productDescriptionMGA ? item.productDescriptionMGA : "",
             productMGA: item?.productMGA ? item.productMGA : "",
             stageActivity: item?.stageActivity ? item.stageActivity : null,
+            validity: item?.validity ? item.validity : null,
+            year: item?.year !== undefined && item.year !== null ? item.year : null,
             objectiveSelect: item?.objetiveActivity ? item.objetiveActivity.consecutive : null
         }
     });
-
+    const validityRequired = control._formValues.detailActivities?.length > 0;
     const objectiveSelect = watch('objectiveSelect');
 
     const { fields, append } = useFieldArray({
@@ -463,31 +465,20 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
     const onSubmit = handleSubmit(async (data: IActivityMGA) => {
 
-        const { yearWithDifferentValidity, nonExistentValidity, validationYear } = validateActivitiesBudget( data );
-
-        if(nonExistentValidity){
-            return setMessage({
-                title: "Validación presupuestos",
-                description: `No existe un año con la vigencia ${nonExistentValidity} en la actividad MGA.`,
-                show: true,
-                background: true,
-                OkTitle: "Cerrar",
-                onOk: () => {
-                    setMessage({});
-                }
-            })
-        }
-        if(yearWithDifferentValidity != null){
-            return setMessage({
-                title: "Validación presupuestos",
-                description: `La vigencia ${validationYear} no corresponde a el año ${yearWithDifferentValidity} en la actividad MGA.`,
-                show: true,
-                background: true,
-                OkTitle: "Cerrar",
-                onOk: () => {
-                    setMessage({});
-                }
-            })
+        if(validityRequired){
+            const { validityOfOffBudget, budgetForValidityYear } = validateActivitiesBudget( data );
+            if( !budgetForValidityYear ) {
+                return setMessage({
+                    title: "Validación presupuestos",
+                    description: `No existe un año con la vigencia ${validityOfOffBudget} en la actividad MGA.`,
+                    show: true,
+                    background: true,
+                    OkTitle: "Cerrar",
+                    onOk: () => {
+                        setMessage({});
+                    }
+                })
+            }
         }
 
         if (view) {
@@ -534,41 +525,29 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     });
 
     const validateActivitiesBudget = ( activity: IActivityMGA ) => {
+        let yearOfOffBudget : number;
+        let budgetForValidityYear: IBudgetMGAYear;
         let validationType: "minor" | "major";
         let validationResult = false;
-        let validationYear: number;
-        let validationValidity: number;
-        let nonExistentValidity: number;
-        let yearWithDifferentValidity: number;
-        let yearsOfOffBudget : number[] = [];
-        let validityOfOffBudget: number[] = [];
-        let budgetForValidityYear: IBudgetMGAYear[] = [];
-        const activities = activity?.detailActivities;
-
-        for (let i = 0; i  < activities.length; i ++) {
-            const year = "year"+`${i}`;
-            const totalCost = activities[i]?.unitCost * activities[i]?.amount;
-            validityOfOffBudget = [ ...validityOfOffBudget, activities[i]?.validity ];
-            if (validityOfOffBudget.includes(Number(activity.budgetsMGA[year]?.validity))){
-                budgetForValidityYear.push(activity?.budgetsMGA[year]);
-                yearsOfOffBudget.push(i);
-            }
-            if(!budgetForValidityYear[i]){
-                nonExistentValidity = activities[i]?.validity;
-                break;
-            }
-            if ( totalCost > budgetForValidityYear[i]?.budget || totalCost < budgetForValidityYear[i]?.budget ) {
-                validationResult = true;
-                validationType = totalCost > budgetForValidityYear[i]?.budget ? "major" : "minor";
-                validationYear = activities[i]?.year;
-                validationValidity = validityOfOffBudget[i];
+        const validityOfOffBudget = activity?.validity;
+        for( let i in activity.budgetsMGA ) {
+            if ( Number(activity.budgetsMGA[i].validity) === validityOfOffBudget ){
+                budgetForValidityYear = activity.budgetsMGA[i]
+                yearOfOffBudget = Number(i.replace("year",""));
             }
         }
+        activity.detailActivities.forEach( detailActivitie => {
+            const totalCost = detailActivitie.unitCost * detailActivitie.amount;
+            if ( totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget ) {
+                validationResult = true;
+                validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
+            }
+        });
 
         if(validationResult){
             setMessage({
                 title: "Validación presupuestos",
-                description: `El costo total de las actividades detalladas para el año ${validationYear} y vigencia ${validationValidity} es ${ validationType == "major" ? "mayor" : "menor" } que los de la actividad MGA.`,
+                description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${ validationType == "major" ? "mayor" : "menor" } que los de la actividad MGA.`,
                 show: true,
                 background: true,
                 OkTitle: "Cerrar",
@@ -577,7 +556,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 }
             })
         }
-        return { yearWithDifferentValidity, nonExistentValidity, validationYear };
+
+        return { budgetForValidityYear, validationResult, validationType, validityOfOffBudget, yearOfOffBudget };
+
     }
 
     const budgetsYears = {
@@ -891,8 +872,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         {!view && <div className="title-button text-main large" onClick={() => {
                             const consecutive = `${getValues("activityMGA")}.${fields.length + 1}`;
                             append({
-                                year: null,
-                                validity: null,
                                 consecutive: consecutive,
                                 detailActivity: "",
                                 component: null,
@@ -905,43 +884,45 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         </div>}
                     </div>
                     <div className="strategic-direction-grid-1">
+                        <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
+                            <Controller
+                                control={control}
+                                name={"validity"}
+                                defaultValue={null}
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Vigencia"
+                                            className={`input-basic ${view && "background-textArea"}`}
+                                            classNameLabel={`text-black biggest bold ${validityRequired && "text-required"}`}
+                                            typeInput={"number"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            errors={errors}
+                                            disabled={view}
+                                        />
+                                    );
+                                }}
+                            />
+                            <SelectComponent
+                                control={control}
+                                idInput={"year"}
+                                className={`select-basic span-width ${view && "background-textArea"}`}
+                                label="Año"
+                                classNameLabel={`text-black biggest bold ${validityRequired && "text-required"}`}
+                                data={yearsData}
+                                errors={errors}
+                                filter={true}
+                                disabled={view}
+                            />
+                        </div>
                         {fields.map((item, index) => {
                             return (
                                 <div className="card-table strategic-direction-grid-1" key={item.id}>
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
-                                        <Controller
-                                            control={control}
-                                            name={`detailActivities.${index}.validity`}
-                                            defaultValue={null}
-                                            render={({ field }) => {
-                                                return (
-                                                    <InputComponent
-                                                        id={field.name}
-                                                        idInput={field.name}
-                                                        value={`${field.value}`}
-                                                        label="Vigencia"
-                                                        className={`input-basic ${view && "background-textArea"}`}
-                                                        classNameLabel="text-black biggest bold text-required"
-                                                        typeInput={"number"}
-                                                        register={register}
-                                                        onChange={field.onChange}
-                                                        errors={errors}
-                                                        disabled={view}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                        <SelectComponent
-                                            control={control}
-                                            idInput={`detailActivities.${index}.year`}
-                                            className={`select-basic span-width ${view && "background-textArea"}`}
-                                            label="Año"
-                                            classNameLabel="text-black biggest bold text-required"
-                                            data={yearsData}
-                                            errors={errors}
-                                            filter={true}
-                                            disabled={view}
-                                        />
                                         <Controller
                                             control={control}
                                             name={`detailActivities.${index}.consecutive`}

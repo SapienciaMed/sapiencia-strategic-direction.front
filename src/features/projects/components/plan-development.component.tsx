@@ -34,6 +34,17 @@ export function PlanDevelopmentComponent({
   } = useForm<IPlanDevelopmentForm>({
     resolver,
     mode: "all",
+    defaultValues: {
+      pnd_pacto: projectData?.identification?.planDevelopment.pnd_pacto ? projectData?.identification?.planDevelopment.pnd_pacto : null,
+      pnd_linea: projectData?.identification?.planDevelopment.pnd_linea ? projectData?.identification?.planDevelopment.pnd_linea : null,
+      pnd_programa: projectData?.identification?.planDevelopment.pnd_programa ? projectData?.identification?.planDevelopment.pnd_programa : null,
+      pdd_linea: projectData?.identification?.planDevelopment.pdd_linea ? projectData?.identification?.planDevelopment.pdd_linea : null,
+      pdd_componentes: projectData?.identification?.planDevelopment.pdd_componentes ? projectData?.identification?.planDevelopment.pdd_componentes : null,
+      pdd_programa: projectData?.identification?.planDevelopment.pdd_programa ? projectData?.identification?.planDevelopment.pdd_programa : null,
+      pdi_linea: projectData?.identification?.planDevelopment.pdi_linea ? projectData?.identification?.planDevelopment.pdi_linea : null,
+      pdi_componentes: projectData?.identification?.planDevelopment.pdi_componentes ? projectData?.identification?.planDevelopment.pdi_componentes : null,
+      pdi_programa: projectData?.identification?.planDevelopment.pdi_programa ? projectData?.identification?.planDevelopment.pdi_programa : null,
+    },
   });
 
   useEffect(() => {
@@ -50,15 +61,19 @@ export function PlanDevelopmentComponent({
     return () => subscription.unsubscribe();
   }, [watch]);
 
+
+
   useEffect(() => {
     if ( isValid && formAction === "new" ) {
-      enableNext();
+        enableNext();
     } else if( !isValid && formAction === "new" ) {
       disableNext();
     } else if( isValid && formAction === "edit" ) {
-      enableNext();
-      setDisableContinue(false);
-    } else {      
+      setTimeout(()=>{
+        enableNext();
+        setDisableContinue(false)
+      },500)
+    } else {
       setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);
