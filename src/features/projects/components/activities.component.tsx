@@ -17,6 +17,8 @@ import { useComponentsService } from "../hooks/components-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { formaterNumberToCurrency } from "../../../common/utils/helpers";
 import { useWidth } from "../../../common/hooks/use-width";
+import { IBudgets } from "../interfaces/BudgetsInterfaces";
+import { useBudgetsService } from "../hooks/budgets-service.hook";
 
 interface IProps {
     disableNext: () => void;
@@ -28,15 +30,15 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [activitiesData, setActivitiesData] = useState<IActivitiesForm>(null);
     const [budgetsData, setBudgetsData] = useState(null);
-    const { setProjectData, 
-            projectData, 
-            setTextContinue, 
-            setActionCancel, 
-            setActionContinue, 
-            setShowCancel, 
-            setDisableContinue, 
-            formAction, 
-            setDisableStatusUpdate } = useContext(ProjectsContext);
+    const { setProjectData,
+        projectData,
+        setTextContinue,
+        setActionCancel,
+        setActionContinue,
+        setShowCancel,
+        setDisableContinue,
+        formAction,
+        setDisableStatusUpdate } = useContext(ProjectsContext);
     const { GetStages } = useStagesService();
     const { setMessage, authorization } = useContext(AppContext);
     const resolver = useYupValidationResolver(activitiesValidator);
@@ -93,28 +95,30 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
         })
     }
     const changeActivities = (data: IActivityMGA, row?: IActivityMGA) => {
-        const activityData = {...data, budgetsMGA: {
-            year0: {
-                validity: data.budgetsMGA.year0.validity || 0,
-                budget: data.budgetsMGA.year0.budget || 0,
-            },
-            year1: {
-                validity: data.budgetsMGA.year1.validity || 0,
-                budget: data.budgetsMGA.year1.budget || 0,
-            },
-            year2: {
-                validity: data.budgetsMGA.year2.validity || 0,
-                budget: data.budgetsMGA.year2.budget || 0,
-            },
-            year3: {
-                validity: data.budgetsMGA.year3.validity || 0,
-                budget: data.budgetsMGA.year3.budget || 0,
-            },
-            year4: {
-                validity: data.budgetsMGA.year4.validity || 0,
-                budget: data.budgetsMGA.year4.budget || 0,
-            },
-        }}
+        const activityData = {
+            ...data, budgetsMGA: {
+                year0: {
+                    validity: data.budgetsMGA.year0.validity || 0,
+                    budget: data.budgetsMGA.year0.budget || 0,
+                },
+                year1: {
+                    validity: data.budgetsMGA.year1.validity || 0,
+                    budget: data.budgetsMGA.year1.budget || 0,
+                },
+                year2: {
+                    validity: data.budgetsMGA.year2.validity || 0,
+                    budget: data.budgetsMGA.year2.budget || 0,
+                },
+                year3: {
+                    validity: data.budgetsMGA.year3.validity || 0,
+                    budget: data.budgetsMGA.year3.budget || 0,
+                },
+                year4: {
+                    validity: data.budgetsMGA.year4.validity || 0,
+                    budget: data.budgetsMGA.year4.budget || 0,
+                },
+            }
+        }
         if (row) {
             const activitiesData = getValues("activities").filter(item => item !== row).concat(activityData).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("activities", activitiesData);
@@ -227,14 +231,14 @@ function ActivitiesComponent({ disableNext, enableNext, setForm }: IProps): Reac
     ];
 
     useEffect(() => {
-        if ( isValid && formAction === "new" ) {
+        if (isValid && formAction === "new") {
             enableNext();
-        } else if( !isValid && formAction === "new" ) {
+        } else if (!isValid && formAction === "new") {
             disableNext();
-        } else if( isValid && formAction === "edit" ) {
+        } else if (isValid && formAction === "edit") {
             enableNext();
             setDisableContinue(false);
-        } else {      
+        } else {
             setDisableContinue(true);
         }
         setDisableStatusUpdate(!isValid);
@@ -383,12 +387,15 @@ interface IBudgetsTable {
 function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAObjectives): React.JSX.Element {
     const { setMessage } = useContext(AppContext);
     const [totalCostCalculate, setTotalCostCalculate] = useState<number>(0);
+    const [pospreData, setPospreData] = useState<IBudgets[]>([]);
+    const [cpcData, setCpcData] = useState<IDropdownProps[]>([]);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [componentsData, setComponentsData] = useState<IDropdownProps[]>([]);
     const { getListByGrouper } = useGenericListService();
     const { GetStages } = useStagesService();
     const { GetComponents } = useComponentsService();
+    const { GetAllBudgets } = useBudgetsService();
     const resolver = useYupValidationResolver(activityMGAValidator);
     const { projectData, setActionContinue, setTextContinue, setActionCancel, setDisableContinue, setShowCancel } = useContext(ProjectsContext);
     const {
@@ -433,13 +440,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         }
     });
 
-    const testData: IDropdownProps[] = [
-        {
-            name: "Prueba",
-            value: 1
-        }
-    ]
-
     const yearsData: IDropdownProps[] = [
         {
             name: "0",
@@ -465,9 +465,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
     const onSubmit = handleSubmit(async (data: IActivityMGA) => {
 
-        if(validityRequired){
-            const { validityOfOffBudget, budgetForValidityYear } = validateActivitiesBudget( data );
-            if( !budgetForValidityYear ) {
+        if (validityRequired) {
+            const { validityOfOffBudget, budgetForValidityYear } = validateActivitiesBudget(data);
+            if (!budgetForValidityYear) {
                 return setMessage({
                     title: "Validación presupuestos",
                     description: `No existe un año con la vigencia ${validityOfOffBudget} en la actividad MGA.`,
@@ -515,7 +515,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                             setActionContinue(null);
                             setMessage({});
                             setDisableContinue(true);
-                            validateActivitiesBudget( data );
+                            validateActivitiesBudget(data);
                         }
                     })
                 }
@@ -524,30 +524,30 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
 
     });
 
-    const validateActivitiesBudget = ( activity: IActivityMGA ) => {
-        let yearOfOffBudget : number;
+    const validateActivitiesBudget = (activity: IActivityMGA) => {
+        let yearOfOffBudget: number;
         let budgetForValidityYear: IBudgetMGAYear;
         let validationType: "minor" | "major";
         let validationResult = false;
         const validityOfOffBudget = activity?.validity;
-        for( let i in activity.budgetsMGA ) {
-            if ( Number(activity.budgetsMGA[i].validity) === validityOfOffBudget ){
+        for (let i in activity.budgetsMGA) {
+            if (Number(activity.budgetsMGA[i].validity) === validityOfOffBudget) {
                 budgetForValidityYear = activity.budgetsMGA[i]
-                yearOfOffBudget = Number(i.replace("year",""));
+                yearOfOffBudget = Number(i.replace("year", ""));
             }
         }
-        activity.detailActivities.forEach( detailActivitie => {
+        activity.detailActivities.forEach(detailActivitie => {
             const totalCost = detailActivitie.unitCost * detailActivitie.amount;
-            if ( totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget ) {
+            if (totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget) {
                 validationResult = true;
                 validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
             }
         });
 
-        if(validationResult){
+        if (validationResult) {
             setMessage({
                 title: "Validación presupuestos",
-                description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${ validationType == "major" ? "mayor" : "menor" } que los de la actividad MGA.`,
+                description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${validationType == "major" ? "mayor" : "menor"} que los de la actividad MGA.`,
                 show: true,
                 background: true,
                 OkTitle: "Cerrar",
@@ -615,28 +615,26 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             header: "Vigencia",
             renderCell: (row) => {
                 return (
-                    <>
-                        <Controller
-                            control={control}
-                            name={validitiesYears[row.year]}
-                            defaultValue={0}
-                            render={({ field }) => {
-                                return (
-                                    <InputInplaceComponent
-                                        id={field.name}
-                                        idInput={field.name}
-                                        value={`${field.value}`}
-                                        label="0"
-                                        className="input-basic"
-                                        typeInput={"number"}
-                                        register={register}
-                                        onChange={field.onChange}
-                                        errors={errors}
-                                    />
-                                );
-                            }}
-                        />
-                    </>
+                    <Controller
+                        control={control}
+                        name={validitiesYears[row.year]}
+                        defaultValue={0}
+                        render={({ field }) => {
+                            return (
+                                <InputInplaceComponent
+                                    id={field.name}
+                                    idInput={field.name}
+                                    value={`${field.value}`}
+                                    label="0"
+                                    className="input-basic"
+                                    typeInput={"number"}
+                                    register={register}
+                                    onChange={field.onChange}
+                                    errors={errors}
+                                />
+                            );
+                        }}
+                    />
                 )
             }
         },
@@ -687,6 +685,11 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 setStagesData(data);
             }
         });
+        GetAllBudgets().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                setPospreData(response.data);
+            }
+        }).catch(err => console.log(err));
         setTotalCostCalculate(_prev => {
             let count = 0;
             getValues("detailActivities").forEach(item => {
@@ -1060,11 +1063,33 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className={`select-basic span-width ${view && "background-textArea"}`}
                                             label="Objeto de gasto POSPRE"
                                             classNameLabel="text-black biggest bold"
-                                            data={testData}
+                                            data={pospreData.length > 0 ? pospreData.map(pospre => {
+                                                return {
+                                                    name: `${pospre.number} - ${pospre.description}`,
+                                                    value: pospre.id
+                                                }
+                                            }) : []}
                                             errors={errors}
                                             fieldArray
                                             filter={true}
                                             disabled={view}
+                                            onChange={() => {
+                                                setValue(`detailActivities.${index}.clasificatorCPC`, null);
+                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                const pospreItem = pospreData.find(item => item.id === getValues(`detailActivities.${index}.pospre`));
+                                                if (pospreItem?.productClassifications?.length > 0) {
+                                                    setValue(`detailActivities.${index}.validatorCPC`, "Si");
+                                                    setCpcData(pospreItem.productClassifications.map(cpc => {
+                                                        return {
+                                                            name: `${cpc.number} - ${cpc.description}`,
+                                                            value: cpc.id
+                                                        }
+                                                    }));
+                                                } else {
+                                                    setValue(`detailActivities.${index}.validatorCPC`, "No");
+                                                    setCpcData([]);
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
@@ -1081,7 +1106,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                         label="Validador CPC"
                                                         className="input-basic background-textArea"
                                                         classNameLabel="text-black biggest bold"
-                                                        typeInput={"number"}
+                                                        typeInput={"text"}
                                                         register={register}
                                                         onChange={field.onChange}
                                                         errors={errors}
@@ -1097,10 +1122,19 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className="select-basic span-width background-textArea"
                                             label="Clasificador CPC"
                                             classNameLabel="text-black biggest bold"
-                                            data={testData}
+                                            data={cpcData}
                                             errors={errors}
-                                            disabled
+                                            disabled={cpcData.length === 0}
                                             filter={true}
+                                            onChange={() => {
+                                                const validatorCPCItem = getValues(`detailActivities.${index}.validatorCPC`);
+                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                if (validatorCPCItem !== null && validatorCPCItem !== undefined) {
+                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "Si");
+                                                } else {
+                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                }
+                                            }}
                                             fieldArray
                                         />
                                         <Controller
@@ -1116,7 +1150,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                         label="Validador sección CPC"
                                                         className="input-basic background-textArea"
                                                         classNameLabel="text-black biggest bold"
-                                                        typeInput={"number"}
+                                                        typeInput={"text"}
                                                         register={register}
                                                         onChange={field.onChange}
                                                         errors={errors}
