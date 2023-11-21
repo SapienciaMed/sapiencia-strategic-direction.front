@@ -314,14 +314,18 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
     };
     useEffect(() => {
         if ( isValid && formAction === "new" ) {
-            enableNext();
+            setTimeout( () => {
+                enableNext();
+            }, 500)
         } else if( !isValid && formAction === "new" ) {
             disableNext();
         } else if( isValid && formAction === "edit" ) {
-            enableNext();
-            setDisableContinue(false);
+            setTimeout( () => {
+                enableNext();
+                setDisableContinue(false);
+            }, 500)
         } else {      
-            setDisableContinue(true);
+            disableNext();
         }
         setDisableStatusUpdate(!isValid);
     }, [isValid]);

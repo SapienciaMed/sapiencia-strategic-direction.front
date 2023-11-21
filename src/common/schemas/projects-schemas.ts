@@ -209,7 +209,8 @@ export const poblationValidator = yup.object().shape({
         .required("Debe seleccionar una opción"),
     shelter: yup
         .string()
-        .max(100, "Solo se permiten 100 caracteres"),
+        .max(100, "Solo se permiten 100 caracteres")
+        .nullable(),
     demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
         yup.object().shape(({
             clasification: yup
@@ -220,7 +221,8 @@ export const poblationValidator = yup.object().shape({
                 .required("Debe seleccionar una opción"),
             infoSource: yup
                 .string()
-                .max(100, "Solo se permiten 100 caracteres"),
+                .max(100, "Solo se permiten 100 caracteres")
+                .nullable()
         }))
     ),
 })
@@ -379,13 +381,23 @@ export const activityMGAValidator = yup.object({
         .required("El campo es obligatorio")
         .max(500, "Solo se permiten 500 caracteres"),
     budgetsMGA: yup.object(),
+    validity: yup.number()
+        .transform((value) => Number.isNaN(value) ? null : value).nullable()
+        .when('detailActivities', ([detailActivities], validity ) => {
+            return detailActivities && detailActivities.length > 0
+              ? validity
+                  .required("El campo es obligatorio")
+              : validity.notRequired();
+        }),
+    year: yup.number()
+        .when('detailActivities', ([detailActivities], year ) => {
+            return detailActivities.length > 0
+            ? year
+                .required("El campo es obligatorio")
+            : year.notRequired();
+        }),
     detailActivities: yup.array().of(
         yup.object().shape(({
-            validity: yup.number()
-                .transform((value) => Number.isNaN(value) ? null : value).nullable()
-                .required("El campo es obligatorio"),
-            year: yup.number()
-                .required("Debe seleccionar una opción"),
             detailActivity: yup
                 .string()
                 .required("Debe seleccionar una opción")

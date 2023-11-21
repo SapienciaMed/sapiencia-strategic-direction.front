@@ -29,7 +29,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         setValue,
         formState: { errors, isValid },
         watch,
-        trigger
     } = useForm<IProblemDescriptionForm>({
         resolver, mode: "all", defaultValues: {
             problemDescription: projectData?.identification?.problemDescription?.problemDescription ? projectData.identification.problemDescription.problemDescription : "",
@@ -57,7 +56,7 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
         } else if( isValid && formAction === "edit" ) {
             enableNext();
             setDisableContinue(false);
-        } else {      
+        } else {
             setDisableContinue(true);
         }
         setDisableStatusUpdate(!isValid);

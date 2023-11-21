@@ -428,16 +428,16 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                         render={({ field }) => {
                                             return (
                                                 <TextAreaComponent
-                                                    id={field.name}
-                                                    idInput={field.name}
-                                                    value={`${field.value}`}
-                                                    className="text-area-basic"
-                                                    placeholder="Escribe aquí"
-                                                    register={register}
-                                                    fieldArray={true}
-                                                    onChange={field.onChange}
-                                                    errors={errors}
-                                                    characters={300}
+                                                id={field.name}
+                                                idInput={field.name}
+                                                value={`${field.value}`}
+                                                className={`text-area-basic ${!field?.value && "error"}`}
+                                                placeholder="Escribe aquí"
+                                                register={register}
+                                                fieldArray={true}
+                                                onChange={field.onChange}
+                                                errors={errors}
+                                                characters={300}
                                                 >
                                                     {getValues(`estatesService.${index}.description`) === "" ? <p className="error-message bold not-margin-padding">El campo es obligatorio</p> : <></>}
                                                     {getValues(`estatesService.${index}.description`).length > 300 ? <p className="error-message bold not-margin-padding">Solo se permiten 300 caracteres</p> : <></>}
