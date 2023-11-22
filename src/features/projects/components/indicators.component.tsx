@@ -429,7 +429,12 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         });
         GetIndicatorName().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                setIndicatorsNameData(response.data);
+                
+                const indicators: IIndicator[] = projectData?.programation?.indicators?.indicators;
+                const savedIndicators: number[] = indicators.length > 0 ? indicators.map( savedIndicator => {
+                    return savedIndicator.indicator;
+                }) : [] ; 
+                setIndicatorsNameData(response.data.filter( data => !savedIndicators.filter(saved => saved !== item.indicator).includes(data.id)));
             } else {
                 console.log(response.operation.message);
             }
@@ -455,12 +460,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         });
         GetIndicatorType().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                const indicators: IIndicator[] = projectData?.programation?.indicators?.indicators;
-                const savedIndicators: number[] = indicators.length > 0 ? indicators.map( savedIndicator => {
-                    return savedIndicator.type;
-                }) : [] ; 
                 const data: IDropdownProps[] = response.data
-                .filter( data => !savedIndicators.includes(data.id))
                 .map( data => {
                     return {
                         name: data.description,
@@ -535,6 +535,11 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 errors={errors}
                                 disabled={view}
                                 filter={true}
+                                onChange={() => {
+                                    setValue("component", null);
+                                    setValue("program", null);
+                                    setValue("indicator", null);
+                                }}
                             />}
                         {typeIndicator === staticValue ?
                             <SelectComponent

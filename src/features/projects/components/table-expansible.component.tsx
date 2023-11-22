@@ -96,7 +96,7 @@ const TableExpansibleComponent = ({ columns, actions, data, widthTable, hideActi
     }
     const mobilTemplate = (item) => {
         const childrens = item.childrens;
-        const actionsMob = actions.filter(action => {
+        const actionsMob = actions?.filter(action => {
             return action.hideRow ? !action.hideRow(item) : true;
         });
         return (
