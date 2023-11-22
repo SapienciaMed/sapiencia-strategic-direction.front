@@ -955,96 +955,159 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                         name={`detailActivities.${index}.detailActivity`}
                                         defaultValue=""
                                         render={({ field }) => {
+                                            const isEmpty = getValues(`detailActivities.${index}.detailActivity`) === "";
+                                            const isOverLimit = getValues(`detailActivities.${index}.detailActivity`).length > 500;
                                             return (
-                                                <TextAreaComponent
-                                                    id={field.name}
-                                                    idInput={field.name}
-                                                    value={`${field.value}`}
-                                                    label="Descripción actividad detallada"
-                                                    classNameLabel="text-black biggest bold text-required"
-                                                    className={`text-area-basic ${view && "background-textArea"}`}
-                                                    placeholder="Escribe aquí"
-                                                    register={register}
-                                                    onChange={field.onChange}
-                                                    errors={errors}
-                                                    characters={500}
-                                                    fieldArray
-                                                    disabled={view}
-                                                >
-                                                </TextAreaComponent>
+                                            <TextAreaComponent
+                                                id={field.name}
+                                                idInput={field.name}
+                                                value={`${field.value}`}
+                                                label="Descripción actividad detallada"
+                                                classNameLabel="text-black biggest bold text-required"
+                                                className={`text-area-basic ${view && "background-textArea"} ${isEmpty ? "undefined error" : ""} ${isOverLimit ? "undefined error" : ""} `}
+                                                placeholder="Escribe aquí"
+                                                register={register}
+                                                onChange={field.onChange}
+                                                errors={errors}
+                                                characters={500}
+                                                fieldArray
+                                                disabled={view}
+                                            >
+                                                {isEmpty && <p className="error-message bold not-margin-padding">El campo es obligatorio</p>}
+                                                {isOverLimit && <p className="error-message bold not-margin-padding">Solo se permiten 500 caracteres</p>}
+                                            </TextAreaComponent>
                                             );
                                         }}
                                     />
+
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
-                                        <SelectComponent
+                                    <Controller
                                             control={control}
-                                            idInput={`detailActivities.${index}.component`}
-                                            className={`select-basic span-width ${view && "background-textArea"}`}
-                                            label="Componente"
-                                            classNameLabel="text-black biggest bold text-required"
-                                            data={componentsData}
-                                            errors={errors}
-                                            fieldArray
-                                            filter={true}
-                                            disabled={view}
-                                        />
-                                        <SelectComponent
-                                            control={control}
-                                            idInput={`detailActivities.${index}.measurement`}
-                                            className={`select-basic span-width ${view && "background-textArea"}`}
-                                            label="Unidad de medida"
-                                            classNameLabel="text-black biggest bold text-required"
-                                            data={measurementData}
-                                            errors={errors}
-                                            fieldArray
-                                            filter={true}
-                                            disabled={view}
-                                        />
-                                        <InputNumberComponent
-                                            idInput={`detailActivities.${index}.amount`}
-                                            control={control}
-                                            label="Cantidad"
-                                            errors={errors}
-                                            classNameLabel="text-black biggest bold text-required"
-                                            className={`inputNumber-basic ${view && "background-textArea"}`}
-                                            onChange={() => {
-                                                setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
-                                                setTotalCostCalculate(_prev => {
-                                                    let count = 0;
-                                                    getValues("detailActivities").forEach(item => {
-                                                        count += item.amount * item.unitCost;
-                                                    });
-                                                    return count;
-                                                });
+                                            name={`detailActivities.${index}.component`}
+                                            defaultValue={null}
+                                            render={({ field }) => {
+                                                const selectedComponent = getValues(`detailActivities.${index}.component`);
+                                                const isEmptyComponent = selectedComponent == null;
+                                                return (
+                                                    <SelectComponent
+                                                    control={control}
+                                                    idInput={`detailActivities.${index}.component`}
+                                                    className={`select-basic span-width ${view && "background-textArea"} ${isEmptyComponent ? "undefined error" : ""}`}
+                                                    label="Componente"
+                                                    classNameLabel="text-black biggest bold text-required"
+                                                    data={componentsData}
+                                                    errors={errors}
+                                                    fieldArray
+                                                    filter={true}
+                                                    disabled={view}>
+                                                
+                                                    {isEmptyComponent && <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>}
+                                                </SelectComponent>
+                                                );
                                             }}
-                                            fieldArray
-                                            disabled={view}
                                         />
+
+                                        <Controller
+                                            control={control}
+                                            name={`detailActivities.${index}.measurement`}
+                                            defaultValue={null}
+                                            render={({ field }) => {
+                                                const selectedMeasurement= getValues(`detailActivities.${index}.measurement`);
+                                                const isEmptyMeasurement = selectedMeasurement == null;
+                                                return (
+                                                    <SelectComponent
+                                                    control={control}
+                                                    idInput={`detailActivities.${index}.measurement`}
+                                                    className={`select-basic span-width ${view && "background-textArea"} ${isEmptyMeasurement ? "undefined error" : ""}`}
+                                                    label="Unidad de medida"
+                                                    classNameLabel="text-black biggest bold text-required"
+                                                    data={measurementData}
+                                                    errors={errors}
+                                                    fieldArray
+                                                    filter={true}
+                                                    disabled={view}>
+                                                
+                                                    {isEmptyMeasurement && <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>}
+                                                </SelectComponent>
+                                                );
+                                            }}
+                                        />
+                                        
+                                        <Controller
+                                            control={control}
+                                            name={`detailActivities.${index}.amount`}
+                                            defaultValue={null}
+                                            render={({ field }) => {
+                                                const selectedAmount = getValues(`detailActivities.${index}.amount`);
+                                                const isEmptyAmount = selectedAmount == null;
+                                                return (
+                                                    <InputNumberComponent
+                                                        idInput={`detailActivities.${index}.amount`}
+                                                        control={control}
+                                                        label="Cantidad"
+                                                        errors={errors}
+                                                        classNameLabel="text-black biggest bold text-required"
+                                                        className={`inputNumber-basic ${view && "background-textArea"} ${isEmptyAmount ? "undefined error" : ""}`}
+                                                        onChange={() => {
+                                                            setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
+                                                            setTotalCostCalculate(_prev => {
+                                                                let count = 0;
+                                                                getValues("detailActivities").forEach(item => {
+                                                                    count += item.amount * item.unitCost;
+                                                                });
+                                                                return count;
+                                                            });
+                                                        }}
+                                                        fieldArray
+                                                        disabled={view}
+                                                    >
+                                                    {isEmptyAmount && <p className="error-message bold not-margin-padding">El campo es obligatorio</p>}
+                                                </InputNumberComponent>
+                                                );
+                                            }}
+                                        />
+                                        
+                                       
                                     </div>
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
-                                        <InputNumberComponent
-                                            idInput={`detailActivities.${index}.unitCost`}
+
+                                    <Controller
                                             control={control}
-                                            label="Costo unitario"
-                                            errors={errors}
-                                            classNameLabel="text-black biggest bold text-required"
-                                            className={`inputNumber-basic ${view && "background-textArea"}`}
-                                            mode="currency"
-                                            currency="COP"
-                                            locale="es-CO"
-                                            minFractionDigits={2}
-                                            onChange={() => {
-                                                setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
-                                                setTotalCostCalculate(_prev => {
-                                                    let count = 0;
-                                                    getValues("detailActivities").forEach(item => {
-                                                        count += item.amount * item.unitCost;
-                                                    });
-                                                    return count;
-                                                });
+                                            name={`detailActivities.${index}.measurement`}
+                                            defaultValue={null}
+                                            render={({ field }) => {
+                                                const selectedUnit = getValues(`detailActivities.${index}.unitCost`);
+                        
+                                                const isEmptyUnit = selectedUnit == null;
+                                                return (
+                                                    <InputNumberComponent
+                                                        idInput={`detailActivities.${index}.unitCost`}
+                                                        control={control}
+                                                        label="Costo unitario"
+                                                        errors={errors}
+                                                        classNameLabel="text-black biggest bold text-required"
+                                                        className={`inputNumber-basic ${view && "background-textArea"} ${isEmptyUnit ? "undefined error" : ""}`}
+                                                        mode="currency"
+                                                        currency="COP"
+                                                        locale="es-CO"
+                                                        minFractionDigits={2}
+                                                        onChange={() => {
+                                                            setValue(`detailActivities.${index}.totalCost`, formaterNumberToCurrency(getValues(`detailActivities.${index}.unitCost`) * getValues(`detailActivities.${index}.amount`)));
+                                                            setTotalCostCalculate(_prev => {
+                                                                let count = 0;
+                                                                getValues("detailActivities").forEach(item => {
+                                                                    count += item.amount * item.unitCost;
+                                                                });
+                                                                return count;
+                                                            });
+                                                        }}
+                                                        fieldArray
+                                                        disabled={view}
+                                                    >
+                                                        {isEmptyUnit && <p className="error-message bold not-margin-padding">El campo es obligatorio</p>} 
+                                                    </InputNumberComponent>
+                                                );
                                             }}
-                                            fieldArray
-                                            disabled={view}
                                         />
                                         <InputComponent
                                             idInput={`detailActivities.${index}.totalCost`}
