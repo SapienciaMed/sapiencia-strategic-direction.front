@@ -892,7 +892,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                 measurement: null,
                                 amount: null,
                                 unitCost: null,
-                                sectionValidatorCPC: "No",
+                                sectionValidatorCPC: "",
                                 validatorCPC: "No"
                             });
                         }}>
@@ -1151,7 +1151,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             disabled={view}
                                             onChange={() => {
                                                 setValue(`detailActivities.${index}.clasificatorCPC`, null);
-                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "");
                                                 const pospreItem = pospreData.find(item => item.id === getValues(`detailActivities.${index}.pospre`));
                                                 if (pospreItem?.productClassifications?.length > 0) {
                                                     setDisableCPC(false);
@@ -1199,11 +1199,11 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             filter={true}
                                             onChange={() => {
                                                 const validatorCPCItem = getValues(`detailActivities.${index}.validatorCPC`);
-                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                setValue(`detailActivities.${index}.sectionValidatorCPC`, "");
                                                 if (validatorCPCItem !== null && validatorCPCItem !== undefined) {
-                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "Si");
+                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "Ok");
                                                 } else {
-                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
+                                                    setValue(`detailActivities.${index}.sectionValidatorCPC`, "");
                                                 }
                                             }}
                                             fieldArray
