@@ -17,6 +17,7 @@ import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
 import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
+import { saveAs } from "file-saver"
 
 export function useProjectsData() {
     const { authorization } = useContext(AppContext);
@@ -30,7 +31,8 @@ export function useProjectsData() {
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess  } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
-
+    const today = DateTime.local();
+    const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
     const {
@@ -102,7 +104,8 @@ export function useProjectsData() {
                   }).then(async response => {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
-                    window.open(url, "_blank")
+                    window.open(url, "_blank");
+                    saveAs(blob, `${"Registro proyecto_"+row?.bpin+"_"+formattedDate}.pdf`);
                   }).catch(err => {
                     setMessage({
                         title: "¡Ha ocurrido un error!",
@@ -171,6 +174,7 @@ export function useProjectsData() {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     window.open(url, "_blank")
+                    saveAs(blob, `${"Ficha técnica_"+row?.bpin+"_"+formattedDate}.pdf`);
                   }).catch(err => {
                     setMessage({
                         title: "¡Ha ocurrido un error!",
