@@ -10,6 +10,8 @@ import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
+import { useSchedulesService } from "./schedules-service.hook";
+import { useNavigate } from "react-router";
 
 interface ISchedulesTablePAI {
     consecutive: number;
@@ -19,6 +21,7 @@ interface ISchedulesTablePAI {
     bimester: number;
     startDate: DateTime;
     endDate: DateTime;
+    userCreate?: string;
 }
 
 export default function useSchedulesPAIData() {
@@ -31,19 +34,23 @@ export default function useSchedulesPAIData() {
     const [rolData, setRolData] = useState<IDropdownProps[]>([]);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [tableData, setTableData] = useState<ISchedulesTablePAI[]>([]);
+    const [constTableData, setConstTableData] = useState<ISchedulesTablePAI[]>([]);
     const [editSchedule, setEditSchedule] = useState<number>(null);
 
     const { getOptions } = useRoleService();
-    const { authorization } = useContext(AppContext);
+    const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
+    const { authorization, setMessage } = useContext(AppContext);
 
     const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
+    const navigate = useNavigate();
     const resolver = useYupValidationResolver(schedulePAIValidator);
     const {
         handleSubmit,
         formState: { errors },
         reset,
         control,
-        setValue
+        setValue,
+        getValues
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
@@ -88,7 +95,8 @@ export default function useSchedulesPAIData() {
             header: "Estado",
             fieldName: "idStatus",
             renderCell: (row) => {
-                return <>{row.idStatus}</>
+                const status = statusData.find(status => status.value === row.idStatus)
+                return <>{status ? status.name : ""}</>
             }
         },
         {
@@ -163,6 +171,88 @@ export default function useSchedulesPAIData() {
         },
     ];
 
+    const cancelAction = () => {
+        if (JSON.stringify(constTableData) !== JSON.stringify(tableData)) {
+            setMessage({
+                title: "Cancelar acción",
+                description: "¿Deseas cancelar la acción?",
+                background: true,
+                show: true,
+                OkTitle: "Aceptar",
+                cancelTitle: "Cancelar",
+                onCancel: () => {
+                    setMessage({});
+                },
+                onOk: () => {
+                    setMessage({});
+                    navigate("./../..");
+                }
+            })
+        } else {
+            navigate("./../..");
+        }
+    }
+
+    const saveAction = () => {
+        console.log(constTableData)
+        if (JSON.stringify(constTableData?.map(data => {
+            return {endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester}
+        })) !== JSON.stringify(tableData.map(data => {
+            return {endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester}
+        }))) {
+            setMessage({
+                title: "Guardar datos",
+                description: "¿Deseas guardar el cronograma?",
+                background: true,
+                show: true,
+                OkTitle: "Aceptar",
+                cancelTitle: "Cancelar",
+                onCancel: () => {
+                    setMessage({});
+                },
+                onOk: () => {
+                    crudSchedules(tableData.map(data => {
+                        return {...data, userCreate: authorization.user.numberDocument}
+                    })).then(response => {
+                        if (response.operation.code === EResponseCodes.OK) {
+                            setMessage({
+                                title: "Cronograma del plan de acción institucional",
+                                description: "¡Guardado exitosamente!",
+                                show: true,
+                                background: true,
+                                OkTitle: "Aceptar",
+                                onOk: () => {
+                                    navigate("./../..");
+                                    setMessage({});
+                                }
+                            });
+                        } else {
+                            setMessage({
+                                title: "¡Ha ocurrido un error!",
+                                description: response.operation.message,
+                                show: true,
+                                background: true,
+                                OkTitle: "Aceptar",
+                                onOk: () => {
+                                    setMessage({});
+                                }
+                            });
+                        }
+                    }).catch(err => setMessage({
+                        title: "¡Ha ocurrido un error!",
+                        description: String(err),
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        }
+                    }))
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         getOptions(Number(process.env.aplicationId)).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -175,6 +265,28 @@ export default function useSchedulesPAIData() {
                 }) : [])
             }
         }).catch(err => console.log(err));
+        getScheduleStatuses().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                setStatusData(response.data.map(item => {
+                    return {
+                        name: item.description,
+                        value: item.id
+                    }
+                }))
+            }
+        }).catch(err => console.log(err));
+        getSchedules().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const data = response.data.map((schedule, index) => {
+                    return { ...schedule, consecutive: index };
+                })
+                const data2 = response.data.map((schedule, index) => {
+                    return { ...schedule, consecutive: index };
+                })
+                setTableData(data);
+                setConstTableData(data2);
+            }
+        }).catch(err => console.log(err));
     }, []);
-    return { errors, resetForm, control, onSubmitCreate, tableColumns, tableActions, rolData, statusData, bimesterData, tableData, createPermission, editSchedule, onSubmitEdit };
+    return { errors, resetForm, control, onSubmitCreate, tableColumns, tableActions, rolData, statusData, bimesterData, tableData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction };
 }
