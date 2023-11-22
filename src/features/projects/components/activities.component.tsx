@@ -388,7 +388,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     const { setMessage } = useContext(AppContext);
     const [totalCostCalculate, setTotalCostCalculate] = useState<number>(0);
     const [pospreData, setPospreData] = useState<IBudgets[]>([]);
-    const [cpcData, setCpcData] = useState<IDropdownProps[]>([]);
+    const [disableCPC, setDisableCPC] = useState<boolean>(true);
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
     const [stagesData, setStagesData] = useState<IDropdownProps[]>([]);
     const [componentsData, setComponentsData] = useState<IDropdownProps[]>([]);
@@ -659,6 +659,17 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         }
     ];
 
+    const getCPCsData = (index) => {
+        const pospreItem = pospreData.find(item => item.id === getValues(`detailActivities.${index}.pospre`));
+        if (pospreItem?.productClassifications?.length > 0) return pospreItem.productClassifications.map(cpc => {
+            return {
+                name: `${cpc.number} - ${cpc.description}`,
+                value: cpc.id
+            }
+        })
+        return [];
+    }
+
     useEffect(() => {
         setActionContinue(() => onSubmit);
         getListByGrouper("UNIDAD_MEDIDA_OBJETIVOS").then(response => {
@@ -880,7 +891,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                 component: null,
                                 measurement: null,
                                 amount: null,
-                                unitCost: null
+                                unitCost: null,
+                                sectionValidatorCPC: "No",
+                                validatorCPC: "No"
                             });
                         }}>
                             Añadir actividad detallada <AiOutlinePlusCircle />
@@ -1078,16 +1091,11 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                 setValue(`detailActivities.${index}.sectionValidatorCPC`, "No");
                                                 const pospreItem = pospreData.find(item => item.id === getValues(`detailActivities.${index}.pospre`));
                                                 if (pospreItem?.productClassifications?.length > 0) {
+                                                    setDisableCPC(false);
                                                     setValue(`detailActivities.${index}.validatorCPC`, "Si");
-                                                    setCpcData(pospreItem.productClassifications.map(cpc => {
-                                                        return {
-                                                            name: `${cpc.number} - ${cpc.description}`,
-                                                            value: cpc.id
-                                                        }
-                                                    }));
                                                 } else {
+                                                    setDisableCPC(true);
                                                     setValue(`detailActivities.${index}.validatorCPC`, "No");
-                                                    setCpcData([]);
                                                 }
                                             }}
                                         />
@@ -1122,9 +1130,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className="select-basic span-width background-textArea"
                                             label="Clasificador CPC"
                                             classNameLabel="text-black biggest bold"
-                                            data={cpcData}
+                                            data={getCPCsData(index)}
                                             errors={errors}
-                                            disabled={cpcData.length === 0}
+                                            disabled={disableCPC}
                                             filter={true}
                                             onChange={() => {
                                                 const validatorCPCItem = getValues(`detailActivities.${index}.validatorCPC`);
