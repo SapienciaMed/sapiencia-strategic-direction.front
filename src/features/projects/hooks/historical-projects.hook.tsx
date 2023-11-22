@@ -9,6 +9,7 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 import { DateTime } from "luxon";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { AppContext } from "../../../common/contexts/app.context";
+import { saveAs } from "file-saver"
 
 export default function useHistoricalProjects() {
     useBreadCrumb({
@@ -16,6 +17,8 @@ export default function useHistoricalProjects() {
         name: "Proyectos Históricos",
         url: "/direccion-estrategica/proyectos-historicos/",
     });
+    const today = DateTime.local();
+    const formattedDate = today.toFormat('ddMMyyyy');
     const { GetAllHistorical } = useProjectsService();
     const { setMessage, authorization } = useContext(AppContext)
     const [showTable, setShowTable] = useState<boolean>(false);
@@ -109,6 +112,7 @@ export default function useHistoricalProjects() {
                         document.body.appendChild(a);
                         a.setAttribute('target', '_blank');
                         a.click();
+                        saveAs(blob, `${"Proyecto_"+row?.bpin+"_"+row?.version}.pdf`);
                         window.URL.revokeObjectURL(url);
                     }).catch(err => {
                         setMessage({
