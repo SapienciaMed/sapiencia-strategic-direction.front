@@ -404,7 +404,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         register,
         setValue,
         handleSubmit,
-        formState: { errors, isValid,isDirty },
+        formState: { errors, isValid },
         watch,
         getValues,
         getFieldState
@@ -427,6 +427,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     });
     const validityRequired = control._formValues.detailActivities?.length > 0;
     const objectiveSelect = watch('objectiveSelect');
+    const detailActivities = watch('detailActivities');
 
     const { fields, append } = useFieldArray({
         control,
@@ -661,8 +662,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         }
     ];
 
-    const getCPCsData = (index) => {
-        const pospreItem = pospreData.find(item => item.id === getValues(`detailActivities.${index}.pospre`));
+    const getCPCsData = (index, data) => {
+        console.log(getValues(`detailActivities.${index}.pospre`));
+        const pospreItem = pospreData.find(item => item.id === data);
         if (pospreItem?.productClassifications?.length > 0) return pospreItem.productClassifications.map(cpc => {
             return {
                 name: `${cpc.number} - ${cpc.description}`,
@@ -1232,7 +1234,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className="select-basic span-width background-textArea"
                                             label="Clasificador CPC"
                                             classNameLabel="text-black biggest bold"
-                                            data={getCPCsData(index)}
+                                            data={getCPCsData(index, detailActivities[index].pospre)}
                                             errors={errors}
                                             disabled={disableCPC}
                                             filter={true}
