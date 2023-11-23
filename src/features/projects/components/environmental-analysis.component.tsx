@@ -516,7 +516,6 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 errors={errors}
                 characters={500}
               >
-                <p className="error-message bold">{errors.errorModal?.message}</p>
               </TextAreaComponent>
             );
           }}
