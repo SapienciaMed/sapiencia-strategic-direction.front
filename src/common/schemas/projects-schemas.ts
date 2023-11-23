@@ -162,7 +162,7 @@ export const environmentalFffectsValidator = yup.object({
 
 export const environmentalAnalysisValidator = yup.object({
     diagnosis: yup
-        .string().required()
+        .string().optional()
         .max(600, "Solo se permiten 600 caracteres"),
 });
 
