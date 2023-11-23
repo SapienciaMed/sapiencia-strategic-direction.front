@@ -111,14 +111,16 @@ export default function useSchedulesPAIData() {
             header: "Fecha de inicio",
             fieldName: "startDate",
             renderCell: (row) => {
-                return <>{row.startDate}</>
+                const fecha = DateTime.fromFormat(row.startDate, 'yyyy/MM/dd').toFormat('dd/MM/yyyy');
+                return <>{fecha}</>
             }
         },
         {
             header: "Fecha final",
             fieldName: "endDate",
             renderCell: (row) => {
-                return <>{row.endDate}</>
+                const fecha = DateTime.fromFormat(row.endDate, 'yyyy/MM/dd').toFormat('dd/MM/yyyy');
+                return <>{fecha}</>
             }
         }
     ]

@@ -893,7 +893,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                 amount: null,
                                 unitCost: null,
                                 sectionValidatorCPC: "",
-                                validatorCPC: "No"
+                                validatorCPC: ""
                             });
                         }}>
                             Añadir actividad detallada <AiOutlinePlusCircle />

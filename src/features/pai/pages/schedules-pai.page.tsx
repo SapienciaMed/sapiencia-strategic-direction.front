@@ -94,6 +94,19 @@ function SchedulesPAIPage(): React.JSX.Element {
                             hideActions={!createPermission}
                         />
                     </div>}
+                    <div className="projects-footer-mobile mobile" style={{marginTop: "2rem"}}>
+                        <div className="mobile-actions">
+                            <span className="bold text-center button" onClick={cancelAction}>
+                                Cancelar
+                            </span>
+                            <ButtonComponent
+                                value={"Guardar"}
+                                className="button-main huge hover-three"
+                                type="button"
+                                action={saveAction}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="container-button-bot space-between">
@@ -104,7 +117,7 @@ function SchedulesPAIPage(): React.JSX.Element {
                     </span>
                     <ButtonComponent
                         className={`button-main extra_extra_large hover-three button-save`}
-                        value={"Guardar y regresar"}
+                        value={"Guardar"}
                         type="button"
                         action={saveAction}
                     />
