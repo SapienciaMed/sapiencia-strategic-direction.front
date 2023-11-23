@@ -50,7 +50,8 @@ export default function useSchedulesPAIData() {
         reset,
         control,
         setValue,
-        getValues
+        getValues,
+        clearErrors
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
@@ -128,6 +129,7 @@ export default function useSchedulesPAIData() {
         {
             icon: "Edit",
             onClick: (row) => {
+                clearErrors();
                 setValue("id", row.id);
                 setValue("bimester", row.bimester);
                 setValue("endDate", row.endDate);
