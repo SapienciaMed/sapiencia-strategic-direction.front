@@ -103,6 +103,7 @@ export interface IEffectEnviromentForm {
   classification?: number;
   level?: number;
   measures?: string;
+  errorModal?:string;
 }
 
 export interface IPoblationForm {

@@ -400,38 +400,68 @@ export function PoblationComponent({
             <div key={fields.id}>
               <div className="poblation-container-3">
                 <div>
-                  <SelectComponent
-                    control={control}
-                    idInput={`demographic.${index}.clasification`}
-                    className="select-basic"
-                    label="Clasificación"
-                    classNameLabel="text-black biggest bold text-required"
-                    data={clasificationData}
-                    errors={errors}
-                    onChange={() => {
-                      setValue(`demographic.${index}.detail`, null);
-                    }}
-                    fieldArray
-                    filter={true}
-                  >
-                    {getValues(`demographic.${index}.clasification`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
-                  </SelectComponent>
+
+                <Controller
+                  control={control}
+                  name={`demographic.${index}.clasification`}
+                  defaultValue={null}
+                  render={({ field }) => {
+                      const isEmptyClasification = !field.value;
+                      const [isFieldDirty, setIsFieldDirty] = useState(false);
+                      return (
+                        <SelectComponent
+                        control={control}
+                        idInput={`demographic.${index}.clasification`}
+                        className={`select-basic span-width ${isEmptyClasification && isFieldDirty ? "undefined error" : ""}`}
+                        label="Clasificación"
+                        classNameLabel="text-black biggest bold text-required"
+                        data={clasificationData}
+                        errors={errors}
+                        onChange={() => {
+                          setValue(`demographic.${index}.detail`, null);
+                          setIsFieldDirty(true);
+                        }}
+                        fieldArray
+                        filter={true}
+                      >
+                        {isEmptyClasification &&  isFieldDirty  &&(<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
+
+                      </SelectComponent>
+                      );
+                  }}
+              />
+              
                 </div>
                 <div>
-                  <SelectComponent
+                  <Controller
                     control={control}
-                    idInput={`demographic.${index}.detail`}
-                    className="select-basic"
-                    label="Detalle"
-                    classNameLabel="text-black biggest bold text-required"
-                    promiseData={getSelectsData(demographicFieldArray[index]?.clasification).then(response => response)}
-                    errors={errors}
-                    fieldArray
-                    filter={true}
-                  >
-                    {getValues(`demographic.${index}.detail`) === null ? <p className="error-message bold not-margin-padding">Debe seleccionar una opción</p> : <></>}
-
-                  </SelectComponent>
+                    name={`demographic.${index}.clasification`}
+                    defaultValue={null}
+                    render={({ field }) => {
+                      debugger;
+                        const isEmptyDetail = getValues(`demographic.${index}.detail`) === null
+                        const [isFieldDirty, setIsFieldDirty] = useState(false);
+                        return (
+                         <SelectComponent
+                          control={control}
+                          idInput={`demographic.${index}.detail`}
+                          className={`select-basic span-width ${isEmptyDetail && isFieldDirty ? "undefined error" : ""}`}
+                          label="Detalle"
+                          classNameLabel="text-black biggest bold text-required"
+                          promiseData={getSelectsData(demographicFieldArray[index]?.clasification).then(response => response)}
+                          errors={errors}
+                          onChange={() => {
+                            setIsFieldDirty(true);
+                          }}
+                          fieldArray
+                          filter={true}
+                        >
+                          {isEmptyDetail &&  isFieldDirty  &&(<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
+     
+                       </SelectComponent>
+                        );
+                    }}
+                  />
                 </div>
                 <div>
                 <Controller

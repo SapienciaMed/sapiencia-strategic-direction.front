@@ -129,6 +129,26 @@ export const capacityValidator = yup.object({
     capacityGenerated: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio")
 });
 
+
+const atLeastOneField = yup.object().test(
+    'atLeastOneField',
+    'Al menos un campo debe ser diligenciado',
+    function (values) {
+        // Verifica si al menos uno de los campos tiene un valor
+        const atLeastOneFieldFilled = Object.values(values).some(value => !!value);
+
+        if (!atLeastOneFieldFilled) {
+            // Personaliza el mensaje de error si la validación falla
+            throw this.createError({
+                path: 'errorModal',
+                message: 'Al menos un campo debe ser diligenciado',
+            });
+        }
+
+        return true;
+    }
+);
+
 export const environmentalFffectsValidator = yup.object({
     impact: yup
         .string().optional()
@@ -136,13 +156,14 @@ export const environmentalFffectsValidator = yup.object({
     measures: yup
         .string().optional()
         .max(500, "Solo se permiten 500 caracteres"),
-});
+
+}).concat(atLeastOneField);
+
 
 export const environmentalAnalysisValidator = yup.object({
     diagnosis: yup
         .string().optional()
         .max(600, "Solo se permiten 600 caracteres"),
-
 });
 
 

@@ -275,7 +275,8 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
         handleSubmit,
         formState: { errors, isValid },
         watch,
-        getValues
+        getValues,
+        getFieldState
     } = useForm<INeedObjetive>({
         resolver, mode: "all", defaultValues: {
             interventionActions: item?.interventionActions ? item.interventionActions : "",
@@ -419,6 +420,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                     </label>
                     <div className="problem-description-container">
                         {fields.map((field, index) => {
+                            
                             return (
                                 <div key={field.id} className="needs-objectives-estates-services">
                                     <Controller
@@ -426,12 +428,18 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                         name={`estatesService.${index}.description`}
                                         defaultValue=""
                                         render={({ field }) => {
+                                            const isEmpty = !field.value; // Reemplazar con la lógica adecuada si el valor debe ser tratado como vacío
+                                            const isOverLimit = field.value.length > 300;
+                                            const isFieldDirty = getFieldState(`estatesService.${index}.description`);
+
                                             return (
                                                 <TextAreaComponent
                                                 id={field.name}
                                                 idInput={field.name}
                                                 value={`${field.value}`}
-                                                className={`text-area-basic ${!field?.value && "error"}`}
+                                                className={`text-area-basic ${
+                                                    isEmpty && isFieldDirty.isDirty ? "undefined error" : ""
+                                                    } ${isOverLimit ? "undefined error" : ""} `}
                                                 placeholder="Escribe aquí"
                                                 register={register}
                                                 fieldArray={true}
@@ -439,8 +447,16 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                                 errors={errors}
                                                 characters={300}
                                                 >
-                                                    {getValues(`estatesService.${index}.description`) === "" ? <p className="error-message bold not-margin-padding">El campo es obligatorio</p> : <></>}
-                                                    {getValues(`estatesService.${index}.description`).length > 300 ? <p className="error-message bold not-margin-padding">Solo se permiten 300 caracteres</p> : <></>}
+                                                {isEmpty && isFieldDirty.isDirty && (
+                                                <p className="error-message bold not-margin-padding">
+                                                    El campo es obligatorio
+                                                </p>
+                                                )}
+                                                {isOverLimit && (
+                                                <p className="error-message bold not-margin-padding">
+                                                    Solo se permiten 300 caracteres
+                                                </p>
+                                                )}
                                                 </TextAreaComponent>
                                             );
                                         }}

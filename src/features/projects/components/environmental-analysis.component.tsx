@@ -520,7 +520,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
             );
           }}
         />
-
+          
       </div>
     </FormComponent>
   );

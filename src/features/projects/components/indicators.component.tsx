@@ -434,7 +434,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                 const savedIndicators: number[] = indicators.length > 0 ? indicators.map( savedIndicator => {
                     return savedIndicator.indicator;
                 }) : [] ; 
-                setIndicatorsNameData(response.data.filter( data => !savedIndicators.filter(saved => saved !== item.indicator).includes(data.id)));
+                setIndicatorsNameData(response.data.filter( data => !savedIndicators.filter(saved => saved !== item?.indicator).includes(data.id)));
             } else {
                 console.log(response.operation.message);
             }
