@@ -9,10 +9,12 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IIndicatorsPAI, 
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { indicatorsPAIValidator} from "../../../common/schemas";
+import { PAIContext } from "../contexts/pai.context";
 
 export default function useIndicatorsPai() {
     
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
+    const { PAIData, setPAIData } = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>([{
         name: "Número",
         value: "43"
@@ -25,28 +27,26 @@ export default function useIndicatorsPai() {
         name: "A demanda",
         value: "101"
     }]);
+    const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const {
         handleSubmit,
         getValues,
         register,
         formState: { errors, isValid },
         control: controlIndicatorsPai,
-        watch,
         setValue,
-        clearErrors,
-        trigger,
     } = useForm<IIndicatorsPAI>({
         resolver,
         mode: "all",
         defaultValues: {
             totalPlannedGoal: 0,
             bimesters: [
-                {ref: "firstBimester",  value: null},
-                {ref: "secondBimester", value: null},
-                {ref: "thirdBimester",  value: null},
-                {ref: "fourthBimester", value: null},
-                {ref: "fifthBimester",  value: null},
-                {ref: "sixthBimester",  value: null}
+                {bimester: "first",  value: null},
+                {bimester: "second", value: null},
+                {bimester: "third",  value: null},
+                {bimester: "fourth", value: null},
+                {bimester: "fifth",  value: null},
+                {bimester: "sixth",  value: null}
             ]
         }
     });
@@ -56,6 +56,7 @@ export default function useIndicatorsPai() {
         const bimesters = getValues("bimesters");
         const sumOfBimesters = bimesters.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
         const indicatorType = indicatorTypeData.find( indicator => indicator.value == getValues("indicatorType"));
+        setIndicatorType(indicatorType)
         if( indicatorType.name == "Porcentaje"){
             return setValue("totalPlannedGoal",sumOfBimesters / 100);
         }else if( indicatorType.name == "A demanda"){
@@ -63,13 +64,11 @@ export default function useIndicatorsPai() {
         } 
         setValue("totalPlannedGoal",sumOfBimesters);
     }
-
     const onChangeIndicator = () => onChangeBimesters();
 
     const onSubmit = () => {
 
     }
-
     const { fields: fieldsBimesters, remove: removeBimesters} = useFieldArray({
         control: controlIndicatorsPai,
         name: "bimesters",
@@ -106,8 +105,10 @@ export default function useIndicatorsPai() {
     
     return {
         errors,
+        PAIData,
         register,
         onSubmit,
+        indicatorType,
         fieldsProducts,
         appendProducts,
         fieldsBimesters,

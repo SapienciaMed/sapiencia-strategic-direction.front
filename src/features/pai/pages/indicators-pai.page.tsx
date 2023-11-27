@@ -1,19 +1,20 @@
 import React from "react";
 import { FormComponent, 
-         InputComponent, 
          SelectComponent, 
          TextAreaComponent } from "../../../common/components/Form";
 import { Controller } from "react-hook-form";
-import useIndicatorsPai from "../hooks/indicators-pai.hook";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { AiOutlineTablet } from "react-icons/ai";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import useIndicatorsPai from "../hooks/indicators-pai.hook";
+import disaggregate from '../../../public/images/icons/disaggregate.svg';
 
 function IndicatorsPaiPage(): React.JSX.Element {
 
     const { errors,
+            PAIData,
             onSubmit, 
             register,
+            indicatorType,
             appendProducts,
             fieldsProducts,
             indicatorTypeData,
@@ -26,8 +27,6 @@ function IndicatorsPaiPage(): React.JSX.Element {
             controlIndicatorsPai,
             fieldsBimesters } = useIndicatorsPai();
 
-    const isADisabledInput = false;
-
     return (
         <div className="main-page full-height">
             <div className='card-table'>
@@ -38,6 +37,19 @@ function IndicatorsPaiPage(): React.JSX.Element {
                     <FormComponent action={onSubmit}>
                         <div className="card-table card-form-development">
                             <div className="project-dates-container">
+                                {/* {
+                                    PAIData?.PAIType === "project" &&
+                                    <SelectComponent
+                                        idInput="projectIndicator"
+                                        className="select-basic"
+                                        control={controlIndicatorsPai}
+                                        errors={errors}
+                                        label="Indicador de proyecto"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        data={[]}
+                                        filter={true}
+                                    />
+                                } */}
                                 <SelectComponent
                                     idInput="projectIndicator"
                                     className="select-basic"
@@ -47,7 +59,6 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                     classNameLabel="text-black biggest bold text-required"
                                     data={[]}
                                     filter={true}
-                                    disabled={ isADisabledInput }
                                 />
                                 <SelectComponent
                                     idInput="indicatorType"
@@ -58,7 +69,6 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                     classNameLabel="text-black biggest bold text-required"
                                     data={indicatorTypeData}
                                     filter={true}
-                                    disabled={ isADisabledInput }
                                     onChange={onChangeIndicator}
                                 />
                             </div>
@@ -82,7 +92,6 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                                 onChange={field.onChange}
                                                 errors={errors}
                                                 characters={400}
-                                                disabled={ isADisabledInput }
                                             ></TextAreaComponent>
                                         );
                                     }}
@@ -101,12 +110,11 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                                 <label className="text-black biggest bold text-required">
                                                     Bimestre {index+1}
                                                 </label>
-                                                {
-
+                                                { indicatorType?.name == "Porcentaje" 
+                                                    && <div className="title-button text-main large" style={{"marginTop": 0}} onClick={() =>{}}>
+                                                        Desagregar <img src={disaggregate} alt="Desagregar bimestre"/>
+                                                    </div>
                                                 }
-                                                <div className="title-button text-main large" style={{"marginTop": 0}} onClick={() =>{}}>
-                                                    Desagregar <AiOutlineTablet />
-                                                </div>
                                             </div>
                                             <InputNumberComponent
                                                 idInput={`bimesters.${index}.value`}

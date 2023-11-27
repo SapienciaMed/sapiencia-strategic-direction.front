@@ -5,26 +5,25 @@ export interface IPAIIndicatorType extends IDropdownProps {
     name: "Número" | "Porcentaje" | "A demanda";
 }
 
+export interface IPAI {
+    PAIType: "project" | "process";
+    indicators: IIndicatorsPAI[];
+}
+
 export interface IIndicatorsPAI {
     id?: number;
     projectIndicator: number;
     indicatorType: number;
     indicatorDesc: string;
-    firstBimester: number;
-    secondBimester: number;
-    thirdBimester: number;
-    fourthBimester: number;
-    fifthBimester: number;
-    sixthBimester: number;
-    totalPlannedGoal: number;
     bimesters: IBimester[];
+    totalPlannedGoal: number;
     products: IProducts[];
     responsibles: IResponsible[];
     coresponsibles: ICoResponsible[];
 }
 
 export interface IBimester {
-    ref?: string;
+    bimester?: string;
     value: number;
 }
 

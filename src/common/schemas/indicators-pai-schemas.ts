@@ -7,30 +7,18 @@ export const indicatorsPAIValidator = yup.object({
     .required("El campo es obligatorio"),
     indicatorDesc: yup.string()
     .required("El campo es obligatorio"),
-    firstBimester: yup.number()
-    .required("El campo es obligatorio"),
-    secondBimester: yup.number()
-    .required("El campo es obligatorio"),
-    thirdBimester: yup.number()
-    .required("El campo es obligatorio"),
-    fourthBimester: yup.number()
-    .required("El campo es obligatorio"),
-    fifthBimester: yup.number()
-    .required("El campo es obligatorio"),
-    sixthBimester: yup.number()
-    .required("El campo es obligatorio"),
-    totalPlannedGoal: yup.number()
-    .notRequired()
-    .nullable(),
     bimesters: yup.array().required().of(
         yup.object().shape(({
-            ref: yup.string()
+            bimester: yup.string()
             .optional()
             .nullable(),
             value: yup.number()
             .required()
         }))
     ),
+    totalPlannedGoal: yup.number()
+    .notRequired()
+    .nullable(),
     products: yup.array().of(
         yup.object().shape(({
             product: yup.string()
