@@ -9,6 +9,7 @@ import ApplicationProvider from "./application-provider";
 import useAppCominicator from "./common/hooks/app-communicator.hook";
 import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
 import PrivateRoute from "./common/utils/auth-private-guard";
+import { addLocale } from 'primereact/api';
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -23,7 +24,7 @@ function App() {
   const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
 
   const { publish } = useAppCominicator();
- 
+
   // Effect que cominica la aplicacion actual
   useEffect(() => {
     localStorage.setItem("currentAplication", process.env.aplicationId);
@@ -31,6 +32,16 @@ function App() {
       () => publish("currentAplication", process.env.aplicationId),
       500
     );
+    addLocale('es', {
+      firstDayOfWeek: 1,
+      dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+      dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+      monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+      today: 'Hoy',
+      clear: 'Limpiar',
+    });
   }, []);
 
   return (
@@ -45,7 +56,7 @@ function App() {
                 path={"/direccion-estrategica/proyectos"}
                 element={
                   <PrivateRoute
-                    element={<ProjectsPage/>}
+                    element={<ProjectsPage />}
                     allowedAction={"PROYECTO_CONSULTAR"}
                   />
                 }
@@ -54,7 +65,7 @@ function App() {
                 path={"/direccion-estrategica/proyectos/crear-proyecto"}
                 element={
                   <PrivateRoute
-                    element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>}
+                    element={<ProjectsContextProvider><ProjectsCrud /></ProjectsContextProvider>}
                     allowedAction={"PROYECTO_CREAR"}
                   />
                 }
@@ -72,7 +83,7 @@ function App() {
                 path={"/direccion-estrategica/proyectos/edit/:id"}
                 element={
                   <PrivateRoute
-                    element={<ProjectsContextProvider><ProjectsCrud/></ProjectsContextProvider>}
+                    element={<ProjectsContextProvider><ProjectsCrud /></ProjectsContextProvider>}
                     allowedAction={"PROYECTO_EDITAR"}
                   />
                 }
@@ -81,7 +92,7 @@ function App() {
                 path={"/direccion-estrategica/proyectos/finalizar-proyecto/:id"}
                 element={
                   <PrivateRoute
-                    element={<FinishProjectPage/>}
+                    element={<FinishProjectPage />}
                     allowedAction={"PROYECTO_FINALIZAR"}
                   />
                 }
@@ -90,7 +101,7 @@ function App() {
                 path={"/direccion-estrategica/proyectos-historicos"}
                 element={
                   <PrivateRoute
-                    element={<HistoricalProjectsPage/>}
+                    element={<HistoricalProjectsPage />}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
@@ -98,7 +109,7 @@ function App() {
               <Route
                 path={"/direccion-estrategica/pai/cronogramas"}
                 element={
-                  <SchedulesPAIPage/>
+                  <SchedulesPAIPage />
                   /*<PrivateRoute
                     element={<SchedulesPAIPage/>}
                     allowedAction={"PROYECTO_HISTORICOS"}
@@ -106,7 +117,7 @@ function App() {
                 }
               />
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
-              
+
               <Route
                 path={"/direccion-estrategica/pai"}
                 element={
@@ -121,7 +132,7 @@ function App() {
                 path={"/direccion-estrategica/pai/crear-indicador"}
                 element={
                   <PrivateRoute
-                    element={<IndicatorsPaiPage/>}
+                    element={<IndicatorsPaiPage />}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }

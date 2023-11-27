@@ -2,7 +2,7 @@ import React from "react";
 import { DateTime } from "luxon";
 import { EDirection } from "../../constants/input.enum";
 import { LabelComponent } from "./label.component";
-import { Controller, Control, useController } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import { IoCalendarOutline } from "react-icons/io5";
 
@@ -99,7 +99,6 @@ export function DatePickerComponent({
               <IoCalendarOutline />
             </span>
           }
-          showButtonBar
           value={field.value && new Date(field.value)}
           onChange={(e) => {
             const formattedDate = DateTime.fromJSDate(e.value).toFormat(
@@ -117,6 +116,8 @@ export function DatePickerComponent({
           disabledDays={disabledDays}
           disabled={disabled}
           view={view}
+          locale="es"
+          showButtonBar
         />
         {error?.message && <span className="icon-error"></span>}
       </div>
