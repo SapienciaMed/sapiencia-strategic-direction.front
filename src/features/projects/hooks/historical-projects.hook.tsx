@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { IProject, IProjectFiltersHistorical } from "../interfaces/ProjectsInterfaces";
+import { IProjectFiltersHistorical } from "../interfaces/ProjectsInterfaces";
 import { useContext, useEffect, useState } from "react";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { Tooltip } from "primereact/tooltip";
@@ -10,6 +10,7 @@ import { DateTime } from "luxon";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { AppContext } from "../../../common/contexts/app.context";
 import { saveAs } from "file-saver"
+import { IHistoricalProject } from "../interfaces/HistoricProjectsInterfaces";
 
 export default function useHistoricalProjects() {
     useBreadCrumb({
@@ -17,8 +18,6 @@ export default function useHistoricalProjects() {
         name: "Proyectos Históricos",
         url: "/direccion-estrategica/proyectos-historicos/",
     });
-    const today = DateTime.local();
-    const formattedDate = today.toFormat('ddMMyyyy');
     const { GetAllHistorical } = useProjectsService();
     const { setMessage, authorization } = useContext(AppContext)
     const [showTable, setShowTable] = useState<boolean>(false);
@@ -34,7 +33,7 @@ export default function useHistoricalProjects() {
         GetAllHistorical(data).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const groupedData = response.data.reduce((result, current, index) => {
-                    const existingGroup = result.find(group => group.bpin === current.bpin);
+                    const existingGroup = result.find(group => group.idProject === current.idProject);
                     if (existingGroup) {
                         existingGroup.childrens.push({ ...current, consecutive: index });
                     } else {
@@ -52,18 +51,18 @@ export default function useHistoricalProjects() {
         reset();
         setShowTable(false);
     };
-    const tableColumns: ITableElement<IProject>[] = [
+    const tableColumns: ITableElement<IHistoricalProject>[] = [
         {
             header: "BPIN",
-            fieldName: "bpin"
+            fieldName: "project.bpin"
         },
         {
             header: "Nombre del Proyecto",
-            fieldName: "project"
+            fieldName: "project.project"
         },
         {
             header: "Fecha de creación",
-            fieldName: "dateCreate",
+            fieldName: "project.dateCreate",
             renderCell: (row) => {
                 return <>{DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
             },
@@ -73,7 +72,7 @@ export default function useHistoricalProjects() {
             fieldName: "version"
         },
     ]
-    const tableActions: ITableAction<IProject>[] = [
+    const tableActions: ITableAction<IHistoricalProject>[] = [
         {
             customIcon: (row) => {
                 return (
@@ -91,7 +90,7 @@ export default function useHistoricalProjects() {
                 )
             },
             onClick: (row) => {
-                const project = dataTable.find(project => project.bpin == row.bpin)
+                const project = dataTable.find(project => project.project.bpin == row.project.bpin)
                 const projectIndex = project.childrens.findIndex(item => item == row)
                 const token = localStorage.getItem("token");
 
@@ -112,7 +111,7 @@ export default function useHistoricalProjects() {
                         document.body.appendChild(a);
                         a.setAttribute('target', '_blank');
                         a.click();
-                        saveAs(blob, `${"Proyecto_"+row?.bpin+"_"+row?.version}.pdf`);
+                        saveAs(blob, `${"Proyecto_"+row?.project?.bpin+"_"+row?.version}.pdf`);
                         window.URL.revokeObjectURL(url);
                     }).catch(err => {
                         setMessage({
@@ -128,7 +127,7 @@ export default function useHistoricalProjects() {
                     })
                 } else {
                     const oldVersion = project.childrens[projectIndex + 1];
-                    const oldId = oldVersion?.bpin == row.bpin ? oldVersion.id : 0;
+                    const oldId = oldVersion?.bpin == row.project.bpin ? oldVersion.id : 0;
                     fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-historic/${row.id}/${oldId}/generate-pdf-historic`, {
                         method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
                         headers: new Headers({
