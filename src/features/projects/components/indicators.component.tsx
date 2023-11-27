@@ -92,13 +92,13 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
 
     const changeIndicators = (data: IIndicator, row?: IIndicator) => {
         if (row) {
-            const indicators = getValues("indicators").filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+            const indicators = getValues("indicators")?.filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators);
             setIndicatorsData(prev => {
                 return { ...prev, indicators: indicators };
             });
         } else {
-            const indicators = getValues("indicators").sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+            const indicators = getValues("indicators")?.sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators ? indicators.concat(data) : [data]);
             setIndicatorsData(prev => {
                 return { ...prev, indicators: indicators ? indicators.concat(data) : [data] };
@@ -431,7 +431,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
             if (response.operation.code === EResponseCodes.OK) {
                 
                 const indicators: IIndicator[] = projectData?.programation?.indicators?.indicators;
-                const savedIndicators: number[] = indicators.length > 0 ? indicators.map( savedIndicator => {
+                const savedIndicators: number[] = indicators?.length > 0 ? indicators?.map( savedIndicator => {
                     return savedIndicator.indicator;
                 }) : [] ; 
                 setIndicatorsNameData(response.data.filter( data => !savedIndicators.filter(saved => saved !== item?.indicator).includes(data.id)));

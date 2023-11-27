@@ -2,6 +2,7 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
+import { IHistoricalProject } from "../interfaces/HistoricProjectsInterfaces";
 import { IFinishProjectForm, IProject, IProjectFiltersHistorical, IProjectTemp } from "../interfaces/ProjectsInterfaces";
 
 export function useProjectsService() {
@@ -60,7 +61,7 @@ export function useProjectsService() {
         return put(`${projectsUrl}${endpoint}`, data);
     }
 
-    async function GetAllHistorical(data: IProjectFiltersHistorical): Promise<ApiResponse<IProject[]>>{
+    async function GetAllHistorical(data: IProjectFiltersHistorical): Promise<ApiResponse<IHistoricalProject[]>>{
         const endpoint: string = `/get-all-historical`;
         return post(`${projectsUrl}${endpoint}`, data);
     }
