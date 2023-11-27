@@ -20,6 +20,7 @@ function App() {
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
   const IndicatorsPaiPage = lazy(() => import("./features/pai/pages/indicators-pai.page"));
+  const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
 
   const { publish } = useAppCominicator();
  
@@ -110,7 +111,7 @@ function App() {
                 path={"/direccion-estrategica/pai"}
                 element={
                   <PrivateRoute
-                    element={<HistoricalProjectsPage/>}
+                    element={<CreatePlanAction/>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
