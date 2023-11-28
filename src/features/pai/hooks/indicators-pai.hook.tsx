@@ -87,23 +87,6 @@ export default function useIndicatorsPai() {
         setActionCancel(()=>onCancelRef);
     }, []);
 
-    const onCancel = () => {
-        setMessage({
-            title: "Cancelar acción",
-            description: "¿Deseas cancelar la creación del indicador?",
-            show: true,
-            background: true,
-            cancelTitle: "Cancelar",
-            OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onOk: () => {
-                navigate(-1)
-                setMessage({});
-            }
-        })
-    }
     const onSubmit = () => {
         setMessage({
             title: "Crear indicador",
@@ -130,7 +113,24 @@ export default function useIndicatorsPai() {
             }
         })
     }
-
+    const onCancel = () => {
+        setMessage({
+            title: "Cancelar acción",
+            description: "¿Deseas cancelar la creación del indicador?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                navigate(-1)
+                setMessage({});
+                setTempButtonText("Guardar temporalmente");
+            }
+        })
+    }
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
         const sumOfBimesters = bimesters.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
