@@ -6,19 +6,42 @@ import { Controller, useFormContext } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "../../projects/components/table-expansible.component";
 import { Tooltip } from "primereact/tooltip";
+import { NavbarPai }  from "../components/navbar-pai.component";
 
 interface IProps {
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
 }
-    
 
-  const tooltipOptions = { position: 'top', mouseTrack: true, effectDuration: 300, showDelay: 100, hideDelay: 100 };
-
-
+const tooltipOptions = { position: 'top', mouseTrack: true, effectDuration: 300, showDelay: 100, hideDelay: 100 };
 
 function CreatePlanActionPAIPage(): React.JSX.Element {
 
-    const { errors, navigate, getFieldState, fields,changeActionsPAi,riskText,View,NamePAIData, riskPAIData, riskFields, TypePAIData, appendRisk,append, remove, yearsArray, setMessage, control, onSubmitCreate,register, rolData, statusData, editSchedule,getValues, setValue, cancelAction, saveAction } = usePlanActionPAIData();
+    const { errors, 
+            navigate, 
+            getFieldState, 
+            fields,
+            changeActionsPAi,
+            riskText,
+            View,
+            NamePAIData, 
+            riskPAIData, 
+            riskFields, 
+            TypePAIData, 
+            appendRisk,
+            append, 
+            remove, 
+            yearsArray, 
+            setMessage, 
+            control, 
+            onSubmitCreate,
+            register, 
+            rolData, 
+            statusData, 
+            editSchedule,
+            getValues, 
+            setValue, 
+            cancelAction, 
+            saveAction } = usePlanActionPAIData();
     return (
         <div className='crud-page full-height'>
             <div className='main-page full-height'>
@@ -283,9 +306,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                 }}>
                                                     Consolidado de acciones PAI <AiOutlinePlusCircle />
                                                 </div>
-                                                <div className="title-button text-main large" onClick={() => {
-                                                
-                                                }}>
+                                                <div className="title-button text-main large" onClick={() => { navigate("./crear-indicador") }}>
                                                     Agregar acción <AiOutlinePlusCircle />
                                                 </div>
                                             </div>
@@ -294,48 +315,9 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                             </div>
 
                     </FormComponent>}
-
-                    
                 </div>
             </div>
-            <div className="container-button-bot space-between">
-                {
-                    <ButtonComponent
-                        className="button-main extra_extra_large hover-three button-save"
-                        value={"Guardar temporalmente"}
-                        type="button"
-                        action={saveAction}
-                    />
-                }
-                <div className="buttons-bot">
-                    { <span className="bold text-center button" onClick={cancelAction || (() => {
-                        //if(!dirty) return navigate('/direccion-estrategica/proyectos/');
-                        setMessage({
-                            title: "Cancelar acción",
-                            description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
-                            show: true,
-                            background: true,
-                            cancelTitle: "Cancelar",
-                            OkTitle: "Aceptar",
-                            onCancel: () => {
-                                setMessage({});
-                            },
-                            onOk: () => {
-                                //navigate('/direccion-estrategica/proyectos/');
-                                setMessage({});
-                            }
-                        })
-                    })}>
-                        Cancelar
-                    </span>}
-                    <ButtonComponent
-                        className={`button-main extra_extra_large hover-three button-save`}
-                        value={"Guardar y regresar"}
-                        type="button"
-                        action={saveAction}
-                    />
-                </div>
-            </div>
+            <NavbarPai/>
         </div>
     )
 }

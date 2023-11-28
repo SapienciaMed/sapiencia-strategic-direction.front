@@ -10,31 +10,32 @@ import { IIndicatorsPAI,
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
+import { useEntitiesService } from "./entities-service.hook";
+import { useNavigate } from "react-router-dom";
+import { IIndicatorAction } from '../interfaces/ProjectsInterfaces';
+import { IDropdownProps } from "../../../common/interfaces/select.interface";
 
 export default function useIndicatorsPai() {
-    
+    const navigate = useNavigate();
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
-    const { PAIData, setPAIData } = useContext(PAIContext);
-    const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>([{
-        name: "Número",
-        value: "43"
-    },
-    {
-        name: "Porcentaje",
-        value: "21"
-    },
-    {
-        name: "A demanda",
-        value: "101"
-    }]);
+    const { PAIData, 
+            setPAIData, 
+            setTempButtonText, 
+            setSaveButtonText, 
+            setSaveButtonAction,
+            setDisableSaveButton } = useContext(PAIContext);
+    const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
+    const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
+    
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
+    const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
     const {
-        handleSubmit,
         getValues,
         register,
         formState: { errors, isValid },
         control: controlIndicatorsPai,
         setValue,
+        watch,
     } = useForm<IIndicatorsPAI>({
         resolver,
         mode: "all",
@@ -50,8 +51,38 @@ export default function useIndicatorsPai() {
             ]
         }
     });
-
     
+    useEffect(() => {
+        getIndicatorsType().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const indicatorType: IPAIIndicatorType[] = response.data;
+                const arrayIndicatorsType: IPAIIndicatorType[] = indicatorType.map((indicator) => {
+                    return { name: indicator?.description, value: indicator?.id };
+                });
+                setIndicatorTypeData(arrayIndicatorsType);
+            }
+        }).catch(() => { });
+
+        getProjectIndicators(PAIData?.namePAI).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const indicatorType: IIndicatorAction[] = response.data;
+                const arrayIndicators: IDropdownProps[] = indicatorType.map((indicator) => {
+                    return { name: indicator?.productMGA, value: indicator?.id };
+                });
+                setProjectIndicatorsData(arrayIndicators);
+            }
+        }).catch(() => { });
+        setSaveButtonText("Guardar");
+        setTempButtonText("Agregar otro indicador")
+    }, []);
+
+    useEffect(()=>{
+        if(isValid){
+           setSaveButtonAction( () => { navigate(-1) } )
+           setDisableSaveButton(isValid!);
+        }
+    },[isValid])
+
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
         const sumOfBimesters = bimesters.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
@@ -64,11 +95,17 @@ export default function useIndicatorsPai() {
         } 
         setValue("totalPlannedGoal",sumOfBimesters);
     }
+
     const onChangeIndicator = () => onChangeBimesters();
 
-    const onSubmit = () => {
+    useEffect(() => {
+        const subscription = watch((value: IIndicatorsPAI ) => setPAIData(prev => {
+            return { ...prev, indicators: [value] }
+        }));
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
-    }
+
     const { fields: fieldsBimesters, remove: removeBimesters} = useFieldArray({
         control: controlIndicatorsPai,
         name: "bimesters",
@@ -107,7 +144,6 @@ export default function useIndicatorsPai() {
         errors,
         PAIData,
         register,
-        onSubmit,
         indicatorType,
         fieldsProducts,
         appendProducts,
@@ -123,6 +159,7 @@ export default function useIndicatorsPai() {
         bimestersFieldArray,
         fieldsCoResponsible,
         controlIndicatorsPai,
+        projectIndicatorsData,
         responsibleFieldArray,
         coResponsibleFieldArray,
     }

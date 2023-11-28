@@ -2,7 +2,8 @@
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 
 export interface IPAIIndicatorType extends IDropdownProps {
-    name: "Número" | "Porcentaje" | "A demanda";
+    id?: number;
+    description?: "Número" | "Porcentaje" | "A demanda";
 }
 
 export interface IPAI {
@@ -29,15 +30,18 @@ export interface IBimester {
 
 export interface IProducts {
     id?: number;
+    idIndicatorPAI?: number;
     product: string;
 }
 
 export interface IResponsible {
     id?: number;
+    idIndicatorPAI?: number;
     responsible: string;
 }
 
 export interface ICoResponsible {
     id?: number;
+    idIndicatorPAI?: number;
     coresponsible: string;
 }

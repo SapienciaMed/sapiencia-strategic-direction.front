@@ -4,18 +4,24 @@ import {
     ReactElement,
     Dispatch,
     SetStateAction,
-    useState
+    useState,
+    useEffect
   } from "react";
   import { useLocation } from 'react-router-dom';
   import { IPAI } from "../interfaces/IndicatorsPAIInterfaces";
+import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
   
   interface IPAIContext {
     disableSaveButton: boolean;
     setDisableSaveButton: Dispatch<SetStateAction<boolean>>;
-    PAIData: IPAI;
-    setPAIData: Dispatch<SetStateAction<IPAI>>;
-    buttonText: string;
-    setButtonText: Dispatch<SetStateAction<string>>;
+    PAIData: ICreatePlanAction;
+    setPAIData: Dispatch<SetStateAction<ICreatePlanAction>>;
+    tempButtonText: string;
+    setTempButtonText: Dispatch<SetStateAction<string>>;
+    tempButtonAction: () => void;
+    setTempButtonAction: Dispatch<SetStateAction<() => void>>;
+    saveButtonText: string;
+    setSaveButtonText: Dispatch<SetStateAction<string>>;
     saveButtonAction: () => void;
     setSaveButtonAction: Dispatch<SetStateAction<() => void>>;
     actionCancel: () => void;
@@ -33,8 +39,12 @@ import {
     setDisableSaveButton: () => {},
     PAIData: null,
     setPAIData: () => {},
-    buttonText: null,
-    setButtonText: () => {},
+    tempButtonText: null,
+    setTempButtonText: () => {},
+    tempButtonAction: () => {},
+    setTempButtonAction: () => {},
+    saveButtonText: null,
+    setSaveButtonText: () => {},
     saveButtonAction: () => {},
     setSaveButtonAction: () => {},
     actionCancel: () => {},
@@ -47,21 +57,26 @@ import {
   export function PAIContextProvider({ children }: IProps) {
     const location = useLocation();
     const [disableSaveButton, setDisableSaveButton] = useState<boolean>(true);
-    const [PAIData, setPAIData] = useState<IPAI>(null);
-    const [buttonText, setButtonText] = useState<string>(null);
+    const [PAIData, setPAIData] = useState<ICreatePlanAction>(null);
+    const [tempButtonText, setTempButtonText] = useState<string>(null);
+    const [tempButtonAction, setTempButtonAction] = useState<() => void>(() => {});
+    const [saveButtonText, setSaveButtonText] = useState<string>(null);
     const [saveButtonAction, setSaveButtonAction] = useState<() => void>(() => {});
     const [actionCancel, setActionCancel] = useState<() => void>(() => {});
     const [showCancel, setShowCancel] = useState<boolean>(true);
     const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
-  
     const values = useMemo<IPAIContext>(() => {
       return {
         disableSaveButton,
         setDisableSaveButton,
         PAIData,
         setPAIData,
-        buttonText,
-        setButtonText,
+        tempButtonText,
+        setTempButtonText,
+        tempButtonAction,
+        setTempButtonAction,
+        saveButtonText,
+        setSaveButtonText,
         saveButtonAction,
         setSaveButtonAction,
         actionCancel,
@@ -70,7 +85,7 @@ import {
         setShowCancel,
         formAction
       };
-    }, [disableSaveButton, PAIData, buttonText, saveButtonAction, actionCancel, showCancel, formAction]);
+    }, [disableSaveButton, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
   
     return <PAIContext.Provider value={values}>{children}</PAIContext.Provider>;
   }

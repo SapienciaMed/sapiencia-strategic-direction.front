@@ -10,6 +10,7 @@ import useAppCominicator from "./common/hooks/app-communicator.hook";
 import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
 import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
+import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -122,7 +123,7 @@ function App() {
                 path={"/direccion-estrategica/pai"}
                 element={
                   <PrivateRoute
-                    element={<CreatePlanAction/>}
+                    element={<PAIContextProvider><CreatePlanAction/></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
@@ -132,7 +133,7 @@ function App() {
                 path={"/direccion-estrategica/pai/crear-indicador"}
                 element={
                   <PrivateRoute
-                    element={<IndicatorsPaiPage />}
+                    element={<PAIContextProvider><IndicatorsPaiPage /></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
