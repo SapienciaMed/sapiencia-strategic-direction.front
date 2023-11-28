@@ -14,6 +14,7 @@ import { useEntitiesService } from "./entities-service.hook";
 import { useNavigate } from "react-router-dom";
 import { IIndicatorAction } from '../interfaces/ProjectsInterfaces';
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
+import { AppContext } from "../../../common/contexts/app.context";
 
 export default function useIndicatorsPai() {
     const navigate = useNavigate();
@@ -23,10 +24,11 @@ export default function useIndicatorsPai() {
             setTempButtonText, 
             setSaveButtonText, 
             setSaveButtonAction,
-            setDisableSaveButton } = useContext(PAIContext);
+            setDisableSaveButton,
+            setActionCancel } = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
     const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
-    
+    const { setMessage } = useContext(AppContext);
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
     const {
@@ -51,7 +53,14 @@ export default function useIndicatorsPai() {
             ]
         }
     });
-    
+
+    useEffect(()=>{
+        if(isValid){
+           setSaveButtonAction( () => { onSubmit() } );
+           setDisableSaveButton(isValid!);
+        }
+    },[isValid])
+
     useEffect(() => {
         getIndicatorsType().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -73,15 +82,54 @@ export default function useIndicatorsPai() {
             }
         }).catch(() => { });
         setSaveButtonText("Guardar");
-        setTempButtonText("Agregar otro indicador")
+        setTempButtonText("Agregar otro indicador");
+        const onCancelRef = onCancel;
+        setActionCancel(()=>onCancelRef);
     }, []);
 
-    useEffect(()=>{
-        if(isValid){
-           setSaveButtonAction( () => { navigate(-1) } )
-           setDisableSaveButton(isValid!);
-        }
-    },[isValid])
+    const onCancel = () => {
+        setMessage({
+            title: "Cancelar acción",
+            description: "¿Deseas cancelar la creación del indicador?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                navigate(-1)
+                setMessage({});
+            }
+        })
+    }
+    const onSubmit = () => {
+        setMessage({
+            title: "Crear indicador",
+            description: "¿Deseas guardar el indicador?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                navigate(-1)
+                setMessage({
+                    title: "Datos guardados",
+                    description: "¡Indicador guardado exitosamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Cerrar",
+                    onOk: () => {
+                        setMessage({});
+                    }
+                });
+            }
+        })
+    }
 
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
