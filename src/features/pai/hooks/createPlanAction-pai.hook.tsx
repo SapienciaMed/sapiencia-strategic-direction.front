@@ -22,8 +22,8 @@ import { IProject } from "../interfaces/ProjectsInterfaces";
 export default function usePlanActionPAIData() {
     useBreadCrumb({
         isPrimaryPage: true,
-        name: "Cronograma del plan de acción institucional",
-        url: "/direccion-estrategica/pai/cronogramas",
+        name: "Formular Plan de Acción Institucional (PAI)",
+        url: "/direccion-estrategica/pai/",
     });
 
 
@@ -220,7 +220,7 @@ export default function usePlanActionPAIData() {
 
 
     const cancelAction = () => {
-            navigate("./../..");
+            navigate("./../");
         
     }
 
