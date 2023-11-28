@@ -69,7 +69,7 @@ export function NavbarPai(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                //navigate('/direccion-estrategica/proyectos/');
+                                navigate("./../");
                                 setMessage({});
                             }
                         });
