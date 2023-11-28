@@ -29,15 +29,18 @@ export interface IBimester {
 
 export interface IProducts {
     id?: number;
+    idIndicatorPAI?: number;
     product: string;
 }
 
 export interface IResponsible {
     id?: number;
+    idIndicatorPAI?: number;
     responsible: string;
 }
 
 export interface ICoResponsible {
     id?: number;
+    idIndicatorPAI?: number;
     coresponsible: string;
 }
