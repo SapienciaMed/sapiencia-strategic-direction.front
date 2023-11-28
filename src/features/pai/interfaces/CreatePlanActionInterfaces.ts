@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { IIndicatorsPAI } from "./IndicatorsPAIInterfaces";
 
 export interface ICreatePlanAction {
     id?: number;
@@ -12,6 +13,7 @@ export interface ICreatePlanAction {
     risksPAI: IRisks[];
     selectedRisk:number;
     actionsPAi: IAddAction[];
+    indicators: IIndicatorsPAI[];
     dateCreate?: DateTime | null;
     dateModify?: Date | null;
     version: string | null;

@@ -1,10 +1,13 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { IEntities } from "../interfaces/Entities";
+import { IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
+import { IIndicatorAction } from "../interfaces/ProjectsInterfaces";
 
 export function useEntitiesService() {
     const baseURL: string =process.env.urlApiStrategicDirection;
     const roleUrl: string = "/api/v1/entities";
+    const indicatorsUrl: string = "/api/v1/indicators";
     const { get } = useCrudService(baseURL);
 
     async function GetEntities(): Promise<ApiResponse<IEntities[]>> {
@@ -64,7 +67,27 @@ export function useEntitiesService() {
         return get(`${roleUrl}${endpoint}`);
     }
 
+    async function getIndicatorsType(): Promise<ApiResponse<IPAIIndicatorType[]>> {
+        const endpoint: string = "/pai/get-all";
+        return get(`${indicatorsUrl}${endpoint}`);
+    }
 
+    async function getProjectIndicators(projectId:number): Promise<ApiResponse<IIndicatorAction[]>> {
+        const endpoint: string = `/project/${3}`;
+        return get(`${indicatorsUrl}${endpoint}`);
+    }
 
-    return { GetEntities, GetEntitiesDependency , getRiskPAI, getObjectivesPAI , getProcessPAI,  GetEntitiesPosition, getEntitiesTypesRisks, getEntitiesProbability,getEntitiesImpact,getEntity,getResource}
+    return { GetEntities, 
+             GetEntitiesDependency , 
+             getRiskPAI, 
+             getObjectivesPAI , 
+             getProcessPAI,  
+             GetEntitiesPosition, 
+             getEntitiesTypesRisks, 
+             getEntitiesProbability,
+             getEntitiesImpact,
+             getEntity,
+             getResource,
+             getIndicatorsType,
+             getProjectIndicators}
 }

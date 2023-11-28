@@ -26,8 +26,6 @@ export default function usePlanActionPAIData() {
         url: "/direccion-estrategica/pai/cronogramas",
     });
 
-    
-
 
     const [rolData, setRolData] = useState<IDropdownProps[]>([]);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);

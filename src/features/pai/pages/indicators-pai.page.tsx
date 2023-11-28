@@ -7,16 +7,17 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
 import useIndicatorsPai from "../hooks/indicators-pai.hook";
 import disaggregate from '../../../public/images/icons/disaggregate.svg';
+import { NavbarPai } from "../components/navbar-pai.component";
 
 function IndicatorsPaiPage(): React.JSX.Element {
 
     const { errors,
             PAIData,
-            onSubmit, 
             register,
             indicatorType,
             appendProducts,
             fieldsProducts,
+            fieldsBimesters,
             indicatorTypeData,
             onChangeBimesters,
             onChangeIndicator,
@@ -25,7 +26,7 @@ function IndicatorsPaiPage(): React.JSX.Element {
             appendCoResponsible,
             fieldsCoResponsible,
             controlIndicatorsPai,
-            fieldsBimesters } = useIndicatorsPai();
+            projectIndicatorsData } = useIndicatorsPai();
 
     return (
         <div className="main-page full-height">
@@ -34,11 +35,11 @@ function IndicatorsPaiPage(): React.JSX.Element {
                     <div className="text-black extra-large bold">Acción No. 1 - Agregar indicador</div>
                 </div>
                 <div className="crud-page full-height">
-                    <FormComponent action={onSubmit}>
+                    <FormComponent action="">
                         <div className="card-table card-form-development">
                             <div className="project-dates-container">
-                                {/* {
-                                    PAIData?.PAIType === "project" &&
+                                {
+                                    PAIData?.typePAI == 1 &&
                                     <SelectComponent
                                         idInput="projectIndicator"
                                         className="select-basic"
@@ -49,7 +50,7 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                         data={[]}
                                         filter={true}
                                     />
-                                } */}
+                                }
                                 <SelectComponent
                                     idInput="projectIndicator"
                                     className="select-basic"
@@ -57,7 +58,7 @@ function IndicatorsPaiPage(): React.JSX.Element {
                                     errors={errors}
                                     label="Indicador de proyecto"
                                     classNameLabel="text-black biggest bold text-required"
-                                    data={[]}
+                                    data={projectIndicatorsData}
                                     filter={true}
                                 />
                                 <SelectComponent
@@ -273,6 +274,7 @@ function IndicatorsPaiPage(): React.JSX.Element {
                     </FormComponent>
                 </div>
             </div>
+            <NavbarPai/>
         </div>
     )
     

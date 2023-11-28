@@ -14,7 +14,7 @@ export function useRegisterData() {
     const { GetEntities , GetEntitiesDependency } = useEntitiesService();
     const [ processData, setprocessData] = useState<IDropdownProps[]>(null);
     const [ dependecyData , setDependencyData] = useState<IDropdownProps[]>(null);
-    const { setDisableContinue, setActionContinue, setStep, setProjectData, projectData, setDisableStatusUpdate } = useContext(ProjectsContext);
+    const { setDisableContinue, setTextContinue, setActionContinue, setStep, setProjectData, projectData, setDisableStatusUpdate } = useContext(ProjectsContext);
     const [ charged, setCharged ] = useState<boolean>(false);
     
     const localitationData: IDropdownProps[] = [
