@@ -2,18 +2,23 @@ import React from "react";
 import usePlanActionPAIData from "../hooks/createPlanAction-pai.hook";
 import { ButtonComponent, DatePickerComponent, FormComponent, SelectComponent,InputComponent,TextAreaComponent } from "../../../common/components/Form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "../../projects/components/table-expansible.component";
+import { Tooltip } from "primereact/tooltip";
 
 interface IProps {
     setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
 }
+    
+
+  const tooltipOptions = { position: 'top', mouseTrack: true, effectDuration: 300, showDelay: 100, hideDelay: 100 };
+
 
 
 function CreatePlanActionPAIPage(): React.JSX.Element {
 
-    const { errors, navigate, getFieldState, fields,changeActionsPAi,NamePAIData, riskPAIData, riskFields, TypePAIData, appendRisk,append, remove, yearsArray, setMessage, control, onSubmitCreate,register, rolData, statusData, editSchedule,getValues, setValue, cancelAction, saveAction } = usePlanActionPAIData();
+    const { errors, navigate, getFieldState, fields,changeActionsPAi,riskText,View,NamePAIData, riskPAIData, riskFields, TypePAIData, appendRisk,append, remove, yearsArray, setMessage, control, onSubmitCreate,register, rolData, statusData, editSchedule,getValues, setValue, cancelAction, saveAction } = usePlanActionPAIData();
     return (
         <div className='crud-page full-height'>
             <div className='main-page full-height'>
@@ -69,7 +74,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                 />
                                 <SelectComponent
                                     control={control}
-                                    idInput={"name"}
+                                    idInput={"namePAI"}
                                     className={`select-basic span-width`}
                                     label="Nombre proyecto/proceso"
                                     classNameLabel="text-black biggest bold text-required"
@@ -95,40 +100,59 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                //disabled={ true }
+                                                disabled={ true }
                                                
                                             >
                                             </TextAreaComponent>
                                         );
                                     }}
                                 />
-                                <Controller
-                                    control={control}
-                                    name={"articulationPAI"}
-                                    defaultValue=""
-                                    render={({ field }) => {
-                                        return (
-                                            <TextAreaComponent
-                                                id={field.name}
-                                                idInput={field.name}
-                                                value={`${field.value}`}
-                                                label="Articulación plan de desarrollo distrital"
-                                                classNameLabel="text-black biggest bold text-required"
-                                                className="text-area-basic"
-                                                register={register}
-                                                onChange={field.onChange}
-                                                errors={errors}
-                                                //disabled={ true }
-                                                characters={100}
-                                            >
-                                            </TextAreaComponent>
-                                        );
-                                    }}
+                                <div>
+
+                                <Tooltip
+                                    target=".custom-tooltip"
+                                    content="Articulación con línea del Plan de Desarrollo Distrital."
+                                    position="top"
+                                    mouseTrack={true}
+                                    showDelay={50}
+                                    hideDelay={100}
                                 />
+
+
+                                <label className="text-black biggest bold text-required custom-tooltip"  style={{ marginBottom: "0.5rem" }}>
+                                    Articulación plan de desarrollo distrital
+                                </label>
+
+                                    <Controller
+                                        control={control}
+                                        name={"articulationPAI"}
+                                        defaultValue=""
+                                        render={({ field }) => {
+                                            return (
+                                                
+                                                <TextAreaComponent
+                                                    id={field.name}
+                                                    idInput={field.name}
+                                                    value={`${field.value}`}
+                                                    classNameLabel="text-black biggest bold text-required"
+                                                    className="text-area-basic"
+                                                    register={register}
+                                                    onChange={field.onChange}
+                                                    errors={errors}
+                                                    disabled={View}
+                                                    characters={100}
+                                                >
+                                                </TextAreaComponent>
+                                            );
+                                        }}
+                                    />
+
+                                </div>
+                              
                             </div>
                         </div>
 
-                        <div className="card-table">
+                        <div className="card-table " style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
                                 <div className="title-area">
                                     <label className="text-black biggest bold text-required">
                                         Articulación plan estratégico
@@ -157,15 +181,18 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                     id={field.name}
                                                     idInput={field.name}
                                                     label={`Línea No. ${lineNumber}`} 
-                                                    classNameLabel="text-black biggest bold"
+                                                    classNameLabel="text-black biggest bold text-required"
                                                     value={`${field.value}`}
-                                                    className="text-area-basic"
+                                                    className={`text-area-basic ${
+                                                        isEmpty && isFieldDirty.isDirty ? "undefined error" : ""
+                                                        } ${isOverLimit ? "undefined error" : ""} `}
                                                     placeholder="Escribe aquí"
                                                     register={register}
                                                     fieldArray={true}
                                                     onChange={field.onChange}
                                                     errors={errors}
                                                     characters={100}
+                                                    
                                                 >
                                                 {isEmpty && isFieldDirty.isDirty && (
                                                     <p className="error-message bold not-margin-padding">
@@ -186,60 +213,54 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                 })}
                             </div>
 
-                            <div className="card-table">
+                            <div className="card-table" style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
                                 <div className="title-area">
-                                    <label className="text-black biggest bold text-required">
-                                        Riesgos asociados
-                                    </label>
-
+                                
+                                    <SelectComponent
+                                        control={control}
+                                        idInput={"selectedRisk"}
+                                        className={`select-basic span-width`}
+                                        label="Riesgos asociados"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        data={riskPAIData}
+                                        errors={errors}
+                                        filter={true}
+                                    />
                                     <ButtonComponent
                                         className="button-main extra_extra_large hover-three button-save"
                                         value={"Agregar riesgo"}
                                         type="button"
-                                        action={() => { 
-                                                        appendRisk({ risk: null });
-                                                      }
-                                                }
+                                        action={() => {
+                                            appendRisk({ risk: riskText }); // Agrega el riesgo con el valor seleccionado
+                                          }}
                                     />
   
                                 </div>
-                                {fields.map((fields, index) => {
+                                {riskFields.map((fields, index) => {
                                     const lineNumber = index + 1;
                                     return (
-                                    <div key={fields.id}> 
+                                    <div key={fields.id} style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}> 
                                         <Controller
                                             control={control}
-                                            name={`linePAI.${index}.line`}
+                                            name={`risksPAI.${index}.risk`}
                                             defaultValue=""
                                             render={({ field }) => {
-                                                const isEmpty = !field.value; // Reemplazar con la lógica adecuada si el valor debe ser tratado como vacío
-                                                const isOverLimit = field.value?.length > 100;
-                                                const isFieldDirty = getFieldState(`linePAI.${index}.line`);
                                             return (
                                                 <TextAreaComponent
                                                     id={field.name}
                                                     idInput={field.name}
-                                                    label={`Línea No. ${lineNumber}`} 
+                                                    label={`Riesgo No. ${lineNumber}`} 
                                                     classNameLabel="text-black biggest bold"
                                                     value={`${field.value}`}
-                                                    className="text-area-basic"
+                                                    className="text-area-basic" 
                                                     placeholder="Escribe aquí"
                                                     register={register}
                                                     fieldArray={true}
                                                     onChange={field.onChange}
                                                     errors={errors}
-                                                    characters={100}
+                                                    
                                                 >
-                                                {isEmpty && isFieldDirty.isDirty && (
-                                                    <p className="error-message bold not-margin-padding">
-                                                        El campo es obligatorio
-                                                    </p>
-                                                    )}
-                                                    {isOverLimit && (
-                                                    <p className="error-message bold not-margin-padding">
-                                                        Solo se permiten 100 caracteres
-                                                    </p>
-                                                )}                                                
+                                                                                        
                                                 </TextAreaComponent>
                                             );
                                             }}

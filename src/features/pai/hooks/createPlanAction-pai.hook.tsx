@@ -2,7 +2,7 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { ICreatePlanAction,IAddAction } from "../interfaces/CreatePlanActionInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { schedulePAIValidator } from "../../../common/schemas";
+import { CreatePAIValidator } from "../../../common/schemas";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { useContext, useEffect, useState } from "react";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
@@ -14,6 +14,9 @@ import { useSchedulesService } from "./schedules-service.hook";
 import { useNavigate } from "react-router";
 import { useEntitiesService } from "./entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
+import { useProjectsService } from "./projects-service.hook";
+import { boolean } from "yargs";
+import { IProject } from "../interfaces/ProjectsInterfaces";
 
 
 export default function usePlanActionPAIData() {
@@ -33,16 +36,21 @@ export default function usePlanActionPAIData() {
     const [NamePAIData, setNamePAIData] = useState<IDropdownProps[]>(null);
     const [objectivePAIData, setObjectivePAIData] = useState<IDropdownProps[]>(null);
     const [processPAIData, setProcessPAIData] = useState<IDropdownProps[]>(null);
+    const [projectsPAIData, setProjectsPAIData] = useState<IDropdownProps[]>(null);
+    const [projectsData, setProjectsData] = useState<IProject[]>(null);
+    const [View, ViewData] = useState<boolean>(false);
+    const [riskText, RisksTextData] = useState<string>("");
+
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
     const { getRiskPAI,getProcessPAI,getObjectivesPAI } = useEntitiesService();
-
+    const { getProjectsByFilters } = useProjectsService();
     const { getOptions } = useRoleService();
     const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
     const { authorization, setMessage } = useContext(AppContext);
 
     const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
     const navigate = useNavigate();
-    const resolver = useYupValidationResolver(schedulePAIValidator);
+    const resolver = useYupValidationResolver(CreatePAIValidator);
     const {
         handleSubmit,
         formState: { errors },
@@ -102,10 +110,19 @@ export default function usePlanActionPAIData() {
                 setObjectivePAIData(arrayEntities);
             }
         }).catch(() => { });
-
     }, []);
 
- 
+    useEffect(() => {
+        getProjectsByFilters(2).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
+                    return { name: entity.bpin, value: entity.id };
+                });
+                setProjectsPAIData(arrayEntities);
+                setProjectsData(response.data)
+            } 
+        });
+    }, []);
 
     const yearsArray: IDropdownProps[] = [];
 
@@ -162,26 +179,46 @@ export default function usePlanActionPAIData() {
     const idType = watch("typePAI")
 
     useEffect(() => {
+        setValue("namePAI",null)
         if (idType == 1) {
-           
-            
+            setNamePAIData(projectsPAIData)
         } else if (idType == 2){
             setNamePAIData(processPAIData);
         } 
-
     }, [idType]);
+
+    
 
     const idName = watch("namePAI")
 
     useEffect(() => {
-        if (idName == 1) {
-           
+        setValue("objectivePAI","")
+        setValue("articulationPAI","")
+        if (idType == 1 && idName != null) {
+           const project = projectsData.find(project => project.id === idName);
+           setValue("objectivePAI",(project.centerProblem))
+           setValue("articulationPAI",project.pdd_linea);
+           ViewData(true);
             
-        } else if (idName == 2){
-            setNamePAIData(processPAIData);
+        } else if (idType == 2 && idName != null){
+            const objective = objectivePAIData.find(project => project.value === idName).name;
+            setValue("objectivePAI",(objective))
+            ViewData(false);
         } 
         
     }, [idName]);
+
+    const idRisks = watch("selectedRisk")
+
+    useEffect(() => {
+
+        if (idRisks != null ) {
+            const objective = riskPAIData.find(project => project.value === idRisks).name;
+            setValue("selectedRisk",idRisks)
+            RisksTextData(objective)
+         } 
+
+    }, [idRisks]);
 
 
     const cancelAction = () => {
@@ -193,5 +230,5 @@ export default function usePlanActionPAIData() {
        
     }
 
-    return { errors,fields, append, NamePAIData,remove,changeActionsPAi, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,resetForm,register, yearsArray, control, setMessage, navigate,onSubmitCreate, rolData, statusData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction };
+    return { errors,fields, append,View,riskText, NamePAIData,remove,changeActionsPAi, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,resetForm,register, yearsArray, control, setMessage, navigate,onSubmitCreate, rolData, statusData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction };
 }

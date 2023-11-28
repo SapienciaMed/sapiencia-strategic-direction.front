@@ -10,6 +10,7 @@ export interface ICreatePlanAction {
     articulationPAI:string;
     linePAI: ILine[];
     risksPAI: IRisks[];
+    selectedRisk:number;
     actionsPAi: IAddAction[];
     dateCreate?: DateTime | null;
     dateModify?: Date | null;

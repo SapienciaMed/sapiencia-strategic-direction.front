@@ -438,7 +438,6 @@ export function PoblationComponent({
                     name={`demographic.${index}.clasification`}
                     defaultValue={null}
                     render={({ field }) => {
-                      debugger;
                         const isEmptyDetail = getValues(`demographic.${index}.detail`) === null
                         const [isFieldDirty, setIsFieldDirty] = useState(false);
                         return (
