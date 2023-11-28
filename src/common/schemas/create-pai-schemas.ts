@@ -6,6 +6,6 @@ export const CreatePAIValidator = yup.object({
     typePAI: yup.number().required("Debe seleccionar una opcion"),
     namePAI: yup.number().required("Debe seleccionar una opcion"),
     objectivePAI: yup.string().required("El campo es obligatorio"),
-    articulationPAI: yup.string().required("El campo es obligatorio").max(100, "Solo se permiten 100 caracteres"),
+    articulationPAI: yup.string().required("El campo es obligatorio").max(200, "Solo se permiten 200 caracteres"),
     selectedRisk: yup.number().required("Debe seleccionar una opcion"),
 });

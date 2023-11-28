@@ -163,7 +163,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                     onChange={field.onChange}
                                                     errors={errors}
                                                     disabled={View}
-                                                    characters={100}
+                                                    characters={200}
                                                 >
                                                 </TextAreaComponent>
                                             );
@@ -184,7 +184,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                     <div className="title-button text-main large" onClick={() => {
                                     append({ line: null });
                                     }}>
-                                    Añadir clasificación <AiOutlinePlusCircle />
+                                    Agregar Línea <AiOutlinePlusCircle />
                                     </div>
                                 </div>
                                 {fields.map((fields, index) => {
@@ -237,8 +237,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                             </div>
 
                             <div className="card-table" style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
-                                <div className="title-area">
-                                
+                                <div className="create-pai-risks">
                                     <SelectComponent
                                         control={control}
                                         idInput={"selectedRisk"}
@@ -295,11 +294,13 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
 
                             <div className="card-table">
                                     <FormComponent action={undefined} className="problem-description-container">
-                                        <div>
+                                        
                                             <div className="title-area">
-                                                <label className="text-black large bold text-required">
+                                                <label className="text-black biggest bold text-required">
                                                     Acciones del PAI
                                                 </label>
+
+                                                 <div className="actions-pai">
 
                                                 <div className="title-button text-main large" onClick={() => {
                                                 
@@ -310,7 +311,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                     Agregar acción <AiOutlinePlusCircle />
                                                 </div>
                                             </div>
-                                        </div>
+                                </div>
                                     </FormComponent>
                             </div>
 
