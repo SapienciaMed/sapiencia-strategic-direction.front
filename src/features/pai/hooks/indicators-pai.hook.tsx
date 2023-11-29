@@ -56,8 +56,8 @@ export default function useIndicatorsPai() {
 
     useEffect(()=>{
         if(isValid){
-           setSaveButtonAction( () => { onSubmit() } );
-           setDisableSaveButton(isValid!);
+           setSaveButtonAction( () => onSubmit );
+           setDisableSaveButton(!isValid);
         }
     },[isValid])
 
@@ -83,8 +83,7 @@ export default function useIndicatorsPai() {
         }).catch(() => { });
         setSaveButtonText("Guardar");
         setTempButtonText("Agregar otro indicador");
-        const onCancelRef = onCancel;
-        setActionCancel(()=>onCancelRef);
+        setActionCancel(()=>onCancel);
     }, []);
 
     const onSubmit = () => {

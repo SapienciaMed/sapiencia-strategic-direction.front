@@ -73,7 +73,7 @@ export function useEntitiesService() {
     }
 
     async function getProjectIndicators(projectId:number): Promise<ApiResponse<IIndicatorAction[]>> {
-        const endpoint: string = `/project/${3}`;
+        const endpoint: string = `/project/${projectId}`;
         return get(`${indicatorsUrl}${endpoint}`);
     }
 

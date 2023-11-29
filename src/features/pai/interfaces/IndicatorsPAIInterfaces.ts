@@ -18,7 +18,7 @@ export interface IIndicatorsPAI {
     indicatorDesc: string;
     bimesters: IBimester[];
     totalPlannedGoal: number;
-    products: IProducts[];
+    products: IProduct[];
     responsibles: IResponsible[];
     coresponsibles: ICoResponsible[];
 }
@@ -28,7 +28,7 @@ export interface IBimester {
     value: number;
 }
 
-export interface IProducts {
+export interface IProduct {
     id?: number;
     idIndicatorPAI?: number;
     product: string;
