@@ -37,11 +37,11 @@ interface IProps<T> {
   title?: string;
   columns: ITableElement<T>[];
   actions?: ITableAction<T>[];
-  searchItems?: object;
   isShowModal: boolean;
   titleMessageModalNoResult?: string;
   descriptionModalNoResult?: string;
   data?: T[];
+  hideActions?: boolean;
 }
 
 interface IRef {
@@ -58,7 +58,8 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
     isShowModal,
     emptyMessage = "No hay resultados.",
     descriptionModalNoResult = "No hay resultado para la búsqueda",
-    data = []
+    data = [],
+    hideActions
   } = props;
 
   // States
@@ -224,7 +225,7 @@ const TableComponent = forwardRef<IRef, IProps<any>>((props, ref) => {
             />
           ))}
 
-          {actions && (
+          {actions && !hideActions && (
             <Column
               className="spc-table-actions"
               header={

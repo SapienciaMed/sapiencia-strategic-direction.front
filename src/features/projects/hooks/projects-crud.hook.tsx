@@ -332,7 +332,7 @@ export function useProjectsCrudData() {
             }
 
             return setMessage({
-                title: "Ocurrio un problema...",
+                title: "¡Ha ocurrido un error!",
                 description: <p className="text-primary biggest">{res.operation.message}</p>,
                 background: true,
                 show: true,
@@ -400,7 +400,7 @@ export function useProjectsCrudData() {
                     });
                 } else {
                     setMessage({
-                        title: "Ocurrio un problema...",
+                        title: "¡Ha ocurrido un error!",
                         description: <p className="text-primary biggest">{res.operation.message}</p>,
                         background: true,
                         show: true,
@@ -451,7 +451,7 @@ export function useProjectsCrudData() {
                     });
                 } else {
                     setMessage({
-                        title: "Ocurrio un problema...",
+                        title: "¡Ha ocurrido un error!",
                         description: <p className="text-primary biggest">{res.operation.message}</p>,
                         background: true,
                         show: true,

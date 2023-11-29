@@ -92,13 +92,13 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
 
     const changeIndicators = (data: IIndicator, row?: IIndicator) => {
         if (row) {
-            const indicators = getValues("indicators").filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+            const indicators = getValues("indicators")?.filter(item => item !== row).concat(data).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators);
             setIndicatorsData(prev => {
                 return { ...prev, indicators: indicators };
             });
         } else {
-            const indicators = getValues("indicators").sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
+            const indicators = getValues("indicators")?.sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
             setValue("indicators", indicators ? indicators.concat(data) : [data]);
             setIndicatorsData(prev => {
                 return { ...prev, indicators: indicators ? indicators.concat(data) : [data] };
@@ -429,7 +429,12 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         });
         GetIndicatorName().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                setIndicatorsNameData(response.data);
+                
+                const indicators: IIndicator[] = projectData?.programation?.indicators?.indicators;
+                const savedIndicators: number[] = indicators?.length > 0 ? indicators?.map( savedIndicator => {
+                    return savedIndicator.indicator;
+                }) : [] ; 
+                setIndicatorsNameData(response.data.filter( data => !savedIndicators.filter(saved => saved !== item?.indicator).includes(data.id)));
             } else {
                 console.log(response.operation.message);
             }
@@ -455,7 +460,8 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
         });
         GetIndicatorType().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                const data: IDropdownProps[] = response.data.map(data => {
+                const data: IDropdownProps[] = response.data
+                .map( data => {
                     return {
                         name: data.description,
                         value: data.id
@@ -529,6 +535,11 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 errors={errors}
                                 disabled={view}
                                 filter={true}
+                                onChange={() => {
+                                    setValue("component", null);
+                                    setValue("program", null);
+                                    setValue("indicator", null);
+                                }}
                             />}
                         {typeIndicator === staticValue ?
                             <SelectComponent
@@ -593,6 +604,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                                 className={`inputNumber-basic ${view && "background-textArea"}`}
                                 disabled={view}
                                 onChange={onChangeYears}
+                                useGrouping={false}
                             /> :
                             <SelectComponent
                                 control={control}

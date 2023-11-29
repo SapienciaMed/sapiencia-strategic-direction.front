@@ -95,7 +95,7 @@ export function ActorCreateComponent({
     } else if( isValid && formAction === "edit" ) {
         enableNext();
         setDisableContinue(false);
-    } else {      
+    } else {
         setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);
@@ -115,13 +115,13 @@ export function ActorCreateComponent({
     GetEntitiesPosition().then(response => {
         if (response.operation.code === EResponseCodes.OK) {
             const entities: IEntities[] = response.data;
-            const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+            const arrayEntities: IDropdownProps[] = entities.map((entity)  => {
                 return { name: entity.description, value: entity.id };
             });
-            setPositionData(arrayEntities);
+              setPositionData(arrayEntities);
         }
     }).catch(() => { });
-  }, [])
+}, [])
 
 
   const actorColumns: ITableElement<IParticipatingActors>[] = [
@@ -136,6 +136,11 @@ export function ActorCreateComponent({
     {
       fieldName: "position",
       header: "Posición",
+       renderCell: (row) => {
+        console.log(positionData,"render");
+        const stage = positionData?.find(stage => stage.value === Number(row.position)) || null;
+         return <>{stage?.name}</>
+      },
     },
     {
       fieldName: "contribution",

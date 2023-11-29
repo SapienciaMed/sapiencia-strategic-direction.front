@@ -1,3 +1,4 @@
+import { IRole } from "./role.interface";
 
 
 export interface IAuthorization {
@@ -23,3 +24,10 @@ export interface IUser {
   dateCreate?: Date;
 }
 
+export interface IProfile {
+  id?: number;
+  userId: number;
+  aplicationId: number;
+  dateValidity: Date;
+  roles: IRole[];
+}

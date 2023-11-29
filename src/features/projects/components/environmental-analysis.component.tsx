@@ -13,6 +13,7 @@ import { environmentalFffectsValidator, environmentalAnalysisValidator } from ".
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { ProjectsContext } from "../contexts/projects.context";
 import { IEffectEnviromentForm, IEnvironmentAnalysisForm } from "../interfaces/ProjectsInterfaces";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 interface IProps {
   disableNext: () => void;
   enableNext: () => void;
@@ -63,15 +64,15 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
   ];
 
   useEffect(() => {
-    if ( isValid && formAction === "new" ) {
+    if (isValid && formAction === "new") {
       enableNext();
-    } else if( !isValid && formAction === "new" ) {
-        disableNext();
-    } else if( isValid && formAction === "edit" ) {
-        enableNext();
-        setDisableContinue(false);
-    } else {      
-        setDisableContinue(true);
+    } else if (!isValid && formAction === "new") {
+      disableNext();
+    } else if (isValid && formAction === "edit") {
+      enableNext();
+      setDisableContinue(false);
+    } else {
+      setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);
   }, [isValid]);
@@ -165,7 +166,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
                     onOk: () => {
                       setEnvironmentalAnalysisData(prev => {
                         const effects = prev?.effects.map(effect => {
-                          if(JSON.stringify(effect) === JSON.stringify(row)) {
+                          if (JSON.stringify(effect) === JSON.stringify(row)) {
                             return data;
                           } else {
                             return effect;
@@ -174,7 +175,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
                         return { ...prev, effects: effects };
                       });
                       setValue('effects', getValues('effects').map(effect => {
-                        if(JSON.stringify(effect) === JSON.stringify(row)) {
+                        if (JSON.stringify(effect) === JSON.stringify(row)) {
                           return data;
                         } else {
                           return effect;
@@ -260,7 +261,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
       <FormComponent action={undefined} className="">
         <div className="">
           <div style={{ paddingBottom: 12 }}>
-            <label className="text-black big bold">
+            <label className="text-black biggest bold">
               Diagnóstico ambiental
             </label>
           </div>
@@ -275,7 +276,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
                   idInput={field.name}
                   value={`${field.value}`}
                   className="text-area-basic"
-                  classNameLabel="text-black big bold text-required label-development"
+                  classNameLabel="text-black biggest bold text-required label-development"
                   rows={1}
                   placeholder="Escribe aquí"
                   register={register}
@@ -291,85 +292,79 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
 
         </div>
       </FormComponent>
-
-      <div className="effects-container" style={{ marginTop: 20 }}>
-        <div className="effects-container-header" style={{ marginTop: 20 }}>
-          <label className="text-black big bold">
+      <div>
+        <div className="title-area">
+          <label className="text-black biggest bold">
             Listado de efectos ambientales
           </label>
 
-          <div
-            className="cursor-pointer add-effect"
-            onClick={() => {
-              setMessage({
-                title: "Agregar efecto ambiental",
-                description: (
-                  <EffectFormComponent ref={EffectCreateComponentRef} types={types} ratings={ratings} levels={levels} />
-                ),
-                show: true,
-                background: true,
-                OkTitle: "Guardar",
-                cancelTitle: "Cancelar",
-                onOk: () => {
-                  if (EffectCreateComponentRef.current) {
-                    EffectCreateComponentRef.current.handleSubmit(
-                      (data: IEffectEnviromentForm) => {
-                        setMessage({
-                          title: "Guardar efecto ambiental",
-                          description: "¿Deseas guardar el efecto ambiental?",
-                          show: true,
-                          background: true,
-                          OkTitle: "Aceptar",
-                          cancelTitle: "Cancelar",
-                          onOk: () => {
-                            setEnvironmentalAnalysisData(prev => {
-                              const effects = prev?.effects ? prev.effects.concat(data) : [data];
-                              return { ...prev, effects: effects };
-                            });
-                            setValue('effects', getValues('effects').concat(data));
-                            setMessage({
-                              title: "Guardar efecto",
-                              description: "¡Efecto ambiental guardado exitosamente!",
-                              show: true,
-                              background: true,
-                              OkTitle: "Cerrar",
-                              onOk: () => {
-                                setMessage({});
-                              },
-                              onClose: () => {
-                                setMessage({});
-                              },
-                            });
-                          },
-                          onCancel: () => {
-                            setMessage({});
-                          },
-                          onClose: () => {
-                            setMessage({});
-                          },
-                        });
+          <div className="title-button text-main biggest" onClick={() => {
+            setMessage({
+              title: "Agregar efecto ambiental",
+              description: (
+                <EffectFormComponent ref={EffectCreateComponentRef} types={types} ratings={ratings} levels={levels} />
+              ),
+              show: true,
+              background: true,
+              OkTitle: "Guardar",
+              cancelTitle: "Cancelar",
+              onOk: () => {
+                if (EffectCreateComponentRef.current) {
+                  EffectCreateComponentRef.current.handleSubmit(
+                    (data: IEffectEnviromentForm) => {
+                      setMessage({
+                        title: "Guardar efecto ambiental",
+                        description: "¿Deseas guardar el efecto ambiental?",
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        cancelTitle: "Cancelar",
+                        onOk: () => {
+                          setEnvironmentalAnalysisData(prev => {
+                            const effects = prev?.effects ? prev.effects.concat(data) : [data];
+                            return { ...prev, effects: effects };
+                          });
+                          setValue('effects', getValues('effects').concat(data));
+                          setMessage({
+                            title: "Guardar efecto",
+                            description: "¡Efecto ambiental guardado exitosamente!",
+                            show: true,
+                            background: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                              setMessage({});
+                            },
+                            onClose: () => {
+                              setMessage({});
+                            },
+                          });
+                        },
+                        onCancel: () => {
+                          setMessage({});
+                        },
+                        onClose: () => {
+                          setMessage({});
+                        },
+                      });
 
 
-                      }
-                    )();
-                  }
-                },
-                onCancel: () => {
-                  setMessage({});
-                },
-                onClose: () => {
-                  setMessage({});
-                },
-                style: "causes-effects-modal-size",
-              });
-            }}
-          >
-            <span style={{ color: '#533893' }} className="text-add-effect">Añadir efecto ambiental</span>
-            <img style={{ marginLeft: 4 }} width={16} src={addIcon} alt="add" />
+                    }
+                  )();
+                }
+              },
+              onCancel: () => {
+                setMessage({});
+              },
+              onClose: () => {
+                setMessage({});
+              },
+              style: "causes-effects-modal-size",
+            });
+          }}>
+            Añadir efecto ambiental <AiOutlinePlusCircle />
           </div>
         </div>
         {getValues('effects').length > 0 && <TableExpansibleComponent actions={EffectsActions} columns={effectsColumns} data={getValues('effects')} />}
-
       </div>
     </div>
   );
@@ -419,7 +414,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 control={control}
                 errors={errors}
                 label="Tipo de impacto"
-                classNameLabel="text-black big bold"
+                classNameLabel="text-black biggest bold"
                 direction={EDirection.column}
                 filter={true}
                 data={types}
@@ -441,7 +436,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 idInput={field.name}
                 value={`${field.value}`}
                 label="Impacto"
-                classNameLabel="text-black big bold"
+                classNameLabel="text-black biggest bold"
                 className="text-area-basic"
                 placeholder="Escribe aquí"
                 register={register}
@@ -469,7 +464,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 control={control}
                 errors={errors}
                 label="Clasificación"
-                classNameLabel="text-black big bold"
+                classNameLabel="text-black biggest bold"
                 direction={EDirection.column}
                 filter={true}
                 data={ratings}
@@ -490,7 +485,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 control={control}
                 errors={errors}
                 label="Nivel de impacto"
-                classNameLabel="text-black big bold"
+                classNameLabel="text-black biggest bold"
                 direction={EDirection.column}
                 filter={true}
                 data={levels}
@@ -512,7 +507,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
                 idInput={field.name}
                 value={`${field.value}`}
                 label="Medidas de mitigación"
-                classNameLabel="text-black big bold"
+                classNameLabel="text-black biggest bold"
                 className="text-area-basic"
                 placeholder="Escribe aquí"
                 register={register}
@@ -525,7 +520,7 @@ const EffectFormComponent = forwardRef<IRef, IPropsEffectssForm>((props, ref) =>
             );
           }}
         />
-
+          
       </div>
     </FormComponent>
   );

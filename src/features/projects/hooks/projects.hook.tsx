@@ -17,8 +17,10 @@ import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
 import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
+import { saveAs } from "file-saver"
 
 export function useProjectsData() {
+    const { authorization } = useContext(AppContext);
     const tableComponentRef = useRef(null);
     const msgs = useRef(null);
     const [errores, setErrores] = useState<string>(null);
@@ -29,6 +31,8 @@ export function useProjectsData() {
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess  } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
+    const today = DateTime.local();
+    const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
     const {
@@ -86,10 +90,36 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`;
-                window.open(pdfUrl, "_blank");
+
+                const token = localStorage.getItem("token");
+                  
+                  fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {
+                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
+                    headers: new Headers({
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Permissions: authorization.encryptedAccess,
+                        authorization: `Bearer ${token}`
+                    }),
+                  }).then(async response => {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, "_blank");
+                    saveAs(blob, `${"Registro proyecto_"+row?.bpin+"_"+formattedDate}.pdf`);
+                  }).catch(err => {
+                    setMessage({
+                        title: "¡Ha ocurrido un error!",
+                        description: String(err),
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        }
+                    })
+                })
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -111,7 +141,7 @@ export function useProjectsData() {
                 setShowDialog(true);
                 setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_CARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
         },
         {
             customIcon: (row) => {
@@ -130,10 +160,35 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                const pdfUrl = `${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`;
-                window.open(pdfUrl, "_blank");
+                const token = localStorage.getItem("token");
+                  
+                fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`, {
+                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
+                    headers: new Headers({
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Permissions: authorization.encryptedAccess,
+                        authorization: `Bearer ${token}`
+                    }),
+                  }).then(async response => {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, "_blank")
+                    saveAs(blob, `${"Ficha técnica_"+row?.bpin+"_"+formattedDate}.pdf`);
+                  }).catch(err => {
+                    setMessage({
+                        title: "¡Ha ocurrido un error!",
+                        description: String(err),
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        }
+                    })
+                })
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -154,7 +209,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`adjuntos/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || !validateActionAccess("PROYECTO_DESCARGA")
+            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },
         {
             customIcon: (row) => {
@@ -174,7 +229,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`finalizar-proyecto/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || !validateActionAccess("PROYECTO_FINALIZAR")
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_FINALIZAR"))
         },
         {
             customIcon: () => {
@@ -254,10 +309,11 @@ export function useProjectsData() {
                 files.forEach(file => {
                     form.append('files', file);
                 });
+                const token = localStorage.getItem("token");
                 const options = {
                     method: 'POST',
                     url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-                    headers: { 'content-type': 'multipart/form-data' },
+                    headers: { 'content-type': 'multipart/form-data', Permissions: authorization.encryptedAccess, authorization: `Bearer ${token}` },
                     data: form,
                 };
                 axios.request(options).then(response => {
@@ -316,4 +372,3 @@ export function useProjectsData() {
              setErrores,
              validateActionAccess };
 }
-

@@ -129,6 +129,26 @@ export const capacityValidator = yup.object({
     capacityGenerated: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio")
 });
 
+
+const atLeastOneField = yup.object().test(
+    'atLeastOneField',
+    'Al menos un campo debe ser diligenciado',
+    function (values) {
+        // Verifica si al menos uno de los campos tiene un valor
+        const atLeastOneFieldFilled = Object.values(values).some(value => !!value);
+
+        if (!atLeastOneFieldFilled) {
+            // Personaliza el mensaje de error si la validación falla
+            throw this.createError({
+                path: 'errorModal',
+                message: 'Al menos un campo debe ser diligenciado',
+            });
+        }
+
+        return true;
+    }
+);
+
 export const environmentalFffectsValidator = yup.object({
     impact: yup
         .string().optional()
@@ -136,13 +156,14 @@ export const environmentalFffectsValidator = yup.object({
     measures: yup
         .string().optional()
         .max(500, "Solo se permiten 500 caracteres"),
-});
+
+}).concat(atLeastOneField);
+
 
 export const environmentalAnalysisValidator = yup.object({
     diagnosis: yup
         .string().optional()
         .max(600, "Solo se permiten 600 caracteres"),
-
 });
 
 
@@ -193,9 +214,7 @@ export const needsObjectivesValidator = yup.object({
 });
 
 export const poblationValidator = yup.object().shape({
-    objectivePeople: yup
-        .number()
-        .required("El campo es obligatorio"),
+    objectivePeople: yup.number().transform((value) => Number.isNaN(value) ? null : value).nullable().required("El campo es obligatorio"),
     informationSource: yup
         .string()
         .max(100, "Solo se permiten 100 caracteres")
@@ -211,7 +230,8 @@ export const poblationValidator = yup.object().shape({
         .required("Debe seleccionar una opción"),
     shelter: yup
         .string()
-        .max(100, "Solo se permiten 100 caracteres"),
+        .max(100, "Solo se permiten 100 caracteres")
+        .nullable(),
     demographic: yup.array().required("Debe haber almenos una caracterstica").min(1, "Debe haber almenos una caracterstica").of(
         yup.object().shape(({
             clasification: yup
@@ -222,7 +242,8 @@ export const poblationValidator = yup.object().shape({
                 .required("Debe seleccionar una opción"),
             infoSource: yup
                 .string()
-                .max(100, "Solo se permiten 100 caracteres"),
+                .max(100, "Solo se permiten 100 caracteres")
+                .nullable()
         }))
     ),
 })
@@ -383,9 +404,19 @@ export const activityMGAValidator = yup.object({
     budgetsMGA: yup.object(),
     validity: yup.number()
         .transform((value) => Number.isNaN(value) ? null : value).nullable()
-        .required("El campo es obligatorio"),
+        .when('detailActivities', ([detailActivities], validity ) => {
+            return detailActivities && detailActivities.length > 0
+              ? validity
+                  .required("El campo es obligatorio")
+              : validity.notRequired();
+        }),
     year: yup.number()
-        .required("Debe seleccionar una opción"),
+        .when('detailActivities', ([detailActivities], year ) => {
+            return detailActivities.length > 0
+            ? year
+                .required("El campo es obligatorio")
+            : year.notRequired();
+        }),
     detailActivities: yup.array().of(
         yup.object().shape(({
             detailActivity: yup
@@ -533,7 +564,6 @@ export const indicatorValidator = yup.object({
         }),
     dpn: yup
         .number()
-        .typeError('Debe ser un número')
         .nullable()
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
@@ -546,8 +576,9 @@ export const indicatorValidator = yup.object({
         }),
     staticValueCode: yup
         .string()
-        .matches(/^[0-9]+$/, "Debe ser un número")
+        .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten caracteres alfanuméricos")
         .nullable()
+        .max(8, "Solo se permiten 8 caracteres")
         .test('required', 'El campo es obligatorio', function (value) {
             const type = this.parent.type;
             if (type === 3) {

@@ -69,7 +69,7 @@ export default function useAttachmentsData(idProject: string) {
                     window.URL.revokeObjectURL(url);
                 }).catch(err => {
                     setMessage({
-                        title: "Ha ocurrido un error...",
+                        title: "¡Ha ocurrido un error!",
                         description: String(err),
                         show: true,
                         background: true,
@@ -113,7 +113,7 @@ export default function useAttachmentsData(idProject: string) {
                 setTableData(response.data);
             } else {
                 setMessage({
-                    title: "Ha ocurrido un problema...",
+                    title: "¡Ha ocurrido un error!",
                     description: response.operation.message,
                     show: true,
                     background: true,
@@ -193,7 +193,7 @@ export default function useAttachmentsData(idProject: string) {
                 setProject(response.data.project);
             } else {
                 setMessage({
-                    title: "Ha ocurrido un problema...",
+                    title: "¡Ha ocurrido un error!",
                     description: response.operation.message,
                     show: true,
                     background: true,

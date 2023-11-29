@@ -229,13 +229,19 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
 
     useEffect(() => {
         if ( isValid && formAction === "new" ) {
-            enableNext();
+            setTimeout( () => {
+                enableNext();
+            }, 500)
         } else if( !isValid && formAction === "new" ) {
             disableNext();
         } else if( isValid && formAction === "edit" ) {
-            enableNext();
-        }      
-        setDisableContinue(isValid);
+            setTimeout( () => {
+                enableNext();
+                setDisableContinue(false);
+            }, 500)
+        } else {      
+            disableNext();
+        }
         setDisableStatusUpdate(!isValid);
     }, [isValid]);
     
