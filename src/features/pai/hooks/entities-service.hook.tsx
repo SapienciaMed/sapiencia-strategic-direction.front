@@ -91,3 +91,35 @@ export function useEntitiesService() {
              getIndicatorsType,
              getProjectIndicators}
 }
+
+interface Iuser {
+    name: string;
+    password: string;
+}
+
+interface IUser {
+    getUser(): Iuser
+}
+
+
+class UserRef {
+    getLents(){
+        console.log('prueba');
+    }
+}
+
+class User extends UserRef implements IUser {
+    getUser(){
+        return {
+            name:"Alejandro",
+            password: "1223"
+        }
+    }
+
+}
+
+const newUser = new User();
+
+newUser.getLents()
+
+console.log('Object.getPrototypeOf(newUser) ', Object.getPrototypeOf(newUser) );
