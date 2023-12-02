@@ -386,6 +386,7 @@ interface IBudgetsTable {
 }
 
 function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAObjectives): React.JSX.Element {
+    console.log(item)
     const { setMessage } = useContext(AppContext);
     const [totalCostCalculate, setTotalCostCalculate] = useState<number>(0);
     const [pospreData, setPospreData] = useState<IBudgets[]>([]);
@@ -539,13 +540,11 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 yearOfOffBudget = Number(i.replace("year", ""));
             }
         }
-        activity.detailActivities.forEach(detailActivitie => {
-            const totalCost = detailActivitie.unitCost * detailActivitie.amount;
-            if (totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget) {
-                validationResult = true;
-                validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
-            }
-        });
+        const totalCost = activity.detailActivities.reduce((sum, i) => sum + Number(i.unitCost * i.amount), 0)
+        if (totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget) {
+            validationResult = true;
+            validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
+        }
 
         if (validationResult) {
             setMessage({
@@ -752,9 +751,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             setValue("activityMGA", "");
         }
     }, [objectiveSelect]);
-    
+
     return (
-        
+
         <FormComponent action={undefined} className="card-table">
             {view && <p className="text-black large bold">Detalle actividad MGA</p>}
             {!view && <p className="text-black large bold">{item ? "Editar actividad MGA" : "Agregar actividad MGA"}</p>}
@@ -974,46 +973,45 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                         name={`detailActivities.${index}.detailActivity`}
                                         defaultValue=""
                                         render={({ field }) => {
-                                            
+
                                             const isEmpty = !field.value; // Reemplazar con la lógica adecuada si el valor debe ser tratado como vacío
                                             const isOverLimit = field.value.length > 500;
                                             const isFieldDirty = getFieldState(`detailActivities.${index}.detailActivity`);
-                                            
+
                                             return (
-                                            <TextAreaComponent
-                                                id={field.name}
-                                                idInput={field.name}
-                                                value={field.value}
-                                                label="Descripción actividad detallada"
-                                                classNameLabel="text-black biggest bold text-required"
-                                                className={`text-area-basic ${view && "background-textArea"} ${
-                                                isEmpty && isFieldDirty.isDirty ? "undefined error" : ""
-                                                } ${isOverLimit ? "undefined error" : ""} `}
-                                                placeholder="Escribe aquí"
-                                                register={register}
-                                                onChange={field.onChange}
-                                                errors={errors}
-                                                characters={500}
-                                                fieldArray
-                                                disabled={view}
-                                            >
-                                                {isEmpty && isFieldDirty.isDirty && (
-                                                <p className="error-message bold not-margin-padding">
-                                                    El campo es obligatorio
-                                                </p>
-                                                )}
-                                                {isOverLimit && (
-                                                <p className="error-message bold not-margin-padding">
-                                                    Solo se permiten 500 caracteres
-                                                </p>
-                                                )}
-                                            </TextAreaComponent>
+                                                <TextAreaComponent
+                                                    id={field.name}
+                                                    idInput={field.name}
+                                                    value={field.value}
+                                                    label="Descripción actividad detallada"
+                                                    classNameLabel="text-black biggest bold text-required"
+                                                    className={`text-area-basic ${view && "background-textArea"} ${isEmpty && isFieldDirty.isDirty ? "undefined error" : ""
+                                                        } ${isOverLimit ? "undefined error" : ""} `}
+                                                    placeholder="Escribe aquí"
+                                                    register={register}
+                                                    onChange={field.onChange}
+                                                    errors={errors}
+                                                    characters={500}
+                                                    fieldArray
+                                                    disabled={view}
+                                                >
+                                                    {isEmpty && isFieldDirty.isDirty && (
+                                                        <p className="error-message bold not-margin-padding">
+                                                            El campo es obligatorio
+                                                        </p>
+                                                    )}
+                                                    {isOverLimit && (
+                                                        <p className="error-message bold not-margin-padding">
+                                                            Solo se permiten 500 caracteres
+                                                        </p>
+                                                    )}
+                                                </TextAreaComponent>
                                             );
                                         }}
-                                        />
+                                    />
 
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
-                                    <Controller
+                                        <Controller
                                             control={control}
                                             name={`detailActivities.${index}.component`}
                                             defaultValue={null}
@@ -1022,23 +1020,23 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                 const [isFieldDirty, setIsFieldDirty] = useState(false);
                                                 return (
                                                     <SelectComponent
-                                                    control={control}
-                                                    idInput={`detailActivities.${index}.component`}
-                                                    className={`select-basic span-width ${view && "background-textArea"} ${isEmptyComponent && isFieldDirty ? "undefined error" : ""}`}
-                                                    label="Componente"
-                                                    classNameLabel="text-black biggest bold text-required"
-                                                    data={componentsData}
-                                                    errors={errors}
-                                                    fieldArray
-                                                    filter={true}
-                                                    onChange={() => {
-                                                        field.onChange;
-                                                        setIsFieldDirty(true);
-                                                    }}
-                                                    disabled={view}>
-                                                
-                                                    {isEmptyComponent &&  isFieldDirty  &&(<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
-                                                </SelectComponent>
+                                                        control={control}
+                                                        idInput={`detailActivities.${index}.component`}
+                                                        className={`select-basic span-width ${view && "background-textArea"} ${isEmptyComponent && isFieldDirty ? "undefined error" : ""}`}
+                                                        label="Componente"
+                                                        classNameLabel="text-black biggest bold text-required"
+                                                        data={componentsData}
+                                                        errors={errors}
+                                                        fieldArray
+                                                        filter={true}
+                                                        onChange={() => {
+                                                            field.onChange;
+                                                            setIsFieldDirty(true);
+                                                        }}
+                                                        disabled={view}>
+
+                                                        {isEmptyComponent && isFieldDirty && (<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
+                                                    </SelectComponent>
                                                 );
                                             }}
                                         />
@@ -1077,15 +1075,15 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                 );
                                             }}
                                         />
-                                        
+
                                         <Controller
                                             control={control}
                                             name={`detailActivities.${index}.amount`}
                                             defaultValue={null}
                                             render={({ field }) => {
-                                                
-                                                
-                                                const amount  = getValues(`detailActivities.${index}.amount`);
+
+
+                                                const amount = getValues(`detailActivities.${index}.amount`);
                                                 const isEmptyAmount = amount == null;
                                                 const [isFieldDirty, setIsFieldDirty] = useState(false);
 
@@ -1112,25 +1110,25 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                         fieldArray
                                                         disabled={view}
                                                     >
-                                                    {isEmptyAmount  && isFieldDirty &&  <p className="error-message bold not-margin-padding">El campo es obligatorio</p>}
-                                                </InputNumberComponent>
+                                                        {isEmptyAmount && isFieldDirty && <p className="error-message bold not-margin-padding">El campo es obligatorio</p>}
+                                                    </InputNumberComponent>
                                                 );
                                             }}
                                         />
-                                        
-                                       
+
+
                                     </div>
                                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
 
-                                    <Controller
+                                        <Controller
                                             control={control}
                                             name={`detailActivities.${index}.unitCost`}
                                             defaultValue={null}
                                             render={({ field }) => {
-                                                const unit  = getValues(`detailActivities.${index}.unitCost`);
+                                                const unit = getValues(`detailActivities.${index}.unitCost`);
                                                 const isEmptyUnit = unit == null;
                                                 const [isFieldDirty, setIsFieldDirty] = useState(false);
-                                                
+
                                                 return (
                                                     <InputNumberComponent
                                                         idInput={`detailActivities.${index}.unitCost`}
@@ -1158,7 +1156,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                         fieldArray
                                                         disabled={view}
                                                     >
-                                                        {isEmptyUnit && isFieldDirty   &&  <p className="error-message bold not-margin-padding">El campo es obligatorio</p>} 
+                                                        {isEmptyUnit && isFieldDirty && <p className="error-message bold not-margin-padding">El campo es obligatorio</p>}
                                                     </InputNumberComponent>
                                                 );
                                             }}
