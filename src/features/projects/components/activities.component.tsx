@@ -386,7 +386,6 @@ interface IBudgetsTable {
 }
 
 function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAObjectives): React.JSX.Element {
-    console.log(item)
     const { setMessage } = useContext(AppContext);
     const [totalCostCalculate, setTotalCostCalculate] = useState<number>(0);
     const [pospreData, setPospreData] = useState<IBudgets[]>([]);
@@ -662,7 +661,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     ];
 
     const getCPCsData = (index, data) => {
-        console.log(getValues(`detailActivities.${index}.pospre`));
         const pospreItem = pospreData.find(item => item.id === data);
         if (pospreItem?.productClassifications?.length > 0) return pospreItem.productClassifications.map(cpc => {
             return {
