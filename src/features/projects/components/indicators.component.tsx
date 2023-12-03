@@ -170,7 +170,7 @@ function IndicatorsFormComponent({ disableNext, enableNext, setForm }: IProps): 
                             description: "¡Eliminado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 const indicators = getValues("indicators").filter(item => item !== row).sort((a, b) => parseFloat(a.productMGA) - parseFloat(b.productMGA));
                                 setValue("indicators", indicators);
@@ -374,7 +374,7 @@ function IndicatorComponent({ returnData, setForm, item, view }: IIndicatorsProp
                         description: item ? "¡Cambios guardados exitosamente!" : "¡Guardado exitosamente! ",
                         show: true,
                         background: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setForm(null);
                             setTextContinue(null);

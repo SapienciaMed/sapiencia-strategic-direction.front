@@ -477,7 +477,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                     description: `No existe un año con la vigencia ${validityOfOffBudget} en la actividad MGA.`,
                     show: true,
                     background: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     }
@@ -511,7 +511,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         description: item ? "¡Cambios guardados exitosamente!" : "¡Guardada exitosamente!",
                         show: true,
                         background: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setForm(null);
                             setTextContinue(null);
@@ -552,7 +552,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 description: `El costo total de las actividades detalladas para el año ${yearOfOffBudget} y vigencia ${validityOfOffBudget} es ${validationType == "major" ? "mayor" : "menor"} que los de la actividad MGA.`,
                 show: true,
                 background: true,
-                OkTitle: "Cerrar",
+                OkTitle: "Aceptar",
                 onOk: () => {
                     setMessage({});
                 }

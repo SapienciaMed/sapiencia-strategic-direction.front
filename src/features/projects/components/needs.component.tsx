@@ -97,7 +97,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                 setMessage({
                     title: "Detalle del objetivo",
                     description: <DetailsComponent row={row} />,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     background: true,
                     show: true,
                     onOk: () => {
@@ -139,7 +139,7 @@ function NeedsComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                             description: "¡Objetivo eliminado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             }
@@ -325,7 +325,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                     description: item ? "¡Objetivo editado exitosamente!" : "¡Objetivo guardado exitosamente!",
                     show: true,
                     background: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setForm(null);
                         setTextContinue(null);

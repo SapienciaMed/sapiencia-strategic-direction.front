@@ -38,12 +38,20 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
       effects: projectData?.preparation?.enviromentalAnalysis?.effects ? projectData.preparation.enviromentalAnalysis.effects : [],
     },
   });
+  const [levels, setLevels] = useState<IDropdownProps[]>([]);
+  const [types, setTypes] = useState<IDropdownProps[]>([]);
+  const [ratings, setRatings] = useState<IDropdownProps[]>([]);
   const EffectCreateComponentRef = useRef(null);
   const { setMessage } = useContext(AppContext);
+  const { get } = useCrudService(process.env.urlApiStrategicDirection);
   const effectsColumns: ITableElement<IEffectEnviromentForm>[] = [
     {
       fieldName: "type",
       header: "Tipo de impacto",
+      renderCell: (row) => {
+        const impactType = types.find(data => data.value === row.type);
+        return <>{impactType ? impactType.name : ""}</>
+      }
     },
     {
       fieldName: "impact",
@@ -52,10 +60,18 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
     {
       fieldName: "level",
       header: "Nivel de impacto",
+      renderCell: (row) => {
+        const impactLevel = levels.find(data => data.value === row.level);
+        return <>{impactLevel ? impactLevel.name : ""}</>
+      }
     },
     {
       fieldName: "classification",
       header: "Clasificación",
+      renderCell: (row) => {
+        const impactClasification = ratings.find(data => data.value === row.classification);
+        return <>{impactClasification ? impactClasification.name : ""}</>
+      }
     },
     {
       fieldName: "measures",
@@ -76,11 +92,6 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
     }
     setDisableStatusUpdate(!isValid);
   }, [isValid]);
-
-  const [levels, setLevels] = useState<IDropdownProps[]>([]);
-  const [types, setTypes] = useState<IDropdownProps[]>([]);
-  const [ratings, setRatings] = useState<IDropdownProps[]>([]);
-  const { get } = useCrudService(process.env.urlApiStrategicDirection);
 
   useEffect(() => {
     get<any>('/api/v1/impact-level').then(response => {
@@ -186,7 +197,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
                         description: "¡Efecto ambiental guardado exitosamente!",
                         show: true,
                         background: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                           setMessage({});
                         },
@@ -243,7 +254,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
               description: "¡Efecto ambiental eliminado exitosamente!",
               show: true,
               background: true,
-              OkTitle: "Cerrar",
+              OkTitle: "Aceptar",
               onOk: () => {
                 setMessage({});
               },
@@ -330,7 +341,7 @@ export function EnvironmentalAnalysis({ disableNext, enableNext }: IProps): Reac
                             description: "¡Efecto ambiental guardado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                               setMessage({});
                             },
