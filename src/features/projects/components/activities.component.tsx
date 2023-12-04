@@ -882,7 +882,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 </div>
                 <div className="card-table">
                     <div className="title-area">
-                        <label className="text-black large bold">
+                        <label className="text-black large bold text-required">
                             {!view && item ? "Editar actividades detalladas" : "Actividades detalladas"}
                         </label>
 
@@ -903,7 +903,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         </div>}
                     </div>
                     <div className="strategic-direction-grid-1">
-                        <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
+                        {fields?.length > 0 && <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
                             <Controller
                                 control={control}
                                 name={"validity"}
@@ -937,7 +937,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                 filter={true}
                                 disabled={view}
                             />
-                        </div>
+                        </div>}
                         {fields.map((item, index) => {
                             return (
                                 <div className="card-table strategic-direction-grid-1" key={item.id}>
