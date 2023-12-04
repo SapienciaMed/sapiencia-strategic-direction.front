@@ -9,7 +9,7 @@ import {
   } from "react";
   import { useLocation } from 'react-router-dom';
   import { IPAI } from "../interfaces/IndicatorsPAIInterfaces";
-import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
+import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
   
   interface IPAIContext {
     disableSaveButton: boolean;
@@ -20,10 +20,14 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
     setTempButtonText: Dispatch<SetStateAction<string>>;
     tempButtonAction: () => void;
     setTempButtonAction: Dispatch<SetStateAction<() => void>>;
+    IndicatorsFormComponent: React.JSX.Element | null;
+    setIndicatorsFormComponent: Dispatch<SetStateAction<React.JSX.Element | null>>;
     saveButtonText: string;
     setSaveButtonText: Dispatch<SetStateAction<string>>;
     saveButtonAction: () => void;
     setSaveButtonAction: Dispatch<SetStateAction<() => void>>;
+    disableTempBtn: boolean;
+    setDisableTempBtn: Dispatch<SetStateAction<boolean>>;
     actionCancel: () => void;
     setActionCancel: Dispatch<SetStateAction<() => void>>;
     showCancel: boolean;
@@ -41,12 +45,16 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
     setPAIData: () => {},
     tempButtonText: null,
     setTempButtonText: () => {},
+    IndicatorsFormComponent: null,
+    setIndicatorsFormComponent: () => {},
     tempButtonAction: () => {},
     setTempButtonAction: () => {},
     saveButtonText: null,
     setSaveButtonText: () => {},
     saveButtonAction: () => {},
     setSaveButtonAction: () => {},
+    disableTempBtn: true,
+    setDisableTempBtn: () => {},
     actionCancel: () => {},
     setActionCancel: () => {},
     showCancel: true,
@@ -57,6 +65,8 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
   export function PAIContextProvider({ children }: IProps) {
     const location = useLocation();
     const [disableSaveButton, setDisableSaveButton] = useState<boolean>(true);
+    const [disableTempBtn, setDisableTempBtn] = useState<boolean>(true);
+    const [IndicatorsFormComponent, setIndicatorsFormComponent] = useState<React.JSX.Element | null>(null)
     const [PAIData, setPAIData] = useState<ICreatePlanAction>(null);
     const [tempButtonText, setTempButtonText] = useState<string>(null);
     const [tempButtonAction, setTempButtonAction] = useState<() => void>(() => {});
@@ -74,18 +84,22 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
         tempButtonText,
         setTempButtonText,
         tempButtonAction,
+        IndicatorsFormComponent,
+        setIndicatorsFormComponent,
         setTempButtonAction,
         saveButtonText,
         setSaveButtonText,
         saveButtonAction,
         setSaveButtonAction,
+        disableTempBtn,
+        setDisableTempBtn,
         actionCancel,
         setActionCancel,
         showCancel,
         setShowCancel,
         formAction
       };
-    }, [disableSaveButton, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
+    }, [disableSaveButton, IndicatorsFormComponent, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
   
     return <PAIContext.Provider value={values}>{children}</PAIContext.Provider>;
   }

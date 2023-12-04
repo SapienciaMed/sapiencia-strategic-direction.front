@@ -18,7 +18,6 @@ function ProjectsCrudPage(): React.JSX.Element {
         navigate,
         actionCancel,
         textContinue,
-        DeleteProject,
         projectData,
         showCancel,
         step,

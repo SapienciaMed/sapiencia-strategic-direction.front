@@ -137,7 +137,6 @@ export function ActorCreateComponent({
       fieldName: "position",
       header: "Posición",
        renderCell: (row) => {
-        console.log(positionData,"render");
         const stage = positionData?.find(stage => stage.value === Number(row.position)) || null;
          return <>{stage?.name}</>
       },

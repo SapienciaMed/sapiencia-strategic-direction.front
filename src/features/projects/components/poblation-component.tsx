@@ -501,7 +501,7 @@ export function PoblationComponent({
                           description: "¡Registro eliminado exitosamente!",
                           show: true,
                           background: true,
-                          OkTitle: "Cerrar",
+                          OkTitle: "Aceptar",
                           onOk: () => {
                             setMessage({});
                           }
@@ -561,7 +561,7 @@ export function PoblationComponent({
                           description: "¡Registro eliminado exitosamente!",
                           show: true,
                           background: true,
-                          OkTitle: "Cerrar",
+                          OkTitle: "Aceptar",
                           onOk: () => {
                             setMessage({});
                           }

@@ -172,7 +172,7 @@ function ProfitsIncomeComponent({ disableNext, enableNext, setForm }: IProps): R
                             description: "¡Eliminado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             }
@@ -351,7 +351,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                         description: item ? "¡Cambios guardados exitosamente!" : "¡Registro guardado exitosamente!",
                         show: true,
                         background: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setForm(null);
                             setTextContinue(null);
@@ -510,7 +510,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                                                     id={field.name}
                                                     idInput={field.name}
                                                     value={`${index}`}
-                                                    label="período"
+                                                    label="Período"
                                                     className="input-basic background-textArea"
                                                     classNameLabel="text-black biggest bold"
                                                     typeInput={"number"}
@@ -564,9 +564,9 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                                         disabled={true}
                                         minFractionDigits={2}
                                     />
-                                    <div className="actions-needs">
+                                    <div className="form-group column">
                                         {!view && (
-                                            <label className="text-black biggest bold">Acciones</label>
+                                            <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
                                         )}
                                         <div onClick={() => {
                                             setMessage({
@@ -583,7 +583,7 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
                                                         description: "¡Eliminado exitosamente!",
                                                         show: true,
                                                         background: true,
-                                                        OkTitle: "Cerrar",
+                                                        OkTitle: "Aceptar",
                                                         onOk: () => {
                                                             setMessage({});
                                                         }
@@ -612,37 +612,6 @@ function ProfitsIncomeAddComponent({ returnData, setForm, item, view }: IPropsPr
             </div>
         </FormComponent>
     )
-}
-
-interface IDetailsProps {
-    row: IprofitsIncome;
-}
-
-function DetailsComponent({ row }: IDetailsProps): React.JSX.Element {
-    return (
-        <section className="needs-objectives-details">
-            <div className="items-details">
-                <label className="text-black bold biggest">Tipo</label>
-                <span className="text-primary biggest">{row.type}</span>
-            </div>
-            <div className="items-details">
-                <label className="text-black bold biggest">Unidad de medida</label>
-                <span className="text-primary biggest">{row.unit}</span>
-            </div>
-            <div className="items-details">
-                <label className="text-black bold biggest">Descripción</label>
-                <span className="text-primary biggest">{row.description}</span>
-            </div>
-            <div className="items-estates">
-                <p className="text-black bold text-center biggest">Añadir periodo</p>
-                {row.period.map(period => {
-                    return (
-                        <span className="text-primary biggest" key={period.period}>{period.quantity}</span>
-                    )
-                })}
-            </div>
-        </section>
-    );
 }
 
 export default React.memo(ProfitsIncomeComponent);

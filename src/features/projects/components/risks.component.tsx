@@ -37,17 +37,18 @@ const LevelData: IDropdownProps[] = [
     }
 ];
 
-function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
+function RisksComponent({ disableNext, enableNext, setForm }: Readonly<IProps>): React.JSX.Element {
     const resolver = useYupValidationResolver(riskValidator);
-    const [RisksData, setRisksData] = useState<IRisks>(null);
-    const { setProjectData, 
-            projectData, 
-            setTextContinue, 
-            setActionCancel, 
-            setActionContinue, 
-            setDisableContinue, 
-            formAction,
-            setDisableStatusUpdate } = useContext(ProjectsContext);
+    const [risksData, setRisksData] = useState<IRisks>(null);
+    const { setProjectData,
+        projectData,
+        setTextContinue,
+        setActionCancel,
+        setActionContinue,
+        setDisableContinue,
+        formAction,
+        setDisableStatusUpdate
+    } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const [typeRiskData, setTypeRiskData] = useState<IDropdownProps[]>(null);
     const [probabilityData, setProbabilityData] = useState<IDropdownProps[]>(null);
@@ -66,14 +67,14 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         }
     });
 
-    const products : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const products: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.productMGA}. ${cause.productDescriptionMGA}`,
             value: cause.productMGA
         }
     });
 
-      const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const activities: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
@@ -180,16 +181,16 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
             fieldName: "risk",
             header: "Riesgo relacionado",
             renderCell: (row) => {
+                const levelRisk = products.find(item => item.value == row.risk);
+                const levelActivities = activities.find(item => item.value == row.risk);
                 switch (row.level) {
                     case 1:
                         return <>{projectData.identification.objectives.generalObjective}</>
-              
-                     case 2:
-                        const levelRisk = products.find(item => item.value == row.risk)
+
+                    case 2:
                         return <>{levelRisk.name || ""}</>;
                     case 3:
-                        const levelActivities = activities.find(item => item.value == row.risk)
-                        return <>{levelActivities.name || "" }</>;
+                        return <>{levelActivities.name || ""}</>;
                     default:
                         return <></>
                 }
@@ -285,7 +286,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                             description: "¡Eliminado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             }
@@ -313,19 +314,19 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         trigger("risks");
     };
     useEffect(() => {
-        if ( isValid && formAction === "new" ) {
-            setTimeout( () => {
+        if (isValid && formAction === "new") {
+            setTimeout(() => {
                 enableNext();
             }, 500)
-        } else if( !isValid && formAction === "new" ) {
+        } else if (!isValid && formAction === "new") {
             disableNext();
-        } else if( isValid && formAction === "edit" ) {
-            setTimeout( () => {
+        } else if (isValid && formAction === "edit") {
+            setTimeout(() => {
                 enableNext();
                 setDisableContinue(false);
             }, 500)
-        } else {      
-            disableNext();
+        } else {
+            setDisableContinue(true);
         }
         setDisableStatusUpdate(!isValid);
     }, [isValid]);
@@ -334,11 +335,11 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
         return () => subscription.unsubscribe();
     }, [watch]);
     useEffect(() => {
-        if (RisksData) setProjectData(prev => {
-            const preparation = prev ? { ...prev.preparation, risks: { ...RisksData } } : { risks: { ...RisksData } };
+        if (risksData) setProjectData(prev => {
+            const preparation = prev ? { ...prev.preparation, risks: { ...risksData } } : { risks: { ...risksData } };
             return { ...prev, preparation: { ...preparation } };
         })
-    }, [RisksData]);
+    }, [risksData]);
     return (
         <div className="card-table">
             <FormComponent action={undefined} className="problem-description-container">
@@ -356,7 +357,7 @@ function RisksComponent({ disableNext, enableNext, setForm }: IProps): React.JSX
                             Añadir riesgo <AiOutlinePlusCircle />
                         </div>
                     </div>
-                    {getValues('risks')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('risks')} horizontalScroll />}
+                    {getValues('risks')?.length > 0 && <TableExpansibleComponent widthTable={`${(width * 0.0149) + 40}vw`} actions={objectivesActions} columns={objectivesColumns} data={getValues('risks')} horizontalScroll />}
                 </div>
             </FormComponent>
         </div>
@@ -369,7 +370,7 @@ interface IPropsAddRisks {
     item?: IAddRisks;
 }
 
-function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
+function AddRisksComponent({ returnData, setForm, item }: Readonly<IPropsAddRisks>) {
     const { setMessage } = useContext(AppContext);
     const resolver = useYupValidationResolver(risksValidator);
 
@@ -399,14 +400,14 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
         }
     });
 
-    const products : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const products: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.productMGA}. ${cause.productDescriptionMGA}`,
             value: cause.productMGA
         }
     });
 
-    const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const activities: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
@@ -424,7 +425,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                 },
             ];
             setRiskData(levelObjectives);
-        } else if (idLevel == 2){
+        } else if (idLevel == 2) {
             setRiskData(products);
         } else if (idLevel == 3) {
             setRiskData(activities)
@@ -497,7 +498,7 @@ function AddRisksComponent({ returnData, setForm, item }: IPropsAddRisks) {
                     description: item ? "¡Cambios Guardados exitosamente!" : "¡Guardado exitosamente!",
                     show: true,
                     background: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setForm(null);
                         setTextContinue(null);

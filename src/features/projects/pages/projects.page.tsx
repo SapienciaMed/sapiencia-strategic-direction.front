@@ -71,8 +71,8 @@ function ProjectsPage(): React.JSX.Element {
                                 Consultar Proyecto
                             </label>
                             { validateActionAccess("PROYECTO_CREAR") && 
-                                <div className="title-button text-three large">
-                                    <span style={{ marginRight: '0.5em' }} onClick={() => { navigate('./crear-proyecto') }}> Formular proyecto</span>
+                                <div className="title-button text-three large" onClick={() => { navigate('./crear-proyecto') }}>
+                                    <span style={{ marginRight: '0.5em' }} > Formular proyecto</span>
                                     {<AiOutlinePlusCircle size={20} color="533893" />}
                                 </div>
                             }

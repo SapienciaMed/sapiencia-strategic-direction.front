@@ -325,7 +325,7 @@ export function useProjectsData() {
                             show: true,
                             title: "Adjuntos del proyecto",
                             description: "¡Archivos guardados exitosamente!",
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                         });
                     } else {
                         setFilesUploadData([]);
@@ -334,7 +334,7 @@ export function useProjectsData() {
                             show: true,
                             title: "Adjuntos del proyecto",
                             description: data.operation.message,
-                            OkTitle: "Cerrar"
+                            OkTitle: "Aceptar"
                         });
                     }
                 }).catch(err => {
@@ -343,7 +343,7 @@ export function useProjectsData() {
                         show: true,
                         title: "Adjuntos del proyecto",
                         description: String(err),
-                        OkTitle: "Cerrar"
+                        OkTitle: "Aceptar"
                     })
                 });
             },

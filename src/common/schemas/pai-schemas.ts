@@ -9,3 +9,7 @@ export const CreatePAIValidator = yup.object({
     articulationPAI: yup.string().required("El campo es obligatorio").max(200, "Solo se permiten 200 caracteres"),
     selectedRisk: yup.number().required("Debe seleccionar una opción"),
 });
+
+export const revisionPAIValidator = yup.object({
+
+});

@@ -23,6 +23,7 @@ function App() {
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
   const IndicatorsPaiPage = lazy(() => import("./features/pai/pages/indicators-pai.page"));
   const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
+  const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
   const { publish } = useAppCominicator();
 
@@ -123,7 +124,7 @@ function App() {
                 path={"/direccion-estrategica/pai"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction/></PAIContextProvider>}
+                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
@@ -138,6 +139,9 @@ function App() {
                   />
                 }
               />
+
+
+              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIPage />} />;
             </Routes>
           </Suspense>
         </Router>
