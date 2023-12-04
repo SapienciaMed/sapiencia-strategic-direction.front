@@ -13,7 +13,7 @@ import { activitiesValidator, capacityValidator, environmentalAnalysisValidator,
 function PreparationPage(): React.JSX.Element {
     const accordionsComponentRef = useRef(null);
     const { projectData, setDisableContinue, setActionContinue, setStep } = useContext(ProjectsContext);
-    const [PlaneFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
+    const [planeFormComponent, setPlaneFormComponent] = useState<React.JSX.Element | null>(null)
     const disableAccordions = (ids: number[] | string[]) => {
         if (accordionsComponentRef.current) {
             accordionsComponentRef.current.disableAccordions(ids);
@@ -131,8 +131,8 @@ function PreparationPage(): React.JSX.Element {
     }, []);
     return (
         <div>
-            {PlaneFormComponent}
-            <div style={{ display: PlaneFormComponent ? "none" : "block" }}>
+            {planeFormComponent}
+            <div style={{ display: planeFormComponent ? "none" : "block" }}>
                 <AccordionsComponent data={accordionsData} ref={accordionsComponentRef} />
             </div>
         </div>

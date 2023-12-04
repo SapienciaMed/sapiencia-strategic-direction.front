@@ -117,7 +117,7 @@ export function useTransferData() {
                             description: "¡Guardado exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 navigate('/direccion-estrategica/proyectos/');
                                 setMessage({});
@@ -130,7 +130,7 @@ export function useTransferData() {
                                 description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                                 background: true,
                                 show: true,
-                                OkTitle: "Cerrar",
+                                OkTitle: "Aceptar",
                                 onOk: () => {
                                     setMessage({});
                                 },
@@ -144,7 +144,7 @@ export function useTransferData() {
                                 description: <p className="text-primary biggest">{res.operation.message}</p>,
                                 background: true,
                                 show: true,
-                                OkTitle: "Cerrar",
+                                OkTitle: "Aceptar",
                                 onOk: () => {
                                     setMessage({});
                                 },
@@ -177,7 +177,7 @@ export function useTransferData() {
                                     description: "¡Guardado exitosamente!",
                                     show: true,
                                     background: true,
-                                    OkTitle: "Cerrar",
+                                    OkTitle: "Aceptar",
                                     onOk: () => {
                                         navigate('/direccion-estrategica/proyectos/');
                                         setMessage({});
@@ -192,7 +192,7 @@ export function useTransferData() {
                                 description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                                 background: true,
                                 show: true,
-                                OkTitle: "Cerrar",
+                                OkTitle: "Aceptar",
                                 onOk: () => {
                                     setMessage({});
                                 },
@@ -206,7 +206,7 @@ export function useTransferData() {
                                 description: <p className="text-primary biggest">{res.operation.message}</p>,
                                 background: true,
                                 show: true,
-                                OkTitle: "Cerrar",
+                                OkTitle: "Aceptar",
                                 onOk: () => {
                                     setMessage({});
                                 },

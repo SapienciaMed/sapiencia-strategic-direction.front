@@ -5,10 +5,6 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     width: 100vw;
 }
 
-.p-radiobutton-box.p-highlight .p-radiobutton-icon {
-    transform: translateZ(0) scale(0.85, 0.85) !important;
-}
-
 .p-accordion-content {
     font-size: .8rem;
 }
@@ -50,6 +46,17 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     align-items: center;
 }
 
+.p-accordion-header-link:focus {
+    z-index: 0 !important;
+}
+
+.p-inputnumber-input {
+    width: 100%;
+}
+
+.p-radiobutton-box.p-highlight .p-radiobutton-icon {
+    transform: translateZ(0) scale(0.85, 0.85) !important;
+}
 
 .crud-page {
     @include generate-flex-container(column);
@@ -359,7 +366,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     text-align: left;
 }
 
-.actions-pai{
+.actions-pai {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -632,10 +639,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     column-gap: 0.5rem;
 }
 
-.create-pai-risks{
+.create-pai-risks {
     display: grid;
     grid-template-rows: 1fr 1fr;
     row-gap: 1.5rem;
+
     :nth-child(4) {
         align-self: end;
     }
@@ -854,11 +862,13 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         padding: 1rem 0px;
         row-gap: 1rem;
         column-gap: 1rem;
+        align-items: end;
 
         .actions-needs {
             display: flex;
-            flex-direction: column;
-            gap: 22px;
+            height: 41px;
+            align-items: center;
+            justify-content: center;
 
 
             .container-div {
@@ -999,7 +1009,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 1rem;
     }
 
-    .create-pai-risks{
+    .create-pai-risks {
         display: grid;
         grid-template-columns: 2fr 1fr;
         grid-template-rows: 1fr;
@@ -1009,7 +1019,7 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         align-items: end;
     }
 
-    .actions-pai{
+    .actions-pai {
         display: grid;
         grid-template-columns: 2fr 1fr;
         padding: 1rem 0px;

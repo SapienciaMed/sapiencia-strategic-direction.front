@@ -106,7 +106,7 @@ export default function useIndicatorsPai() {
                     description: "¡Indicador guardado exitosamente!",
                     show: true,
                     background: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     }

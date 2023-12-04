@@ -34,3 +34,16 @@ export interface IAddAction {
     id?: number;
     risk: string;
   }
+
+export interface IActionPlanTemp {
+  id?: number;
+  user: string;
+  yearPAI: number;
+  budgetPAI: number;
+  typePAI: number;
+  namePAI:number;
+  objectivePAI: string;
+  articulationPAI:string;
+  linePAI: ILine[];
+  risksPAI: IRisks[];
+}

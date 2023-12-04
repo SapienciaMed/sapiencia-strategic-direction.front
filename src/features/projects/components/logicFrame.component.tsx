@@ -424,7 +424,7 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                     description: item ? "¡Cambios Guardados exitosamente!" : "¡Guardado exitosamente!",
                     show: true,
                     background: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setForm(null);
                         setTextContinue(null);

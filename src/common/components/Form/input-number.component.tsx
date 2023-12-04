@@ -46,7 +46,7 @@ function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
 export function InputNumberComponent({
   idInput,
   control,
-  className = "select-basic",
+  className = "inputNumber-basic",
   placeholder = "0",
   label,
   classNameLabel = "text-main",

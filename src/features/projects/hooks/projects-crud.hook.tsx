@@ -240,7 +240,7 @@ export function useProjectsCrudData() {
                         description: <p className="text-primary biggest">{response.operation.message}</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -255,7 +255,7 @@ export function useProjectsCrudData() {
                     description: <p className="text-primary biggest">{error}</p>,
                     background: true,
                     show: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     },
@@ -321,7 +321,7 @@ export function useProjectsCrudData() {
                     description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                     background: true,
                     show: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     },
@@ -336,7 +336,7 @@ export function useProjectsCrudData() {
                 description: <p className="text-primary biggest">{res.operation.message}</p>,
                 background: true,
                 show: true,
-                OkTitle: "Cerrar",
+                OkTitle: "Aceptar",
                 onOk: () => {
                     setMessage({});
                 },
@@ -351,7 +351,7 @@ export function useProjectsCrudData() {
             description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,
             background: true,
             show: true,
-            OkTitle: "Cerrar",
+            OkTitle: "Aceptar",
             onOk: () => {
                 navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
                 setMessage({});
@@ -375,7 +375,7 @@ export function useProjectsCrudData() {
                     description: <p className="text-primary biggest"> Podrás continuar la  {formAction === "new" ? "creación" : "modificación"} del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     },
@@ -390,7 +390,7 @@ export function useProjectsCrudData() {
                         description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -404,7 +404,7 @@ export function useProjectsCrudData() {
                         description: <p className="text-primary biggest">{res.operation.message}</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -426,7 +426,7 @@ export function useProjectsCrudData() {
                     description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
                     background: true,
                     show: true,
-                    OkTitle: "Cerrar",
+                    OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
                     },
@@ -441,7 +441,7 @@ export function useProjectsCrudData() {
                         description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -455,7 +455,7 @@ export function useProjectsCrudData() {
                         description: <p className="text-primary biggest">{res.operation.message}</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },

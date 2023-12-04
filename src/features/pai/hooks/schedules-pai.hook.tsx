@@ -198,7 +198,6 @@ export default function useSchedulesPAIData() {
     }
 
     const saveAction = () => {
-        console.log(constTableData)
         if (JSON.stringify(constTableData?.map(data => {
             return {endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester}
         })) !== JSON.stringify(tableData.map(data => {

@@ -237,7 +237,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
                             description: "¡Eliminada exitosamente!",
                             show: true,
                             background: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             }
@@ -561,7 +561,7 @@ function EntityAddComponent({ returnData, setForm, item, view }: IPropsEntity) {
                         description: item ? "¡Cambios guardados exitosamente!" : "¡Guardada exitosamente!",
                         show: true,
                         background: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setForm(null);
                             setTextContinue(null);
