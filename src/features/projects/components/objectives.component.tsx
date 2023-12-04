@@ -11,13 +11,12 @@ import { ITableAction, ITableElement } from "../../../common/interfaces/table.in
 import { useGenericListService } from "../../../common/hooks/generic-list-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
 
 interface IProps {
     disableNext: () => void;
     enableNext: () => void;
 }
-export function ObjectivesComponent({ disableNext, enableNext }: IProps): React.JSX.Element {
+export function ObjectivesComponent({ disableNext, enableNext }: Readonly<IProps>): React.JSX.Element {
     const specificObjectivesPurposesComponentRef = useRef(null);
     const [objectivesData, setObjectivesData] = useState<IObjectivesForm>(null)
     const [measurementData, setMeasurementData] = useState<IDropdownProps[]>([]);
@@ -428,16 +427,26 @@ const SpecificObjectivesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm
                                 fieldArray={true}
                                 disabled={true}
                             />
-                            <InputComponent
-                                idInput={`childrens.${index}.description`}
-                                typeInput="text"
-                                className="input-basic"
-                                label="Descripción objetivo Indirecto"
-                                classNameLabel="text-black big bold text-required"
-                                register={register}
-                                errors={errors}
-                                fieldArray={true}
-                                disabled={item ? !compareIds(counter, index) : false}
+                            <Controller
+                                control={control}
+                                name={`childrens.${index}.description`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Descripción objetivo Directo"
+                                            className="input-basic"
+                                            classNameLabel="text-black big bold text-required"
+                                            typeInput={"text"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            disabled={item ? !compareIds(counter, index) : false}
+                                            errors={errors} />
+                                    );
+                                }}
                             />
                         </div>
                     )
@@ -528,16 +537,26 @@ const PurposesFormComponent = forwardRef<IRef, IPropsCausesEffectsForm>((props, 
                                 fieldArray={true}
                                 disabled={true}
                             />
-                            <InputComponent
-                                idInput={`childrens.${index}.description`}
-                                typeInput="text"
-                                className="input-basic"
-                                label="Descripción fin Indirecto"
-                                classNameLabel="text-black big bold text-required"
-                                register={register}
-                                errors={errors}
-                                fieldArray={true}
-                                disabled={item ? !compareIds(counter, index) : false}
+                            <Controller
+                                control={control}
+                                name={`childrens.${index}.description`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Descripción fin Indirecto"
+                                            className="input-basic"
+                                            classNameLabel="text-black big bold text-required"
+                                            typeInput={"text"}
+                                            register={register}
+                                            onChange={field.onChange}
+                                            disabled={item ? !compareIds(counter, index) : false}
+                                            errors={errors} />
+                                    );
+                                }}
                             />
                         </div>
                     )

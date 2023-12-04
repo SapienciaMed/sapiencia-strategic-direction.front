@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
-import { ICreatePlanAction,IAddAction } from "../interfaces/CreatePlanActionInterfaces";
+import { ICreatePlanAction ,IAddAction } from "../interfaces/PAIInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { CreatePAIValidator } from "../../../common/schemas";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";

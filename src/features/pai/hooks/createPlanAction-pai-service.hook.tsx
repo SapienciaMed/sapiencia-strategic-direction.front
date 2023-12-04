@@ -2,7 +2,7 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
-import {  ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
+import {  ICreatePlanAction } from "../interfaces/PAIInterfaces";
 
 export function usePaiService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
