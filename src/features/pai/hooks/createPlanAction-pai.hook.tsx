@@ -1,10 +1,11 @@
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { ICreatePlanAction,IAddAction } from "../interfaces/CreatePlanActionInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { CreatePAIValidator } from "../../../common/schemas";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import { useContext, useEffect, useState } from "react";
+import { PAIContext } from "../contexts/pai.context";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -15,8 +16,13 @@ import { useNavigate } from "react-router";
 import { useEntitiesService } from "./entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
 import { useProjectsService } from "./projects-service.hook";
+import { usePaiService } from "./createPlanAction-pai-service.hook"
 import { boolean } from "yargs";
 import { IProject } from "../interfaces/ProjectsInterfaces";
+import { InputInplaceComponent } from "../../../common/components/Form";
+import { AiOutlineDownload, AiOutlinePlusCircle } from "react-icons/ai";
+
+import IndicatorsPaiPage from "../pages/indicators-pai.page";
 
 
 export default function usePlanActionPAIData() {
@@ -27,9 +33,8 @@ export default function usePlanActionPAIData() {
     });
 
 
-    const [rolData, setRolData] = useState<IDropdownProps[]>([]);
-    const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
-    const [editSchedule, setEditSchedule] = useState<number>(null);
+    const [tableData, setTableData] = useState<IAddAction[]>([]);
+    const [actionForm, setActionForm] = useState();
     const [riskPAIData, setRiskPAIData] = useState<IDropdownProps[]>(null);
     const [NamePAIData, setNamePAIData] = useState<IDropdownProps[]>(null);
     const [objectivePAIData, setObjectivePAIData] = useState<IDropdownProps[]>(null);
@@ -38,13 +43,36 @@ export default function usePlanActionPAIData() {
     const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const [View, ViewData] = useState<boolean>(false);
     const [riskText, RisksTextData] = useState<string>("");
+    const [IndicatorsFormComponent, setIndicatorsFormComponent] = useState<React.JSX.Element | null>(null)
 
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
     const { getRiskPAI,getProcessPAI,getObjectivesPAI } = useEntitiesService();
     const { getProjectsByFilters } = useProjectsService();
+    const {CreatePAI,UpdatePAI} =  usePaiService();
     const { getOptions } = useRoleService();
     const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
     const { authorization, setMessage } = useContext(AppContext);
+    const {   
+        disableSaveButton,
+        setDisableSaveButton,
+        PAIData,
+        setPAIData,
+        tempButtonText,
+        setTempButtonText,
+        tempButtonAction,
+        setTempButtonAction,
+        saveButtonText,
+        setSaveButtonText,
+        saveButtonAction,
+        setSaveButtonAction,
+        actionCancel,
+        setActionCancel,
+        showCancel,
+        setShowCancel,
+        formAction} = useContext(PAIContext);
+
+        
+    
 
     const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
     const navigate = useNavigate();
@@ -60,23 +88,126 @@ export default function usePlanActionPAIData() {
         getFieldState,
         watch,
         trigger
-    } = useForm<ICreatePlanAction>({ resolver, mode: "all" });
+    } = useForm<ICreatePlanAction>({ resolver, mode: "all" ,defaultValues: {
+        id: PAIData?.id ? PAIData.id : null,
+        yearPAI: PAIData?.yearPAI ? PAIData.yearPAI :null,
+        budgetPAI: PAIData?.budgetPAI ? PAIData.budgetPAI :null,
+        typePAI: PAIData?.typePAI ? PAIData.typePAI :null,
+        namePAI: PAIData?.namePAI ? PAIData.namePAI :null,
+        objectivePAI: PAIData?.objectivePAI ? PAIData.objectivePAI :"",
+        articulationPAI: PAIData?.articulationPAI ? PAIData.articulationPAI :"",
+        linePAI: PAIData?.linePAI ? PAIData?.linePAI :null,
+        risksPAI: PAIData?.risksPAI ? PAIData?.risksPAI : null,
+    }});
 
-    const onSubmitCreate = handleSubmit(async (data: ICreatePlanAction) => {
-        
-        setTimeout(() => {
-            reset();
-        }, 100);
+    
+
+    const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
+            if (data?.id) {
+                const dataPai = { ...data, user: authorization.user.numberDocument };
+                const res = await UpdatePAI(dataPai.id, dataPai);
+                if (res.operation.code === EResponseCodes.OK) {
+                    setMessage({
+                        title: "Guardado temporal realizado con éxito",
+                        description: <p className="text-primary biggest">Podrás continuar la formulación del plan en cualquier momento</p>,
+                        background: true,
+                        show: true,
+                        OkTitle: "Cerrar",
+                        onOk: () => {
+                            setMessage({});
+                        },
+                        onClose: () => {
+                            setMessage({});
+                        }
+                    });
+                } else {
+                    if (res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                        setMessage({
+                            title: "Validación BPIN.",
+                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    } else {
+                        setMessage({
+                            title: "¡Ha ocurrido un error!",
+                            description: <p className="text-primary biggest">{res.operation.message}</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                }
+            } else {
+                const dataPai = { ...data, user: authorization.user.numberDocument };
+                const res = await CreatePAI(dataPai);
+                setPAIData(prev => {
+                    return { ...prev, id: res.data.id }
+                });
+                if (res.operation.code === EResponseCodes.OK) {
+                    setMessage({
+                        title: "Guardado temporal realizado con éxito",
+                        description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                        background: true,
+                        show: true,
+                        OkTitle: "Cerrar",
+                        onOk: () => {
+                            setMessage({});
+                        },
+                        onClose: () => {
+                            setMessage({});
+                        }
+                    });
+                } else {
+                    if (res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                        setMessage({
+                            title: "Validación BPIN.",
+                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    } else {
+                        setMessage({
+                            title: "¡Ha ocurrido un error!",
+                            description: <p className="text-primary biggest">{res.operation.message}</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Cerrar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                }
+            }
     });
 
     const onSubmitEdit = handleSubmit(async (data: ICreatePlanAction) => {
         
     });
-
-    const resetForm = () => {
-        reset();
-        setEditSchedule(null);
-    }
 
     useEffect(() => {
         getRiskPAI().then(response => {
@@ -130,6 +261,7 @@ export default function usePlanActionPAIData() {
     }
 
     useEffect(() => {
+        debugger;
         const subscription = watch((value: ICreatePlanAction) => setCreatePlanActionFormData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
     }, [watch]);
@@ -224,9 +356,160 @@ export default function usePlanActionPAIData() {
         
     }
 
+    
+  const createPlanActionColumns: ITableElement<IAddAction>[] = [
+    {
+      fieldName: "action",
+      header: "No.acción",
+    },
+    {
+      fieldName: "description",
+      header: "Descripción de acción PAI",
+        renderCell: (row) => {
+            return (
+                <Controller
+                    control={control}
+                    name={`actionsPAi.${row.action}.description`}
+                    defaultValue={"           "}
+                    render={({ field }) => {
+                        return (
+                            <InputInplaceComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label=""
+                                className="input-basic"
+                                typeInput={"text"}
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                            />
+                        );
+                    }}
+                />
+            )
+        }
+    },
+  ];
+
+  const createPlanActionActions: ITableAction<IAddAction>[] = [
+    {
+        customIcon: (row) => {
+            return (
+                <>
+                    <div
+                        className="create-action"
+                        data-pr-position="bottom"
+                        style={{ 'color': '#D72FD1' }}
+                    >
+                        <AiOutlinePlusCircle />
+                    </div>
+                </>
+            )
+        },
+        onClick: (row) => {
+            setIndicatorsFormComponent(<>hola Agrega tu componente</>);
+        }
+    },
+    {
+      icon: "Detail",
+      onClick: (row) => {
+        setMessage({
+          title: "Agregar Acción",
+          description: ( ""
+            //<ActorFormComponent ref={ActorCreateComponentRef} item={row} />
+          ),
+          show: true,
+          background: true,
+          OkTitle: "Guardar",
+          cancelTitle: "Cancelar",
+          onOk: () => {
+            // if (ActorCreateComponentRef.current) {
+            //   ActorCreateComponentRef.current.handleSubmit(
+            //     (data: IParticipatingActors) => {
+            //       const newActors = getValues("actors")
+            //         .filter((actor) => actor !== row)
+            //         .concat(data)
+            //       setActorCreateData((prev) => {
+            //         return { ...prev, actors: newActors };
+            //       });
+            //       setValue("actors", newActors);
+            //       trigger("actors");
+            //       setMessage({
+            //         title: "Se editó exitosamente",
+            //         description: "Se ha editado el actor exitosamente",
+            //         show: true,
+            //         background: true,
+            //         OkTitle: "Aceptar",
+            //         onOk: () => {
+            //           setMessage({});
+            //         },
+            //         onClose: () => {
+            //           setMessage({});
+            //         },
+            //       });
+            //     }
+            //   )();
+            // }
+          },
+          onCancel: () => {
+            setMessage({});
+          },
+          onClose: () => {
+            setMessage({});
+          },
+          style: "causes-effects-modal-size",
+        });
+      },
+    },
+    {
+      icon: "Delete",
+      onClick: (row) => {
+        setMessage({
+          background: true,
+          cancelTitle: "Cancelar",
+          description: "No se podrá recuperar",
+          OkTitle: "Aceptar",
+          onCancel: () => {
+            setMessage({});
+          },
+          onClose: () => {
+            setMessage({});
+          },
+          show: true,
+          title: "¿Deseas quitar la acción?",
+          onOk: () => {
+            // const newActors = getValues("actors").filter((actor) =>
+            //   actor !== row
+            // );
+            // setActorCreateData((prev) => {
+            //   return { ...prev, actors: newActors };
+            // });
+            // setValue("actors", newActors);
+            // trigger("actors");
+            // setMessage({});
+          },
+        });
+      },
+
+    },
+  ];
+
+
+  const onSubmitCreate = () => {
+    debugger;
+    setTableData(tableData.concat({action:tableData.length + 1, description:"prueba"}));
+};
+  
+
+    useEffect(() => {
+        setTempButtonAction(()=> onSubmitTemp);
+    }, []);
+
+
     const saveAction = () => {
        
     }
 
-    return { errors,fields, append,View,riskText, NamePAIData,remove,changeActionsPAi, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,resetForm,register, yearsArray, control, setMessage, navigate,onSubmitCreate, rolData, statusData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction };
+    return { errors,fields, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }
