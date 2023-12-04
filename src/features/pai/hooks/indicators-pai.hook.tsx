@@ -25,7 +25,8 @@ export default function useIndicatorsPai() {
             setSaveButtonText, 
             setSaveButtonAction,
             setDisableSaveButton,
-            setActionCancel } = useContext(PAIContext);
+            setActionCancel,
+            setDisableTempBtn } = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
     const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
     const { setMessage } = useContext(AppContext);
@@ -58,6 +59,7 @@ export default function useIndicatorsPai() {
         if(isValid){
            setSaveButtonAction( () => onSubmit );
            setDisableSaveButton(!isValid);
+           setDisableTempBtn(!isValid);
         }
     },[isValid])
 

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 export function NavbarPai(): React.JSX.Element {
 
     const navigate = useNavigate();
-    const {saveButtonAction, tempButtonAction,actionCancel,saveButtonText,tempButtonText, disableSaveButton } = useContext(PAIContext);
+    const {saveButtonAction, tempButtonAction,actionCancel,saveButtonText,tempButtonText, disableSaveButton, disableTempBtn } = useContext(PAIContext);
     const { setMessage } = useContext(AppContext);
 
     return (
@@ -18,7 +18,8 @@ export function NavbarPai(): React.JSX.Element {
                     className="button-main extra_extra_large hover-three button-save"
                     value={tempButtonText || "Guardar temporalmente"}
                     type="button"
-                    action={tempButtonAction} />}
+                    action={tempButtonAction} 
+                    disabled={disableTempBtn} />}
             </div>
             <div className="mobile-actions">
                 {<span className="bold text-center button" onClick={actionCancel || (() => {
@@ -54,7 +55,8 @@ export function NavbarPai(): React.JSX.Element {
                     className="button-main extra_extra_large hover-three button-save"
                     value={tempButtonText || "Guardar temporalmente"}
                     type="button"
-                    action={tempButtonAction} />}
+                    action={tempButtonAction} 
+                    disabled={disableTempBtn}/>}
                 <div className="buttons-bot">
                     {<span className="bold text-center button" onClick={actionCancel || (() => {
                         //if(!dirty) return navigate('/direccion-estrategica/proyectos/');
