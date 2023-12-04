@@ -12,10 +12,10 @@ import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
 import { useEntitiesService } from "./entities-service.hook";
 import { useNavigate } from "react-router-dom";
-import { IIndicatorAction } from '../interfaces/ProjectsInterfaces';
+import { IIndicatorIndicative, IIndicatorAction, IProject } from '../interfaces/ProjectsInterfaces';
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
-
+import { useProjectsService } from "./projects-service.hook";
 export default function useIndicatorsPai() {
     const navigate = useNavigate();
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
@@ -26,12 +26,16 @@ export default function useIndicatorsPai() {
             setSaveButtonAction,
             setDisableSaveButton,
             setActionCancel,
-            setDisableTempBtn } = useContext(PAIContext);
+            setDisableTempBtn,
+            setIndicatorsFormComponent} = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
+    const [ indicators, setIndicators ] = useState<Array<IIndicatorIndicative | IIndicatorAction>>();
+    const [ projectData, setProjectData ] = useState<IProject>();
     const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
     const { setMessage } = useContext(AppContext);
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
+    const { GetProjectById } = useProjectsService()
     const {
         getValues,
         register,
@@ -43,6 +47,7 @@ export default function useIndicatorsPai() {
         resolver,
         mode: "all",
         defaultValues: {
+            typePAI: PAIData?.typePAI,
             totalPlannedGoal: 0,
             bimesters: [
                 {bimester: "first",  value: null},
@@ -58,9 +63,9 @@ export default function useIndicatorsPai() {
     useEffect(()=>{
         if(isValid){
            setSaveButtonAction( () => onSubmit );
-           setDisableSaveButton(!isValid);
-           setDisableTempBtn(!isValid);
         }
+        setDisableSaveButton(!isValid);
+        setDisableTempBtn(!isValid);
     },[isValid])
 
     useEffect(() => {
@@ -76,17 +81,37 @@ export default function useIndicatorsPai() {
 
         getProjectIndicators(PAIData?.namePAI).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                const indicatorType: IIndicatorAction[] = response.data;
-                const arrayIndicators: IDropdownProps[] = indicatorType.map((indicator) => {
-                    return { name: indicator?.productMGA, value: indicator?.id };
-                });
-                setProjectIndicatorsData(arrayIndicators);
+                const indicatorsData = response.data;
+                const indicators = indicatorsData.indicatorsAction.concat(indicatorsData.indicatorsIndicative);
+                setIndicators(indicators)
             }
         }).catch(() => { });
+
         setSaveButtonText("Guardar");
         setTempButtonText("Agregar otro indicador");
         setActionCancel(()=>onCancel);
     }, []);
+
+
+    useEffect(()=>{
+        GetProjectById(`${PAIData?.namePAI}`).then( response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const project: IProject = response.data;
+                setProjectData(project)
+            }
+        }).catch(()=>{})
+    },[indicators])
+
+    useEffect(()=>{
+        if(projectData){
+            let arrayIndicators= [];
+            for(let i = 0; i < indicators.length; i++){
+                const indicator = projectData.activities?.find(activity => activity.productMGA === indicators[i].productMGA);
+                arrayIndicators.push({ name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, value: indicators[i].type })
+            }
+            setProjectIndicatorsData(arrayIndicators);
+        }
+    },[projectData])
 
     const onSubmit = () => {
         setMessage({
@@ -100,6 +125,7 @@ export default function useIndicatorsPai() {
                 setMessage({});
             },
             onOk: () => {
+                setIndicatorsFormComponent(null)
                 navigate(-1)
                 setMessage({
                     title: "Datos guardados",
@@ -126,7 +152,7 @@ export default function useIndicatorsPai() {
                 setMessage({});
             },
             onOk: () => {
-                navigate(-1)
+                setIndicatorsFormComponent(null)
                 setMessage({});
                 setTempButtonText("Guardar temporalmente");
             }
@@ -193,6 +219,7 @@ export default function useIndicatorsPai() {
         errors,
         PAIData,
         register,
+        getValues,
         indicatorType,
         fieldsProducts,
         appendProducts,

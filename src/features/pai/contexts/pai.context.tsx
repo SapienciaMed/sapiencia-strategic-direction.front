@@ -20,6 +20,8 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     setTempButtonText: Dispatch<SetStateAction<string>>;
     tempButtonAction: () => void;
     setTempButtonAction: Dispatch<SetStateAction<() => void>>;
+    IndicatorsFormComponent: React.JSX.Element | null;
+    setIndicatorsFormComponent: Dispatch<SetStateAction<React.JSX.Element | null>>;
     saveButtonText: string;
     setSaveButtonText: Dispatch<SetStateAction<string>>;
     saveButtonAction: () => void;
@@ -43,6 +45,8 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     setPAIData: () => {},
     tempButtonText: null,
     setTempButtonText: () => {},
+    IndicatorsFormComponent: null,
+    setIndicatorsFormComponent: () => {},
     tempButtonAction: () => {},
     setTempButtonAction: () => {},
     saveButtonText: null,
@@ -62,6 +66,7 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     const location = useLocation();
     const [disableSaveButton, setDisableSaveButton] = useState<boolean>(true);
     const [disableTempBtn, setDisableTempBtn] = useState<boolean>(true);
+    const [IndicatorsFormComponent, setIndicatorsFormComponent] = useState<React.JSX.Element | null>(null)
     const [PAIData, setPAIData] = useState<ICreatePlanAction>(null);
     const [tempButtonText, setTempButtonText] = useState<string>(null);
     const [tempButtonAction, setTempButtonAction] = useState<() => void>(() => {});
@@ -79,6 +84,8 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
         tempButtonText,
         setTempButtonText,
         tempButtonAction,
+        IndicatorsFormComponent,
+        setIndicatorsFormComponent,
         setTempButtonAction,
         saveButtonText,
         setSaveButtonText,
@@ -92,7 +99,7 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
         setShowCancel,
         formAction
       };
-    }, [disableSaveButton, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
+    }, [disableSaveButton, IndicatorsFormComponent, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
   
     return <PAIContext.Provider value={values}>{children}</PAIContext.Provider>;
   }
