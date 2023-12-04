@@ -136,7 +136,7 @@ export function InputComponent({
           className={messageError() ? `${className} error` : className}
           placeholder={placeholder}
           register={register}
-          value={value}
+          value={value === "null" || value === "undefined" ? "" : value}
           disabled={disabled}
           onChange={onChange}
           onBlur={onBlur}

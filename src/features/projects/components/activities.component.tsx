@@ -535,7 +535,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
         const validityOfOffBudget = activity?.validity;
         for (let i in activity.budgetsMGA) {
             if (Number(activity.budgetsMGA[i].validity) === validityOfOffBudget) {
-                budgetForValidityYear = activity.budgetsMGA[i]
+                budgetForValidityYear = activity.budgetsMGA[i];
                 yearOfOffBudget = Number(i.replace("year", ""));
             }
         }
@@ -751,7 +751,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
     }, [objectiveSelect]);
 
     return (
-
         <FormComponent action={undefined} className="card-table">
             {view && <p className="text-black large bold">Detalle actividad MGA</p>}
             {!view && <p className="text-black large bold">{item ? "Editar actividad MGA" : "Agregar actividad MGA"}</p>}
@@ -1079,12 +1078,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             name={`detailActivities.${index}.amount`}
                                             defaultValue={null}
                                             render={({ field }) => {
-
-
                                                 const amount = getValues(`detailActivities.${index}.amount`);
                                                 const isEmptyAmount = amount == null;
                                                 const [isFieldDirty, setIsFieldDirty] = useState(false);
-
                                                 return (
                                                     <InputNumberComponent
                                                         idInput={`detailActivities.${index}.amount`}
@@ -1126,7 +1122,6 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                                 const unit = getValues(`detailActivities.${index}.unitCost`);
                                                 const isEmptyUnit = unit == null;
                                                 const [isFieldDirty, setIsFieldDirty] = useState(false);
-
                                                 return (
                                                     <InputNumberComponent
                                                         idInput={`detailActivities.${index}.unitCost`}
