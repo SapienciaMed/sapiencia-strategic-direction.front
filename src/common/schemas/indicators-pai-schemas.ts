@@ -55,5 +55,5 @@ export const indicatorsPAIValidator = yup.object({
             .required("El campo es obligatorio")
             .max(100, "Solo se permiten 100 caracteres"),
         }))
-    ).min(1, "Debes agregar al menos un corresponsable")
+    ).min(1, "Debes agregar al menos un corresponsable ")
 });
