@@ -99,6 +99,7 @@ export function useProjectsCrudData() {
             GetProjectById(id).then((response => {
                 if (response.operation.code === EResponseCodes.OK) {
                     const projectDataResponse = response.data;
+                    console.log('projectDataResponse: ',projectDataResponse );
                     setProjectData({
                         id: projectDataResponse.id,
                         status: projectDataResponse.status,

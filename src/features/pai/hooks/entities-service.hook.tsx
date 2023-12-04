@@ -2,7 +2,7 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { IEntities } from "../interfaces/Entities";
 import { IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
-import { IIndicatorAction } from "../interfaces/ProjectsInterfaces";
+import { IProjectIndicators } from "../interfaces/ProjectsInterfaces";
 
 export function useEntitiesService() {
     const baseURL: string =process.env.urlApiStrategicDirection;
@@ -72,7 +72,7 @@ export function useEntitiesService() {
         return get(`${indicatorsUrl}${endpoint}`);
     }
 
-    async function getProjectIndicators(projectId:number): Promise<ApiResponse<IIndicatorAction[]>> {
+    async function getProjectIndicators(projectId:number): Promise<ApiResponse<IProjectIndicators>> {
         const endpoint: string = `/project/${projectId}`;
         return get(`${indicatorsUrl}${endpoint}`);
     }
@@ -91,35 +91,3 @@ export function useEntitiesService() {
              getIndicatorsType,
              getProjectIndicators}
 }
-
-interface Iuser {
-    name: string;
-    password: string;
-}
-
-interface IUser {
-    getUser(): Iuser
-}
-
-
-class UserRef {
-    getLents(){
-        console.log('prueba');
-    }
-}
-
-class User extends UserRef implements IUser {
-    getUser(){
-        return {
-            name:"Alejandro",
-            password: "1223"
-        }
-    }
-
-}
-
-const newUser = new User();
-
-newUser.getLents()
-
-console.log('Object.getPrototypeOf(newUser) ', Object.getPrototypeOf(newUser) );

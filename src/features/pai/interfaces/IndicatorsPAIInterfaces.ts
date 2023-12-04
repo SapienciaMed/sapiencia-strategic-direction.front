@@ -13,6 +13,7 @@ export interface IPAI {
 
 export interface IIndicatorsPAI {
     id?: number;
+    typePAI?: number;
     projectIndicator: number;
     indicatorType: number;
     indicatorDesc: string;

@@ -436,6 +436,11 @@ export interface IActivitiesProject {
   detailActivities: IDetailActivity[];
 }
 
+export interface IProjectIndicators {
+  indicatorsIndicative: IIndicatorIndicative[];
+  indicatorsAction: IIndicatorAction[];
+}
+
 export interface IIndicatorAction {
   id?: number;
   type: number;
@@ -448,6 +453,7 @@ export interface IIndicatorAction {
   accumulative?: number;
   productMGA: string;
   measurement: number;
+  developmentPlan?: string;
   year0: number;
   year1: number;
   year2: number;

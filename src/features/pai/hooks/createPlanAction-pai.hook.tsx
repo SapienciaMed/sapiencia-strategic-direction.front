@@ -21,8 +21,9 @@ import { boolean } from "yargs";
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { InputInplaceComponent } from "../../../common/components/Form";
 import { AiOutlineDownload, AiOutlinePlusCircle } from "react-icons/ai";
-
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
+import { IIndicatorsPAI } from "../interfaces/IndicatorsPAIInterfaces";
+
 
 
 export default function usePlanActionPAIData() {
@@ -43,7 +44,6 @@ export default function usePlanActionPAIData() {
     const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const [View, ViewData] = useState<boolean>(false);
     const [riskText, RisksTextData] = useState<string>("");
-    const [IndicatorsFormComponent, setIndicatorsFormComponent] = useState<React.JSX.Element | null>(null)
 
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
     const { getRiskPAI,getProcessPAI,getObjectivesPAI } = useEntitiesService();
@@ -69,7 +69,9 @@ export default function usePlanActionPAIData() {
         setActionCancel,
         showCancel,
         setShowCancel,
-        formAction} = useContext(PAIContext);
+        formAction,
+        setIndicatorsFormComponent,
+        IndicatorsFormComponent } = useContext(PAIContext);
 
         
     
@@ -100,7 +102,12 @@ export default function usePlanActionPAIData() {
         risksPAI: PAIData?.risksPAI ? PAIData?.risksPAI : null,
     }});
 
-    
+    useEffect(() => {
+        const subscription = watch((value: IIndicatorsPAI ) => setPAIData(prev => {
+            return { ...prev, ...value }
+        }));
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
     const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
             if (data?.id) {
@@ -261,7 +268,6 @@ export default function usePlanActionPAIData() {
     }
 
     useEffect(() => {
-        debugger;
         const subscription = watch((value: ICreatePlanAction) => setCreatePlanActionFormData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
     }, [watch]);
@@ -408,7 +414,7 @@ export default function usePlanActionPAIData() {
             )
         },
         onClick: (row) => {
-            setIndicatorsFormComponent(<>hola Agrega tu componente</>);
+            setIndicatorsFormComponent(<IndicatorsPaiPage/>);
         }
     },
     {
@@ -497,7 +503,6 @@ export default function usePlanActionPAIData() {
 
 
   const onSubmitCreate = () => {
-    debugger;
     setTableData(tableData.concat({action:tableData.length + 1, description:"prueba"}));
 };
   
