@@ -9,7 +9,7 @@ import {
   } from "react";
   import { useLocation } from 'react-router-dom';
   import { IPAI } from "../interfaces/IndicatorsPAIInterfaces";
-import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
+import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
   
   interface IPAIContext {
     disableSaveButton: boolean;
