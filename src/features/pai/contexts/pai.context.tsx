@@ -24,6 +24,8 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
     setSaveButtonText: Dispatch<SetStateAction<string>>;
     saveButtonAction: () => void;
     setSaveButtonAction: Dispatch<SetStateAction<() => void>>;
+    disableTempBtn: boolean;
+    setDisableTempBtn: Dispatch<SetStateAction<boolean>>;
     actionCancel: () => void;
     setActionCancel: Dispatch<SetStateAction<() => void>>;
     showCancel: boolean;
@@ -47,6 +49,8 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
     setSaveButtonText: () => {},
     saveButtonAction: () => {},
     setSaveButtonAction: () => {},
+    disableTempBtn: true,
+    setDisableTempBtn: () => {},
     actionCancel: () => {},
     setActionCancel: () => {},
     showCancel: true,
@@ -57,6 +61,7 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
   export function PAIContextProvider({ children }: IProps) {
     const location = useLocation();
     const [disableSaveButton, setDisableSaveButton] = useState<boolean>(true);
+    const [disableTempBtn, setDisableTempBtn] = useState<boolean>(true);
     const [PAIData, setPAIData] = useState<ICreatePlanAction>(null);
     const [tempButtonText, setTempButtonText] = useState<string>(null);
     const [tempButtonAction, setTempButtonAction] = useState<() => void>(() => {});
@@ -79,13 +84,15 @@ import { ICreatePlanAction } from "../interfaces/CreatePlanActionInterfaces";
         setSaveButtonText,
         saveButtonAction,
         setSaveButtonAction,
+        disableTempBtn,
+        setDisableTempBtn,
         actionCancel,
         setActionCancel,
         showCancel,
         setShowCancel,
         formAction
       };
-    }, [disableSaveButton, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
+    }, [disableSaveButton, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
   
     return <PAIContext.Provider value={values}>{children}</PAIContext.Provider>;
   }
