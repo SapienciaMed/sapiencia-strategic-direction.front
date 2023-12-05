@@ -9,7 +9,11 @@ import useIndicatorsPai from "../hooks/indicators-pai.hook";
 import disaggregate from '../../../public/images/icons/disaggregate.svg';
 import { NavbarPai } from "../components/navbar-pai.component";
 
-function IndicatorsPaiPage(): React.JSX.Element {
+interface IIndicatorsPaiProps {
+    actionId: number;
+}
+
+function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Element {
 
     const { errors,
             PAIData,
@@ -27,7 +31,7 @@ function IndicatorsPaiPage(): React.JSX.Element {
             appendCoResponsible,
             fieldsCoResponsible,
             controlIndicatorsPai,
-            projectIndicatorsData } = useIndicatorsPai();
+            projectIndicatorsData } = useIndicatorsPai(actionId);
 
     return (
         <>

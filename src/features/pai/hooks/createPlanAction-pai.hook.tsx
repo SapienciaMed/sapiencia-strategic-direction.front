@@ -33,7 +33,6 @@ export default function usePlanActionPAIData() {
         url: "/direccion-estrategica/pai/",
     });
 
-
     const [tableData, setTableData] = useState<IAddAction[]>([]);
     const [actionForm, setActionForm] = useState();
     const [riskPAIData, setRiskPAIData] = useState<IDropdownProps[]>(null);
@@ -70,18 +69,16 @@ export default function usePlanActionPAIData() {
         showCancel,
         setShowCancel,
         formAction,
+        setDisableTempBtn,
         setIndicatorsFormComponent,
         IndicatorsFormComponent } = useContext(PAIContext);
-
-        
-    
 
     const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
     const navigate = useNavigate();
     const resolver = useYupValidationResolver(CreatePAIValidator);
     const {
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
         reset,
         control,
         setValue,
@@ -103,7 +100,7 @@ export default function usePlanActionPAIData() {
     }});
 
     useEffect(() => {
-        const subscription = watch((value: IIndicatorsPAI ) => setPAIData(prev => {
+        const subscription = watch((value: ICreatePlanAction ) => setPAIData(prev => {
             return { ...prev, ...value }
         }));
         return () => subscription.unsubscribe();
@@ -159,7 +156,7 @@ export default function usePlanActionPAIData() {
                     }
                 }
             } else {
-                const dataPai = { ...data, user: authorization.user.numberDocument };
+                const dataPai = { ...PAIData, user: authorization.user.numberDocument };
                 const res = await CreatePAI(dataPai);
                 setPAIData(prev => {
                     return { ...prev, id: res.data.id }
@@ -414,7 +411,7 @@ export default function usePlanActionPAIData() {
             )
         },
         onClick: (row) => {
-            setIndicatorsFormComponent(<IndicatorsPaiPage/>);
+            setIndicatorsFormComponent(<IndicatorsPaiPage actionId={row?.id | row.action}/>);
         }
     },
     {
@@ -501,20 +498,43 @@ export default function usePlanActionPAIData() {
     },
   ];
 
+    const { fields: fieldsActionsPAi, append: appendActionsPAi, remove: removeActionPai } = useFieldArray({
+        control: control,
+        name: "actionsPAi",
+    });
+
+    const actionsPAiFieldArray = useWatch({
+        control: control,
+        name: "actionsPAi"
+    });
+
 
   const onSubmitCreate = () => {
-    setTableData(tableData.concat({action:tableData.length + 1, description:"prueba"}));
-};
-  
+    appendActionsPAi({ action: fieldsActionsPAi.length ++, description:"prueba"})
+    // setTableData(tableData.concat({action:tableData.length + 1, description:"prueba"}));
+  };
 
-    useEffect(() => {
-        setTempButtonAction(()=> onSubmitTemp);
-    }, []);
+    useEffect(()=>{
+        if(isValid){
+            setTempButtonAction( () => onSubmitTemp );
+            setSaveButtonAction(() => onSubmitTemp); 
+        }
+        setDisableTempBtn(!isValid);
+        setDisableSaveButton(!isValid);
+    },[isValid])
 
+    useEffect(()=>{
+        setTempButtonAction( () => onSubmitTemp );
+        setSaveButtonAction(() => onSubmitTemp); 
+        setTempButtonText("Guardar temporalmente"); 
+        setSaveButtonText("Guardar y regresar"); 
+        setDisableTempBtn(!isValid);
+        setDisableSaveButton(!isValid);
+    },[IndicatorsFormComponent])
 
     const saveAction = () => {
        
     }
 
-    return { errors,fields, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }
