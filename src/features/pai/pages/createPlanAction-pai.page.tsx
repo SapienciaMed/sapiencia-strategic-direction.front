@@ -33,17 +33,14 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
             yearsArray, 
             setMessage, 
             control, 
-            register, 
-            getValues, 
-            setValue, 
-            cancelAction, 
-            saveAction,
-            tableData,
+            register,
+            fieldsActionsPAi,
             createPlanActionActions,
             createPlanActionColumns,
             onSubmitCreate,
             IndicatorsFormComponent
          } = usePlanActionPAIData();
+         
     return (
 
         <>
@@ -309,7 +306,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                     {<TableExpansibleComponent
                                         actions={createPlanActionActions}
                                         columns={createPlanActionColumns}
-                                        data={tableData || []} />}
+                                        data={fieldsActionsPAi || []} />}
                                 </div>
 
                             </FormComponent>}

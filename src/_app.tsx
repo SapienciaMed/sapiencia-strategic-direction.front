@@ -130,17 +130,6 @@ function App() {
                 }
               />
 
-              <Route
-                path={"/direccion-estrategica/pai/crear-indicador"}
-                element={
-                  <PrivateRoute
-                    element={<PAIContextProvider><IndicatorsPaiPage /></PAIContextProvider>}
-                    allowedAction={"PROYECTO_HISTORICOS"}
-                  />
-                }
-              />
-
-
               <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIPage />} />;
             </Routes>
           </Suspense>
