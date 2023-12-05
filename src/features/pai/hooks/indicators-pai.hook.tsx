@@ -42,7 +42,8 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         setValue,
         reset,
-        watch: watchIndicators
+        watch: watchIndicators,
+        trigger
     } = useForm<IIndicatorsPAI>({
         resolver,
         mode: "all",
@@ -196,15 +197,17 @@ export default function useIndicatorsPai(actionId:number) {
     }
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
-        const sumOfBimesters = bimesters.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
-        const indicatorType = indicatorTypeData.find( indicator => indicator.value == getValues("indicatorType"));
-        setIndicatorType(indicatorType)
-        if( indicatorType.name == "Porcentaje"){
+        const sumOfBimesters = bimesters?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
+        const indicatorType = indicatorTypeData?.find( indicator => indicator.value == getValues("indicatorType"));
+        const validateFullFill = bimesters?.find( bimester => !bimester.value );
+        if( indicatorType?.name == "Porcentaje"){
             return setValue("totalPlannedGoal",sumOfBimesters / 100);
-        }else if( indicatorType.name == "A demanda"){
+        }else if( indicatorType?.name == "A demanda"){
             return setValue("totalPlannedGoal",sumOfBimesters / 6);
         } 
         setValue("totalPlannedGoal",sumOfBimesters);
+        setIndicatorType(indicatorType);
+        if(!validateFullFill) trigger("totalPlannedGoal"); 
     }
 
     const onChangeIndicator = () => onChangeBimesters();
