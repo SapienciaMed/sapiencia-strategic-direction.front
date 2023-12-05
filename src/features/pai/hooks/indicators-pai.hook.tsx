@@ -200,13 +200,13 @@ export default function useIndicatorsPai(actionId:number) {
         const sumOfBimesters = bimesters?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
         const indicatorType = indicatorTypeData?.find( indicator => indicator.value == getValues("indicatorType"));
         const validateFullFill = bimesters?.find( bimester => !bimester.value );
-        if( indicatorType?.name == "Porcentaje"){
-            return setValue("totalPlannedGoal",sumOfBimesters / 100);
-        }else if( indicatorType?.name == "A demanda"){
-            return setValue("totalPlannedGoal",sumOfBimesters / 6);
-        } 
         setValue("totalPlannedGoal",sumOfBimesters);
         setIndicatorType(indicatorType);
+        if( indicatorType?.name == "Porcentaje"){
+            setValue("totalPlannedGoal",sumOfBimesters / 100);
+        }else if( indicatorType?.name == "A demanda"){
+            setValue("totalPlannedGoal",sumOfBimesters / 6);
+        } 
         if(!validateFullFill) trigger("totalPlannedGoal"); 
     }
 
