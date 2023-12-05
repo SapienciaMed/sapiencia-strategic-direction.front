@@ -28,7 +28,7 @@ const ResumeData: IDropdownProps[] = [
         value: 1,
     },
     {
-        name: "objetivo específico",
+        name: "Objetivo específico",
         value: 2,
     },
     {

@@ -47,3 +47,9 @@ export interface IActionPlanTemp {
   linePAI: ILine[];
   risksPAI: IRisks[];
 }
+
+export interface IRevisionPAI {
+  field: number;
+  observations: string;
+  test: string[];
+}
