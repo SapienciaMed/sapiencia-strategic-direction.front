@@ -17,6 +17,7 @@ export interface ICreatePlanAction {
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
   version?: string | null;
+  status:number;
 }
 
 export interface IAddAction {

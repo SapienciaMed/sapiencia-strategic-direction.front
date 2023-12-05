@@ -106,9 +106,105 @@ export default function usePlanActionPAIData() {
         return () => subscription.unsubscribe();
     }, [watch]);
 
+        const onSubmitSave = handleSubmit(async (data: ICreatePlanAction) => {
+            setMessage({
+                title: " Crear plan ",
+                description: "¿Deseas enviar el plan de acción institucional para revisión? ",
+                show: true,
+                background: true,
+                cancelTitle: "Cancelar",
+                OkTitle: "Aceptar",
+                onCancel: () => {
+                    setMessage({});
+                },
+                onOk: async () => {
+                    debugger;
+                    if (PAIData?.id) {
+                        const formData = { ...data,
+                                    user: authorization.user.numberDocument, 
+                                    status: 2, };
+                        const res = await UpdatePAI(PAIData.id, formData );
+                        if (res.operation.code === EResponseCodes.OK) {
+                            setMessage({
+                                title: "Plan de acción institucional",
+                                description: "¡Enviado exitosamente!",
+                                show: true,
+                                background: true,
+                                OkTitle: "Aceptar",
+                                onOk: () => {
+                                    navigate('../../');
+                                    setMessage({});
+                                }
+                            })
+                        } else {
+                                setMessage({
+                                    title: "¡Ha ocurrido un error!",
+                                    description: <p className="text-primary biggest">{res.operation.message}</p>,
+                                    background: true,
+                                    show: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    }
+                                });
+                        }
+                    } else {
+                        const formData = { ...data, user: authorization.user.numberDocument, status: 2 };
+                        const res = await CreatePAI(formData);
+                        setPAIData(prev => {
+                            return { ...prev, id: res.data.id }
+                        });
+                        if (res.operation.code === EResponseCodes.OK) {
+                            setMessage({
+                                title: " Crear plan ",
+                                description: "¿Deseas enviar el plan de acción institucional para revisión? ",
+                                show: true,
+                                background: true,
+                                cancelTitle: "Cancelar",
+                                OkTitle: "Aceptar",
+                                onCancel: () => {
+                                    setMessage({});
+                                },
+                                onOk: () => {
+                                    setMessage({
+                                        title: "Plan de acción institucional",
+                                        description: "¡Enviado exitosamente!",
+                                        show: true,
+                                        background: true,
+                                        OkTitle: "Aceptar",
+                                        onOk: () => {
+                                            navigate('../../');
+                                            setMessage({});
+                                        }
+                                    })
+                                }
+                            });
+                        } else {
+                                setMessage({
+                                    title: "¡Ha ocurrido un error!",
+                                    description: <p className="text-primary biggest">{res.operation.message}</p>,
+                                    background: true,
+                                    show: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    }
+                                });
+                        }
+                    }
+                }
+            });
+        });
+
     const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
             if (data?.id) {
-                const dataPai = { ...data, user: authorization.user.numberDocument };
+                const dataPai = { ...PAIData, user: authorization.user.numberDocument ,status: 1};
                 const res = await UpdatePAI(dataPai.id, dataPai);
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
@@ -125,7 +221,7 @@ export default function usePlanActionPAIData() {
                         }
                     });
                 } else {
-                    if (res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                    if (res.operation.message === ("Error: id.")) {
                         setMessage({
                             title: "Validación BPIN.",
                             description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
@@ -156,7 +252,7 @@ export default function usePlanActionPAIData() {
                     }
                 }
             } else {
-                const dataPai = { ...PAIData, user: authorization.user.numberDocument };
+                const dataPai = { ...PAIData, user: authorization.user.numberDocument,status: 1 };
                 const res = await CreatePAI(dataPai);
                 setPAIData(prev => {
                     return { ...prev, id: res.data.id }
