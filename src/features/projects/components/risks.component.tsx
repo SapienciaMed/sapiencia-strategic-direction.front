@@ -317,14 +317,15 @@ function RisksComponent({ disableNext, enableNext, setForm }: Readonly<IProps>):
         if (isValid && formAction === "new") {
             setTimeout(() => {
                 enableNext();
-            }, 500)
+            }, 1000)
         } else if (!isValid && formAction === "new") {
             disableNext();
         } else if (isValid && formAction === "edit") {
             setTimeout(() => {
+                console.log(enableNext)
                 enableNext();
                 setDisableContinue(false);
-            }, 500)
+            }, 1000)
         } else {
             setDisableContinue(true);
         }
