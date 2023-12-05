@@ -63,7 +63,9 @@ export default function useIndicatorsPai(actionId:number) {
     });
 
     useEffect(() => {
-        const subscription = watchIndicators(() => setPAIData(prev => {
+        const subscription = watchIndicators(( values: IIndicatorsPAI ) => setPAIData(prev => {
+            if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
+            if(values?.projectIndicator) trigger("indicatorDesc");
             return { ...prev, indicators: prev?.indicators ? [ ...prev.indicators ] :  [] }
         }));
         return () => subscription.unsubscribe();
