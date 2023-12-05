@@ -188,7 +188,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                 <div className='card-table'>
                                     <div className="title-area">
                                         <label className="text-black extra-large bold text-required">
-                                            Responsable
+                                            Responsable directo
                                         </label>
 
                                         <div className="title-button text-main large" onClick={() => {
@@ -218,7 +218,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                             register={register}
                                                             onChange={field.onChange}
                                                             errors={errors}
-                                                            characters={500}
+                                                            characters={100}
                                                         ></TextAreaComponent>
                                                     );
                                                 }}
