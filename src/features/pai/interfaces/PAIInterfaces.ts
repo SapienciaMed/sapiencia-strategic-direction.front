@@ -36,19 +36,6 @@ export interface IRisks {
   risk: string;
 }
 
-export interface IActionPlanTemp {
-  id?: number;
-  user: string;
-  yearPAI: number;
-  budgetPAI: number;
-  typePAI: number;
-  namePAI: number;
-  objectivePAI: string;
-  articulationPAI: string;
-  linePAI: ILine[];
-  risksPAI: IRisks[];
-}
-
 export interface IRevisionPAI {
   field: number;
   observations: string;
