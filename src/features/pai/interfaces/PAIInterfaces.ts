@@ -13,10 +13,12 @@ export interface ICreatePlanAction {
   risksPAI: IRisks[];
   selectedRisk: number;
   actionsPAi: IAddAction[];
-  indicators: IIndicatorsPAI[];
+  indicators?: IIndicatorsPAI[];
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
   version?: string | null;
+  status: number;
+  revision?: IRevisionPAI;
 }
 
 export interface IAddAction {
@@ -35,15 +37,17 @@ export interface IRisks {
   risk: string;
 }
 
-export interface IActionPlanTemp {
+export interface IRevisionFormPAI {
+  field: number;
+  observations: string;
+}
+
+export interface IRevisionPAI {
   id?: number;
-  user: string;
-  yearPAI: number;
-  budgetPAI: number;
-  typePAI: number;
-  namePAI: number;
-  objectivePAI: string;
-  articulationPAI: string;
-  linePAI: ILine[];
-  risksPAI: IRisks[];
+  idPai: number;
+  json?: string;
+  completed: boolean;
+  version: number;
+  userCreate: string;
+  dateCreate?: DateTime;
 }

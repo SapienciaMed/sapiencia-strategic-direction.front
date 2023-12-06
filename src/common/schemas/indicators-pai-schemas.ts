@@ -34,7 +34,9 @@ export const indicatorsPAIValidator = yup.object({
     ),
     totalPlannedGoal: yup.number()
     .notRequired()
-    .nullable(),
+    .nullable()
+    .min(100, "Alerta. El total de la meta planeada no puede ser inferior a 100. ")
+    .max(100, "Alerta. El total de la meta planeada no puede ser mayor a 100. "),
     products: yup.array().required().of(
         yup.object().shape(({
             product: yup.string()
@@ -46,7 +48,7 @@ export const indicatorsPAIValidator = yup.object({
         yup.object().shape(({
             responsible: yup.string()
             .required("El campo es obligatorio")
-            .max(500, "Solo se permiten 500 caracteres"),
+            .max(100, "Solo se permiten 100 caracteres"),
         }))
     ).min(1, "Debes agregar al menos un responsable"),
     coresponsibles: yup.array().of(

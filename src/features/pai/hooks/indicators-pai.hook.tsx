@@ -11,23 +11,22 @@ import { IIndicatorsPAI,
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
 import { useEntitiesService } from "./entities-service.hook";
-import { useNavigate } from "react-router-dom";
 import { IIndicatorIndicative, IIndicatorAction, IProject } from '../interfaces/ProjectsInterfaces';
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useProjectsService } from "./projects-service.hook";
-export default function useIndicatorsPai() {
-    const navigate = useNavigate();
+export default function useIndicatorsPai(actionId:number) {
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
     const { PAIData, 
             setPAIData, 
-            setTempButtonText, 
-            setSaveButtonText, 
-            setSaveButtonAction,
-            setDisableSaveButton,
             setActionCancel,
             setDisableTempBtn,
-            setIndicatorsFormComponent} = useContext(PAIContext);
+            setTempButtonText, 
+            setSaveButtonText,
+            setTempButtonAction, 
+            setSaveButtonAction,
+            setDisableSaveButton,
+            setIndicatorsFormComponent } = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
     const [ indicators, setIndicators ] = useState<Array<IIndicatorIndicative | IIndicatorAction>>();
     const [ projectData, setProjectData ] = useState<IProject>();
@@ -42,15 +41,18 @@ export default function useIndicatorsPai() {
         formState: { errors, isValid },
         control: controlIndicatorsPai,
         setValue,
-        watch,
+        reset,
+        watch: watchIndicators,
+        trigger
     } = useForm<IIndicatorsPAI>({
         resolver,
         mode: "all",
         defaultValues: {
             typePAI: PAIData?.typePAI,
             totalPlannedGoal: 0,
+            actionId: actionId,
             bimesters: [
-                {bimester: "first",  value: null},
+                {bimester: "first",  value: null },
                 {bimester: "second", value: null},
                 {bimester: "third",  value: null},
                 {bimester: "fourth", value: null},
@@ -60,9 +62,19 @@ export default function useIndicatorsPai() {
         }
     });
 
+    useEffect(() => {
+        const subscription = watchIndicators(( values: IIndicatorsPAI ) => setPAIData(prev => {
+            if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
+            if(values?.projectIndicator) trigger("indicatorDesc");
+            return { ...prev, indicators: prev?.indicators ? [ ...prev.indicators ] :  [] }
+        }));
+        return () => subscription.unsubscribe();
+    }, [watchIndicators]);
+
     useEffect(()=>{
         if(isValid){
            setSaveButtonAction( () => onSubmit );
+           setTempButtonAction( () => onAddNewIndicator )
         }
         setDisableSaveButton(!isValid);
         setDisableTempBtn(!isValid);
@@ -78,7 +90,6 @@ export default function useIndicatorsPai() {
                 setIndicatorTypeData(arrayIndicatorsType);
             }
         }).catch(() => { });
-
         getProjectIndicators(PAIData?.namePAI).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const indicatorsData = response.data;
@@ -86,12 +97,17 @@ export default function useIndicatorsPai() {
                 setIndicators(indicators)
             }
         }).catch(() => { });
-
-        setSaveButtonText("Guardar");
-        setTempButtonText("Agregar otro indicador");
-        setActionCancel(()=>onCancel);
     }, []);
 
+    useEffect(()=>{
+        setTimeout(()=>{
+            setActionCancel(()=>onCancel);
+            setTempButtonText("Agregar otro indicador"); 
+            setSaveButtonText("Guardar"); 
+            setDisableTempBtn(!isValid);
+            setDisableSaveButton(!isValid);
+        },50)
+    },[])
 
     useEffect(()=>{
         GetProjectById(`${PAIData?.namePAI}`).then( response => {
@@ -105,14 +121,29 @@ export default function useIndicatorsPai() {
     useEffect(()=>{
         if(projectData){
             let arrayIndicators= [];
-            for(let i = 0; i < indicators.length; i++){
-                const indicator = projectData.activities?.find(activity => activity.productMGA === indicators[i].productMGA);
-                arrayIndicators.push({ name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, value: indicators[i].type })
+            for(let i = 0; i < indicators?.length; i++){
+                const indicator = projectData.activities
+                ?.find( activity => activity.productMGA === indicators[i].productMGA);
+                arrayIndicators.push({ 
+                    name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, 
+                    value: indicators[i].type 
+                })
             }
             setProjectIndicatorsData(arrayIndicators);
         }
     },[projectData])
 
+    const onSaveIndicator = () => {
+        if(isValid){
+            const values = getValues();
+            setPAIData( prev => {
+                return { ...prev, 
+                    indicators: prev?.indicators ?  [ ...prev.indicators, { ...values, actionId: actionId }] :  [{ ...values, actionId: actionId }]
+                }
+            });
+        }
+    }
+    
     const onSubmit = () => {
         setMessage({
             title: "Crear indicador",
@@ -125,8 +156,9 @@ export default function useIndicatorsPai() {
                 setMessage({});
             },
             onOk: () => {
+                onSaveIndicator();
                 setIndicatorsFormComponent(null)
-                navigate(-1)
+                setSaveButtonText("Guardar y regresar");
                 setMessage({
                     title: "Datos guardados",
                     description: "¡Indicador guardado exitosamente!",
@@ -153,33 +185,34 @@ export default function useIndicatorsPai() {
             },
             onOk: () => {
                 setIndicatorsFormComponent(null)
+                setSaveButtonText("Guardar y regresar");
                 setMessage({});
                 setTempButtonText("Guardar temporalmente");
             }
         })
     }
+    const onAddNewIndicator = () => {
+        if(isValid){
+            onSaveIndicator();
+            reset();
+        }
+    }
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
-        const sumOfBimesters = bimesters.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
-        const indicatorType = indicatorTypeData.find( indicator => indicator.value == getValues("indicatorType"));
-        setIndicatorType(indicatorType)
-        if( indicatorType.name == "Porcentaje"){
-            return setValue("totalPlannedGoal",sumOfBimesters / 100);
-        }else if( indicatorType.name == "A demanda"){
-            return setValue("totalPlannedGoal",sumOfBimesters / 6);
-        } 
+        const sumOfBimesters = bimesters?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
+        const indicatorType = indicatorTypeData?.find( indicator => indicator.value == getValues("indicatorType"));
+        const validateFullFill = bimesters?.find( bimester => !bimester.value );
         setValue("totalPlannedGoal",sumOfBimesters);
+        setIndicatorType(indicatorType);
+        if( indicatorType?.name == "Porcentaje"){
+            setValue("totalPlannedGoal",sumOfBimesters / 100);
+        }else if( indicatorType?.name == "A demanda"){
+            setValue("totalPlannedGoal",sumOfBimesters / 6);
+        } 
+        if(!validateFullFill) trigger("totalPlannedGoal"); 
     }
 
     const onChangeIndicator = () => onChangeBimesters();
-
-    useEffect(() => {
-        const subscription = watch((value: IIndicatorsPAI ) => setPAIData(prev => {
-            return { ...prev, indicators: [value] }
-        }));
-        return () => subscription.unsubscribe();
-    }, [watch]);
-
 
     const { fields: fieldsBimesters, remove: removeBimesters} = useFieldArray({
         control: controlIndicatorsPai,

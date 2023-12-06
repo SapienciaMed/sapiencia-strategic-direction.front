@@ -42,7 +42,7 @@ interface IProps {
 export function PoblationComponent({
   disableNext,
   enableNext
-}: IProps): React.JSX.Element {
+}: Readonly<IProps>): React.JSX.Element {
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
@@ -184,19 +184,15 @@ export function PoblationComponent({
   }, [watch]);
 
   useEffect(() => {
-    if ( isValid && formAction === "new" ) {
-      setTimeout( () => {
-          enableNext();
-      }, 500)
-    } else if( !isValid && formAction === "new" ) {
-        disableNext();
-    } else if( isValid && formAction === "edit" ) {
-        setTimeout( () => {
-            enableNext();
-            setDisableContinue(false);
-        }, 500)
-    } else {      
-        setDisableContinue(true);
+    if (isValid && formAction === "new") {
+      enableNext();
+    } else if (!isValid && formAction === "new") {
+      disableNext();
+    } else if (isValid && formAction === "edit") {
+      enableNext();
+      setDisableContinue(false);
+    } else {
+      setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);
   }, [isValid]);
@@ -207,7 +203,7 @@ export function PoblationComponent({
     if (response.operation.code === EResponseCodes.OK) {
       const data: IDropdownProps[] = response.data.map(data => {
         return { name: data.itemDescription, value: Number(data.id) }
-    });
+      });
       return data;
     } else {
       return [];
@@ -401,36 +397,36 @@ export function PoblationComponent({
               <div className="poblation-container-3">
                 <div>
 
-                <Controller
-                  control={control}
-                  name={`demographic.${index}.clasification`}
-                  defaultValue={null}
-                  render={({ field }) => {
+                  <Controller
+                    control={control}
+                    name={`demographic.${index}.clasification`}
+                    defaultValue={null}
+                    render={({ field }) => {
                       const isEmptyClasification = !field.value;
                       const [isFieldDirty, setIsFieldDirty] = useState(false);
                       return (
                         <SelectComponent
-                        control={control}
-                        idInput={`demographic.${index}.clasification`}
-                        className={`select-basic span-width ${isEmptyClasification && isFieldDirty ? "undefined error" : ""}`}
-                        label="Clasificación"
-                        classNameLabel="text-black biggest bold text-required"
-                        data={clasificationData}
-                        errors={errors}
-                        onChange={() => {
-                          setValue(`demographic.${index}.detail`, null);
-                          setIsFieldDirty(true);
-                        }}
-                        fieldArray
-                        filter={true}
-                      >
-                        {isEmptyClasification &&  isFieldDirty  &&(<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
+                          control={control}
+                          idInput={`demographic.${index}.clasification`}
+                          className={`select-basic span-width ${isEmptyClasification && isFieldDirty ? "undefined error" : ""}`}
+                          label="Clasificación"
+                          classNameLabel="text-black biggest bold text-required"
+                          data={clasificationData}
+                          errors={errors}
+                          onChange={() => {
+                            setValue(`demographic.${index}.detail`, null);
+                            setIsFieldDirty(true);
+                          }}
+                          fieldArray
+                          filter={true}
+                        >
+                          {isEmptyClasification && isFieldDirty && (<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
 
-                      </SelectComponent>
+                        </SelectComponent>
                       );
-                  }}
-              />
-              
+                    }}
+                  />
+
                 </div>
                 <div>
                   <Controller
@@ -438,10 +434,10 @@ export function PoblationComponent({
                     name={`demographic.${index}.clasification`}
                     defaultValue={null}
                     render={({ field }) => {
-                        const isEmptyDetail = getValues(`demographic.${index}.detail`) === null
-                        const [isFieldDirty, setIsFieldDirty] = useState(false);
-                        return (
-                         <SelectComponent
+                      const isEmptyDetail = getValues(`demographic.${index}.detail`) === null
+                      const [isFieldDirty, setIsFieldDirty] = useState(false);
+                      return (
+                        <SelectComponent
                           control={control}
                           idInput={`demographic.${index}.detail`}
                           className={`select-basic span-width ${isEmptyDetail && isFieldDirty ? "undefined error" : ""}`}
@@ -455,33 +451,33 @@ export function PoblationComponent({
                           fieldArray
                           filter={true}
                         >
-                          {isEmptyDetail &&  isFieldDirty  &&(<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
-     
-                       </SelectComponent>
-                        );
+                          {isEmptyDetail && isFieldDirty && (<p className="error-message bold not-margin-padding">Debe seleccionar una opción</p>)}
+
+                        </SelectComponent>
+                      );
                     }}
                   />
                 </div>
                 <div>
-                <Controller
-                      control={control}
-                      name={`demographic.${index}.numPerson`}
-                      defaultValue= {index} 
-                      render={({ field }) => {
-                          return (
-                              <InputComponent
-                                  id={field.name}
-                                  idInput={field.name}
-                                  value={`${field.value}`}
-                                  label="No. de personas"
-                                  className="input-basic"
-                                  classNameLabel="text-black biggest bold"
-                                  typeInput={"number"}
-                                  register={register}
-                                  onChange={field.onChange}
-                                  errors={errors} />
-                          );
-                      }}
+                  <Controller
+                    control={control}
+                    name={`demographic.${index}.numPerson`}
+                    defaultValue={index}
+                    render={({ field }) => {
+                      return (
+                        <InputComponent
+                          id={field.name}
+                          idInput={field.name}
+                          value={`${field.value}`}
+                          label="No. de personas"
+                          className="input-basic"
+                          classNameLabel="text-black biggest bold"
+                          typeInput={"number"}
+                          register={register}
+                          onChange={field.onChange}
+                          errors={errors} />
+                      );
+                    }}
                   />
                 </div>
                 <div className="div-acciones">

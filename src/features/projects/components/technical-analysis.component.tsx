@@ -57,22 +57,25 @@ export function TechnicalAnalysisComponent({
   }, [watch]);
 
   useEffect(() => {
-    if ( isValid && formAction === "new" ) {
+    if (isValid && formAction === "new") {
+      setTimeout(() => {
         enableNext();
-    } else if( !isValid && formAction === "new" ) {
-        disableNext();
-    } else if( isValid && formAction === "edit" ) {
+      }, 1000)
+    } else if (!isValid && formAction === "new") {
+      disableNext();
+    } else if (isValid && formAction === "edit") {
+      setTimeout(() => {
         enableNext();
         setDisableContinue(false);
-    } else {      
-        setDisableContinue(true);
+      }, 1000)
+    } else {
+      setDisableContinue(true);
     }
     setDisableStatusUpdate(!isValid);
   }, [isValid]);
 
 
   useEffect(() => {
-
     if (technicalAnalysisData)
       setProjectData((prev) => {
         const preparation = prev?.preparation
