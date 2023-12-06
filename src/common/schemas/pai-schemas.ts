@@ -11,7 +11,7 @@ export const CreatePAIValidator = yup.object({
             .notRequired()
             .nullable(),
             description: yup.string()
-            .required()
+            .notRequired()
             .nullable()
         }))
     ),

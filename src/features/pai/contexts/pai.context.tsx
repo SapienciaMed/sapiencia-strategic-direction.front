@@ -75,7 +75,6 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     const [actionCancel, setActionCancel] = useState<() => void>(() => {});
     const [showCancel, setShowCancel] = useState<boolean>(true);
     const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
-    console.log('PAIData: ', PAIData );
     const values = useMemo<IPAIContext>(() => {
       return {
         disableSaveButton,
