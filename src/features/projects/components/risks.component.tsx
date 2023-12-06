@@ -97,7 +97,6 @@ function RisksComponent({ disableNext, enableNext, setForm }: Readonly<IProps>):
                 setForm(null);
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
             }
         })
@@ -118,7 +117,6 @@ function RisksComponent({ disableNext, enableNext, setForm }: Readonly<IProps>):
                 setForm(null);
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
             }
         })
@@ -314,18 +312,14 @@ function RisksComponent({ disableNext, enableNext, setForm }: Readonly<IProps>):
         trigger("risks");
     };
     useEffect(() => {
+        console.log(enableNext)
         if (isValid && formAction === "new") {
-            setTimeout(() => {
-                enableNext();
-            }, 1000)
+            enableNext();
         } else if (!isValid && formAction === "new") {
             disableNext();
         } else if (isValid && formAction === "edit") {
-            setTimeout(() => {
-                console.log(enableNext)
-                enableNext();
-                setDisableContinue(false);
-            }, 1000)
+            enableNext();
+            setDisableContinue(false);
         } else {
             setDisableContinue(true);
         }
@@ -504,7 +498,6 @@ function AddRisksComponent({ returnData, setForm, item }: Readonly<IPropsAddRisk
                         setForm(null);
                         setTextContinue(null);
                         setActionCancel(null);
-                        setActionContinue(null);
                         setMessage({});
                     }
                 })
