@@ -522,7 +522,7 @@ export default function usePlanActionPAIData() {
         setMessage({
           background: true,
           cancelTitle: "Cancelar",
-          description: "No se podrá recuperar",
+          description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
           OkTitle: "Aceptar",
           onCancel: () => {
             setMessage({});
@@ -531,10 +531,22 @@ export default function usePlanActionPAIData() {
             setMessage({});
           },
           show: true,
-          title: "¿Deseas quitar la acción?",
+          title: "¿Eliminar acción?",
           onOk: () => {
+            setMessage({
+                title: "Acción del PAI",
+                description: "¡Eliminada exitosamente!",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onOk: () => {
+                  setMessage({});
+                },
+                onClose: () => {
+                  setMessage({});
+                },
+              });
             removeActionPai(row.id);
-            setMessage({});
           },
         });
       },
