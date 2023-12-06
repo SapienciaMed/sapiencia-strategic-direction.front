@@ -40,15 +40,14 @@ const ResumeData: IDropdownProps[] = [
 function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): React.JSX.Element {
     const resolver = useYupValidationResolver(logicFrameFormValidator);
     const [LogicFrameData, setLogicFrameData] = useState<IlogicFrameForm>(null);
-    const { setProjectData, 
-            projectData, 
-            setTextContinue, 
-            setActionCancel, 
-            setActionContinue, 
-            formAction, 
-            setDisableContinue, 
-            isADisabledInput,
-            setDisableStatusUpdate } = useContext(ProjectsContext);
+    const { setProjectData,
+        projectData,
+        setTextContinue,
+        setActionCancel,
+        formAction,
+        setDisableContinue,
+        isADisabledInput,
+        setDisableStatusUpdate } = useContext(ProjectsContext);
     const { setMessage } = useContext(AppContext);
     const { GetIndicatorName } = useIndicatorsService();
     const [indicatorsNameData, setIndicatorsNameData] = useState<MasterTable[]>(null);
@@ -65,29 +64,29 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
         }
     });
 
-    const ObjectivesEspecific : IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
+    const ObjectivesEspecific: IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
         return {
             name: `${cause.consecutive}. ${cause.description}`,
             value: cause.consecutive
         }
     });
 
-    const IndicatorList : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const IndicatorList: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
         }
     });
 
-    const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
+    const indicators: IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator, index) => {
         const matchedData = indicatorsNameData?.find(data => data.id === indicator.indicator);
         return {
             name: matchedData ? `${matchedData.description}` : ` ${indicator.staticValue}`,
             value: index
         }
-     });
+    });
 
-     useEffect(() => {
+    useEffect(() => {
         GetIndicatorName().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 setIndicatorsNameData(response.data);
@@ -112,7 +111,6 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                 setForm(null);
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
             }
         })
@@ -133,7 +131,6 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                 setForm(null);
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
             }
         })
@@ -159,18 +156,18 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                 switch (row.resume) {
                     case 1:
                         return <>{projectData.identification.objectives.generalObjective}</>
-              
+
                     case 2:
                         const objetives = ObjectivesEspecific.find(item => item.value == row.description)
                         return <>{objetives.name || ""}</>;
                     case 3:
                         const levelActivities = IndicatorList.find(item => item.value == row.description)
-                        return <>{levelActivities.name || "" }</>;
+                        return <>{levelActivities.name || ""}</>;
                     default:
                         return <></>
                 }
             },
-        
+
         },
         {
             fieldName: "indicador",
@@ -184,7 +181,7 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                 }
 
             },
-           
+
         },
         {
             fieldName: "meta",
@@ -228,23 +225,19 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
     };
 
     useEffect(() => {
-        if ( isValid && formAction === "new" ) {
-            setTimeout( () => {
-                enableNext();
-            }, 500)
-        } else if( !isValid && formAction === "new" ) {
+        if (isValid && formAction === "new") {
+            enableNext();
+        } else if (!isValid && formAction === "new") {
             disableNext();
-        } else if( isValid && formAction === "edit" ) {
-            setTimeout( () => {
-                enableNext();
-                setDisableContinue(false);
-            }, 500)
-        } else {      
+        } else if (isValid && formAction === "edit") {
+            enableNext();
+            setDisableContinue(false);
+        } else {
             disableNext();
         }
         setDisableStatusUpdate(!isValid);
     }, [isValid]);
-    
+
     useEffect(() => {
         const subscription = watch((value: IlogicFrameForm) => setLogicFrameData(prev => { return { ...prev, ...value } }));
         return () => subscription.unsubscribe();
@@ -272,9 +265,9 @@ function LogicFrameComponent({ disableNext, enableNext, setForm }: IProps): Reac
                             Añadir marco lógico <AiOutlinePlusCircle />
                         </div>}
                     </div>
-                    {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent  widthTable={`${(width * 0.0149) + 40}vw`}  actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} hideActions={isADisabledInput} horizontalScroll />}
-                </div>      
-                </FormComponent>
+                    {getValues('logicFrame')?.length > 0 && <TableExpansibleComponent widthTable={`${(width * 0.0149) + 40}vw`} actions={objectivesActions} columns={objectivesColumns} data={getValues('logicFrame')} hideActions={isADisabledInput} horizontalScroll />}
+                </div>
+            </FormComponent>
         </div>
     )
 }
@@ -303,14 +296,14 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
         setValue,
         getValues,
     } = useForm<IAddLogicFrame>({
-            resolver, mode: "all", defaultValues: {
+        resolver, mode: "all", defaultValues: {
             resume: item?.resume ? item.resume : null,
-            indicator: item?.indicatorType ? projectData.programation.indicators.indicators.findIndex(data => JSON.stringify(data) === JSON.stringify(item.indicatorType)): null,
-            meta:item?.meta ? item.meta : null,
+            indicator: item?.indicatorType ? projectData.programation.indicators.indicators.findIndex(data => JSON.stringify(data) === JSON.stringify(item.indicatorType)) : null,
+            meta: item?.meta ? item.meta : null,
             description: item?.description ? item.description : "",
             sourceVerification: item?.sourceVerification ? item?.sourceVerification : "",
             assumptions: item?.assumptions ? item?.assumptions : "",
-            indicatorType:item?.indicatorType ? item.indicatorType : null,
+            indicatorType: item?.indicatorType ? item.indicatorType : null,
         }
     });
 
@@ -325,44 +318,44 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     }, []);
 
 
-    const ObjectivesEspecific : IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
+    const ObjectivesEspecific: IDropdownProps[] = projectData.identification.problemDescription.causes.map((cause) => {
         return {
             name: `${cause.consecutive}. ${cause.description}`,
             value: cause.consecutive
         }
     });
 
-      const activities : IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
+    const activities: IDropdownProps[] = projectData.preparation.activities.activities.map((cause) => {
         return {
             name: `${cause.activityMGA}. ${cause.activityDescriptionMGA}`,
             value: cause.activityMGA
         }
     });
 
-     const indicators : IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator,index) => {
+    const indicators: IDropdownProps[] = projectData.programation.indicators.indicators.map((indicator, index) => {
         const matchedData = indicatorsNameData?.find(data => data.id === indicator.indicator);
         return {
-            name: matchedData ? `${matchedData.description}`  : ` ${indicator.staticValue}`,
+            name: matchedData ? `${matchedData.description}` : ` ${indicator.staticValue}`,
             value: index
         }
-     });
+    });
 
-     const indicator = watch("indicator");
+    const indicator = watch("indicator");
     useEffect(() => {
-    if(indicator == null || indicator == undefined){
-        setValue("meta",null)    
-        return
-    }
+        if (indicator == null || indicator == undefined) {
+            setValue("meta", null)
+            return
+        }
         const selectedIndicator = projectData.programation.indicators.indicators[indicator]
-        if (selectedIndicator.total){
+        if (selectedIndicator.total) {
             let meta = selectedIndicator.total
-            setValue("meta",meta)
-            setValue("indicatorType",selectedIndicator)
-            
-        }else{
+            setValue("meta", meta)
+            setValue("indicatorType", selectedIndicator)
+
+        } else {
             let meta = (selectedIndicator.year0 + selectedIndicator.year1 + selectedIndicator.year2 + selectedIndicator.year3 + selectedIndicator.year4)
-            setValue("meta",meta)
-            setValue("indicatorType",selectedIndicator)
+            setValue("meta", meta)
+            setValue("indicatorType", selectedIndicator)
         }
     }, [indicator])
 
@@ -379,16 +372,16 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                 },
             ];
             setDescriptionData(levelObjectives);
-            setValue("description","1");
-        } else if (idLevel == 2){
+            setValue("description", "1");
+        } else if (idLevel == 2) {
             setDescriptionData(ObjectivesEspecific);
-            if(getValues("description") && item?.resume != idLevel){
-                setValue("description",null);
+            if (getValues("description") && item?.resume != idLevel) {
+                setValue("description", null);
             }
         } else if (idLevel == 3) {
             setDescriptionData(activities)
-            if(getValues("description") && item?.resume != idLevel){
-                setValue("description",null);
+            if (getValues("description") && item?.resume != idLevel) {
+                setValue("description", null);
             }
         }
 
@@ -429,7 +422,6 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
                         setForm(null);
                         setTextContinue(null);
                         setActionCancel(null);
-                        setActionContinue(null);
                         setMessage({});
                     }
                 })
@@ -443,118 +435,118 @@ function AddLogicFrameComponent({ returnData, setForm, item }: IPropsAddRisks) {
     return (
         <FormComponent action={undefined} className="card-table">
             <p className="text-black large bold">{item ? "Editar marco lógico" : "Agregar marco lógico"}</p>
-                <div className="logic-component">
-                    <SelectComponent
-                        control={control}
-                        idInput={"resume"}
-                        className="select-basic span-width"
-                        label="Resumen narrativo"
-                        classNameLabel="text-black biggest bold text-required"
-                        data={ResumeData}
-                        errors={errors}
-                        filter={true}
-                        
+            <div className="logic-component">
+                <SelectComponent
+                    control={control}
+                    idInput={"resume"}
+                    className="select-basic span-width"
+                    label="Resumen narrativo"
+                    classNameLabel="text-black biggest bold text-required"
+                    data={ResumeData}
+                    errors={errors}
+                    filter={true}
 
-                    />
-                    <SelectComponent
-                        control={control}
-                        idInput={"description"}
-                        className="select-basic span-width"
-                        label="Descripción"
-                        classNameLabel="text-black biggest bold text-required"
-                        data={descriptionData}
-                        errors={errors}
-                        filter={true}
 
-                    />
-                    <SelectComponent
-                        control={control}
-                        idInput={"indicator"}
-                        className="select-basic span-width"
-                        label="Nombre de indicador"
-                        classNameLabel="text-black biggest bold text-required"
-                        data={indicators}
-                        errors={errors}
-                        filter={true}
+                />
+                <SelectComponent
+                    control={control}
+                    idInput={"description"}
+                    className="select-basic span-width"
+                    label="Descripción"
+                    classNameLabel="text-black biggest bold text-required"
+                    data={descriptionData}
+                    errors={errors}
+                    filter={true}
 
-                    />
-                </div>
-                <div className="meta-div">
-                    <Controller
-                        control={control}
-                        name={"meta"}
-                        defaultValue={null}
-                        render={({ field }) => {
-                            return (
-                                <InputComponent
-                                    id={field.name}
-                                    idInput={field.name}
-                                    value={`${field.value}`}
-                                    label="Meta"
-                                    className="input-basic background-textArea"
-                                    classNameLabel="text-black biggest bold"
-                                    typeInput={"number"}
-                                    register={register}
-                                    onChange={field.onChange}
-                                    errors={errors}
-                                    disabled
-                                />
-                            );
-                        }}
-                    />  
-                    </div>
-                    <div className="assumptions-div">
+                />
+                <SelectComponent
+                    control={control}
+                    idInput={"indicator"}
+                    className="select-basic span-width"
+                    label="Nombre de indicador"
+                    classNameLabel="text-black biggest bold text-required"
+                    data={indicators}
+                    errors={errors}
+                    filter={true}
 
-                    <Controller
-                            control={control}
-                            name={"sourceVerification"}
-                            defaultValue=""
-                            render={({ field }) => {
-                                return (
-                                    <TextAreaComponent
-                                        id={field.name}
-                                        idInput={field.name}
-                                        value={`${field.value}`}
-                                        label="Fuente de verificación"
-                                        classNameLabel="text-black biggest bold"
-                                        className="text-area-basic"
-                                        placeholder="Escribe aquí"
-                                        register={register}
-                                        onChange={field.onChange}
-                                        errors={errors}
-                                        characters={500}
-                                    >
-                                    </TextAreaComponent>
-                                );
-                            }}
-                    />
-                    <Controller
-                            control={control}
-                            name={"assumptions"}
-                            defaultValue=""
-                            render={({ field }) => {
-                                return (
-                                    <TextAreaComponent
-                                        id={field.name}
-                                        idInput={field.name}
-                                        value={`${field.value}`}
-                                        label="Supuestos"
-                                        classNameLabel="text-black biggest bold"
-                                        className="text-area-basic"
-                                        placeholder="Escribe aquí"
-                                        register={register}
-                                        onChange={field.onChange}
-                                        errors={errors}
-                                        characters={500}
-                                    >
-                                    </TextAreaComponent>
-                                );
-                            }}
-                        />
-                  
+                />
+            </div>
+            <div className="meta-div">
+                <Controller
+                    control={control}
+                    name={"meta"}
+                    defaultValue={null}
+                    render={({ field }) => {
+                        return (
+                            <InputComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Meta"
+                                className="input-basic background-textArea"
+                                classNameLabel="text-black biggest bold"
+                                typeInput={"number"}
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                disabled
+                            />
+                        );
+                    }}
+                />
+            </div>
+            <div className="assumptions-div">
 
-                    </div>
-                        
+                <Controller
+                    control={control}
+                    name={"sourceVerification"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Fuente de verificación"
+                                classNameLabel="text-black biggest bold"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                characters={500}
+                            >
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+                <Controller
+                    control={control}
+                    name={"assumptions"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Supuestos"
+                                classNameLabel="text-black biggest bold"
+                                className="text-area-basic"
+                                placeholder="Escribe aquí"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                characters={500}
+                            >
+                            </TextAreaComponent>
+                        );
+                    }}
+                />
+
+
+            </div>
+
         </FormComponent>
     )
 }
