@@ -9,20 +9,17 @@ import { PAIContext } from "../contexts/pai.context";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useSchedulesService } from "./schedules-service.hook";
 import { useNavigate } from "react-router";
 import { useEntitiesService } from "./entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
 import { useProjectsService } from "./projects-service.hook";
-import { usePaiService } from "./createPlanAction-pai-service.hook"
-import { boolean } from "yargs";
+import { usePaiService } from "./pai-service.hook"
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { InputInplaceComponent } from "../../../common/components/Form";
-import { AiOutlineDownload, AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
-import { IIndicatorsPAI } from "../interfaces/IndicatorsPAIInterfaces";
 
 
 
@@ -525,7 +522,7 @@ export default function usePlanActionPAIData() {
         setMessage({
           background: true,
           cancelTitle: "Cancelar",
-          description: "No se podrá recuperar",
+          description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
           OkTitle: "Aceptar",
           onCancel: () => {
             setMessage({});
@@ -534,10 +531,22 @@ export default function usePlanActionPAIData() {
             setMessage({});
           },
           show: true,
-          title: "¿Deseas quitar la acción?",
+          title: "¿Eliminar acción?",
           onOk: () => {
+            setMessage({
+                title: "Acción del PAI",
+                description: "¡Eliminada exitosamente!",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onOk: () => {
+                  setMessage({});
+                },
+                onClose: () => {
+                  setMessage({});
+                },
+              });
             removeActionPai(row.id);
-            setMessage({});
           },
         });
       },

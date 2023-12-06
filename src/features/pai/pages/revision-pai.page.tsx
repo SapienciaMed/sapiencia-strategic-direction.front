@@ -53,6 +53,7 @@ function RevisionPAIPage(): React.JSX.Element {
                                     label="Presupuesto"
                                     errors={errorsPAI}
                                     placeholder=""
+                                    prefix="$ "
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
                                     disabled
