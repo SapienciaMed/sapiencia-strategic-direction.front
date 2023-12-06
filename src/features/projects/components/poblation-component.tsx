@@ -42,7 +42,7 @@ interface IProps {
 export function PoblationComponent({
   disableNext,
   enableNext
-}: IProps): React.JSX.Element {
+}: Readonly<IProps>): React.JSX.Element {
   const [PoblationData, setPoblationData] = useState<IPoblationForm>();
   const [regionData, setRegionData] = useState<IDropdownProps[]>([]);
   const [districtList, setDistrictList] = useState([]);
@@ -185,16 +185,12 @@ export function PoblationComponent({
 
   useEffect(() => {
     if (isValid && formAction === "new") {
-      setTimeout(() => {
-        enableNext();
-      }, 1000)
+      enableNext();
     } else if (!isValid && formAction === "new") {
       disableNext();
     } else if (isValid && formAction === "edit") {
-      setTimeout(() => {
-        enableNext();
-        setDisableContinue(false);
-      }, 1000)
+      enableNext();
+      setDisableContinue(false);
     } else {
       setDisableContinue(true);
     }

@@ -9,20 +9,17 @@ import { PAIContext } from "../contexts/pai.context";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useSchedulesService } from "./schedules-service.hook";
 import { useNavigate } from "react-router";
 import { useEntitiesService } from "./entities-service.hook";
 import { IEntities } from "../interfaces/Entities";
 import { useProjectsService } from "./projects-service.hook";
-import { usePaiService } from "./createPlanAction-pai-service.hook"
-import { boolean } from "yargs";
+import { usePaiService } from "./pai-service.hook"
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { InputInplaceComponent } from "../../../common/components/Form";
-import { AiOutlineDownload, AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
-import { IIndicatorsPAI } from "../interfaces/IndicatorsPAIInterfaces";
 
 
 
@@ -97,6 +94,7 @@ export default function usePlanActionPAIData() {
         articulationPAI: PAIData?.articulationPAI ? PAIData.articulationPAI :"",
         linePAI: PAIData?.linePAI ? PAIData?.linePAI :null,
         risksPAI: PAIData?.risksPAI ? PAIData?.risksPAI : null,
+        actionsPAi:PAIData?.actionsPAi ? PAIData.actionsPAi : null,
     }});
 
     useEffect(() => {
@@ -119,10 +117,12 @@ export default function usePlanActionPAIData() {
                 },
                 onOk: async () => {
                     debugger;
-                    if (PAIData?.id) {
-                        const formData = { ...data,
+                    console.log(PAIData);
+                    if (data?.id) {
+                        const formData = { ...PAIData,
                                     user: authorization.user.numberDocument, 
-                                    status: 2, };
+                                    status: 2,
+                                    };
                         const res = await UpdatePAI(PAIData.id, formData );
                         if (res.operation.code === EResponseCodes.OK) {
                             setMessage({
@@ -152,7 +152,8 @@ export default function usePlanActionPAIData() {
                                 });
                         }
                     } else {
-                        const formData = { ...data, user: authorization.user.numberDocument, status: 2 };
+                        debugger;
+                        const formData = { ...PAIData, user: authorization.user.numberDocument, status: 2 };
                         const res = await CreatePAI(formData);
                         setPAIData(prev => {
                             return { ...prev, id: res.data.id }
@@ -204,7 +205,7 @@ export default function usePlanActionPAIData() {
 
     const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
             if (data?.id) {
-                const dataPai = { ...PAIData, user: authorization.user.numberDocument ,status: 1};
+                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1,indicators:PAIData.indicators};
                 const res = await UpdatePAI(dataPai.id, dataPai);
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
@@ -345,7 +346,7 @@ export default function usePlanActionPAIData() {
         getProjectsByFilters(2).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
-                    return { name: entity.bpin, value: entity.id };
+                    return { name: entity.bpin + " " + entity.project, value: entity.id };
                 });
                 setProjectsPAIData(arrayEntities);
                 setProjectsData(response.data)
@@ -366,6 +367,7 @@ export default function usePlanActionPAIData() {
     }, [watch]);
     
     const changeActionsPAi = (data: IAddAction, row?: IAddAction) => {
+        debugger;
         if (row) {
             const CreateActionData = getValues("actionsPAi").filter(item => item !== row).concat(data);
             setValue("actionsPAi", CreateActionData);
@@ -495,7 +497,6 @@ export default function usePlanActionPAIData() {
     {
         customIcon: (row) => {
             return (
-                <>
                     <div
                         className="create-action"
                         data-pr-position="bottom"
@@ -503,7 +504,6 @@ export default function usePlanActionPAIData() {
                     >
                         <AiOutlinePlusCircle />
                     </div>
-                </>
             )
         },
         onClick: (row) => {
@@ -513,53 +513,8 @@ export default function usePlanActionPAIData() {
     {
       icon: "Detail",
       onClick: (row) => {
-        setMessage({
-          title: "Agregar Acción",
-          description: ( ""
-            //<ActorFormComponent ref={ActorCreateComponentRef} item={row} />
-          ),
-          show: true,
-          background: true,
-          OkTitle: "Guardar",
-          cancelTitle: "Cancelar",
-          onOk: () => {
-            // if (ActorCreateComponentRef.current) {
-            //   ActorCreateComponentRef.current.handleSubmit(
-            //     (data: IParticipatingActors) => {
-            //       const newActors = getValues("actors")
-            //         .filter((actor) => actor !== row)
-            //         .concat(data)
-            //       setActorCreateData((prev) => {
-            //         return { ...prev, actors: newActors };
-            //       });
-            //       setValue("actors", newActors);
-            //       trigger("actors");
-            //       setMessage({
-            //         title: "Se editó exitosamente",
-            //         description: "Se ha editado el actor exitosamente",
-            //         show: true,
-            //         background: true,
-            //         OkTitle: "Aceptar",
-            //         onOk: () => {
-            //           setMessage({});
-            //         },
-            //         onClose: () => {
-            //           setMessage({});
-            //         },
-            //       });
-            //     }
-            //   )();
-            // }
-          },
-          onCancel: () => {
-            setMessage({});
-          },
-          onClose: () => {
-            setMessage({});
-          },
-          style: "causes-effects-modal-size",
-        });
-      },
+
+      }
     },
     {
       icon: "Delete",
@@ -567,7 +522,7 @@ export default function usePlanActionPAIData() {
         setMessage({
           background: true,
           cancelTitle: "Cancelar",
-          description: "No se podrá recuperar",
+          description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
           OkTitle: "Aceptar",
           onCancel: () => {
             setMessage({});
@@ -576,17 +531,22 @@ export default function usePlanActionPAIData() {
             setMessage({});
           },
           show: true,
-          title: "¿Deseas quitar la acción?",
+          title: "¿Eliminar acción?",
           onOk: () => {
-            // const newActors = getValues("actors").filter((actor) =>
-            //   actor !== row
-            // );
-            // setActorCreateData((prev) => {
-            //   return { ...prev, actors: newActors };
-            // });
-            // setValue("actors", newActors);
-            // trigger("actors");
-            // setMessage({});
+            setMessage({
+                title: "Acción del PAI",
+                description: "¡Eliminada exitosamente!",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onOk: () => {
+                  setMessage({});
+                },
+                onClose: () => {
+                  setMessage({});
+                },
+              });
+            removeActionPai(row.id);
           },
         });
       },
@@ -606,14 +566,16 @@ export default function usePlanActionPAIData() {
 
 
   const onSubmitCreate = () => {
-    appendActionsPAi({ action: fieldsActionsPAi.length ++, description:"prueba"})
-    // setTableData(tableData.concat({action:tableData.length + 1, description:"prueba"}));
+    
+    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""})
+    console.log(fieldsActionsPAi)
+    //setTableData(tableData.concat({action:tableData.length + 1, description:""}));
   };
 
     useEffect(()=>{
         if(isValid){
             setTempButtonAction( () => onSubmitTemp );
-            setSaveButtonAction(() => onSubmitTemp); 
+            setSaveButtonAction(() => onSubmitSave); 
         }
         setDisableTempBtn(!isValid);
         setDisableSaveButton(!isValid);
@@ -621,7 +583,7 @@ export default function usePlanActionPAIData() {
 
     useEffect(()=>{
         setTempButtonAction( () => onSubmitTemp );
-        setSaveButtonAction(() => onSubmitTemp); 
+        setSaveButtonAction(() => onSubmitSave); 
         setTempButtonText("Guardar temporalmente"); 
         setSaveButtonText("Guardar y regresar"); 
         setDisableTempBtn(!isValid);

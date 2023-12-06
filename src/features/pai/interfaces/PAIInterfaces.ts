@@ -16,7 +16,8 @@ export interface ICreatePlanAction {
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
   version?: string | null;
-  status:number;
+  status: number;
+  revision?: IRevisionPAI;
 }
 
 export interface IAddAction {
@@ -36,21 +37,17 @@ export interface IRisks {
   risk: string;
 }
 
-export interface IActionPlanTemp {
-  id?: number;
-  user: string;
-  yearPAI: number;
-  budgetPAI: number;
-  typePAI: number;
-  namePAI: number;
-  objectivePAI: string;
-  articulationPAI: string;
-  linePAI: ILine[];
-  risksPAI: IRisks[];
+export interface IRevisionFormPAI {
+  field: number;
+  observations: string;
 }
 
 export interface IRevisionPAI {
-  field: number;
-  observations: string;
-  test: string[];
+  id?: number;
+  idPai: number;
+  json?: string;
+  completed: boolean;
+  version: number;
+  userCreate: string;
+  dateCreate?: DateTime;
 }

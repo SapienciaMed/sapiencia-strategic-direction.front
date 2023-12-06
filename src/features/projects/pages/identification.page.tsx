@@ -26,49 +26,49 @@ function IdentificationPage(): React.JSX.Element {
         {
             id: 1,
             name: "Plan de desarrollo",
-            content: <PlanDevelopmentComponent 
-                disableNext={() => { 
-                        disableAccordions([2]) 
-                }} 
-                enableNext={() => { 
-                        enableAccordions([2]) 
-                }} 
+            content: <PlanDevelopmentComponent
+                disableNext={() => {
+                    disableAccordions([2])
+                }}
+                enableNext={() => {
+                    enableAccordions([2])
+                }}
             />
         },
         {
             id: 2,
             name: "Descripción del problema",
-            content: <ProblemDescriptionComponent 
-                disableNext={() => { 
-                        disableAccordions([3]) 
-                }} 
-                enableNext={() => { 
-                        enableAccordions([3]) 
-                }} 
+            content: <ProblemDescriptionComponent
+                disableNext={() => {
+                    disableAccordions([3])
+                }}
+                enableNext={() => {
+                    enableAccordions([3])
+                }}
             />
         },
         {
             id: 3,
             name: "Objetivos",
-            content: <ObjectivesComponent 
-                disableNext={() => { 
-                        disableAccordions([4]) 
-                }} 
-                enableNext={() => { 
-                        enableAccordions([4]) 
-                }} 
+            content: <ObjectivesComponent
+                disableNext={() => {
+                    disableAccordions([4])
+                }}
+                enableNext={() => {
+                    enableAccordions([4])
+                }}
             />
         },
         {
             id: 4,
             name: "Actores participantes",
-            content: <ActorCreateComponent 
-                disableNext={() => { 
-                        disableAccordions([5]) 
-                }} 
-                enableNext={() => { 
-                        enableAccordions([5]) 
-                }} 
+            content: <ActorCreateComponent
+                disableNext={() => {
+                    disableAccordions([5])
+                }}
+                enableNext={() => {
+                    enableAccordions([5])
+                }}
             />
         },
         {
@@ -99,7 +99,7 @@ function IdentificationPage(): React.JSX.Element {
                             disableAccordions([]);
                             setDisableContinue(false);
                             setActionContinue(() => nextStep);
-                        }).catch(( ) => {});
+                        }).catch(() => { });
                     }).catch(() => {
                         disableAccordions([5]);
                     })

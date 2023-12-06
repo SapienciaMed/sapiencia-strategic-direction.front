@@ -26,7 +26,8 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
             NamePAIData, 
             riskPAIData, 
             riskFields, 
-            TypePAIData, 
+            TypePAIData,
+            tableData, 
             appendRisk,
             append, 
             remove, 
@@ -312,12 +313,13 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                             </FormComponent>}
                         </div>
                     </div>
-                    <NavbarPai />
                 </div>
-                </div>
+                <NavbarPai />
+                </div> 
             </div>
-            
+   
         </>
+        
     )
 }
 
