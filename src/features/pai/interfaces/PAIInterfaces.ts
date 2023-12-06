@@ -13,7 +13,6 @@ export interface ICreatePlanAction {
   risksPAI: IRisks[];
   selectedRisk: number;
   actionsPAi: IAddAction[];
-  indicators?: IIndicatorsPAI[];
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
   version?: string | null;
@@ -25,6 +24,7 @@ export interface IAddAction {
   id?: number;
   action: number;
   description: string;
+  indicators?: IIndicatorsPAI[];
 }
 
 export interface ILine {

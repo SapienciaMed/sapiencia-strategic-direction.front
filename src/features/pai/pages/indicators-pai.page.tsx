@@ -38,7 +38,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
             <div className="main-page full-height">
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Acción No. 1 - Agregar indicador</div>
+                        <div className="text-black extra-large bold">Acción No. {actionId} - Agregar indicador</div>
                     </div>
                     <div className="crud-page full-height">
                         <FormComponent action="">
@@ -162,7 +162,14 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                 control={controlIndicatorsPai}
                                                 name={`products.${index}.product`}
                                                 defaultValue=""
+                                                rules={{
+                                                    required: {
+                                                        value: true,
+                                                        message: "El campo es obligatorio"
+                                                    }
+                                                }}
                                                 render={({ field }) => {
+                                                    console.log('errors: ', errors );
                                                     return (
                                                         <TextAreaComponent
                                                             id={field.name}
@@ -204,6 +211,12 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                 control={controlIndicatorsPai}
                                                 name={`responsibles.${index}.responsible`}
                                                 defaultValue=""
+                                                rules={{
+                                                    required: {
+                                                        value: true,
+                                                        message: "El campo es obligatorio"
+                                                    }
+                                                }}
                                                 render={({ field }) => {
                                                     return (
                                                         <TextAreaComponent
@@ -246,6 +259,12 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                 control={controlIndicatorsPai}
                                                 name={`coresponsibles.${index}.coresponsible`}
                                                 defaultValue=""
+                                                rules={{
+                                                    required: {
+                                                        value: true,
+                                                        message: "El campo es obligatorio"
+                                                    }
+                                                }}
                                                 render={({ field }) => {
                                                     return (
                                                         <TextAreaComponent

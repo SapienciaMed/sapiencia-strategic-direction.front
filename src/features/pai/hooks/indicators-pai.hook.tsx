@@ -66,18 +66,17 @@ export default function useIndicatorsPai(actionId:number) {
         const subscription = watchIndicators(( values: IIndicatorsPAI ) => setPAIData(prev => {
             if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
             if(values?.projectIndicator) trigger("indicatorDesc");
-            return { ...prev, indicators: prev?.indicators ? [ ...prev.indicators ] :  [] }
+            return { ...prev }
         }));
         return () => subscription.unsubscribe();
     }, [watchIndicators]);
 
     useEffect(()=>{
-        if(isValid){
-           setSaveButtonAction( () => onSubmit );
-           setTempButtonAction( () => onAddNewIndicator )
-        }
         setDisableSaveButton(!isValid);
         setDisableTempBtn(!isValid);
+        if(!isValid) return;
+        setSaveButtonAction( () => onSubmit );
+        setTempButtonAction( () => onAddNewIndicator )
     },[isValid])
 
     useEffect(() => {
@@ -119,29 +118,32 @@ export default function useIndicatorsPai(actionId:number) {
     },[indicators])
 
     useEffect(()=>{
-        if(projectData){
-            let arrayIndicators= [];
-            for(let i = 0; i < indicators?.length; i++){
-                const indicator = projectData.activities
-                ?.find( activity => activity.productMGA === indicators[i].productMGA);
-                arrayIndicators.push({ 
-                    name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, 
-                    value: indicators[i].type 
-                })
-            }
-            setProjectIndicatorsData(arrayIndicators);
+        if(!projectData) return;
+        let arrayIndicators= [];
+        for(let i = 0; i < indicators?.length; i++){
+            const indicator = projectData.activities
+            ?.find( activity => activity.productMGA === indicators[i].productMGA);
+            arrayIndicators.push({ 
+                name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, 
+                value: indicators[i].type 
+            })
         }
+        setProjectIndicatorsData(arrayIndicators);
     },[projectData])
 
     const onSaveIndicator = () => {
-        if(isValid){
-            const values = getValues();
-            setPAIData( prev => {
-                return { ...prev, 
-                    indicators: prev?.indicators ?  [ ...prev.indicators, { ...values, actionId: actionId }] :  [{ ...values, actionId: actionId }]
+        if(!isValid) return;
+        const values = getValues();
+        setPAIData( prev => {
+            prev?.actionsPAi.map( action => {
+                if(( action?.id | action?.action ) === actionId){
+                    action.indicators = action?.indicators 
+                    ?  [ ...action.indicators, { ...values, actionId: actionId }] 
+                    :  [{ ...values, actionId: actionId }]
                 }
             });
-        }
+            return { ...prev }
+        });
     }
     
     const onSubmit = () => {
@@ -172,6 +174,7 @@ export default function useIndicatorsPai(actionId:number) {
             }
         })
     }
+
     const onCancel = () => {
         setMessage({
             title: "Cancelar acción",
@@ -192,10 +195,9 @@ export default function useIndicatorsPai(actionId:number) {
         })
     }
     const onAddNewIndicator = () => {
-        if(isValid){
-            onSaveIndicator();
-            reset();
-        }
+        if(!isValid) return;
+        onSaveIndicator();
+        reset();
     }
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
@@ -231,6 +233,7 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         name: "products"
     });
+    
     const { fields: fieldsResponsible, append: appendResponsible} = useFieldArray({
         control: controlIndicatorsPai,
         name: "responsibles",
@@ -239,6 +242,7 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         name: "responsibles"
     });
+    
     const { fields: fieldsCoResponsible, append: appendCoResponsible} = useFieldArray({
         control: controlIndicatorsPai,
         name: "coresponsibles",

@@ -39,6 +39,7 @@ export default function usePlanActionPAIData() {
     const [projectsPAIData, setProjectsPAIData] = useState<IDropdownProps[]>(null);
     const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const [View, ViewData] = useState<boolean>(false);
+    const [actionCount, setActionCount] = useState<number>(1);
     const [riskText, RisksTextData] = useState<string>("");
 
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
@@ -205,7 +206,7 @@ export default function usePlanActionPAIData() {
 
     const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
             if (data?.id) {
-                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1,indicators:PAIData.indicators};
+                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1};
                 const res = await UpdatePAI(dataPai.id, dataPai);
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
@@ -546,7 +547,7 @@ export default function usePlanActionPAIData() {
                   setMessage({});
                 },
               });
-            removeActionPai(row.id);
+            removeActionPai(row.action);
           },
         });
       },
@@ -554,23 +555,18 @@ export default function usePlanActionPAIData() {
     },
   ];
 
-    const { fields: fieldsActionsPAi, append: appendActionsPAi, remove: removeActionPai } = useFieldArray({
-        control: control,
-        name: "actionsPAi",
-    });
+    const onSubmitCreate = () => {
+        const newAction = {action:tableData.length + 1, description:""};
+        setTableData(tableData.concat(newAction));
+        setPAIData( prev => {
+            return {...prev, actionsPAI: prev?.actionsPAi ? [ ...prev.actionsPAi, newAction] : newAction}
+        });
+    };
 
-    const actionsPAiFieldArray = useWatch({
-        control: control,
-        name: "actionsPAi"
-    });
-
-
-  const onSubmitCreate = () => {
-    
-    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""})
-    console.log(fieldsActionsPAi)
-    //setTableData(tableData.concat({action:tableData.length + 1, description:""}));
-  };
+    const removeActionPai = (index: number) => {
+        const filterActions = tableData.filter(action => action.action != index);
+        setTableData(filterActions);
+    }
 
     useEffect(()=>{
         if(isValid){
@@ -594,5 +590,5 @@ export default function usePlanActionPAIData() {
        
     }
 
-    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }
