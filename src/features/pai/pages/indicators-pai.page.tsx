@@ -169,7 +169,6 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     }
                                                 }}
                                                 render={({ field }) => {
-                                                    console.log('errors: ', errors );
                                                     return (
                                                         <TextAreaComponent
                                                             id={field.name}

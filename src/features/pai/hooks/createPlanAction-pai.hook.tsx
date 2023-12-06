@@ -117,7 +117,6 @@ export default function usePlanActionPAIData() {
                     setMessage({});
                 },
                 onOk: async () => {
-                    debugger;
                     console.log(PAIData);
                     if (data?.id) {
                         const formData = { ...PAIData,
@@ -153,7 +152,6 @@ export default function usePlanActionPAIData() {
                                 });
                         }
                     } else {
-                        debugger;
                         const formData = { ...PAIData, user: authorization.user.numberDocument, status: 2 };
                         const res = await CreatePAI(formData);
                         setPAIData(prev => {
@@ -368,7 +366,6 @@ export default function usePlanActionPAIData() {
     }, [watch]);
     
     const changeActionsPAi = (data: IAddAction, row?: IAddAction) => {
-        debugger;
         if (row) {
             const CreateActionData = getValues("actionsPAi").filter(item => item !== row).concat(data);
             setValue("actionsPAi", CreateActionData);
@@ -555,18 +552,21 @@ export default function usePlanActionPAIData() {
     },
   ];
 
-    const onSubmitCreate = () => {
-        const newAction = {action:tableData.length + 1, description:""};
-        setTableData(tableData.concat(newAction));
-        setPAIData( prev => {
-            return {...prev, actionsPAI: prev?.actionsPAi ? [ ...prev.actionsPAi, newAction] : newAction}
-        });
-    };
+    const { fields: fieldsActionsPAi, append: appendActionsPAi, remove: removeActionPai } = useFieldArray({
+        control: control,
+        name: "actionsPAi",
+    });
 
-    const removeActionPai = (index: number) => {
-        const filterActions = tableData.filter(action => action.action != index);
-        setTableData(filterActions);
-    }
+    const actionsPAiFieldArray = useWatch({
+        control: control,
+        name: "actionsPAi"
+    });
+
+
+  const onSubmitCreate = () => {
+    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""});
+    //setTableData(tableData.concat({action:tableData.length + 1, description:""}));
+  };
 
     useEffect(()=>{
         if(isValid){
@@ -590,5 +590,5 @@ export default function usePlanActionPAIData() {
        
     }
 
-    return { errors,fields, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }

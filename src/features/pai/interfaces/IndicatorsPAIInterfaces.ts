@@ -15,9 +15,9 @@ export interface IIndicatorsPAI {
     id?: number;
     actionId?: number;
     typePAI?: number;
-    projectIndicator: number;
+    projectIndicator?: number;
     indicatorType: number;
-    indicatorDesc: string;
+    indicatorDesc?: string;
     bimesters: IBimester[];
     totalPlannedGoal: number;
     products: IProduct[];
