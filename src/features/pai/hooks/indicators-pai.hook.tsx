@@ -197,6 +197,16 @@ export default function useIndicatorsPai(actionId:number) {
     const onAddNewIndicator = () => {
         if(!isValid) return;
         onSaveIndicator();
+        setMessage({
+            title: "Datos guardados",
+            description: "¡Indicador guardado exitosamente!",
+            show: true,
+            background: true,
+            OkTitle: "Aceptar",
+            onOk: () => {
+                setMessage({});
+            }
+        });
         reset();
     }
     const onChangeBimesters = () => {

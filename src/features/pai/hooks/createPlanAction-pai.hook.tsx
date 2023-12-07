@@ -544,7 +544,7 @@ export default function usePlanActionPAIData() {
                   setMessage({});
                 },
               });
-            removeActionPai(row.action);
+            removeActionPai(row.id);
           },
         });
       },
