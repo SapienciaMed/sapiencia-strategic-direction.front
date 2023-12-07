@@ -19,6 +19,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
             PAIData,
             register,
             getValues,
+            getFieldState,
             indicatorType,
             appendProducts,
             fieldsProducts,
@@ -169,13 +170,16 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     }
                                                 }}
                                                 render={({ field }) => {
+                                                    const isEmpty = !field.value; 
+                                                    const isOverLimit = field.value?.length > 500;
+                                                    const isFieldDirty = getFieldState(`products.${index}.product`);
                                                     return (
                                                         <TextAreaComponent
                                                             id={field.name}
                                                             idInput={field.name}
                                                             value={`${field.value}`}
                                                             label={`Producto No. ${index+1}`}
-                                                            className="text-area-basic"
+                                                            className={`text-area-basic  ${isEmpty && isFieldDirty.isDirty ? "undefined error" : "" } ${isOverLimit ? "undefined error" : ""} `}
                                                             classNameLabel={`text-black biggest bold text-required`}
                                                             rows={4}
                                                             placeholder="Escribe aquí"
@@ -183,7 +187,18 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                             onChange={field.onChange}
                                                             errors={errors}
                                                             characters={500}
-                                                        ></TextAreaComponent>
+                                                        >
+                                                            {isEmpty && isFieldDirty.isDirty && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    El campo es obligatorio
+                                                                </p>
+                                                            )}
+                                                            {isOverLimit && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    Solo se permiten 500 caracteres
+                                                                </p>
+                                                            )}
+                                                        </TextAreaComponent>
                                                     );
                                                 }}
                                             />
@@ -217,13 +232,16 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     }
                                                 }}
                                                 render={({ field }) => {
+                                                    const isEmpty = !field.value; 
+                                                    const isOverLimit = field.value?.length > 100;
+                                                    const isFieldDirty = getFieldState(`responsibles.${index}.responsible`);
                                                     return (
                                                         <TextAreaComponent
                                                             id={field.name}
                                                             idInput={field.name}
                                                             value={`${field.value}`}
                                                             label={`Responsable No. ${index+1}`}
-                                                            className="text-area-basic"
+                                                            className={`text-area-basic  ${isEmpty && isFieldDirty.isDirty ? "undefined error" : "" } ${isOverLimit ? "undefined error" : ""} `}
                                                             classNameLabel="text-black biggest bold text-required"
                                                             rows={4}
                                                             placeholder="Escribe aquí"
@@ -231,7 +249,18 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                             onChange={field.onChange}
                                                             errors={errors}
                                                             characters={100}
-                                                        ></TextAreaComponent>
+                                                        >
+                                                            {isEmpty && isFieldDirty.isDirty && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    El campo es obligatorio
+                                                                </p>
+                                                            )}
+                                                            {isOverLimit && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    Solo se permiten 100 caracteres
+                                                                </p>
+                                                            )}
+                                                        </TextAreaComponent>
                                                     );
                                                 }}
                                             />
@@ -265,13 +294,16 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     }
                                                 }}
                                                 render={({ field }) => {
+                                                    const isEmpty = !field.value; 
+                                                    const isOverLimit = field.value?.length > 100;
+                                                    const isFieldDirty = getFieldState(`coresponsibles.${index}.coresponsible`);
                                                     return (
                                                         <TextAreaComponent
                                                             id={field.name}
                                                             idInput={field.name}
                                                             value={`${field.value}`}
                                                             label={`Corresponsable No. ${index+1}`}
-                                                            className="text-area-basic"
+                                                            className={`text-area-basic  ${isEmpty && isFieldDirty.isDirty ? "undefined error" : "" } ${isOverLimit ? "undefined error" : ""} `}
                                                             classNameLabel="text-black biggest bold text-required"
                                                             rows={4}
                                                             placeholder="Escribe aquí"
@@ -279,7 +311,18 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                             onChange={field.onChange}
                                                             errors={errors}
                                                             characters={100}
-                                                        ></TextAreaComponent>
+                                                        >
+                                                            {isEmpty && isFieldDirty.isDirty && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    El campo es obligatorio
+                                                                </p>
+                                                            )}
+                                                            {isOverLimit && (
+                                                                <p className="error-message bold not-margin-padding">
+                                                                    Solo se permiten 100 caracteres
+                                                                </p>
+                                                            )}
+                                                        </TextAreaComponent>
                                                     );
                                                 }}
                                             />

@@ -43,7 +43,8 @@ export default function useIndicatorsPai(actionId:number) {
         setValue,
         reset,
         watch: watchIndicators,
-        trigger
+        trigger,
+        getFieldState
     } = useForm<IIndicatorsPAI>({
         resolver,
         mode: "all",
@@ -267,6 +268,7 @@ export default function useIndicatorsPai(actionId:number) {
         PAIData,
         register,
         getValues,
+        getFieldState,
         indicatorType,
         fieldsProducts,
         appendProducts,
