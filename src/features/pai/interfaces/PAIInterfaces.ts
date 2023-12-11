@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IIndicatorsPAI } from "./IndicatorsPAIInterfaces";
+import { IIndicatorsPAI, IIndicatorsPAITemp } from "./IndicatorsPAIInterfaces";
 
 export interface ICreatePlanAction {
   id?: number;
@@ -24,7 +24,7 @@ export interface IAddAction {
   id?: number;
   action: number;
   description: string;
-  indicators?: IIndicatorsPAI[];
+  indicators?: IIndicatorsPAITemp[];
 }
 
 export interface ILine {

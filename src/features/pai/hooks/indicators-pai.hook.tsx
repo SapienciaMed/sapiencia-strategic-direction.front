@@ -7,6 +7,7 @@ import { useContext,
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IIndicatorsPAI, 
+         IIndicatorsPAITemp, 
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
@@ -45,7 +46,7 @@ export default function useIndicatorsPai(actionId:number) {
         watch: watchIndicators,
         trigger,
         getFieldState
-    } = useForm<IIndicatorsPAI>({
+    } = useForm<IIndicatorsPAITemp>({
         resolver,
         mode: "all",
         defaultValues: {
@@ -137,7 +138,7 @@ export default function useIndicatorsPai(actionId:number) {
         const values = getValues();
         setPAIData( prev => {
             prev?.actionsPAi.map( action => {
-                if(( action?.id | action?.action ) === actionId){
+                if((action?.id | action?.action ) === actionId){
                     action.indicators = action?.indicators 
                     ?  [ ...action.indicators, { ...values, actionId: actionId }] 
                     :  [{ ...values, actionId: actionId }]
