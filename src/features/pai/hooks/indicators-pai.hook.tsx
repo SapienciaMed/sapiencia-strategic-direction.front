@@ -6,7 +6,7 @@ import { useContext,
          useState } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { IIndicatorsPAI, 
+import { IIndicatorsPAITemp, 
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
@@ -45,7 +45,7 @@ export default function useIndicatorsPai(actionId:number) {
         watch: watchIndicators,
         trigger,
         getFieldState
-    } = useForm<IIndicatorsPAI>({
+    } = useForm<IIndicatorsPAITemp>({
         resolver,
         mode: "all",
         defaultValues: {
@@ -64,7 +64,7 @@ export default function useIndicatorsPai(actionId:number) {
     });
 
     useEffect(() => {
-        const subscription = watchIndicators(( values: IIndicatorsPAI ) => setPAIData(prev => {
+        const subscription = watchIndicators(( values: IIndicatorsPAITemp ) => setPAIData(prev => {
             if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
             if(values?.projectIndicator) trigger("indicatorDesc");
             return { ...prev }
