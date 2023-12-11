@@ -11,6 +11,7 @@ import { ProjectsContextProvider } from "./features/projects/contexts/projects.c
 import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
+import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -21,7 +22,6 @@ function App() {
   const FinishProjectPage = lazy(() => import("./features/projects/pages/finish-project.page"));
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
-  const IndicatorsPaiPage = lazy(() => import("./features/pai/pages/indicators-pai.page"));
   const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
   const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
@@ -130,7 +130,7 @@ function App() {
                 }
               />
 
-              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIPage />} />;
+              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage/></RevisionPAIContextProvider>} />;
             </Routes>
           </Suspense>
         </Router>

@@ -1,4 +1,5 @@
 @import "./mixins.scss";
+@import "./variables.scss";
 
 div[id="single-spa-application:@sapiencia/strategic-direction"] {
     height: 100%;
@@ -589,6 +590,21 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     row-gap: 1.5rem;
 }
 
+.strategic-direction-revision-pai-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    row-gap: 1rem;
+}
+
+.strategic-direction-complete-revision-pai {
+    margin: 2rem 1rem;
+    .strategic-direction-complete-revision-pai-button {
+        color: $main-color;
+        cursor: pointer;
+    }
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -1026,5 +1042,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 2rem;
         justify-items: end;
     }
+    
+    .strategic-direction-revision-pai-form {
+        grid-template-columns: 70% 1fr;
+    }
 
+    .strategic-direction-complete-revision-pai {
+        margin: 4rem 10rem;
+    }
 }

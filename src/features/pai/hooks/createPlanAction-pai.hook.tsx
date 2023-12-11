@@ -391,19 +391,7 @@ export default function usePlanActionPAIData() {
         control,
         name: "risksPAI",
       });
-    
 
-    
-    const TypePAIData: IDropdownProps[] = [
-        {
-            name: "Proyecto",
-            value: 1
-        },
-        {
-            name: "Proceso",
-            value: 2
-        },
-    ];
 
     const idType = watch("typePAI")
 
@@ -590,5 +578,5 @@ export default function usePlanActionPAIData() {
        
     }
 
-    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }
