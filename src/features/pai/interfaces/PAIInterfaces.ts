@@ -38,7 +38,8 @@ export interface IRisks {
 }
 
 export interface IRevisionFormPAI {
-  field: number;
+  idIndicator?: number;
+  field: string;
   observations: string;
 }
 

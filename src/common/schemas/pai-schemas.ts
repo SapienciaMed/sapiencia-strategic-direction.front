@@ -21,5 +21,6 @@ export const CreatePAIValidator = yup.object({
 });
 
 export const revisionPAIValidator = yup.object({
-
+    field: yup.string().required("Debe seleccionar una opción"),
+    observations: yup.string().required("El campo es obligatorio").max(5000, "Solo se permiten 5000 caracteres"),
 });
