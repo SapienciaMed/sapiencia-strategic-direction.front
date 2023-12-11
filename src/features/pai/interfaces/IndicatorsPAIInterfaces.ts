@@ -18,11 +18,20 @@ export interface IIndicatorsPAI {
     projectIndicator?: number;
     indicatorType: number;
     indicatorDesc?: string;
-    bimesters: IBimester[];
+    firstBimester?: number,
+    secondBimester?: number,
+    thirdBimester?: number,
+    fourthBimester?: number,
+    fifthBimester?: number,
+    sixthBimester?: number,
     totalPlannedGoal: number;
     products: IProduct[];
     responsibles: IResponsible[];
     coresponsibles: ICoResponsible[];
+}
+
+export interface IIndicatorsPAITemp extends IIndicatorsPAI {
+    bimesters: IBimester[];
 }
 
 export interface IBimester {
