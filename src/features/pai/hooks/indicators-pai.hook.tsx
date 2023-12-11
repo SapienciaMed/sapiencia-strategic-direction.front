@@ -137,7 +137,7 @@ export default function useIndicatorsPai(actionId:number) {
         const values = getValues();
         setPAIData( prev => {
             prev?.actionsPAi.map( action => {
-                if(( action?.id | action?.action ) === actionId){
+                if((action?.id | action?.action ) === actionId){
                     action.indicators = action?.indicators 
                     ?  [ ...action.indicators, { ...values, actionId: actionId }] 
                     :  [{ ...values, actionId: actionId }]
