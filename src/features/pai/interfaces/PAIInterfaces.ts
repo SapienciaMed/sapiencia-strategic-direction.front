@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IIndicatorsPAI, IIndicatorsPAITemp } from "./IndicatorsPAIInterfaces";
+import { IIndicatorsPAITemp } from "./IndicatorsPAIInterfaces";
 
 export interface ICreatePlanAction {
   id?: number;
@@ -17,7 +17,7 @@ export interface ICreatePlanAction {
   dateModify?: Date | null;
   version?: string | null;
   status: number;
-  revision?: IRevisionPAI;
+  revision?: IRevisionPAI[];
 }
 
 export interface IAddAction {

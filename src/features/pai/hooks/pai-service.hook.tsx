@@ -1,6 +1,6 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { ApiResponse } from "../../../common/utils/api-response";
-import {  ICreatePlanAction } from "../interfaces/PAIInterfaces";
+import {  ICreatePlanAction, IRevisionPAI } from "../interfaces/PAIInterfaces";
 
 export function usePaiService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
@@ -27,5 +27,18 @@ export function usePaiService() {
         return get(`${paiUrl}${endpoint}`);
     }
 
-    return { CreatePAI, UpdatePAI, GetPAIById } 
+    async function CreateRevisionPAI(data: IRevisionPAI): Promise<ApiResponse<IRevisionPAI>> {
+        const endpoint: string = "/revision/create";
+        return post(`${paiUrl}${endpoint}`, data);
+    }
+
+    async function UpdateRevisionPAI(
+        id: number,
+        data: IRevisionPAI
+    ): Promise<ApiResponse<IRevisionPAI>> {
+        const endpoint: string = `/revision/update/${id}`;
+        return put(`${paiUrl}${endpoint}`, data);
+    }
+
+    return { CreatePAI, UpdatePAI, GetPAIById, CreateRevisionPAI, UpdateRevisionPAI } 
 }
