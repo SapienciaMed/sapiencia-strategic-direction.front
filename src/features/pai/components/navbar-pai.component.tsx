@@ -35,7 +35,7 @@ export function NavbarPai(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                navigate("./../");
+                                navigate('/direccion-estrategica/pai');
                                 setMessage({});
                             }
                         });
@@ -71,7 +71,7 @@ export function NavbarPai(): React.JSX.Element {
                                 setMessage({});
                             },
                             onOk: () => {
-                                navigate("./../");
+                                navigate('/direccion-estrategica/pai');
                                 setMessage({});
                             }
                         });

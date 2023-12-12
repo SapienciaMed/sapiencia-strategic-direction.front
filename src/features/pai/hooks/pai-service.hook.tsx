@@ -1,10 +1,11 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
+import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
 import {  ICreatePlanAction, IRevisionPAI } from "../interfaces/PAIInterfaces";
 
 export function usePaiService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
-    const paiUrl: string = "/api/v1/pai";
+    const paiUrl: string = "/api/v1/pai"; 
     const { get, post, put } = useCrudService(baseURL);
 
     async function CreatePAI(data: ICreatePlanAction): Promise<ApiResponse<ICreatePlanAction>> {
@@ -40,5 +41,12 @@ export function usePaiService() {
         return put(`${paiUrl}${endpoint}`, data);
     }
 
-    return { CreatePAI, UpdatePAI, GetPAIById, CreateRevisionPAI, UpdateRevisionPAI } 
+    async function GetAllStatus(): Promise<ApiResponse<MasterTable[]>>{
+        const endpoint: string = `/status/get-all`;
+        return get(`${paiUrl}${endpoint}`);
+    }
+
+  
+
+    return { CreatePAI, UpdatePAI, GetPAIById, CreateRevisionPAI, UpdateRevisionPAI , GetAllStatus} 
 }

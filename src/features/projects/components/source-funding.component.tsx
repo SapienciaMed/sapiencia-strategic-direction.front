@@ -290,7 +290,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     // actividades y suma de años
     let activitiesPreinversion = 0
 
-    debugger;
 
     projectData.preparation?.activities?.activities?.filter(activity => activity.stageActivity === 1).forEach(activity => {
         activitiesPreinversion += activity.budgetsMGA.year0.budget + activity.budgetsMGA.year1.budget + activity.budgetsMGA.year2.budget + activity.budgetsMGA.year3.budget + activity.budgetsMGA.year4.budget
@@ -339,7 +338,6 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
 
 
     function validarFormulario() {
-        debugger;
         if (activitiesPreinversion != 0 && fundingPreInversion != 0 && activitiesPreinversion == fundingPreInversion) {
             setEsValidoPreinversion(true);
         } else if (activitiesPreinversion != 0 || fundingPreInversion != 0) {
