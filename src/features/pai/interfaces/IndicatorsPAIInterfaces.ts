@@ -36,7 +36,19 @@ export interface IIndicatorsPAITemp extends IIndicatorsPAI {
 
 export interface IBimester {
     bimester?: string;
-    value: number;
+    value?: number;
+    disaggregate?: IDisaggregate[];
+    showDisaggregate?: boolean;
+    sumOfPercentage?: number;
+}
+
+export interface IDisaggregate {
+    id?: number;
+    index?: number;
+    indexBimester?: number;
+    percentage: number,
+    description: string;
+    totalPercentage?: number;
 }
 
 export interface IProduct {

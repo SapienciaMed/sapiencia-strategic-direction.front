@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IIndicatorsPAI, IIndicatorsPAITemp } from "./IndicatorsPAIInterfaces";
+import { IIndicatorsPAI, IIndicatorsPAITemp, IDisaggregate } from "./IndicatorsPAIInterfaces";
 
 export interface ICreatePlanAction {
   id?: number;
@@ -18,6 +18,7 @@ export interface ICreatePlanAction {
   version?: string | null;
   status: number;
   revision?: IRevisionPAI;
+  disaggregate?: IDisaggregate[];
 }
 
 export interface IAddAction {
