@@ -22,6 +22,7 @@ function App() {
   const FinishProjectPage = lazy(() => import("./features/projects/pages/finish-project.page"));
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
+  const PlanAction = lazy(() => import("./features/pai/pages/planAction-pai.page"));
   const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
   const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
@@ -121,7 +122,7 @@ function App() {
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
 
               <Route
-                path={"/direccion-estrategica/pai"}
+                path={"/direccion-estrategica/pai/crear-pai"}
                 element={
                   <PrivateRoute
                     element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
@@ -129,6 +130,18 @@ function App() {
                   />
                 }
               />
+
+
+                <Route
+                  path={"/direccion-estrategica/pai/"}
+                  element={
+                    <PrivateRoute
+                      element={<PlanAction />}
+                      allowedAction={"PROYECTO_CONSULTAR"}
+                    />
+                  }
+             />
+              
 
               <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage/></RevisionPAIContextProvider>} />;
             </Routes>

@@ -14,7 +14,11 @@ function RevisionPAIPage(): React.JSX.Element {
         errorsPAI,
         fieldsLines,
         fieldsRisks,
-        accordionsActions
+        accordionsActions,
+        onSaveTemp,
+        onSubmit,
+        onCancel,
+        onComplete
     } = useRevisionPAIData(idPAI);
     return (
         <div className='crud-page full-height'>
@@ -224,7 +228,7 @@ function RevisionPAIPage(): React.JSX.Element {
                     </FormComponent>
                 </div>
                 <div className="card-table strategic-direction-complete-revision-pai">
-                    <p className="text-black large bold text-center">Para formular la versión 1 del PAI haz clic <span className="strategic-direction-complete-revision-pai-button">aquí</span></p>
+                    <p className="text-black large bold text-center">Para formular la versión 1 del PAI haz clic <span className="strategic-direction-complete-revision-pai-button" onClick={onComplete}>aquí</span></p>
                 </div>
                 <div className="projects-footer-mobile mobile">
                     <div className="save-temp">
@@ -232,18 +236,18 @@ function RevisionPAIPage(): React.JSX.Element {
                             className="button-main huge hover-three button-save"
                             value="Guardar temporalmente"
                             type="button"
-                            action={() => { }}
+                            action={onSaveTemp}
                         />
                     </div>
                     <div className="mobile-actions">
-                        <span className="bold text-center button" onClick={() => {}}>
+                        <span className="bold text-center button" onClick={onCancel}>
                             Cancelar
                         </span>
                         <ButtonComponent
                             value="Guardar"
                             className="button-main huge hover-three"
                             type="button"
-                            action={() => { }}
+                            action={onSubmit}
                         />
                     </div>
                 </div>
@@ -253,17 +257,17 @@ function RevisionPAIPage(): React.JSX.Element {
                     className="button-main huge hover-three"
                     value="Guardar temporalmente"
                     type="button"
-                    action={() => { }}
+                    action={onSaveTemp}
                 />
                 <div className="buttons-bot">
-                    <span className="bold text-center button" onClick={() => { }}>
+                    <span className="bold text-center button" onClick={onCancel}>
                         Cancelar
                     </span>
                     <ButtonComponent
                         className={`button-main extra_extra_large hover-three button-save`}
                         value={"Guardar"}
                         type="button"
-                        action={() => { }}
+                        action={onSubmit}
                     />
                 </div>
             </div>

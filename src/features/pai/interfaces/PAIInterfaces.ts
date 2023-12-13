@@ -17,8 +17,7 @@ export interface ICreatePlanAction {
   dateModify?: Date | null;
   version?: string | null;
   status: number;
-  revision?: IRevisionPAI;
-  disaggregate?: IDisaggregate[];
+  revision?: IRevisionPAI[];
 }
 
 export interface IAddAction {

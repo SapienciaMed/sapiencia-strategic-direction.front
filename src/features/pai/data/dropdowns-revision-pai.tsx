@@ -61,7 +61,7 @@ export const indicatorFieldsData: IDropdownProps[] = [
         name: "Bimestre 6"
     },
     {
-        value: "",
+        value: "totalPlannedGoal",
         name: "Meta total planeada"
     },
     {

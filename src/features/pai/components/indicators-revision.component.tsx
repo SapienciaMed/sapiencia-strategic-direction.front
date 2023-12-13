@@ -1,4 +1,4 @@
-import { IIndicatorsPAI, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
+import { IIndicatorsPAI, IIndicatorsPAITemp, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
@@ -19,15 +19,43 @@ interface IProps {
 }
 
 function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<IProps>): React.JSX.Element {
+    const ind: IIndicatorsPAITemp = {
+        ...indicator, bimesters: [
+            {
+                bimester: "1",
+                value: indicator.firstBimester
+            },
+            {
+                bimester: "2",
+                value: indicator.secondBimester
+            },
+            {
+                bimester: "3",
+                value: indicator.thirdBimester
+            },
+            {
+                bimester: "4",
+                value: indicator.fourthBimester
+            },
+            {
+                bimester: "5",
+                value: indicator.fifthBimester
+            },
+            {
+                bimester: "6",
+                value: indicator.sixthBimester
+            },
+        ]
+    };
     const [fieldsData, setFieldsData] = useState<IDropdownProps[]>([]);
-    const { revisionPAI, setRevisionPAI, pai, projectPAI } = useContext(RevisionPAIContext);
+    const { revisionPAI, setRevisionPAI, pai } = useContext(RevisionPAIContext);
     const { getIndicatorsType } = useEntitiesService();
     const {
         register,
         control,
         formState: { errors },
         setValue
-    } = useForm<any>({ mode: "all", defaultValues: indicator });
+    } = useForm<any>({ mode: "all", defaultValues: ind });
     const { fields: fieldsBimesters } = useFieldArray({
         control: control,
         name: "bimesters",
@@ -138,7 +166,6 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 setValue("indicatorType", indType.name || "");
             }
         }).catch(() => { });
-        //const indicatorProject = projectPAI.indicators
     }, []);
     return (
         <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
@@ -222,7 +249,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                             <InputComponent
                                                 id={field.name}
                                                 idInput={field.name}
-                                                value={`${field.value}`}
+                                                value={`${field.value}%`}
                                                 label={`Bimestre ${index + 1}`}
                                                 className="input-basic"
                                                 classNameLabel="text-black biggest bold"
@@ -238,6 +265,27 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                             )
                         })
                     }
+                    <Controller
+                        control={control}
+                        name={`totalPlannedGoal`}
+                        render={({ field }) => {
+                            return (
+                                <InputComponent
+                                    id={field.name}
+                                    idInput={field.name}
+                                    value={`${field.value}%`}
+                                    label={`Meta total planeada`}
+                                    className="input-basic"
+                                    classNameLabel="text-black biggest bold"
+                                    typeInput={"text"}
+                                    register={register}
+                                    onChange={field.onChange}
+                                    errors={errors}
+                                    disabled
+                                />
+                            );
+                        }}
+                    />
                 </div>
             </div>
             <div className="card-table">

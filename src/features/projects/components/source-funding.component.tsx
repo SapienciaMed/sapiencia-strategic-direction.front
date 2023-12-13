@@ -290,6 +290,7 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     // actividades y suma de años
     let activitiesPreinversion = 0
 
+
     projectData.preparation?.activities?.activities?.filter(activity => activity.stageActivity === 1).forEach(activity => {
         activitiesPreinversion += activity.budgetsMGA.year0.budget + activity.budgetsMGA.year1.budget + activity.budgetsMGA.year2.budget + activity.budgetsMGA.year3.budget + activity.budgetsMGA.year4.budget
     });
@@ -312,19 +313,19 @@ function SourceFundingComponent({ disableNext, enableNext, setForm }: IProps): R
     let fundingPreInversion = 0
 
     projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding => sourceFunding.stage === 1).forEach(sourceFunding => {
-        fundingPreInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
+        fundingPreInversion += Number(sourceFunding.year0) + Number(sourceFunding.year1) + Number(sourceFunding.year2) + Number(sourceFunding.year3) + Number(sourceFunding.year4)
     });
 
     let fundingOperacion = 0
 
     projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding => sourceFunding.stage === 2).forEach(sourceFunding => {
-        fundingOperacion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
+        fundingOperacion += Number(sourceFunding.year0) + Number(sourceFunding.year1) + Number(sourceFunding.year2) + Number(sourceFunding.year3) + Number(sourceFunding.year4)
     });
 
     let fundingInversion = 0
 
     projectData.programation?.sourceFunding?.sourceFunding?.filter(sourceFunding => sourceFunding.stage === 3).forEach(sourceFunding => {
-        fundingInversion += sourceFunding.year0 + sourceFunding.year1 + sourceFunding.year2 + sourceFunding.year3 + sourceFunding.year4
+        fundingInversion += Number(sourceFunding.year0) + Number(sourceFunding.year1) + Number(sourceFunding.year2) + Number(sourceFunding.year3) + Number(sourceFunding.year4)
     });
 
 
