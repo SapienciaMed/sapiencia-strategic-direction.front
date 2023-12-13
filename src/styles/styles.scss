@@ -305,6 +305,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     padding: 0px 0px 1rem;
 }
 
+
+
 .p-datatable-row-expansion {
     [role="cell"] {
         padding: 0.5rem 0px !important;
@@ -605,6 +607,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.title-area-disaggregate, .inputNumber-disaggregate {
+ width: 100%;
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -665,6 +671,20 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.disaggregate-container {
+    margin: -28px 10px 47px 0px;
+}
+
+.footer-disaggregate {
+    & .p-datatable-footer {
+        max-width: 33.33%;
+        color: #000;
+        font-size: 17px;
+        text-align: center;
+    }
+}
+
+
 @media (min-width: 1024px) {
     div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: initial;
@@ -718,6 +738,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         .grid-span-3-columns {
             grid-column: span 3;
         }
+    }
+
+    .title-area-disaggregate, .inputNumber-disaggregate {
+        max-width: 35%;
     }
 
     .risk-component-2 {
@@ -856,6 +880,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         padding: 1.5rem 0px;
         row-gap: 1.5rem;
         column-gap: 1.5rem;
+    }
+
+    .block-container {
+        display: block;
+        padding: 1.5rem 0px;
     }
 
     .identification-objectives-container {

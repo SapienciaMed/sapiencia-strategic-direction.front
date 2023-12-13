@@ -8,6 +8,7 @@ import { InputNumberComponent } from "../../../common/components/Form/input-numb
 import useIndicatorsPai from "../hooks/indicators-pai.hook";
 import disaggregate from '../../../public/images/icons/disaggregate.svg';
 import { NavbarPai } from "../components/navbar-pai.component";
+import TableDisaggregate from "../components/table-disaggregate";
 
 interface IIndicatorsPaiProps {
     actionId: number;
@@ -20,20 +21,24 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
             register,
             getValues,
             getFieldState,
-            indicatorType,
             appendProducts,
             fieldsProducts,
             fieldsBimesters,
+            onAddDisaggregate,
             indicatorTypeData,
             onChangeBimesters,
             onChangeIndicator,
             appendResponsible,
             fieldsResponsible,
+            onShowDisaggregate,
+            removeDisaggregate,
             appendCoResponsible,
             fieldsCoResponsible,
+            onChangeDisaggregate,
             controlIndicatorsPai,
-            projectIndicatorsData } = useIndicatorsPai(actionId);
-
+            projectIndicatorsData,
+            indicatorTypeValidation } = useIndicatorsPai(actionId);
+    
     return (
         <>
             <div className="main-page full-height">
@@ -102,18 +107,20 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                     <div className="title-area">
                                         <div className="text-black extra-large bold">Meta planeada</div>
                                     </div>
-                                    <div className="project-filters-container">
+                                    <div className={`${ indicatorTypeValidation ? "block-container" : "project-filters-container"}`}>
                                         {fieldsBimesters.map((fields, index) => {
                                         return (
                                             <div key={index}>
-                                                <div className="title-area">
+                                                <div className={`title-area ${indicatorTypeValidation && "title-area-disaggregate"}`}>
                                                     <label className="text-black biggest bold text-required">
                                                         Bimestre {index+1}
                                                     </label>
-                                                    { indicatorType?.name == "Porcentaje" 
-                                                        && <div className="title-button text-main large" style={{"marginTop": 0}} onClick={() =>{}}>
-                                                            Desagregar <img src={disaggregate} alt="Desagregar bimestre"/>
-                                                        </div>
+                                                    { indicatorTypeValidation 
+                                                        &&  <div className="title-button text-main large" style={{"marginTop": 0}} onClick={() =>{
+                                                            onShowDisaggregate(index);
+                                                        }}>
+                                                                Desagregar <img src={disaggregate} alt="Desagregar bimestre"/>
+                                                            </div> 
                                                     }
                                                 </div>
                                                 <InputNumberComponent
@@ -121,11 +128,28 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     control={controlIndicatorsPai}
                                                     errors={errors}
                                                     classNameLabel="text-black biggest bold text-required"
-                                                    className={`inputNumber-basic`}
+                                                    className={`inputNumber-basic ${indicatorTypeValidation && "inputNumber-disaggregate"}`}
                                                     onChange={onChangeBimesters}
                                                     useGrouping={false}
                                                     suffix="%"
                                                 />
+                                                { indicatorTypeValidation
+                                                    &&  <div key={index} className="disaggregate-container">
+                                                            <TableDisaggregate 
+                                                                actionId={actionId} 
+                                                                indexDisaggregate={index}
+                                                                controlIndicatorsPai={controlIndicatorsPai}
+                                                                errors={errors}
+                                                                register={register}
+                                                                sumOfPercentage={fields.sumOfPercentage}
+                                                                removeDisaggregate={removeDisaggregate}
+                                                                onAddDisaggregate={onAddDisaggregate}
+                                                                onChangeDisaggregate={onChangeDisaggregate}
+                                                                tableData={fields.disaggregate}
+                                                                showDissagregate={fields.showDisaggregate}
+                                                            />
+                                                    </div> 
+                                                }
                                             </div>
                                         )})}
 
@@ -135,7 +159,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                             label="Meta total planeada"
                                             errors={errors}
                                             classNameLabel="text-black biggest bold"
-                                            className={`inputNumber-basic`}
+                                            className={`inputNumber-basic ${indicatorTypeValidation && "inputNumber-disaggregate"}`}
                                             disabled={true}
                                             useGrouping={false}
                                             suffix="%"
