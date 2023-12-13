@@ -61,12 +61,12 @@ export default function useIndicatorsPai(actionId:number) {
             totalPlannedGoal: 0,
             actionId: actionId,
             bimesters: [
-                {bimester: "first",  value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0},
-                {bimester: "second", value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0},
-                {bimester: "third",  value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0},
-                {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0},
-                {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0},
-                {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: false, sumOfPercentage: 0}
+                {bimester: "first",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
+                {bimester: "second", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
+                {bimester: "third",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
+                {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
+                {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
+                {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0}
             ]
         }
     });
@@ -317,8 +317,8 @@ export default function useIndicatorsPai(actionId:number) {
     }
 
     const onShowDisaggregate = ( index:number ) => {
-        setValue(`bimesters.${index}.showDisaggregate`,true);
-        fieldsBimesters.at(index).showDisaggregate = true;
+        setValue(`bimesters.${index}.showDisaggregate`,1);
+        fieldsBimesters.at(index).showDisaggregate = 1;
         trigger("bimesters")
     }
 

@@ -39,7 +39,7 @@ export const indicatorsPAIValidator = yup.object({
                     .max(200, "Solo se permiten 200 caracteres"),
                 }))
             ),
-            showDisaggregate: yup.boolean().optional(),
+            showDisaggregate: yup.number().optional(),
             sumOfPercentage: yup.number().optional()
         }))
     ),
