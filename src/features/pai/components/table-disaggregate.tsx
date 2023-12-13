@@ -25,7 +25,7 @@ interface IProps<T> {
     onAddDisaggregate: Function,
     onChangeDisaggregate: Function,
     tableData: IDisaggregate[],
-    showDissagregate: boolean,
+    showDissagregate: number,
 }
 
 const TableDisaggregate = ({ actionId, sumOfPercentage, showDissagregate, controlIndicatorsPai, errors, register, removeDisaggregate, onAddDisaggregate, onChangeDisaggregate, indexDisaggregate, tableData, widthTable, horizontalScroll = false }: IProps<any>): React.JSX.Element => {
@@ -103,7 +103,7 @@ const TableDisaggregate = ({ actionId, sumOfPercentage, showDissagregate, contro
 
     const widthColumns = width / ((disaggregateColumns.length + 1) * 2);
 
-    if(!showDissagregate) return (<></>);
+    if(showDissagregate === 0) return (<></>);
     
     const mobilTemplate = (item) => {
         const childrens = item.childrens;
