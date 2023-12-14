@@ -10,7 +10,7 @@ function SchedulesPAIPage(): React.JSX.Element {
             <div className='main-page full-height'>
                 <div className='card-table'>
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Cronograma del plan de acción institucional</div>
+                        <div className="text-black extra-large bold">Cronograma del Plan de Acción Institucional</div>
                     </div>
                     {createPermission && <FormComponent action={editSchedule !== null ? onSubmitEdit : onSubmitCreate}>
                         <div className="card-table">

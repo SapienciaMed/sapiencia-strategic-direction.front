@@ -35,6 +35,7 @@ export interface IIndicatorsPAITemp extends IIndicatorsPAI {
 }
 
 export interface IBimester {
+    id?: number;
     idIndicatorPAI?: number;
     bimester?: string;
     value?: number;

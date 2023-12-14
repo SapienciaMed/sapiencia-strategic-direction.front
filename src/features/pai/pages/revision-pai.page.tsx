@@ -1,12 +1,16 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useRevisionPAIData from "../hooks/revision-pai.hook";
-import { ButtonComponent, FormComponent, InputComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { Controller } from "react-hook-form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
 import AccordionsComponent from "../../../common/components/accordions.component";
 
-function RevisionPAIPage(): React.JSX.Element {
+export interface IPropsRevisionPAI {
+    status: "revision" | "correction" | "adjustment";
+}
+
+function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Element {
     const { id: idPAI } = useParams();
     const {
         controlPAI,
@@ -18,8 +22,14 @@ function RevisionPAIPage(): React.JSX.Element {
         onSaveTemp,
         onSubmit,
         onCancel,
-        onComplete
-    } = useRevisionPAIData(idPAI);
+        onComplete,
+        getValues,
+        typePAIData,
+        nameProjectsData,
+        nameProcessData,
+        fieldsChange,
+        fieldsCorrected
+    } = useRevisionPAIData({ idPAI, status });
     return (
         <div className='crud-page full-height'>
             <div className='main-page full-height'>
@@ -46,7 +56,8 @@ function RevisionPAIPage(): React.JSX.Element {
                                                 register={registerPAI}
                                                 onChange={field.onChange}
                                                 errors={errorsPAI}
-                                                disabled />
+                                                disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
+                                            />
                                         );
                                     }}
                                 />
@@ -59,49 +70,31 @@ function RevisionPAIPage(): React.JSX.Element {
                                     prefix="$ "
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
-                                    disabled
+                                    disabled={!fieldsChange.includes("budgetPAI") || fieldsCorrected.includes("budgetPAI")}
                                 />
-                                <Controller
+                                <SelectComponent
                                     control={controlPAI}
-                                    name={`typePAI`}
-                                    render={({ field }) => {
-                                        return (
-                                            <InputComponent
-                                                id={field.name}
-                                                idInput={field.name}
-                                                value={`${field.value}`}
-                                                label="Tipo de plan de acción institucional"
-                                                className="input-basic"
-                                                classNameLabel="text-black biggest bold"
-                                                typeInput={"text"}
-                                                register={registerPAI}
-                                                onChange={field.onChange}
-                                                errors={errorsPAI}
-                                                disabled />
-                                        );
-                                    }}
+                                    idInput={"typePAI"}
+                                    className={`select-basic span-width`}
+                                    label="Tipo de plan de acción institucional"
+                                    classNameLabel={`text-black biggest bold`}
+                                    data={typePAIData}
+                                    errors={errorsPAI}
+                                    filter={true}
+                                    disabled={!fieldsChange.includes("typePAI") || fieldsCorrected.includes("typePAI")}
                                 />
                             </div>
                             <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
-                                <Controller
+                                <SelectComponent
                                     control={controlPAI}
-                                    name={`namePAI`}
-                                    render={({ field }) => {
-                                        return (
-                                            <InputComponent
-                                                id={field.name}
-                                                idInput={field.name}
-                                                value={`${field.value}`}
-                                                label="Nombre proyecto - proceso"
-                                                className="input-basic"
-                                                classNameLabel="text-black biggest bold"
-                                                typeInput={"text"}
-                                                register={registerPAI}
-                                                onChange={field.onChange}
-                                                errors={errorsPAI}
-                                                disabled />
-                                        );
-                                    }}
+                                    idInput={"namePAI"}
+                                    className={`select-basic span-width`}
+                                    label="Nombre proyecto - proceso"
+                                    classNameLabel={`text-black biggest bold`}
+                                    data={getValues("typePAI") === 1 ? nameProjectsData : nameProcessData}
+                                    errors={errorsPAI}
+                                    filter={true}
+                                    disabled={!fieldsChange.includes("namePAI") || fieldsCorrected.includes("namePAI")}
                                 />
                             </div>
                             <Controller
@@ -120,7 +113,7 @@ function RevisionPAIPage(): React.JSX.Element {
                                             register={registerPAI}
                                             onChange={field.onChange}
                                             errors={errorsPAI}
-                                            disabled
+                                            disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
                                         >
                                         </TextAreaComponent>
                                     );
@@ -142,7 +135,7 @@ function RevisionPAIPage(): React.JSX.Element {
                                             register={registerPAI}
                                             onChange={field.onChange}
                                             errors={errorsPAI}
-                                            disabled
+                                            disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
                                         >
                                         </TextAreaComponent>
                                     );
@@ -153,71 +146,77 @@ function RevisionPAIPage(): React.JSX.Element {
                             <div className="title-area">
                                 <div className="text-black large bold">Articulación plan estratégico</div>
                             </div>
-                            {
-                                fieldsLines.map((item, index) => {
-                                    return (
-                                        <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
-                                            <Controller
-                                                control={controlPAI}
-                                                name={`linePAI.${index}.line`}
-                                                defaultValue=""
-                                                render={({ field }) => {
-                                                    return (
-                                                        <TextAreaComponent
-                                                            id={field.name}
-                                                            idInput={field.name}
-                                                            value={`${field.value}`}
-                                                            label={`Línea No. ${index + 1}`}
-                                                            classNameLabel="text-black biggest bold"
-                                                            className="text-area-basic"
-                                                            register={registerPAI}
-                                                            onChange={field.onChange}
-                                                            errors={errorsPAI}
-                                                            disabled
-                                                        >
-                                                        </TextAreaComponent>
-                                                    );
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                })
-                            }
+                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
+                                {
+                                    fieldsLines.map((item, index) => {
+                                        const idField = getValues(`linePAI.${index}.id`);
+                                        return (
+                                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
+                                                <Controller
+                                                    control={controlPAI}
+                                                    name={`linePAI.${index}.line`}
+                                                    defaultValue=""
+                                                    render={({ field }) => {
+                                                        return (
+                                                            <TextAreaComponent
+                                                                id={field.name}
+                                                                idInput={field.name}
+                                                                value={`${field.value}`}
+                                                                label={`Línea No. ${index + 1}`}
+                                                                classNameLabel="text-black biggest bold"
+                                                                className="text-area-basic"
+                                                                register={registerPAI}
+                                                                onChange={field.onChange}
+                                                                errors={errorsPAI}
+                                                                disabled={!fieldsChange.includes(`linePAI.${idField}`) || fieldsCorrected.includes(`linePAI.${idField}`)}
+                                                            >
+                                                            </TextAreaComponent>
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
                         <div className="card-table">
                             <div className="title-area">
                                 <div className="text-black large bold">Riesgos asociados</div>
                             </div>
-                            {
-                                fieldsRisks.map((item, index) => {
-                                    return (
-                                        <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
-                                            <Controller
-                                                control={controlPAI}
-                                                name={`risksPAI.${index}.risk`}
-                                                defaultValue=""
-                                                render={({ field }) => {
-                                                    return (
-                                                        <TextAreaComponent
-                                                            id={field.name}
-                                                            idInput={field.name}
-                                                            value={`${field.value}`}
-                                                            label={`Riesgo No. ${index + 1}`}
-                                                            classNameLabel="text-black biggest bold"
-                                                            className="text-area-basic"
-                                                            register={registerPAI}
-                                                            onChange={field.onChange}
-                                                            errors={errorsPAI}
-                                                            disabled
-                                                        >
-                                                        </TextAreaComponent>
-                                                    );
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                })
-                            }
+                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
+                                {
+                                    fieldsRisks.map((item, index) => {
+                                        const idField = getValues(`risksPAI.${index}.id`);
+                                        return (
+                                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
+                                                <Controller
+                                                    control={controlPAI}
+                                                    name={`risksPAI.${index}.risk`}
+                                                    defaultValue=""
+                                                    render={({ field }) => {
+                                                        return (
+                                                            <TextAreaComponent
+                                                                id={field.name}
+                                                                idInput={field.name}
+                                                                value={`${field.value}`}
+                                                                label={`Riesgo No. ${index + 1}`}
+                                                                classNameLabel="text-black biggest bold"
+                                                                className="text-area-basic"
+                                                                register={registerPAI}
+                                                                onChange={field.onChange}
+                                                                errors={errorsPAI}
+                                                                disabled={!fieldsChange.includes(`risksPAI.${idField}`) || fieldsCorrected.includes(`risksPAI.${idField}`)}
+                                                            >
+                                                            </TextAreaComponent>
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
                         <div className="title-area">
                             <div className="text-black extra-large bold">Acciones del PAI</div>
@@ -227,9 +226,9 @@ function RevisionPAIPage(): React.JSX.Element {
                         </div>
                     </FormComponent>
                 </div>
-                <div className="card-table strategic-direction-complete-revision-pai">
+                {status === "revision" && <div className="card-table strategic-direction-complete-revision-pai">
                     <p className="text-black large bold text-center">Para formular la versión 1 del PAI haz clic <span className="strategic-direction-complete-revision-pai-button" onClick={onComplete}>aquí</span></p>
-                </div>
+                </div>}
                 <div className="projects-footer-mobile mobile">
                     <div className="save-temp">
                         <ButtonComponent
