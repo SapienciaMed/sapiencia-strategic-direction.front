@@ -328,8 +328,8 @@ export default function useIndicatorsPai(actionId:number) {
 
     const validateBimester = ( validationBimester: IBimester, indexBimester: number, sumOfPercentage: number ) => {
         let errors = [];
-        if(sumOfPercentage + validationBimester?.value > 100 || sumOfPercentage + validationBimester?.value < 100 ){
-            errors.push(`Los porcentajes no coinciden. No pueden ser ${sumOfPercentage + validationBimester?.value > 100 ? "superior" : "inferior"} al total del bimestre.`)
+        if(sumOfPercentage > validationBimester?.value || sumOfPercentage < validationBimester?.value ){
+            errors.push(`Los porcentajes no coinciden. No pueden ser ${sumOfPercentage > validationBimester?.value ? "superior" : "inferior"} al total del bimestre.`)
         }
         fieldsBimesters.at(indexBimester).errors = errors;
         setValue(`bimesters.${indexBimester}.errors`, errors);
