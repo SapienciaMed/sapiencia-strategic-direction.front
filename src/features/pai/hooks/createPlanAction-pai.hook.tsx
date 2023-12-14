@@ -344,7 +344,7 @@ export default function usePlanActionPAIData() {
         getProjectsByFilters(2).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
-                    return { name: entity.bpin + "-" + entity.project, value: entity.id };
+                    return { name: entity.bpin + " - " + entity.project, value: entity.id };
                 });
                 setProjectsPAIData(arrayEntities);
                 setProjectsData(response.data)
