@@ -598,7 +598,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                         if (response.operation.code === EResponseCodes.OK) {
                             setMessage({
                                 title: "Plan de acción institucional",
-                                description: "¡Formulado versión 1 exitosamente!",
+                                description: "¡Devuelto exitosamente!",
                                 show: true,
                                 background: true,
                                 OkTitle: "Aceptar",
@@ -609,7 +609,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                                 onCancel: () => {
                                     setMessage({});
                                 }
-                            })
+                            });
                         } else {
                             setMessage({
                                 title: "¡Ha ocurrido un error!",
@@ -652,7 +652,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                         if (response.operation.code === EResponseCodes.OK) {
                             setMessage({
                                 title: "Plan de acción institucional",
-                                description: "¡Formulado versión 1 exitosamente!",
+                                description: "¡Devuelto exitosamente!",
                                 show: true,
                                 background: true,
                                 OkTitle: "Aceptar",
@@ -663,7 +663,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                                 onCancel: () => {
                                     setMessage({});
                                 }
-                            })
+                            });
                         } else {
                             setMessage({
                                 title: "¡Ha ocurrido un error!",
@@ -873,7 +873,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                         if (response.operation.code === EResponseCodes.OK) {
                             setMessage({
                                 title: "Plan de acción institucional",
-                                description: "¡Devuelto exitosamente!",
+                                description: "¡Formulado versión 1 exitosamente!",
                                 show: true,
                                 background: true,
                                 OkTitle: "Aceptar",
@@ -884,7 +884,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                                 onCancel: () => {
                                     setMessage({});
                                 }
-                            })
+                            });
                         } else {
                             setMessage({
                                 title: "¡Ha ocurrido un error!",
@@ -913,7 +913,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                         if (response.operation.code === EResponseCodes.OK) {
                             setMessage({
                                 title: "Plan de acción institucional",
-                                description: "¡Devuelto exitosamente!",
+                                description: "¡Formulado versión 1 exitosamente!",
                                 show: true,
                                 background: true,
                                 OkTitle: "Aceptar",
@@ -924,7 +924,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                                 onCancel: () => {
                                     setMessage({});
                                 }
-                            })
+                            });
                         } else {
                             setMessage({
                                 title: "¡Ha ocurrido un error!",
