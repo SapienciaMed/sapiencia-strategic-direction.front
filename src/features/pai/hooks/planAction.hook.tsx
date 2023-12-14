@@ -90,10 +90,10 @@ export function useProjectsData() {
             header: "Nombre proyecto - proceso",
             renderCell: (row) => {
                 if(row.typePAI == 1){
-                    const project = projectsPAIData.find(project => project.value === row.namePAI);
+                    const project = projectsPAIData?.find(project => project.value === row.namePAI);
                     return <>{project?.name}</>
                 }else {
-                    const process = processPAIData.find(project => project.value === row.namePAI);
+                    const process = processPAIData?.find(project => project.value === row.namePAI);
                     return <>{process?.name}</>
                 }
             }
