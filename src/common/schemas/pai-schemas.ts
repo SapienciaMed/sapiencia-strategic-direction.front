@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const CreatePAIValidator = yup.object({
     yearPAI: yup.number().required("Debe seleccionar una opción"),
-    budgetPAI: yup.number().required("Debe seleccionar una opción"),
+    budgetPAI: yup.number().required("El campo es obligatorio"),
     typePAI: yup.number().required("Debe seleccionar una opción"),
     namePAI: yup.number().required("Debe seleccionar una opción"),
     actionsPAi: yup.array().of(
