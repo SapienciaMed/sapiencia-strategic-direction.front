@@ -357,7 +357,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 if (response.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: "Podrás continuar la revisión del plan en cualquier momento",
+                        description: "Podrás continuar en cualquier momento",
                         show: true,
                         background: true,
                         OkTitle: "Aceptar",
@@ -411,7 +411,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 if (response.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: "Podrás continuar la revisión del plan en cualquier momento",
+                        description: "Podrás continuar en cualquier momento",
                         show: true,
                         background: true,
                         OkTitle: "Aceptar",
@@ -470,7 +470,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 if (response.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: "Podrás continuar la revisión del plan en cualquier momento",
+                        description: "Podrás continuar en cualquier momento",
                         show: true,
                         background: true,
                         OkTitle: "Aceptar",
@@ -525,7 +525,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 if (response.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: "Podrás continuar la revisión del plan en cualquier momento",
+                        description: "Podrás continuar en cualquier momento",
                         show: true,
                         background: true,
                         OkTitle: "Aceptar",
