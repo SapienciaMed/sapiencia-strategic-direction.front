@@ -25,9 +25,9 @@ import IndicatorsPaiPage from "../pages/indicators-pai.page";
 
 export default function usePlanActionPAIData() {
     useBreadCrumb({
-        isPrimaryPage: true,
+        isPrimaryPage: false,
         name: "Formular Plan de Acción Institucional (PAI)",
-        url: "/direccion-estrategica/pai/",
+        url: "/direccion-estrategica/pai/crear-pai",
     });
 
     const [tableData, setTableData] = useState<IAddAction[]>([]);
@@ -39,6 +39,7 @@ export default function usePlanActionPAIData() {
     const [projectsPAIData, setProjectsPAIData] = useState<IDropdownProps[]>(null);
     const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const [View, ViewData] = useState<boolean>(false);
+    const [actionCount, setActionCount] = useState<number>(1);
     const [riskText, RisksTextData] = useState<string>("");
 
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
@@ -116,8 +117,6 @@ export default function usePlanActionPAIData() {
                     setMessage({});
                 },
                 onOk: async () => {
-                    debugger;
-                    console.log(PAIData);
                     if (data?.id) {
                         const formData = { ...PAIData,
                                     user: authorization.user.numberDocument, 
@@ -132,7 +131,7 @@ export default function usePlanActionPAIData() {
                                 background: true,
                                 OkTitle: "Aceptar",
                                 onOk: () => {
-                                    navigate('../../');
+                                    navigate('/direccion-estrategica/pai');
                                     setMessage({});
                                 }
                             })
@@ -152,7 +151,6 @@ export default function usePlanActionPAIData() {
                                 });
                         }
                     } else {
-                        debugger;
                         const formData = { ...PAIData, user: authorization.user.numberDocument, status: 2 };
                         const res = await CreatePAI(formData);
                         setPAIData(prev => {
@@ -177,7 +175,7 @@ export default function usePlanActionPAIData() {
                                         background: true,
                                         OkTitle: "Aceptar",
                                         onOk: () => {
-                                            navigate('../../');
+                                            navigate('/direccion-estrategica/pai');
                                             setMessage({});
                                         }
                                     })
@@ -205,7 +203,7 @@ export default function usePlanActionPAIData() {
 
     const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
             if (data?.id) {
-                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1,indicators:PAIData.indicators};
+                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1};
                 const res = await UpdatePAI(dataPai.id, dataPai);
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
@@ -213,7 +211,7 @@ export default function usePlanActionPAIData() {
                         description: <p className="text-primary biggest">Podrás continuar la formulación del plan en cualquier momento</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -224,11 +222,11 @@ export default function usePlanActionPAIData() {
                 } else {
                     if (res.operation.message === ("Error: id.")) {
                         setMessage({
-                            title: "Validación BPIN.",
-                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            title: "Validación ID.",
+                            description: <p className="text-primary biggest">Ya existe un plan con el id ingresado, por favor verifique.</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -242,7 +240,7 @@ export default function usePlanActionPAIData() {
                             description: <p className="text-primary biggest">{res.operation.message}</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -261,10 +259,10 @@ export default function usePlanActionPAIData() {
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                        description: <p className="text-primary biggest">Podrás continuar la formulación del plan en cualquier momento</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -273,13 +271,13 @@ export default function usePlanActionPAIData() {
                         }
                     });
                 } else {
-                    if (res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                    if (res.operation.message === ("Error: Ya existe un plan con este id.")) {
                         setMessage({
                             title: "Validación BPIN.",
-                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            description: <p className="text-primary biggest">Ya existe un plan con este id , por favor verifique.</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -293,7 +291,7 @@ export default function usePlanActionPAIData() {
                             description: <p className="text-primary biggest">{res.operation.message}</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -346,7 +344,7 @@ export default function usePlanActionPAIData() {
         getProjectsByFilters(2).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
-                    return { name: entity.bpin + " " + entity.project, value: entity.id };
+                    return { name: entity.bpin + " - " + entity.project, value: entity.id };
                 });
                 setProjectsPAIData(arrayEntities);
                 setProjectsData(response.data)
@@ -367,7 +365,6 @@ export default function usePlanActionPAIData() {
     }, [watch]);
     
     const changeActionsPAi = (data: IAddAction, row?: IAddAction) => {
-        debugger;
         if (row) {
             const CreateActionData = getValues("actionsPAi").filter(item => item !== row).concat(data);
             setValue("actionsPAi", CreateActionData);
@@ -393,19 +390,7 @@ export default function usePlanActionPAIData() {
         control,
         name: "risksPAI",
       });
-    
 
-    
-    const TypePAIData: IDropdownProps[] = [
-        {
-            name: "Proyecto",
-            value: 1
-        },
-        {
-            name: "Proceso",
-            value: 2
-        },
-    ];
 
     const idType = watch("typePAI")
 
@@ -471,7 +456,7 @@ export default function usePlanActionPAIData() {
                 <Controller
                     control={control}
                     name={`actionsPAi.${row.action}.description`}
-                    defaultValue={"           "}
+                    defaultValue={""}
                     render={({ field }) => {
                         return (
                             <InputInplaceComponent
@@ -566,9 +551,7 @@ export default function usePlanActionPAIData() {
 
 
   const onSubmitCreate = () => {
-    
-    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""})
-    console.log(fieldsActionsPAi)
+    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""});
     //setTableData(tableData.concat({action:tableData.length + 1, description:""}));
   };
 
@@ -594,5 +577,5 @@ export default function usePlanActionPAIData() {
        
     }
 
-    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, TypePAIData, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
 }

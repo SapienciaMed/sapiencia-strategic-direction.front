@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IIndicatorsPAI } from "./IndicatorsPAIInterfaces";
+import { IIndicatorsPAI, IIndicatorsPAITemp, IDisaggregate } from "./IndicatorsPAIInterfaces";
 
 export interface ICreatePlanAction {
   id?: number;
@@ -13,18 +13,18 @@ export interface ICreatePlanAction {
   risksPAI: IRisks[];
   selectedRisk: number;
   actionsPAi: IAddAction[];
-  indicators?: IIndicatorsPAI[];
   dateCreate?: DateTime | null;
   dateModify?: Date | null;
   version?: string | null;
   status: number;
-  revision?: IRevisionPAI;
+  revision?: IRevisionPAI[];
 }
 
 export interface IAddAction {
   id?: number;
   action: number;
   description: string;
+  indicators?: IIndicatorsPAITemp[];
 }
 
 export interface ILine {
@@ -38,7 +38,8 @@ export interface IRisks {
 }
 
 export interface IRevisionFormPAI {
-  field: number;
+  idIndicator?: number;
+  field: string;
   observations: string;
 }
 

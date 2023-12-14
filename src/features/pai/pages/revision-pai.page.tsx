@@ -1,9 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useRevisionPAIData from "../hooks/revision-pai.hook";
-import { FormComponent, InputComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, InputComponent, TextAreaComponent } from "../../../common/components/Form";
 import { Controller } from "react-hook-form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import AccordionsComponent from "../../../common/components/accordions.component";
 
 function RevisionPAIPage(): React.JSX.Element {
     const { id: idPAI } = useParams();
@@ -13,9 +14,11 @@ function RevisionPAIPage(): React.JSX.Element {
         errorsPAI,
         fieldsLines,
         fieldsRisks,
-        controlRevision,
-        registerRevision,
-        errorsRevision,
+        accordionsActions,
+        onSaveTemp,
+        onSubmit,
+        onCancel,
+        onComplete
     } = useRevisionPAIData(idPAI);
     return (
         <div className='crud-page full-height'>
@@ -67,14 +70,14 @@ function RevisionPAIPage(): React.JSX.Element {
                                                 id={field.name}
                                                 idInput={field.name}
                                                 value={`${field.value}`}
-                                                label="Año del plan de acción institucional"
+                                                label="Tipo de plan de acción institucional"
                                                 className="input-basic"
                                                 classNameLabel="text-black biggest bold"
                                                 typeInput={"text"}
                                                 register={registerPAI}
                                                 onChange={field.onChange}
-                                                errors={errorsPAI} 
-                                                disabled/>
+                                                errors={errorsPAI}
+                                                disabled />
                                         );
                                     }}
                                 />
@@ -164,7 +167,7 @@ function RevisionPAIPage(): React.JSX.Element {
                                                             id={field.name}
                                                             idInput={field.name}
                                                             value={`${field.value}`}
-                                                            label={`Línea No. ${index+1}`}
+                                                            label={`Línea No. ${index + 1}`}
                                                             classNameLabel="text-black biggest bold"
                                                             className="text-area-basic"
                                                             register={registerPAI}
@@ -199,7 +202,7 @@ function RevisionPAIPage(): React.JSX.Element {
                                                             id={field.name}
                                                             idInput={field.name}
                                                             value={`${field.value}`}
-                                                            label={`Riesgo No. ${index+1}`}
+                                                            label={`Riesgo No. ${index + 1}`}
                                                             classNameLabel="text-black biggest bold"
                                                             className="text-area-basic"
                                                             register={registerPAI}
@@ -216,7 +219,56 @@ function RevisionPAIPage(): React.JSX.Element {
                                 })
                             }
                         </div>
+                        <div className="title-area">
+                            <div className="text-black extra-large bold">Acciones del PAI</div>
+                        </div>
+                        <div className="card-table">
+                            <AccordionsComponent data={accordionsActions} />
+                        </div>
                     </FormComponent>
+                </div>
+                <div className="card-table strategic-direction-complete-revision-pai">
+                    <p className="text-black large bold text-center">Para formular la versión 1 del PAI haz clic <span className="strategic-direction-complete-revision-pai-button" onClick={onComplete}>aquí</span></p>
+                </div>
+                <div className="projects-footer-mobile mobile">
+                    <div className="save-temp">
+                        <ButtonComponent
+                            className="button-main huge hover-three button-save"
+                            value="Guardar temporalmente"
+                            type="button"
+                            action={onSaveTemp}
+                        />
+                    </div>
+                    <div className="mobile-actions">
+                        <span className="bold text-center button" onClick={onCancel}>
+                            Cancelar
+                        </span>
+                        <ButtonComponent
+                            value="Guardar"
+                            className="button-main huge hover-three"
+                            type="button"
+                            action={onSubmit}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="container-button-bot space-between">
+                <ButtonComponent
+                    className="button-main huge hover-three"
+                    value="Guardar temporalmente"
+                    type="button"
+                    action={onSaveTemp}
+                />
+                <div className="buttons-bot">
+                    <span className="bold text-center button" onClick={onCancel}>
+                        Cancelar
+                    </span>
+                    <ButtonComponent
+                        className={`button-main extra_extra_large hover-three button-save`}
+                        value={"Guardar"}
+                        type="button"
+                        action={onSubmit}
+                    />
                 </div>
             </div>
         </div>

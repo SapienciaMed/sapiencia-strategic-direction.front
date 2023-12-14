@@ -301,7 +301,6 @@ export function useProjectsCrudData() {
         });
     }
     const updateStatus = async () => {
-
         const data = {
             ...projectData,
             user: authorization.user.numberDocument,
@@ -345,7 +344,7 @@ export function useProjectsCrudData() {
                 }
             });
         }
-
+        setProjectData({...projectData, status: 3});
         return setMessage({
             title: "Proyecto en actualización",
             description: <p className="text-primary biggest">¡Cambios guardados exitosamente!</p>,

@@ -1,4 +1,5 @@
 @import "./mixins.scss";
+@import "./variables.scss";
 
 div[id="single-spa-application:@sapiencia/strategic-direction"] {
     height: 100%;
@@ -304,6 +305,8 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     padding: 0px 0px 1rem;
 }
 
+
+
 .p-datatable-row-expansion {
     [role="cell"] {
         padding: 0.5rem 0px !important;
@@ -589,6 +592,25 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     row-gap: 1.5rem;
 }
 
+.strategic-direction-revision-pai-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    row-gap: 1rem;
+}
+
+.strategic-direction-complete-revision-pai {
+    margin: 2rem 1rem;
+    .strategic-direction-complete-revision-pai-button {
+        color: $main-color;
+        cursor: pointer;
+    }
+}
+
+.title-area-disaggregate, .inputNumber-disaggregate {
+ width: 100%;
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -649,6 +671,20 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
     }
 }
 
+.disaggregate-container {
+    margin: -28px 10px 47px 0px;
+}
+
+.footer-disaggregate {
+    & .p-datatable-footer {
+        max-width: 33.33%;
+        color: #000;
+        font-size: 17px;
+        text-align: center;
+    }
+}
+
+
 @media (min-width: 1024px) {
     div[id="single-spa-application:@sapiencia/strategic-direction"] {
         width: initial;
@@ -702,6 +738,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         .grid-span-3-columns {
             grid-column: span 3;
         }
+    }
+
+    .title-area-disaggregate, .inputNumber-disaggregate {
+        max-width: 35%;
     }
 
     .risk-component-2 {
@@ -840,6 +880,11 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         padding: 1.5rem 0px;
         row-gap: 1.5rem;
         column-gap: 1.5rem;
+    }
+
+    .block-container {
+        display: block;
+        padding: 1.5rem 0px;
     }
 
     .identification-objectives-container {
@@ -1026,5 +1071,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
         column-gap: 2rem;
         justify-items: end;
     }
+    
+    .strategic-direction-revision-pai-form {
+        grid-template-columns: 70% 1fr;
+    }
 
+    .strategic-direction-complete-revision-pai {
+        margin: 4rem 10rem;
+    }
 }

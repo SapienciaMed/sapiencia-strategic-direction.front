@@ -1,53 +1,43 @@
 import React from "react";
 import usePlanActionPAIData from "../hooks/createPlanAction-pai.hook";
-import { ButtonComponent, DatePickerComponent, FormComponent, SelectComponent,InputComponent,TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "../../projects/components/table-expansible.component";
 import { Tooltip } from "primereact/tooltip";
-import { NavbarPai }  from "../components/navbar-pai.component";
-
-interface IProps {
-    setForm: React.Dispatch<React.SetStateAction<React.JSX.Element>>;
-}
-
-const tooltipOptions = { position: 'top', mouseTrack: true, effectDuration: 300, showDelay: 100, hideDelay: 100 };
+import { NavbarPai } from "../components/navbar-pai.component";
+import { typePAIData } from "../data/dropdowns-revision-pai";
 
 function CreatePlanActionPAIPage(): React.JSX.Element {
-
-    const { errors, 
-            navigate, 
-            getFieldState, 
-            fields,
-            changeActionsPAi,
-            riskText,
-            View,
-            NamePAIData, 
-            riskPAIData, 
-            riskFields, 
-            TypePAIData,
-            tableData, 
-            appendRisk,
-            append, 
-            remove, 
-            yearsArray, 
-            setMessage, 
-            control, 
-            register,
-            fieldsActionsPAi,
-            createPlanActionActions,
-            createPlanActionColumns,
-            onSubmitCreate,
-            IndicatorsFormComponent
-         } = usePlanActionPAIData();
-         
+    const { errors,
+        navigate,
+        getFieldState,
+        fields,
+        changeActionsPAi,
+        riskText,
+        View,
+        NamePAIData,
+        riskPAIData,
+        riskFields,
+        tableData,
+        appendRisk,
+        append,
+        remove,
+        yearsArray,
+        setMessage,
+        control,
+        register,
+        fieldsActionsPAi,
+        createPlanActionActions,
+        createPlanActionColumns,
+        onSubmitCreate,
+        IndicatorsFormComponent
+    } = usePlanActionPAIData();
     return (
-
-        <>
-            <div>
-                {IndicatorsFormComponent}
-                <div style={{ display: IndicatorsFormComponent ? "none" : "block" }}>
+        <div>
+            {IndicatorsFormComponent}
+            <div style={{ display: IndicatorsFormComponent ? "none" : "block" }}>
                 <div className='crud-page full-height'>
                     <div className='main-page full-height'>
                         <div className='card-table'>
@@ -85,7 +75,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                         locale="es-CO"
                                                         minFractionDigits={2} />
                                                 );
-                                            } } />
+                                            }} />
 
                                         <SelectComponent
                                             control={control}
@@ -93,7 +83,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                             className={`select-basic span-width`}
                                             label="Tipo de plan de acción institucional"
                                             classNameLabel="text-black biggest bold text-required"
-                                            data={TypePAIData}
+                                            data={typePAIData}
                                             errors={errors}
                                             filter={true} />
                                         <SelectComponent
@@ -128,7 +118,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                     >
                                                     </TextAreaComponent>
                                                 );
-                                            } } />
+                                            }} />
                                         <div>
 
                                             <Tooltip
@@ -165,7 +155,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                         >
                                                         </TextAreaComponent>
                                                     );
-                                                } } />
+                                                }} />
 
                                         </div>
 
@@ -180,7 +170,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
 
                                         <div className="title-button text-main large" onClick={() => {
                                             append({ line: null });
-                                        } }>
+                                        }}>
                                             Agregar Línea <AiOutlinePlusCircle />
                                         </div>
                                     </div>
@@ -224,7 +214,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                                                 )}
                                                             </TextAreaComponent>
                                                         );
-                                                    } } />
+                                                    }} />
                                             </div>
                                         );
                                     })}
@@ -247,7 +237,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                             type="button"
                                             action={() => {
                                                 appendRisk({ risk: riskText }); // Agrega el riesgo con el valor seleccionado
-                                            } } />
+                                            }} />
 
                                     </div>
                                     {riskFields.map((fields, index) => {
@@ -277,7 +267,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
 
                                                             </TextAreaComponent>
                                                         );
-                                                    } } />
+                                                    }} />
                                             </div>
                                         );
                                     })}
@@ -293,10 +283,10 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
 
                                             <div className="actions-pai">
 
-                                                <div className="title-button text-main large" onClick={() => {
-                                                } }>
+                                                {/* <div className="title-button text-main large" onClick={() => {
+                                                }}>
                                                     Consolidado de acciones PAI <AiOutlinePlusCircle />
-                                                </div>
+                                                </div> */}
                                                 <div className="title-button text-main large" onClick={onSubmitCreate}>
                                                     Agregar acción <AiOutlinePlusCircle />
                                                 </div>
@@ -315,11 +305,9 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                     </div>
                 </div>
                 <NavbarPai />
-                </div> 
             </div>
-   
-        </>
-        
+        </div>
+
     )
 }
 

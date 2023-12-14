@@ -348,7 +348,7 @@ const paginatorFooter: PaginatorTemplateOptions = {
     },
 };
 
-const ActionComponent = (props: {
+export const ActionComponent = (props: {
     row: any;
     actions: ITableAction<any>[];
 }): React.JSX.Element => {
@@ -380,7 +380,7 @@ const ActionComponent = (props: {
 };
 
 // Metodo que retorna el icono o nombre de la accion
-function getIconElement(icon: string, element: "name" | "src") {
+export function getIconElement(icon: string, element: "name" | "src") {
     switch (icon) {
         case "Detail":
             return element == "name" ? (

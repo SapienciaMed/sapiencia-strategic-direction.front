@@ -150,6 +150,7 @@ export function ActorCreateComponent({
     {
       icon: "Edit",
       onClick: (row) => {
+      
         setMessage({
           title: "Editar Actor",
           description: (
@@ -331,7 +332,7 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
     register,
     formState: { errors },
     control,
-  } = useForm<IParticipatingActors>({ resolver, mode: "all", defaultValues: item ? {...item} : {} });
+  } = useForm<IParticipatingActors>({ resolver, mode: "all", defaultValues: item ? {...item,position : Number(item.position)} : {} });
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleSubmit,
@@ -398,7 +399,6 @@ const ActorFormComponent = forwardRef<IRef, IPropsActorsForm>((props, ref) => {
       <Controller
         control={control}
         name={"position"}
-        defaultValue={null}
         render={({ field }) => {
           return (
             <SelectComponent

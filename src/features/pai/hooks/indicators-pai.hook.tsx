@@ -1,12 +1,13 @@
-import { useFieldArray, 
+import { Controller, UseFieldArrayRemove, useFieldArray, 
          useForm, 
          useWatch } from "react-hook-form";
-import { useContext, 
+import { useCallback, useContext, 
          useEffect, 
          useState } from "react";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { IIndicatorsPAI, 
+import { IBimester, IDisaggregate, IIndicatorsPAI, 
+         IIndicatorsPAITemp, 
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
@@ -15,6 +16,10 @@ import { IIndicatorIndicative, IIndicatorAction, IProject } from '../interfaces/
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useProjectsService } from "./projects-service.hook";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
+import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import { InputInplaceComponent } from "../../../common/components/Form";
 export default function useIndicatorsPai(actionId:number) {
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
     const { PAIData, 
@@ -29,8 +34,11 @@ export default function useIndicatorsPai(actionId:number) {
             setIndicatorsFormComponent } = useContext(PAIContext);
     const [ indicatorTypeData, setIndicatorTypeData ] = useState<IPAIIndicatorType[]>();
     const [ indicators, setIndicators ] = useState<Array<IIndicatorIndicative | IIndicatorAction>>();
+    const [ indicatorTypeValidation, setIndicatorTypeValidation ] = useState<boolean>(false);
     const [ projectData, setProjectData ] = useState<IProject>();
     const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
+    const [ tableData, setTableData ] = useState<IDisaggregate[]>([]);
+    const [ disaggregateColumns, setDisaggregateColumns] = useState<ITableElement<IDisaggregate>[]>([]);
     const { setMessage } = useContext(AppContext);
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
@@ -43,8 +51,9 @@ export default function useIndicatorsPai(actionId:number) {
         setValue,
         reset,
         watch: watchIndicators,
-        trigger
-    } = useForm<IIndicatorsPAI>({
+        trigger,
+        getFieldState
+    } = useForm<IIndicatorsPAITemp>({
         resolver,
         mode: "all",
         defaultValues: {
@@ -52,32 +61,35 @@ export default function useIndicatorsPai(actionId:number) {
             totalPlannedGoal: 0,
             actionId: actionId,
             bimesters: [
-                {bimester: "first",  value: null },
-                {bimester: "second", value: null},
-                {bimester: "third",  value: null},
-                {bimester: "fourth", value: null},
-                {bimester: "fifth",  value: null},
-                {bimester: "sixth",  value: null}
+                {bimester: "first",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "second", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "third",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []}
             ]
         }
     });
 
     useEffect(() => {
-        const subscription = watchIndicators(( values: IIndicatorsPAI ) => setPAIData(prev => {
+        const subscription = watchIndicators(( values: IIndicatorsPAITemp ) => setPAIData(prev => {
             if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
             if(values?.projectIndicator) trigger("indicatorDesc");
-            return { ...prev, indicators: prev?.indicators ? [ ...prev.indicators ] :  [] }
+            return { ...prev }
         }));
         return () => subscription.unsubscribe();
     }, [watchIndicators]);
 
     useEffect(()=>{
-        if(isValid){
-           setSaveButtonAction( () => onSubmit );
-           setTempButtonAction( () => onAddNewIndicator )
-        }
+        setIndicatorTypeValidation(!(indicatorType?.name != "Porcentaje"));
+    },[indicatorType])
+
+    useEffect(()=>{
         setDisableSaveButton(!isValid);
         setDisableTempBtn(!isValid);
+        if(!isValid) return;
+        setSaveButtonAction( () => onSubmit );
+        setTempButtonAction( () => onAddNewIndicator )
     },[isValid])
 
     useEffect(() => {
@@ -119,29 +131,32 @@ export default function useIndicatorsPai(actionId:number) {
     },[indicators])
 
     useEffect(()=>{
-        if(projectData){
-            let arrayIndicators= [];
-            for(let i = 0; i < indicators?.length; i++){
-                const indicator = projectData.activities
-                ?.find( activity => activity.productMGA === indicators[i].productMGA);
-                arrayIndicators.push({ 
-                    name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, 
-                    value: indicators[i].type 
-                })
-            }
-            setProjectIndicatorsData(arrayIndicators);
+        if(!projectData) return;
+        let arrayIndicators= [];
+        for(let i = 0; i < indicators?.length; i++){
+            const indicator = projectData.activities
+            ?.find( activity => activity.productMGA === indicators[i].productMGA);
+            arrayIndicators.push({ 
+                name: `${indicator?.productMGA} - ${indicator?.productDescriptionMGA}`, 
+                value: indicators[i].type 
+            })
         }
+        setProjectIndicatorsData(arrayIndicators);
     },[projectData])
 
     const onSaveIndicator = () => {
-        if(isValid){
-            const values = getValues();
-            setPAIData( prev => {
-                return { ...prev, 
-                    indicators: prev?.indicators ?  [ ...prev.indicators, { ...values, actionId: actionId }] :  [{ ...values, actionId: actionId }]
+        if(!isValid) return;
+        const values = getValues();
+        setPAIData( prev => {
+            prev?.actionsPAi.map( action => {
+                if((action?.id | action?.action ) === actionId){
+                    action.indicators = action?.indicators 
+                    ?  [ ...action.indicators, { ...values, actionId: actionId }] 
+                    :  [{ ...values, actionId: actionId }]
                 }
             });
-        }
+            return { ...prev }
+        });
     }
     
     const onSubmit = () => {
@@ -172,6 +187,7 @@ export default function useIndicatorsPai(actionId:number) {
             }
         })
     }
+
     const onCancel = () => {
         setMessage({
             title: "Cancelar acción",
@@ -192,11 +208,21 @@ export default function useIndicatorsPai(actionId:number) {
         })
     }
     const onAddNewIndicator = () => {
-        if(isValid){
-            onSaveIndicator();
-            reset();
-        }
+        if(!isValid) return;
+        onSaveIndicator();
+        setMessage({
+            title: "Datos guardados",
+            description: "¡Indicador guardado exitosamente!",
+            show: true,
+            background: true,
+            OkTitle: "Aceptar",
+            onOk: () => {
+                setMessage({});
+            }
+        });
+        reset();
     }
+    
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
         const sumOfBimesters = bimesters?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
@@ -214,7 +240,7 @@ export default function useIndicatorsPai(actionId:number) {
 
     const onChangeIndicator = () => onChangeBimesters();
 
-    const { fields: fieldsBimesters, remove: removeBimesters} = useFieldArray({
+    const { fields: fieldsBimesters, remove: removeBimesters } = useFieldArray({
         control: controlIndicatorsPai,
         name: "bimesters",
     });
@@ -231,6 +257,7 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         name: "products"
     });
+    
     const { fields: fieldsResponsible, append: appendResponsible} = useFieldArray({
         control: controlIndicatorsPai,
         name: "responsibles",
@@ -239,6 +266,7 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         name: "responsibles"
     });
+    
     const { fields: fieldsCoResponsible, append: appendCoResponsible} = useFieldArray({
         control: controlIndicatorsPai,
         name: "coresponsibles",
@@ -247,12 +275,78 @@ export default function useIndicatorsPai(actionId:number) {
         control: controlIndicatorsPai,
         name: "coresponsibles"
     });
-    
+
+    const updatedDisaggregate = ( disaggregate: IDisaggregate[] ) => {
+        return disaggregate.map((item, itemIndex) => ({
+            ...item,
+            index: itemIndex
+        }));
+    }
+
+    const onChangeDisaggregate = ( indexBimester: number, indexDisaggregate: number ) => {
+        const disaggregate = getValues(`bimesters.${indexBimester}.disaggregate`);
+        const sumOfPercentage = disaggregate?.reduce ? disaggregate?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.percentage, 0 ) : 0;
+        const disaggregateUpdated = updatedDisaggregate(disaggregate);
+        fieldsBimesters.at(indexBimester).sumOfPercentage = sumOfPercentage;
+        fieldsBimesters.at(indexBimester).disaggregate = [...disaggregateUpdated];
+        setValue(`bimesters.${indexBimester}.disaggregate`, [...disaggregateUpdated]);
+        setValue(`bimesters.${indexBimester}.disaggregate.${indexDisaggregate}.percentage`, disaggregate.at(indexDisaggregate).percentage);
+        setValue(`bimesters.${indexBimester}.disaggregate.${indexDisaggregate}.description`, disaggregate.at(indexDisaggregate).description);
+        trigger("bimesters")
+        validateBimester(getValues(`bimesters.${indexBimester}`),indexBimester,sumOfPercentage);
+    }
+
+    const onAddDisaggregate = ( index: number ) => {
+        const disaggregate = getValues(`bimesters.${index}.disaggregate`);
+        const newDisaggregate = {
+          indexBimester: index,
+          index: disaggregate.length === 0 ? 0 : disaggregate.length,
+          percentage: 0,
+          description: ""
+        };
+        const disaggregateUpdated = updatedDisaggregate(disaggregate);
+        fieldsBimesters.at(index).disaggregate = [...disaggregateUpdated, newDisaggregate];
+        setValue(`bimesters.${index}.disaggregate`,[...disaggregateUpdated, newDisaggregate]);
+    }
+
+    const removeDisaggregate = ( indexBimester: number, index: number ) => {
+        const disaggregate = getValues(`bimesters.${indexBimester}.disaggregate`);
+        const filtered = disaggregate?.filter(disaggregate => (disaggregate.index !== index)) || [];
+        const disaggregateUpdated = updatedDisaggregate(filtered);
+        fieldsBimesters.at(indexBimester).disaggregate = [...disaggregateUpdated];
+        setValue(`bimesters.${indexBimester}.disaggregate`, [...disaggregateUpdated]);
+        trigger("bimesters")
+    }
+
+    const onShowDisaggregate = ( index:number ) => {
+        setValue(`bimesters.${index}.showDisaggregate`,1);
+        fieldsBimesters.at(index).showDisaggregate = 1;
+        trigger("bimesters")
+    }
+
+    const validateBimester = ( validationBimester: IBimester, indexBimester: number, sumOfPercentage: number ) => {
+        let errors = [];
+        if(sumOfPercentage > validationBimester?.value || sumOfPercentage < validationBimester?.value ){
+            errors.push(`Los porcentajes no coinciden. No pueden ser ${sumOfPercentage > validationBimester?.value ? "superior" : "inferior"} al total del bimestre.`)
+        }
+        if(validationBimester?.disaggregate.length  < 2){
+            errors.push("Se debe realizar la desagregación del bimestre mínimo en dos registros.")
+        }
+
+        fieldsBimesters.at(indexBimester).errors = errors;
+        setValue(`bimesters.${indexBimester}.errors`, errors);
+    }
+
     return {
         errors,
+        trigger,
         PAIData,
+        setValue,
         register,
         getValues,
+        tableData,
+        setMessage,
+        getFieldState,
         indicatorType,
         fieldsProducts,
         appendProducts,
@@ -262,14 +356,21 @@ export default function useIndicatorsPai(actionId:number) {
         indicatorTypeData,
         onChangeIndicator,
         appendResponsible,
+        onAddDisaggregate,
         fieldsResponsible,
+        onShowDisaggregate,
         productsFieldArray,
+        removeDisaggregate,
+        disaggregateColumns,
         appendCoResponsible,
         bimestersFieldArray,
         fieldsCoResponsible,
         controlIndicatorsPai,
+        onChangeDisaggregate,
         projectIndicatorsData,
         responsibleFieldArray,
+        setDisaggregateColumns,
         coResponsibleFieldArray,
+        indicatorTypeValidation,
     }
 }

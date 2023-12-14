@@ -15,19 +15,41 @@ export interface IIndicatorsPAI {
     id?: number;
     actionId?: number;
     typePAI?: number;
-    projectIndicator: number;
+    projectIndicator?: number;
     indicatorType: number;
-    indicatorDesc: string;
-    bimesters: IBimester[];
+    indicatorDesc?: string;
+    firstBimester?: number,
+    secondBimester?: number,
+    thirdBimester?: number,
+    fourthBimester?: number,
+    fifthBimester?: number,
+    sixthBimester?: number,
     totalPlannedGoal: number;
     products: IProduct[];
     responsibles: IResponsible[];
     coresponsibles: ICoResponsible[];
 }
 
+export interface IIndicatorsPAITemp extends IIndicatorsPAI {
+    bimesters: IBimester[];
+}
+
 export interface IBimester {
+    idIndicatorPAI?: number;
     bimester?: string;
-    value: number;
+    value?: number;
+    disaggregate?: IDisaggregate[];
+    showDisaggregate?: number;
+    sumOfPercentage?: number;
+    errors?: any[]
+}
+
+export interface IDisaggregate {
+    id?: number;
+    index?: number;
+    indexBimester?: number;
+    percentage: number,
+    description: string;
 }
 
 export interface IProduct {

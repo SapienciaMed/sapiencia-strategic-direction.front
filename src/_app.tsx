@@ -11,6 +11,7 @@ import { ProjectsContextProvider } from "./features/projects/contexts/projects.c
 import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
+import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -21,7 +22,7 @@ function App() {
   const FinishProjectPage = lazy(() => import("./features/projects/pages/finish-project.page"));
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
-  const IndicatorsPaiPage = lazy(() => import("./features/pai/pages/indicators-pai.page"));
+  const PlanAction = lazy(() => import("./features/pai/pages/planAction-pai.page"));
   const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
   const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
@@ -121,11 +122,34 @@ function App() {
               <Route path={"/direccion-estrategica/test"} element={<TestPage />} />;
 
               <Route
-                path={"/direccion-estrategica/pai"}
+                path={"/direccion-estrategica/pai/crear-pai"}
                 element={
                   <PrivateRoute
                     element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
+                  />
+                }
+              />
+
+
+                <Route
+                  path={"/direccion-estrategica/pai/"}
+                  element={
+                    <PrivateRoute
+                      element={<PlanAction />}
+                      allowedAction={"PROYECTO_CONSULTAR"}
+                    />
+                  }
+             />
+              
+
+              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage/></RevisionPAIContextProvider>} />;
+              <Route
+                path={"/direccion-estrategica/consulta"}
+                element={
+                  <PrivateRoute
+                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
+                    allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
                   />
                 }
               />
