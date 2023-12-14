@@ -1,7 +1,7 @@
 import { IIndicatorsPAITemp, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { revisionPAIValidator } from "../../../common/schemas";
 import { useContext, useEffect, useState } from "react";

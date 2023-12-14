@@ -567,7 +567,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     const onSubmitRevision = () => {
         setMessage({
             title: "Revisión 1 formulación",
-            description: "¿Deseas formular la versión 1 del plan de acción institucional?",
+            description: "¿Deseas devolver el plan de acción institucional con las observaciones indicadas?",
             show: true,
             OkTitle: "Aceptar",
             cancelTitle: "Cancelar",
@@ -855,7 +855,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     const onComplete = () => {
         setMessage({
             title: "Revisión 1 formulación",
-            description: "¿Deseas devolver el plan de acción institucional con las observaciones indicadas?",
+            description: "¿Deseas formular la versión 1 del plan de acción institucional?",
             show: true,
             OkTitle: "Aceptar",
             cancelTitle: "Cancelar",
