@@ -232,9 +232,7 @@ export default function useIndicatorsPai(actionId:number) {
         const validateFullFill = bimesters?.find( bimester => !bimester.value );
         setValue("totalPlannedGoal",sumOfBimesters);
         setIndicatorType(indicatorType);
-        if( indicatorType?.name == "Porcentaje"){
-            setValue("totalPlannedGoal",sumOfBimesters / 100);
-        }else if( indicatorType?.name == "A demanda"){
+        if( indicatorType?.name == "A demanda"){
             setValue("totalPlannedGoal",sumOfBimesters / 6);
         } 
         if(!validateFullFill) trigger("totalPlannedGoal"); 
