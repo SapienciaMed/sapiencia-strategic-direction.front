@@ -45,10 +45,18 @@ export const indicatorsPAIValidator = yup.object({
         }))
     ),
     totalPlannedGoal: yup.number()
-    .notRequired()
-    .nullable()
-    .min(100, "Alerta. El total de la meta planeada no puede ser inferior a 100. ")
-    .max(100, "Alerta. El total de la meta planeada no puede ser mayor a 100. "),
+    .when(['indicatorType'], ([indicatorType], totalPlannedGoal ) => {
+        console.log('indicatorType:', indicatorType);
+        return indicatorType && indicatorType == 2
+        ? totalPlannedGoal
+            .min(100, "Alerta. El total de la meta planeada no puede ser inferior a 100. ")
+            .max(100, "Alerta. El total de la meta planeada no puede ser mayor a 100. ")
+            .notRequired()
+            .nullable()
+        : totalPlannedGoal
+            .notRequired()
+            .nullable()
+    }),
     products: yup.array().required().of(
         yup.object().shape(({
             product: yup.string()
