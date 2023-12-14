@@ -41,6 +41,7 @@ export interface IBimester {
     disaggregate?: IDisaggregate[];
     showDisaggregate?: number;
     sumOfPercentage?: number;
+    errors?: any[]
 }
 
 export interface IDisaggregate {

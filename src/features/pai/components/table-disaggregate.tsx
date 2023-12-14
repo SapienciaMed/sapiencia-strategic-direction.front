@@ -18,7 +18,7 @@ interface IProps<T> {
     horizontalScroll?: boolean
     widthTable?: string;
     controlIndicatorsPai: Control<IIndicatorsPAITemp, any>,
-    errors: FieldErrors<IIndicatorsPAITemp>,
+    errors: any[],
     register: UseFormRegister<IIndicatorsPAITemp>,
     sumOfPercentage: number,
     removeDisaggregate: Function,
@@ -214,6 +214,9 @@ const TableDisaggregate = ({ actionId, sumOfPercentage, showDissagregate, contro
                         footer={footer}
                     />
                 )}
+            { errors.length > 0 && 
+                <p className="error-message bold not-margin-padding">{errors.at(0)}</p>
+            }
             </div>
         </div>
     )
