@@ -66,17 +66,18 @@ export function useProjectsData() {
                 setProjectsData(response.data)
             } 
         });
+        getProcessPAI().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setProcessPAIData(arrayEntities);
+            }
+        }).catch(() => { });
     }, []);
 
-    getProcessPAI().then(response => {
-        if (response.operation.code === EResponseCodes.OK) {
-            const entities: IEntities[] = response.data;
-            const arrayEntities: IDropdownProps[] = entities.map((entity) => {
-                return { name: entity.description, value: entity.id };
-            });
-            setProcessPAIData(arrayEntities);
-        }
-    }).catch(() => { });
+
 
 
     const tableColumns: ITableElement<ICreatePlanAction>[] = [
