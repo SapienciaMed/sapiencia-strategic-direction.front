@@ -9,6 +9,7 @@ import { usePaiService } from "./pai-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
+import { IoSearch } from "react-icons/io5";
 import { RiPencilLine } from "react-icons/ri";
 import { HiOutlineDocument } from "react-icons/hi";
 import { FcCancel } from "react-icons/fc";
@@ -20,6 +21,9 @@ import { ApiResponse } from "../../../common/utils/api-response";
 import { saveAs } from "file-saver"
 import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
 import { IActionPlanFilters } from "../interfaces/ActionPlanInterface";
+import { useEntitiesService } from "./entities-service.hook";
+import { useProjectsService } from "./projects-service.hook";
+import { IEntities } from "../interfaces/Entities";
 
 export function useProjectsData() {
     const { authorization } = useContext(AppContext);
@@ -32,6 +36,11 @@ export function useProjectsData() {
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess  } = useContext(AppContext);
+    const { getRiskPAI,getProcessPAI,getObjectivesPAI } = useEntitiesService();
+    const { getProjectsByFilters } = useProjectsService();
+    const [processPAIData, setProcessPAIData] = useState<IDropdownProps[]>(null);
+    const [projectsPAIData, setProjectsPAIData] = useState<IDropdownProps[]>(null);
+    const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const { GetAllStatus } = usePaiService();
     const today = DateTime.local();
     const formattedDate = today.toFormat('ddMMyyyy');
@@ -44,6 +53,33 @@ export function useProjectsData() {
         reset,
         control
     } = useForm<IActionPlanFilters>({ resolver });
+
+
+
+    useEffect(() => {
+        getProjectsByFilters(2).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
+                    return { name: entity.bpin + " - " + entity.project, value: entity.id };
+                });
+                setProjectsPAIData(arrayEntities);
+                setProjectsData(response.data)
+            } 
+        });
+        getProcessPAI().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                const entities: IEntities[] = response.data;
+                const arrayEntities: IDropdownProps[] = entities.map((entity) => {
+                    return { name: entity.description, value: entity.id };
+                });
+                setProcessPAIData(arrayEntities);
+            }
+        }).catch(() => { });
+    }, []);
+
+
+
+
     const tableColumns: ITableElement<ICreatePlanAction>[] = [
         {
             fieldName: "id",
@@ -51,7 +87,17 @@ export function useProjectsData() {
         },
         {
             fieldName: "namePAI",
-            header: "Nombre proyecto - proceso"
+            header: "Nombre proyecto - proceso",
+            renderCell: (row) => {
+                if(row.typePAI == 1){
+                    const project = projectsPAIData?.find(project => project.value === row.namePAI);
+                    return <>{project?.name}</>
+                }else {
+                    const process = processPAIData?.find(project => project.value === row.namePAI);
+                    return <>{process?.name}</>
+                }
+            }
+            
         },
         {
             fieldName: "dateCreate",
@@ -79,49 +125,23 @@ export function useProjectsData() {
             customIcon: (row) => {
                 return (
                     <>
-                        <Tooltip target=".download-tooltip" />
+                        <Tooltip target=".review-tooltip" />
                         <div
-                            className="download-tooltip"
-                            data-pr-tooltip="Descargar registro"
+                            className="review-tooltip"
+                            data-pr-tooltip="Revisar Formulación"
                             data-pr-position="bottom"
                             style={{ 'color': '#D72FD1' }}
                         >
-                            <AiOutlineDownload />
+                            <IoSearch />
                         </div>
                     </>
                 )
             },
             onClick: (row) => {
-
-                const token = localStorage.getItem("token");
-                  
-                  fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {
-                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                    headers: new Headers({
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Permissions: authorization.encryptedAccess,
-                        authorization: `Bearer ${token}`
-                    }),
-                  }).then(async response => {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, "_blank");
-                    saveAs(blob, `${"Registro proyecto_"+row?.bpin+"_"+formattedDate}.pdf`);
-                  }).catch(err => {
-                    setMessage({
-                        title: "¡Ha ocurrido un error!",
-                        description: String(err),
-                        show: true,
-                        background: true,
-                        OkTitle: "Aceptar",
-                        onOk: () => {
-                            setMessage({});
-                        }
-                    })
-                })
+                setShowDialog(true);
+                setSelectedRow(row);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
+            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
         },
         {
             customIcon: (row) => {
@@ -160,6 +180,7 @@ export function useProjectsData() {
                         </div>
                     </>
                 )
+                hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
             },
             onClick: (row) => {
                 const token = localStorage.getItem("token");

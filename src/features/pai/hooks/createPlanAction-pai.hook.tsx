@@ -25,9 +25,9 @@ import IndicatorsPaiPage from "../pages/indicators-pai.page";
 
 export default function usePlanActionPAIData() {
     useBreadCrumb({
-        isPrimaryPage: true,
+        isPrimaryPage: false,
         name: "Formular Plan de Acción Institucional (PAI)",
-        url: "/direccion-estrategica/pai/",
+        url: "/direccion-estrategica/pai/crear-pai",
     });
 
     const [tableData, setTableData] = useState<IAddAction[]>([]);
@@ -117,7 +117,6 @@ export default function usePlanActionPAIData() {
                     setMessage({});
                 },
                 onOk: async () => {
-                    console.log(PAIData);
                     if (data?.id) {
                         const formData = { ...PAIData,
                                     user: authorization.user.numberDocument, 
@@ -132,7 +131,7 @@ export default function usePlanActionPAIData() {
                                 background: true,
                                 OkTitle: "Aceptar",
                                 onOk: () => {
-                                    navigate('../../');
+                                    navigate('/direccion-estrategica/pai');
                                     setMessage({});
                                 }
                             })
@@ -176,7 +175,7 @@ export default function usePlanActionPAIData() {
                                         background: true,
                                         OkTitle: "Aceptar",
                                         onOk: () => {
-                                            navigate('../../');
+                                            navigate('/direccion-estrategica/pai');
                                             setMessage({});
                                         }
                                     })
@@ -223,8 +222,8 @@ export default function usePlanActionPAIData() {
                 } else {
                     if (res.operation.message === ("Error: id.")) {
                         setMessage({
-                            title: "Validación BPIN.",
-                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            title: "Validación ID.",
+                            description: <p className="text-primary biggest">Ya existe un plan con el id ingresado, por favor verifique.</p>,
                             background: true,
                             show: true,
                             OkTitle: "Cerrar",
@@ -345,7 +344,7 @@ export default function usePlanActionPAIData() {
         getProjectsByFilters(2).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const arrayEntities: IDropdownProps[] = response.data.map((entity) => {
-                    return { name: entity.bpin + " " + entity.project, value: entity.id };
+                    return { name: entity.bpin + " - " + entity.project, value: entity.id };
                 });
                 setProjectsPAIData(arrayEntities);
                 setProjectsData(response.data)
@@ -457,7 +456,7 @@ export default function usePlanActionPAIData() {
                 <Controller
                     control={control}
                     name={`actionsPAi.${row.action}.description`}
-                    defaultValue={"           "}
+                    defaultValue={""}
                     render={({ field }) => {
                         return (
                             <InputInplaceComponent
