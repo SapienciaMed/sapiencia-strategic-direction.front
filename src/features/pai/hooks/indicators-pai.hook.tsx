@@ -61,12 +61,12 @@ export default function useIndicatorsPai(actionId:number) {
             totalPlannedGoal: 0,
             actionId: actionId,
             bimesters: [
-                {bimester: "first",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
-                {bimester: "second", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
-                {bimester: "third",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
-                {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
-                {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0},
-                {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0}
+                {bimester: "first",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "second", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "third",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
+                {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []}
             ]
         }
     });
@@ -160,6 +160,7 @@ export default function useIndicatorsPai(actionId:number) {
     }
     
     const onSubmit = () => {
+        if(indicatorTypeValidation && onValidateMinimumDisaggregated()) return;
         setMessage({
             title: "Crear indicador",
             description: "¿Deseas guardar el indicador?",
@@ -209,6 +210,7 @@ export default function useIndicatorsPai(actionId:number) {
     }
     const onAddNewIndicator = () => {
         if(!isValid) return;
+        if(indicatorTypeValidation && onValidateMinimumDisaggregated()) return;
         onSaveIndicator();
         setMessage({
             title: "Datos guardados",
@@ -222,6 +224,7 @@ export default function useIndicatorsPai(actionId:number) {
         });
         reset();
     }
+    
     const onChangeBimesters = () => {
         const bimesters = getValues("bimesters");
         const sumOfBimesters = bimesters?.reduce( ( accumulator, currentValue ) => accumulator + currentValue.value, 0 );
@@ -292,6 +295,7 @@ export default function useIndicatorsPai(actionId:number) {
         setValue(`bimesters.${indexBimester}.disaggregate.${indexDisaggregate}.percentage`, disaggregate.at(indexDisaggregate).percentage);
         setValue(`bimesters.${indexBimester}.disaggregate.${indexDisaggregate}.description`, disaggregate.at(indexDisaggregate).description);
         trigger("bimesters")
+        validateBimester(getValues(`bimesters.${indexBimester}`),indexBimester,sumOfPercentage);
     }
 
     const onAddDisaggregate = ( index: number ) => {
@@ -320,6 +324,34 @@ export default function useIndicatorsPai(actionId:number) {
         setValue(`bimesters.${index}.showDisaggregate`,1);
         fieldsBimesters.at(index).showDisaggregate = 1;
         trigger("bimesters")
+    }
+
+    const validateBimester = ( validationBimester: IBimester, indexBimester: number, sumOfPercentage: number ) => {
+        let errors = [];
+        if(sumOfPercentage + validationBimester?.value > 100 || sumOfPercentage + validationBimester?.value < 100 ){
+            errors.push(`Los porcentajes no coinciden. No pueden ser ${sumOfPercentage + validationBimester?.value > 100 ? "superior" : "inferior"} al total del bimestre.`)
+        }
+        fieldsBimesters.at(indexBimester).errors = errors;
+        setValue(`bimesters.${indexBimester}.errors`, errors);
+    }
+
+    const onValidateMinimumDisaggregated = ():boolean => {
+        const bimesters = getValues("bimesters");
+        const minimumDisaggregated = bimesters.filter(bimester => bimester.disaggregate.length > 0);
+        const validationResult = minimumDisaggregated.length < 2;
+        if(validationResult) {
+            setMessage({
+                title: "Validación bimestres",
+                description: "Se debe realizar la desagregación del bimestre mínimo en dos registros.",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onOk: () => {
+                    setMessage({});
+                }
+            });  
+        }
+        return validationResult;
     }
 
     return {

@@ -40,7 +40,8 @@ export const indicatorsPAIValidator = yup.object({
                 }))
             ),
             showDisaggregate: yup.number().optional(),
-            sumOfPercentage: yup.number().optional()
+            sumOfPercentage: yup.number().optional(),
+            errors: yup.array().optional()
         }))
     ),
     totalPlannedGoal: yup.number()

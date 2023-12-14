@@ -109,15 +109,16 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                     </div>
                                     <div className={`${ indicatorTypeValidation ? "block-container" : "project-filters-container"}`}>
                                         {fieldsBimesters.map((fields, index) => {
+                                        const value = getValues(`bimesters.${index}.value`);
                                         return (
                                             <div key={index}>
                                                 <div className={`title-area ${indicatorTypeValidation && "title-area-disaggregate"}`}>
                                                     <label className="text-black biggest bold text-required">
                                                         Bimestre {index+1}
                                                     </label>
-                                                    { indicatorTypeValidation 
+                                                    { (indicatorTypeValidation)
                                                         &&  <div className="title-button text-main large" style={{"marginTop": 0}} onClick={() =>{
-                                                            onShowDisaggregate(index);
+                                                            value > 0 ? onShowDisaggregate(index) : null
                                                         }}>
                                                                 Desagregar <img src={disaggregate} alt="Desagregar bimestre"/>
                                                             </div> 
@@ -139,14 +140,14 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                                 actionId={actionId} 
                                                                 indexDisaggregate={index}
                                                                 controlIndicatorsPai={controlIndicatorsPai}
-                                                                errors={errors}
+                                                                errors={fields.errors}
                                                                 register={register}
                                                                 sumOfPercentage={fields.sumOfPercentage}
                                                                 removeDisaggregate={removeDisaggregate}
                                                                 onAddDisaggregate={onAddDisaggregate}
                                                                 onChangeDisaggregate={onChangeDisaggregate}
                                                                 tableData={fields.disaggregate}
-                                                                showDissagregate={fields.showDisaggregate}
+                                                                showDissagregate={(!value || value == 0) ? 0 : fields.showDisaggregate}
                                                             />
                                                     </div> 
                                                 }
