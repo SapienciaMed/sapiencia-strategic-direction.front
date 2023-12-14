@@ -211,7 +211,7 @@ export default function usePlanActionPAIData() {
                         description: <p className="text-primary biggest">Podrás continuar la formulación del plan en cualquier momento</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -226,7 +226,7 @@ export default function usePlanActionPAIData() {
                             description: <p className="text-primary biggest">Ya existe un plan con el id ingresado, por favor verifique.</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -240,7 +240,7 @@ export default function usePlanActionPAIData() {
                             description: <p className="text-primary biggest">{res.operation.message}</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -259,10 +259,10 @@ export default function usePlanActionPAIData() {
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
                         title: "Guardado temporal realizado con éxito",
-                        description: <p className="text-primary biggest">Se guardó exitosamente. Podrás continuar la creación del Proyecto en cualquier momento</p>,
+                        description: <p className="text-primary biggest">Podrás continuar la formulación del plan en cualquier momento</p>,
                         background: true,
                         show: true,
-                        OkTitle: "Cerrar",
+                        OkTitle: "Aceptar",
                         onOk: () => {
                             setMessage({});
                         },
@@ -271,13 +271,13 @@ export default function usePlanActionPAIData() {
                         }
                     });
                 } else {
-                    if (res.operation.message === ("Error: Ya existe un proyecto con este BPIN.")) {
+                    if (res.operation.message === ("Error: Ya existe un plan con este id.")) {
                         setMessage({
                             title: "Validación BPIN.",
-                            description: <p className="text-primary biggest">Ya existe un proyecto con el BPIN ingresado, por favor verifique.</p>,
+                            description: <p className="text-primary biggest">Ya existe un plan con este id , por favor verifique.</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
@@ -291,7 +291,7 @@ export default function usePlanActionPAIData() {
                             description: <p className="text-primary biggest">{res.operation.message}</p>,
                             background: true,
                             show: true,
-                            OkTitle: "Cerrar",
+                            OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
                             },
