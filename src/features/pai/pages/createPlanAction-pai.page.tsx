@@ -283,10 +283,10 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
 
                                             <div className="actions-pai">
 
-                                                <div className="title-button text-main large" onClick={() => {
+                                                {/* <div className="title-button text-main large" onClick={() => {
                                                 }}>
                                                     Consolidado de acciones PAI <AiOutlinePlusCircle />
-                                                </div>
+                                                </div> */}
                                                 <div className="title-button text-main large" onClick={onSubmitCreate}>
                                                     Agregar acción <AiOutlinePlusCircle />
                                                 </div>
