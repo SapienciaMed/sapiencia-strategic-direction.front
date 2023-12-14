@@ -130,6 +130,16 @@ function App() {
                 }
               />
 
+              <Route
+                path={"/direccion-estrategica/consulta"}
+                element={
+                  <PrivateRoute
+                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
+                    allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
+                  />
+                }
+              />
+
               <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIPage />} />;
             </Routes>
           </Suspense>
