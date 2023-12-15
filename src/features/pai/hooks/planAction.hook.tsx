@@ -130,7 +130,6 @@ export function useProjectsData() {
                             className="review-tooltip"
                             data-pr-tooltip="Revisar Formulación"
                             data-pr-position="bottom"
-                            style={{ 'color': '#D72FD1' }}
                         >
                             <IoSearch />
                         </div>
@@ -155,97 +154,13 @@ export function useProjectsData() {
             }
         },
         {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".attach-tooltip" />
-                        <div
-                            className="attach-tooltip"
-                            data-pr-tooltip="Adjuntar archivos"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#533893' }}
-                        >
-                            <AiOutlinePaperClip />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".download-attach-tooltip" />
-                        <div
-                            className="download-attach-tooltip"
-                            data-pr-tooltip="Descargar ficha"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#FF7D06' }}
-                        >
-                            <HiOutlineDocument />
-                        </div>
-                    </>
-                )
-                hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
-            },
-            onClick: (row) => {
-                
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".download-file-tooltip" />
-                        <div
-                            className="download-file-tooltip"
-                            data-pr-tooltip="Descargar adjuntos"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#058CC1' }}
-                        >
-                            <AiOutlineEye />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-                navigate(`adjuntos/${row.id}`);
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".finish-tooltip" />
-                        <div
-                            className="finish-tooltip"
-                            data-pr-tooltip="Finalizar proyecto"
-                            data-pr-position="bottom"
-                        >
-                            <FcCancel />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-                navigate(`finalizar-proyecto/${row.id}`);
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_FINALIZAR"))
-        },
-        {
             customIcon: () => {
                 return (
                     <>
                         <Tooltip target=".edit-tooltip" />
                         <div
                             className="edit-tooltip"
-                            data-pr-tooltip="Editar proyecto"
+                            data-pr-tooltip="Editar plan"
                             data-pr-position="bottom"
                             style={{ 'color': '#0CA529' }}
                         >
@@ -257,7 +172,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`./edit/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 1) || (!validateActionAccess("PROYECTO_EDITAR"))
+            hideRow: (row) => !(row.status === 1) || (!validateActionAccess("EDITAR_PLAN"))
         },
     ];
 
