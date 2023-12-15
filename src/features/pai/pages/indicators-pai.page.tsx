@@ -12,9 +12,11 @@ import TableDisaggregate from "../components/table-disaggregate";
 
 interface IIndicatorsPaiProps {
     actionId: number;
+    editMode?: boolean;
+    indicatorId?: number;
 }
 
-function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Element {
+function IndicatorsPaiPage({ actionId, indicatorId, editMode = false }: IIndicatorsPaiProps ): React.JSX.Element {
 
     const { errors,
             PAIData,
@@ -37,15 +39,17 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
             onChangeDisaggregate,
             controlIndicatorsPai,
             projectIndicatorsData,
-            indicatorTypeValidation } = useIndicatorsPai(actionId);
+            indicatorTypeValidation } = useIndicatorsPai(actionId,indicatorId,editMode);
     
     return (
         <>
-            <div className="main-page full-height">
-                <div className='card-table'>
-                    <div className="title-area">
-                        <div className="text-black extra-large bold">Acción No. {actionId} - Agregar indicador</div>
-                    </div>
+            <div className={`${!editMode && "main-page full-height"}`}>
+                <div className={`${!editMode && "card-table"}`}>
+                    {!editMode &&
+                        <div className="title-area">
+                            <div className="text-black extra-large bold">Acción No. {actionId} - Agregar indicador</div>
+                        </div>
+                    }
                     <div className="crud-page full-height">
                         <FormComponent action="">
                             <div className="card-table card-form-development">
@@ -132,7 +136,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                                     className={`inputNumber-basic ${indicatorTypeValidation && "inputNumber-disaggregate"}`}
                                                     onChange={onChangeBimesters}
                                                     useGrouping={false}
-                                                    suffix="%"
+                                                    suffix={indicatorTypeValidation?"%":""}
                                                 />
                                                 { indicatorTypeValidation
                                                     &&  <div key={index} className="disaggregate-container">
@@ -163,7 +167,7 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                                             className={`inputNumber-basic ${indicatorTypeValidation && "inputNumber-disaggregate"}`}
                                             disabled={true}
                                             useGrouping={false}
-                                            suffix="%"
+                                            suffix={indicatorTypeValidation?"%":""}
                                         />
                                     </div>
                                 </div>
@@ -359,7 +363,10 @@ function IndicatorsPaiPage({ actionId }: IIndicatorsPaiProps ): React.JSX.Elemen
                     </div>
                 </div>
             </div>
-            <NavbarPai/>
+            
+            { !editMode
+                && <NavbarPai/>
+            }
         </>
     )
     
