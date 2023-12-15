@@ -14,7 +14,7 @@ interface IProps {
 
 function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JSX.Element {
     const [accordionsIndicators, setAccordionsIndicators] = useState<IAccordionTemplate[]>([]);
-    const { fieldsChange, setCorrectionFields, fieldsValues, fieldsCorrected } = useContext(RevisionPAIContext);
+    const { fieldsChange, setCorrectionFields, fieldsValues, fieldsCorrected, approveFields, status: { status }, setApproveFields } = useContext(RevisionPAIContext);
     const {
         register,
         control,
@@ -31,21 +31,50 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                 content: <IndicatorsRevisionComponent indicator={indicator} showGeneralFields={indexIndicator === 0 && index == 0} />
             };
         }));
-        if(fieldsValues.length > 0) {
+        if (fieldsValues.length > 0) {
             const values = Reflect.ownKeys(getValues()).map(item => `${String(item)}.${action.indicators[0].id}`);
             fieldsValues.forEach(value => {
                 const field = value.field.split(".")[0];
-                if(values.includes(value.field)) {
+                if (values.includes(value.field)) {
                     setValue(field, value.value);
                 }
             });
         }
     }, []);
+
+    const validateActiveField = (idInput: string) => {
+        const approveIds = approveFields.reduce((result, current) => {
+            if (!current.approved) result.push(current.field);
+            return result;
+        }, []);
+        if (approveIds.includes(idInput)) {
+            return false;
+        }
+        if (!fieldsChange.includes(idInput)) {
+            return true;
+        }
+        if (fieldsCorrected.includes(idInput)) {
+            return true;
+        }
+        return false;
+    }
+
     useEffect(() => {
         const subscription = watch((value, { name }) => {
+            if (status === "adjustment") {
+                setApproveFields(prev => {
+                    const approveSelect = prev.findIndex(approve => approve.field === name);
+                    if (approveSelect !== undefined && approveSelect !== -1) {
+                        let newValues = [...prev];
+                        newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[prev[approveSelect].field] }
+                        return newValues;
+                    }
+                    return prev;
+                });
+            }
             return setCorrectionFields(prev => {
                 const indicatorId = getValues("indicators")[0].id;
-                const newValues = {...prev[indicatorId]};
+                const newValues = { ...prev[indicatorId] };
                 const nameField = name.split(".");
                 if (nameField.length === 1) {
                     const field = name
@@ -85,7 +114,7 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
-                            disabled={!fieldsChange.includes(`${field.name}.${action.indicators[0].id}`) || fieldsCorrected.includes(`${field.name}.${action.indicators[0].id}`)}
+                            disabled={validateActiveField(`${field.name}.${action.indicators[0].id}`)}
                         />
                     );
                 }}

@@ -12,3 +12,4 @@ export * from "./switch.component";
 export * from "./input-text-area.component";
 export * from "./input-inplace.component";
 export * from "./input-number-inplace.component";
+export * from "./input-radio.component";

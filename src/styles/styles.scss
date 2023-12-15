@@ -611,6 +611,12 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
  width: 100%;
 }
 
+.strategic-direction-adjusment-pai-radios {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+}
+
 @media (max-width: 1024px) {
     .capacity-page {
         .group-inputs {
@@ -1078,5 +1084,10 @@ div[id="single-spa-application:@sapiencia/strategic-direction"] {
 
     .strategic-direction-complete-revision-pai {
         margin: 4rem 10rem;
+    }
+
+    .strategic-direction-adjusment-pai-radios {
+        display: grid;
+        grid-template-columns: 8rem 8rem;
     }
 }

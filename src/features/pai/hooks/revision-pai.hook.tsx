@@ -45,7 +45,9 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         setFieldsCorrected,
         setFieldsValues,
         fieldsValues,
-        fieldsCorrected
+        fieldsCorrected,
+        approveFields,
+        setApproveFields
     } = useContext(RevisionPAIContext);
     const { setMessage, authorization, validateActionAccess } = useContext(AppContext);
     const { getProcessPAI } = useEntitiesService();
@@ -191,6 +193,87 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                             }
                         });
                     }
+                } else if (status === "adjustment") {
+                    const paiAdjustment = res.revision.filter(rev => rev.version === 3 && rev.completed === true);
+                    if (paiAdjustment.length > 0) {
+                        navigate(`./../../`);
+                        return setMessage({
+                            title: "Formulario no disponible",
+                            show: true,
+                            OkTitle: "Aceptar",
+                            onCancel: () => {
+                                setMessage({});
+                            },
+                            onOk: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
+                    const resAdjustment = res.revision.find(rev => rev.completed === false && rev.version === 3);
+                    const resCorrection = res.revision.find(rev => rev.completed === true && rev.version === 2);
+                    const resRevision = res.revision.find(rev => rev.completed === true && rev.version === 1);
+                    if (resAdjustment && resCorrection && resRevision) {
+                        setUpdatePAI(resAdjustment.id);
+                        setApproveFields(JSON.parse(JSON.stringify(resAdjustment.json)));
+                        let revPAI = [];
+                        const jsonCorrection = JSON.parse(JSON.stringify(resRevision.json));
+                        const ownKeysRevPAI = Reflect.ownKeys(jsonCorrection);
+                        ownKeysRevPAI.forEach(key => {
+                            jsonCorrection[key].forEach((indicator: IRevisionFormPAI) => revPAI.push({ ...indicator, idIndicator: Number(key) }));
+                        })
+                        setRevisionPAI(revPAI);
+                        let flds = [];
+                        revPAI.forEach(rev => {
+                            flds.push(rev.field);
+                        });
+                        setFieldsChange(flds);
+                        const jsonCorrectionPrev = JSON.parse(JSON.stringify(resCorrection.json));
+                        setCorrectionFields(jsonCorrectionPrev);
+                        let fieldsCorrectionPrev = [];
+                        let fieldsValuesPrev = [];
+                        Reflect.ownKeys(jsonCorrectionPrev).forEach(key => Reflect.ownKeys(jsonCorrectionPrev[key]).forEach(key2 => {
+                            fieldsCorrectionPrev.push(key2);
+                            fieldsValuesPrev.push({ field: key2, value: jsonCorrectionPrev[key][key2] });
+                        }));
+                        setFieldsCorrected(fieldsCorrectionPrev);
+                        setFieldsValues(fieldsValuesPrev);
+                    } else if (resCorrection && resRevision) {
+                        let revPAI = [];
+                        const jsonCorrection = JSON.parse(JSON.stringify(resRevision.json));
+                        const ownKeysRevPAI = Reflect.ownKeys(jsonCorrection);
+                        ownKeysRevPAI.forEach(key => {
+                            jsonCorrection[key].forEach((indicator: IRevisionFormPAI) => revPAI.push({ ...indicator, idIndicator: Number(key) }));
+                        })
+                        setRevisionPAI(revPAI);
+                        let flds = [];
+                        revPAI.forEach(rev => {
+                            flds.push(rev.field);
+                        });
+                        setFieldsChange(flds);
+                        const jsonCorrectionPrev = JSON.parse(JSON.stringify(resCorrection.json));
+                        setCorrectionFields(jsonCorrectionPrev);
+                        let fieldsCorrectionPrev = [];
+                        let fieldsValuesPrev = [];
+                        Reflect.ownKeys(jsonCorrectionPrev).forEach(key => Reflect.ownKeys(jsonCorrectionPrev[key]).forEach(key2 => {
+                            fieldsCorrectionPrev.push(key2);
+                            fieldsValuesPrev.push({ field: key2, value: jsonCorrectionPrev[key][key2] });
+                        }));
+                        setFieldsCorrected(fieldsCorrectionPrev);
+                        setFieldsValues(fieldsValuesPrev);
+                    } else {
+                        navigate(`./../../`);
+                        return setMessage({
+                            title: "Formulario no disponible",
+                            show: true,
+                            OkTitle: "Aceptar",
+                            onCancel: () => {
+                                setMessage({});
+                            },
+                            onOk: () => {
+                                setMessage({});
+                            }
+                        });
+                    }
                 }
             } else {
                 console.log(response.operation.message);
@@ -230,7 +313,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     }, [watchProject, watchType]);
 
     useEffect(() => {
-        if(!authorization?.allowedActions) return;
+        if (!authorization?.allowedActions) return;
         if (status === "adjustment" || status === "revision") {
             if (!validateActionAccess("REVISAR_PLAN")) {
                 navigate(`./../../`);
@@ -282,6 +365,17 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     useEffect(() => {
         if (fieldsChange.length > 0) {
             const subscription = watch((value, { name }) => {
+                if (status === "adjustment") {
+                    setApproveFields(prev => {
+                        const approveSelect = prev.findIndex(approve => approve.field === name);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[prev[approveSelect].field] }
+                            return newValues;
+                        }
+                        return prev;
+                    })
+                }
                 return setCorrectionFields(prev => {
                     const indicatorId = getValues("actionsPAi")[0].indicators[0].id;
                     const newValues = { ...prev[indicatorId] };
@@ -332,11 +426,30 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         }
     }, [fieldsValues]);
 
+    const validateActiveField = (idInput: string) => {
+        const approveIds = approveFields.reduce((result, current) => {
+            if (!current.approved) result.push(current.field);
+            return result;
+        }, []);
+        if (approveIds.includes(idInput)) {
+            return false;
+        }
+        if (!fieldsChange.includes(idInput)) {
+            return true;
+        }
+        if (fieldsCorrected.includes(idInput)) {
+            return true;
+        }
+        return false;
+    }
+
     const onSaveTemp = () => {
         if (status === "revision") {
             onSaveTempRevision();
         } else if (status === "correction") {
             onSaveTempCorrection();
+        } else if (status === "adjustment") {
+            onSaveTempAdjustment();
         }
     }
 
@@ -566,11 +679,97 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         }
     }
 
+    const onSaveTempAdjustment = () => {
+        if (updatePAI !== null && updatePAI !== undefined) {
+            const data: IRevisionPAI = {
+                idPai: Number(idPAI),
+                completed: false,
+                userCreate: authorization.user.numberDocument,
+                version: 3,
+                json: JSON.stringify(approveFields)
+            };
+            UpdateRevisionPAI(updatePAI, data).then(response => {
+                if (response.operation.code === EResponseCodes.OK) {
+                    setMessage({
+                        title: "Guardado temporal realizado con éxito",
+                        description: "Podrás continuar en cualquier momento",
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setUpdatePAI(response.data.id);
+                            setMessage({});
+                        },
+                        onCancel: () => {
+                            setMessage({});
+                        }
+                    })
+                } else {
+                    setMessage({
+                        title: "¡Ha ocurrido un error!",
+                        description: response.operation.message,
+                        background: true,
+                        show: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        },
+                        onClose: () => {
+                            setMessage({});
+                        }
+                    });
+                }
+            });
+        } else {
+            const data: IRevisionPAI = {
+                idPai: Number(idPAI),
+                completed: false,
+                userCreate: authorization.user.numberDocument,
+                version: 3,
+                json: JSON.stringify(approveFields)
+            }
+            CreateRevisionPAI(data).then(response => {
+                if (response.operation.code === EResponseCodes.OK) {
+                    setMessage({
+                        title: "Guardado temporal realizado con éxito",
+                        description: "Podrás continuar en cualquier momento",
+                        show: true,
+                        background: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setUpdatePAI(response.data.id);
+                            setMessage({});
+                        },
+                        onCancel: () => {
+                            setMessage({});
+                        }
+                    })
+                } else {
+                    setMessage({
+                        title: "¡Ha ocurrido un error!",
+                        description: response.operation.message,
+                        background: true,
+                        show: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        },
+                        onClose: () => {
+                            setMessage({});
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     const onSubmit = () => {
         if (status === "revision") {
             onSubmitRevision();
         } else if (status === "correction") {
             onSubmitCorrection();
+        } else if (status === "adjustment") {
+            onSubmitAdjustment();
         }
     }
 
@@ -845,6 +1044,124 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         }
     }
 
+    const onSubmitAdjustment = () => {
+        const requirements = fieldsChange.reduce((result, current) => {
+            if (!result.includes(current)) {
+                result.push(current);
+            }
+            return result
+        }, []);
+        const approveFieldsValidation = approveFields.filter(item => item.approved || (item.adjustment !== null && item.adjustment !== undefined));
+        if (approveFieldsValidation.length !== requirements.length) {
+            setMessage({
+                title: "Atención",
+                description: "Debes aprobar todos los cambios.",
+                show: true,
+                OkTitle: "Aceptar",
+                onCancel: () => {
+                    setMessage({});
+                },
+                onOk: () => {
+                    setMessage({});
+                },
+            })
+        } else {
+            setMessage({
+                title: "Revisión 1 formulación",
+                description: "¿Deseas formular la versión 1 del plan de acción institucional?",
+                show: true,
+                OkTitle: "Aceptar",
+                cancelTitle: "Cancelar",
+                onOk: () => {
+                    if (updatePAI !== null && updatePAI !== undefined) {
+                        const data: IRevisionPAI = {
+                            idPai: Number(idPAI),
+                            completed: true,
+                            userCreate: authorization.user.numberDocument,
+                            version: 3,
+                            json: JSON.stringify(approveFields)
+                        };
+                        UpdateRevisionPAI(updatePAI, data).then(response => {
+                            if (response.operation.code === EResponseCodes.OK) {
+                                setMessage({
+                                    title: "Plan de acción institucional",
+                                    description: "¡Formulado versión 1 exitosamente!",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        navigate(`./../../`);
+                                        setMessage({});
+                                    },
+                                    onCancel: () => {
+                                        setMessage({});
+                                    }
+                                })
+                            } else {
+                                setMessage({
+                                    title: "¡Ha ocurrido un error!",
+                                    description: response.operation.message,
+                                    background: true,
+                                    show: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        const data: IRevisionPAI = {
+                            idPai: Number(idPAI),
+                            completed: true,
+                            userCreate: authorization.user.numberDocument,
+                            version: 3,
+                            json: JSON.stringify(approveFields)
+                        }
+                        CreateRevisionPAI(data).then(response => {
+                            if (response.operation.code === EResponseCodes.OK) {
+                                setMessage({
+                                    title: "Plan de acción institucional",
+                                    description: "¡Formulado versión 1 exitosamente!",
+                                    show: true,
+                                    background: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        navigate(`./../../`);
+                                        setMessage({});
+                                    },
+                                    onCancel: () => {
+                                        setMessage({});
+                                    }
+                                })
+                            } else {
+                                setMessage({
+                                    title: "¡Ha ocurrido un error!",
+                                    description: response.operation.message,
+                                    background: true,
+                                    show: true,
+                                    OkTitle: "Aceptar",
+                                    onOk: () => {
+                                        setMessage({});
+                                    },
+                                    onClose: () => {
+                                        setMessage({});
+                                    }
+                                });
+                            }
+                        });
+                    }
+                },
+                onCancel: () => {
+                    setMessage({});
+                }
+            });
+        }
+    }
+
     const onCancel = () => {
         setMessage({
             title: "Cancelar acción",
@@ -974,7 +1291,6 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         typePAIData,
         nameProjectsData,
         nameProcessData,
-        fieldsChange,
-        fieldsCorrected
+        validateActiveField
     };
 }
