@@ -345,7 +345,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                     label={`Bimestre ${index + 1}`}
                                     errors={errors}
                                     placeholder=""
-                                    prefix="%"
+                                    suffix={`${indicator.typePAI === 2 ? "%" : ""}`}
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
                                     disabled={!fieldsChange.includes(`bimesters.${idField}`) || fieldsCorrected.includes(`bimesters.${idField}`)}
@@ -359,7 +359,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                         label={`Meta total planeada`}
                         errors={errors}
                         placeholder=""
-                        prefix="%"
+                        suffix={`${indicator.typePAI === 2 ? "%" : ""}`}
                         classNameLabel="text-black biggest bold"
                         className={`inputNumber-basic`}
                         disabled={true}

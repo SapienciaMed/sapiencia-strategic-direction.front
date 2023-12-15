@@ -15,12 +15,18 @@ import { AppContext } from "../../../common/contexts/app.context";
 import { useNavigate } from "react-router-dom";
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { IPropsRevisionPAI } from "../pages/revision-pai.page";
+import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 interface IProps extends IPropsRevisionPAI {
     idPAI: string;
 }
 
 export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) {
+    useBreadCrumb({
+        isPrimaryPage: false,
+        name: "Revisión plan de Acción Institucional",
+        url: `/direccion-estrategica/pai/${status}/${idPAI}`,
+    });
     const [updatePAI, setUpdatePAI] = useState<number>(null);
     const [accordionsActions, setAccordionsActions] = useState<IAccordionTemplate[]>([]);
     const [nameProjectsData, setNameProjectsData] = useState<IDropdownProps[]>([]);
@@ -69,52 +75,6 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     useEffect(() => {
         if (!idPAI) return;
         setStatus({ status });
-        if (status === "adjustment" || status === "revision") {
-            if (!validateActionAccess("REVISAR_PLAN")) {
-                navigate(`./../../`);
-                return setMessage({
-                    title: "Formulario no disponible",
-                    show: true,
-                    OkTitle: "Aceptar",
-                    onCancel: () => {
-                        setMessage({});
-                    },
-                    onOk: () => {
-                        setMessage({});
-                    }
-                });
-            }
-        } else if (status === "correction") {
-            if (validateActionAccess("CORREGIR_PLAN")) {
-                if (validateActionAccess("REVISAR_PLAN")) {
-                    navigate(`./../../`);
-                    return setMessage({
-                        title: "Formulario no disponible",
-                        show: true,
-                        OkTitle: "Aceptar",
-                        onCancel: () => {
-                            setMessage({});
-                        },
-                        onOk: () => {
-                            setMessage({});
-                        }
-                    });
-                }
-            } else {
-                navigate(`./../../`);
-                return setMessage({
-                    title: "Formulario no disponible",
-                    show: true,
-                    OkTitle: "Aceptar",
-                    onCancel: () => {
-                        setMessage({});
-                    },
-                    onOk: () => {
-                        setMessage({});
-                    }
-                });
-            };
-        }
         GetPAIById(Number(idPAI)).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const res = response.data;
@@ -268,6 +228,56 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         }
         return setProjectPAI(null);
     }, [watchProject, watchType]);
+
+    useEffect(() => {
+        if(!authorization?.allowedActions) return;
+        if (status === "adjustment" || status === "revision") {
+            if (!validateActionAccess("REVISAR_PLAN")) {
+                navigate(`./../../`);
+                return setMessage({
+                    title: "Formulario no disponible",
+                    show: true,
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    onOk: () => {
+                        setMessage({});
+                    }
+                });
+            }
+        } else if (status === "correction") {
+            if (validateActionAccess("CORREGIR_PLAN")) {
+                if (validateActionAccess("REVISAR_PLAN")) {
+                    navigate(`./../../`);
+                    return setMessage({
+                        title: "Formulario no disponible",
+                        show: true,
+                        OkTitle: "Aceptar",
+                        onCancel: () => {
+                            setMessage({});
+                        },
+                        onOk: () => {
+                            setMessage({});
+                        }
+                    });
+                }
+            } else {
+                navigate(`./../../`);
+                return setMessage({
+                    title: "Formulario no disponible",
+                    show: true,
+                    OkTitle: "Aceptar",
+                    onCancel: () => {
+                        setMessage({});
+                    },
+                    onOk: () => {
+                        setMessage({});
+                    }
+                });
+            };
+        }
+    }, [authorization])
 
     useEffect(() => {
         if (fieldsChange.length > 0) {
