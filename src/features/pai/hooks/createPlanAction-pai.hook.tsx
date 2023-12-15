@@ -20,6 +20,7 @@ import { IProject } from "../interfaces/ProjectsInterfaces";
 import { InputInplaceComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
+import ActionListPaiPage from "../pages/actionList-pai.page";
 
 
 
@@ -498,7 +499,7 @@ export default function usePlanActionPAIData() {
     {
       icon: "Detail",
       onClick: (row) => {
-
+        setIndicatorsFormComponent(<ActionListPaiPage actionId={row?.id | row.action} control={control} register={register} errors={errors}/>);
       }
     },
     {
@@ -564,9 +565,28 @@ export default function usePlanActionPAIData() {
         setDisableSaveButton(!isValid);
     },[isValid])
 
+    const onCancel = () => {
+        setMessage({
+            title: "Cancelar acción",
+            description: "¿Deseas cancelar la acción y regresar a la opción de consulta?",
+            show: true,
+            background: true,
+            cancelTitle: "Cancelar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                navigate('/direccion-estrategica/pai');
+                setMessage({});
+            }
+        });
+    }
+
     useEffect(()=>{
         setTempButtonAction( () => onSubmitTemp );
         setSaveButtonAction(() => onSubmitSave); 
+        setActionCancel(()=> onCancel)
         setTempButtonText("Guardar temporalmente"); 
         setSaveButtonText("Guardar y regresar"); 
         setDisableTempBtn(!isValid);

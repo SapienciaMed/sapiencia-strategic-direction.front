@@ -5,7 +5,10 @@ import { ButtonComponent } from "../../../common/components/Form";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useNavigate } from "react-router";
 
-export function NavbarPai(): React.JSX.Element {
+interface INavbarPaiProps {
+    editMode?: boolean;
+}
+export function NavbarPai({ editMode = false}:INavbarPaiProps): React.JSX.Element {
 
     const navigate = useNavigate();
     const {saveButtonAction, tempButtonAction,actionCancel,saveButtonText,tempButtonText, disableSaveButton, disableTempBtn } = useContext(PAIContext);
@@ -14,12 +17,12 @@ export function NavbarPai(): React.JSX.Element {
     return (
         <><div className="projects-footer-mobile mobile">
             <div className="save-temp">
-            {<ButtonComponent
+            { !editMode ? <ButtonComponent
                     className="button-main extra_extra_large hover-three button-save"
                     value={tempButtonText || "Guardar temporalmente"}
                     type="button"
                     action={tempButtonAction} 
-                    disabled={disableTempBtn} />}
+                    disabled={disableTempBtn} /> : <div></div>}
             </div>
             <div className="mobile-actions">
                 {<span className="bold text-center button" onClick={actionCancel || (() => {
@@ -49,14 +52,14 @@ export function NavbarPai(): React.JSX.Element {
                         type="button"
                         action={saveButtonAction}
                         disabled={disableSaveButton} />
-                </div>
+            </div>
         </div><div className="container-button-bot space-between">
-                {<ButtonComponent
+                {!editMode ? <ButtonComponent
                     className="button-main extra_extra_large hover-three button-save"
                     value={tempButtonText || "Guardar temporalmente"}
                     type="button"
                     action={tempButtonAction} 
-                    disabled={disableTempBtn}/>}
+                    disabled={disableTempBtn}/> : <div></div>}
                 <div className="buttons-bot">
                     {<span className="bold text-center button" onClick={actionCancel || (() => {
                         //if(!dirty) return navigate('/direccion-estrategica/proyectos/');

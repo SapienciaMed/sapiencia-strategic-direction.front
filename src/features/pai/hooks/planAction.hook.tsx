@@ -120,7 +120,7 @@ export function useProjectsData() {
         },
     ];
 
-    const tableActions: ITableAction<IProject>[] = [
+    const tableActions: ITableAction<ICreatePlanAction>[] = [
         {
             customIcon: (row) => {
                 return (
@@ -138,10 +138,21 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                setShowDialog(true);
-                setSelectedRow(row);
+                const urlRevision = {
+                    2: `./revision/${row.id}`,
+                    3: `./correction/${row.id}`,
+                    4: `./adjustment/${row.id}`
+                };
+                navigate(urlRevision[row.status]);
             },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
+            hideRow: (row) => {
+                if(row.status === 2 || row.status === 4) {
+                    return !validateActionAccess("REVISAR_PLAN")
+                } else if (row.status === 3) {
+                    if(validateActionAccess("CORREGIR_PLAN")) return validateActionAccess("REVISAR_PLAN");
+                }
+                return true;
+            }
         },
         {
             customIcon: (row) => {
@@ -160,8 +171,7 @@ export function useProjectsData() {
                 )
             },
             onClick: (row) => {
-                setShowDialog(true);
-                setSelectedRow(row);
+
             },
             hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
         },
@@ -183,33 +193,7 @@ export function useProjectsData() {
                 hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
             },
             onClick: (row) => {
-                const token = localStorage.getItem("token");
-                  
-                fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`, {
-                    method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
-                    headers: new Headers({
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Permissions: authorization.encryptedAccess,
-                        authorization: `Bearer ${token}`
-                    }),
-                  }).then(async response => {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    window.open(url, "_blank")
-                    saveAs(blob, `${"Ficha técnica_"+row?.bpin+"_"+formattedDate}.pdf`);
-                  }).catch(err => {
-                    setMessage({
-                        title: "¡Ha ocurrido un error!",
-                        description: String(err),
-                        show: true,
-                        background: true,
-                        OkTitle: "Aceptar",
-                        onOk: () => {
-                            setMessage({});
-                        }
-                    })
-                })
+                
             },
             hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
         },

@@ -46,7 +46,6 @@ export const indicatorsPAIValidator = yup.object({
     ),
     totalPlannedGoal: yup.number()
     .when(['indicatorType'], ([indicatorType], totalPlannedGoal ) => {
-        console.log('indicatorType:', indicatorType);
         return indicatorType && indicatorType == 2
         ? totalPlannedGoal
             .min(100, "Alerta. El total de la meta planeada no puede ser inferior a 100. ")
