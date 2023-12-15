@@ -1,7 +1,7 @@
 import { IIndicatorsPAITemp, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
 import { IApproveRevisionPAI, IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent, InputRadioComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent, InputRadioComponent, InputInplaceComponent } from "../../../common/components/Form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { approvePAIValidator, revisionPAIValidator } from "../../../common/schemas";
 import { useContext, useEffect, useState } from "react";
@@ -27,6 +27,7 @@ interface IProps {
 
 function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<IProps>): React.JSX.Element {
     const ind: IIndicatorsPAITemp = { ...indicator };
+    const [tableData, setTableData] = useState<IRevisionFormPAI[]>([]);
     const [approveItem, setApproveItem] = useState<IApproveRevisionPAI>(null);
     const [typesIndicatorData, setTypesIndicatorData] = useState<IDropdownProps[]>([]);
     const [projectIndicatorsData, setProjectIndicatorsData] = useState<IDropdownProps[]>([]);
@@ -84,6 +85,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
     const {
         register: registerRevision,
         control: controlRevision,
+        setValue: setValueRevision,
         formState: { errors: errorsRevision },
         handleSubmit,
         reset
@@ -94,8 +96,8 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             return newRevision;
         });
         reset();
+        setValueRevision("observations", null);
     });
-    console.log(approveFields)
     const onSubmitApprove = handleSubmitApprove(async (data: IApproveRevisionPAI) => {
         const approveForm = data;
         if (approveForm.approved !== undefined && approveForm.approved !== null && approveForm.comments !== "" && approveForm.comments !== undefined && approveForm.comments !== null) {
@@ -107,7 +109,6 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             setApproveItem(null);
         }
     });
-    const tableData = revisionPAI.filter(revision => revision.idIndicator === indicator.id || (showGeneralFields && revision.idIndicator === null));
     const tableColumns: ITableElement<IRevisionFormPAI>[] = [
         {
             header: "Campo",
@@ -119,7 +120,25 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         },
         {
             header: "Observaciones",
-            fieldName: "observations"
+            fieldName: "observations",
+            renderCell: (row) => {
+                if(status === "revision") {
+                    const onChangeObservation = (observationValue: string) => {
+                        setTableData(prev => {
+                            const newData = prev.map(data => {
+                                if(data.field === row.field) {
+                                    return {...data, observations: observationValue}
+                                } else {
+                                    return data;
+                                }
+                            });
+                            return newData;
+                        })
+                    }
+                    return <ObservationsInplace value={row.observations} change={onChangeObservation} />
+                }
+                return <>{row.observations}</>
+            }
         }
     ];
     const actionColumnCorrection: ITableAction<IRevisionFormPAI>[] = [
@@ -329,7 +348,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 }
             });
         }
-        if(approveFields.length > 0) {
+        if (approveFields.length > 0) {
             const values = Reflect.ownKeys(getValues());
             approveFields.forEach(approve => {
                 const field = approve.field.split(".");
@@ -361,6 +380,9 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             });
         }
     }, []);
+    useEffect(() => {
+        setTableData(revisionPAI.filter(revision => revision.idIndicator === indicator.id || (showGeneralFields && revision.idIndicator === null)));
+    }, [revisionPAI]);
     useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (status === "adjustment") {
@@ -820,6 +842,41 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             </div>
         </div>
     );
+}
+
+interface IObservationsInplace {
+    change: (observationValue: string) => void;
+    value: string;
+}
+
+function ObservationsInplace({ change, value }: Readonly<IObservationsInplace>) {
+    const { control, register, formState: { errors }, watch } = useForm<{ value: string }>({ defaultValues: { value: value }, mode: "all" });
+    const watchValue = watch("value");
+    useEffect(() => {
+        change(watchValue);
+    }, [watchValue]);
+    return (
+        <Controller
+            control={control}
+            name={`value`}
+            defaultValue={value}
+            render={({ field }) => {
+                return (
+                    <InputInplaceComponent
+                        id={field.name}
+                        idInput={field.name}
+                        value={`${field.value}`}
+                        label=""
+                        className="input-basic"
+                        typeInput={"text"}
+                        register={register}
+                        onChange={field.onChange}
+                        errors={errors}
+                    />
+                );
+            }}
+        />
+    )
 }
 
 export default IndicatorsRevisionComponent;
