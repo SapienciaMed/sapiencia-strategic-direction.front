@@ -329,17 +329,66 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 }
             });
         }
+        if(approveFields.length > 0) {
+            const values = Reflect.ownKeys(getValues());
+            approveFields.forEach(approve => {
+                const field = approve.field.split(".");
+                if (values.includes(field[0])) {
+                    if (field[0] === "bimesters") {
+                        const bimesters = getValues("bimesters");
+                        bimesters.forEach((bimester, index) => {
+                            if (String(bimester.id) === field[1]) setValue(`${field[0]}.${index}.value`, approve.adjustment);
+                        });
+                    } else if (field[0] === "products") {
+                        const products = getValues("products");
+                        products.forEach((product, index) => {
+                            if (String(product.id) === field[1]) setValue(`${field[0]}.${index}.product`, approve.adjustment);
+                        });
+                    } else if (field[0] === "responsibles") {
+                        const responsibles = getValues("responsibles");
+                        responsibles.forEach((responsible, index) => {
+                            if (String(responsible.id) === field[1]) setValue(`${field[0]}.${index}.responsible`, approve.adjustment);
+                        });
+                    } else if (field[0] === "coresponsibles") {
+                        const coresponsibles = getValues("coresponsibles");
+                        coresponsibles.forEach((coresponsible, index) => {
+                            if (String(coresponsible.id) === field[1]) setValue(`${field[0]}.${index}.coresponsible`, approve.adjustment);
+                        });
+                    } else {
+                        setValue(field[0], approve.adjustment);
+                    }
+                }
+            });
+        }
     }, []);
     useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (status === "adjustment") {
                 setApproveFields(prev => {
-                    debugger
-                    const approveSelect = prev.findIndex(approve => approve.field === name);
-                    if (approveSelect !== undefined && approveSelect !== -1) {
-                        let newValues = [...prev];
-                        newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[prev[approveSelect].field] }
-                        return newValues;
+                    const nameSplit = name.split(".");
+                    if (nameSplit.length === 1) {
+                        const field = name
+                            .replace(".line", "")
+                            .replace(".risk", "")
+                            .replace(".product", "")
+                            .replace(".responsible", "")
+                            .replace(".coresponsible", "")
+                            .replace(".value", "");
+                        const nameField = `${field}.${indicator.id}`;
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[name] }
+                            return newValues;
+                        }
+                    } else {
+                        const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                            return newValues;
+                        }
                     }
                     return prev;
                 });

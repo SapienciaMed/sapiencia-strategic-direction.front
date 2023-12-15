@@ -28,6 +28,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         url: `/direccion-estrategica/pai/${status}/${idPAI}`,
     });
     const [updatePAI, setUpdatePAI] = useState<number>(null);
+    const [adjustmentLoaded, setAdjustmentLoaded] = useState<boolean>(false);
     const [accordionsActions, setAccordionsActions] = useState<IAccordionTemplate[]>([]);
     const [nameProjectsData, setNameProjectsData] = useState<IDropdownProps[]>([]);
     const [nameProcessData, setNameProcessData] = useState<IDropdownProps[]>([]);
@@ -367,14 +368,33 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
             const subscription = watch((value, { name }) => {
                 if (status === "adjustment") {
                     setApproveFields(prev => {
-                        const approveSelect = prev.findIndex(approve => approve.field === name);
-                        if (approveSelect !== undefined && approveSelect !== -1) {
-                            let newValues = [...prev];
-                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[prev[approveSelect].field] }
-                            return newValues;
+                        const nameSplit = name.split(".");
+                        if (nameSplit.length === 1) {
+                            const field = name
+                                .replace(".line", "")
+                                .replace(".risk", "")
+                                .replace(".product", "")
+                                .replace(".responsible", "")
+                                .replace(".coresponsible", "")
+                                .replace(".value", "");
+                            const nameField = `${field}`;
+                            const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                            if (approveSelect !== undefined && approveSelect !== -1) {
+                                let newValues = [...prev];
+                                newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[name] }
+                                return newValues;
+                            }
+                        } else {
+                            const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                            const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                            if (approveSelect !== undefined && approveSelect !== -1) {
+                                let newValues = [...prev];
+                                newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                                return newValues;
+                            }
                         }
                         return prev;
-                    })
+                    });
                 }
                 return setCorrectionFields(prev => {
                     const indicatorId = getValues("actionsPAi")[0].indicators[0].id;
@@ -403,7 +423,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     }, [watch, fieldsChange]);
 
     useEffect(() => {
-        if (fieldsValues.length > 0) {
+        if (fieldsValues.length > 0 && status === "correction") {
             const values = Reflect.ownKeys(getValues());
             fieldsValues.forEach(value => {
                 const field = value.field.split(".");
@@ -425,6 +445,31 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
             });
         }
     }, [fieldsValues]);
+
+    useEffect(() => {
+        if(approveFields.length > 0 && adjustmentLoaded === false){
+            const values = Reflect.ownKeys(getValues());
+            approveFields.forEach(approve => {
+                const field = approve.field.split(".");
+                if(values.includes(field[0])) {
+                    if (field[0] === "risksPAI") {
+                        const risks = getValues("risksPAI");
+                        risks.forEach((risk, index) => {
+                            if (String(risk.id) === field[1]) setValue(`${field[0]}.${index}.risk`, approve.adjustment);
+                        });
+                    } else if (field[0] === "linePAI") {
+                        const lines = getValues("linePAI");
+                        lines.forEach((line, index) => {
+                            if (String(line.id) === field[1]) setValue(`${field[0]}.${index}.line`, approve.adjustment);
+                        });
+                    } else {
+                        setValue(field[0], approve.adjustment);
+                    }
+                }
+            });
+            setAdjustmentLoaded(true);
+        }
+    }, [approveFields]);
 
     const validateActiveField = (idInput: string) => {
         const approveIds = approveFields.reduce((result, current) => {
@@ -1055,7 +1100,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         if (approveFieldsValidation.length !== requirements.length) {
             setMessage({
                 title: "Atención",
-                description: "Debes aprobar todos los cambios.",
+                description: "Debes aprobar y corregir todos los cambios.",
                 show: true,
                 OkTitle: "Aceptar",
                 onCancel: () => {
