@@ -40,6 +40,15 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                 }
             });
         }
+        if(approveFields.length > 0){
+            const values = Reflect.ownKeys(getValues()).map(item => `${String(item)}.${action.indicators[0].id}`);
+            approveFields.forEach(approve => {
+                const field: any = approve.field.split(".")[0];
+                if(values.includes(approve.field)) {
+                    setValue(field, approve.adjustment);
+                }
+            });
+        }
     }, []);
 
     const validateActiveField = (idInput: string) => {
@@ -63,11 +72,30 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
         const subscription = watch((value, { name }) => {
             if (status === "adjustment") {
                 setApproveFields(prev => {
-                    const approveSelect = prev.findIndex(approve => approve.field === name);
-                    if (approveSelect !== undefined && approveSelect !== -1) {
-                        let newValues = [...prev];
-                        newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[prev[approveSelect].field] }
-                        return newValues;
+                    const nameSplit = name.split(".");
+                    if (nameSplit.length === 1) {
+                        const field = name
+                            .replace(".line", "")
+                            .replace(".risk", "")
+                            .replace(".product", "")
+                            .replace(".responsible", "")
+                            .replace(".coresponsible", "")
+                            .replace(".value", "");
+                        const nameField = `${field}.${action.indicators[0].id}`;
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[name] }
+                            return newValues;
+                        }
+                    } else {
+                        const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                            return newValues;
+                        }
                     }
                     return prev;
                 });
