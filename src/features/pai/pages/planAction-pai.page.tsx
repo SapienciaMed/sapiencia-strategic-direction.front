@@ -28,7 +28,6 @@ function PlanActionPage(): React.JSX.Element {
             setShowDialog, 
             filesUploadData, 
             setFilesUploadData, 
-            uploadFiles, 
             yearsArray,
             msgs, 
             setErrores,
