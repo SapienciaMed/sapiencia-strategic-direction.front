@@ -224,64 +224,7 @@ export function useProjectsData() {
         }
     }, [errores]);
 
-    const uploadFiles = () => {
-        setShowDialog(false);
-        setMessage({
-            title: "Adjuntar archivos",
-            description: "¿Deseas adjuntar los archivos seleccionados al proyecto?",
-            show: true,
-            background: true,
-            cancelTitle: "Cancelar",
-            OkTitle: "Aceptar",
-            onOk: () => {
-                const form = new FormData();
-                const files = filesUploadData;
-                files.forEach(file => {
-                    form.append('files', file);
-                });
-                const token = localStorage.getItem("token");
-                const options = {
-                    method: 'POST',
-                    url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-                    headers: { 'content-type': 'multipart/form-data', Permissions: authorization.encryptedAccess, authorization: `Bearer ${token}` },
-                    data: form,
-                };
-                axios.request(options).then(response => {
-                    const data: ApiResponse<boolean> = response.data;
-                    if (data.operation.code === EResponseCodes.OK) {
-                        setFilesUploadData([]);
-                        setMessage({
-                            background: true,
-                            show: true,
-                            title: "Adjuntos del proyecto",
-                            description: "¡Archivos guardados exitosamente!",
-                            OkTitle: "Aceptar",
-                        });
-                    } else {
-                        setFilesUploadData([]);
-                        setMessage({
-                            background: true,
-                            show: true,
-                            title: "Adjuntos del proyecto",
-                            description: data.operation.message,
-                            OkTitle: "Aceptar"
-                        });
-                    }
-                }).catch(err => {
-                    setMessage({
-                        background: true,
-                        show: true,
-                        title: "Adjuntos del proyecto",
-                        description: String(err),
-                        OkTitle: "Aceptar"
-                    })
-                });
-            },
-            onCancel: () => {
-                setMessage({});
-            }
-        })
-    }
+
 
     return { navigate, 
              tableComponentRef, 
@@ -297,7 +240,6 @@ export function useProjectsData() {
              setShowDialog, 
              filesUploadData, 
              setFilesUploadData, 
-             uploadFiles, 
              msgs, 
              yearsArray,
              setErrores,
