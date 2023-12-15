@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import usePlanActionPAIData from "../hooks/createPlanAction-pai.hook";
 import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
@@ -9,7 +9,11 @@ import { Tooltip } from "primereact/tooltip";
 import { NavbarPai } from "../components/navbar-pai.component";
 import { typePAIData } from "../data/dropdowns-revision-pai";
 
-function CreatePlanActionPAIPage(): React.JSX.Element {
+export interface IPropsPAI {
+    status: "new" | "edit" ;
+}
+
+function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Element {
     const { errors,
         navigate,
         getFieldState,
@@ -26,14 +30,18 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
         remove,
         yearsArray,
         setMessage,
+        formAction,
         control,
         register,
-        fieldsActionsPAi,
+        getValues,
         createPlanActionActions,
         createPlanActionColumns,
         onSubmitCreate,
+        setFormAction,
         IndicatorsFormComponent
-    } = usePlanActionPAIData();
+    } = usePlanActionPAIData({status});
+
+
     return (
         <div>
             {IndicatorsFormComponent}
@@ -42,7 +50,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                     <div className='main-page full-height'>
                         <div className='card-table'>
                             <div className="title-area">
-                                <div className="text-black extra-large bold">Formular Plan de Acción Institucional (PAI)</div>
+                            <div className="text-black extra-large bold">{formAction === "new" ? "Formular Plan de Acción Institucional (PAI) " : "Editar Plan de Acción Institucional (PAI)"}</div>
                             </div>
                             {<FormComponent action={undefined}>
                                 <div className="card-table">
@@ -297,7 +305,7 @@ function CreatePlanActionPAIPage(): React.JSX.Element {
                                     {<TableExpansibleComponent
                                         actions={createPlanActionActions}
                                         columns={createPlanActionColumns}
-                                        data={fieldsActionsPAi || []} />}
+                                        data={ getValues("actionsPAi") || []} />}
                                 </div>
 
                             </FormComponent>}

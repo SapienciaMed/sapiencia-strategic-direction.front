@@ -34,7 +34,8 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     setShowCancel: Dispatch<SetStateAction<boolean>>;
     isValidIndicator: boolean;
     setIsValidIndicator: Dispatch<SetStateAction<boolean>>;
-    formAction: "new" | "edit";
+    formAction: string;
+    setFormAction:Dispatch<SetStateAction<string>>;
   }
   interface IProps {
     children: ReactElement | ReactElement[];
@@ -64,6 +65,7 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     isValidIndicator: true,
     setIsValidIndicator: () => {},
     formAction: null,
+    setFormAction:() => {},
   });
   
   export function PAIContextProvider({ children }: IProps) {
@@ -79,8 +81,10 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
     const [actionCancel, setActionCancel] = useState<() => void>(() => {});
     const [showCancel, setShowCancel] = useState<boolean>(true);
     const [isValidIndicator, setIsValidIndicator] = useState<boolean>(true);
-    const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
+    //const formAction = location.pathname.includes('/edit/') ? "edit" : "new";
+    const [formAction, setFormAction] = useState<string>(null);
     const values = useMemo<IPAIContext>(() => {
+      console.log(IndicatorsFormComponent);
       return {
         disableSaveButton,
         setDisableSaveButton,
@@ -104,7 +108,8 @@ import { ICreatePlanAction } from "../interfaces/PAIInterfaces";
         setShowCancel,
         isValidIndicator,
         setIsValidIndicator,
-        formAction
+        formAction,
+        setFormAction,
       };
     }, [disableSaveButton, IndicatorsFormComponent, isValidIndicator, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
   

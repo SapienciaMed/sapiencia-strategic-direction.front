@@ -40,7 +40,7 @@ function ActionListPAIPage({ actionId, control, register, errors }: Readonly<IAc
             return {
                 id: indexIndicator,
                 name: `Indicador No. ${indexIndicator + 1}`,
-                content: <IndicatorsPaiPage actionId={actionId} indicatorId={indexIndicator} editMode={true}/>
+                content: <IndicatorsPaiPage actionId={actionId} indicatorId={indexIndicator} editMode={true} updatePAIForm={null}/>
             };
         }) : []);
     },[]);

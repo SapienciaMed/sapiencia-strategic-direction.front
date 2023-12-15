@@ -12,11 +12,12 @@ import TableDisaggregate from "../components/table-disaggregate";
 
 interface IIndicatorsPaiProps {
     actionId: number;
+    updatePAIForm: () => void;
     editMode?: boolean;
     indicatorId?: number;
 }
 
-function IndicatorsPaiPage({ actionId, indicatorId, editMode = false }: IIndicatorsPaiProps ): React.JSX.Element {
+function IndicatorsPaiPage({ actionId, indicatorId, editMode = false , updatePAIForm }: IIndicatorsPaiProps ): React.JSX.Element {
 
     const { errors,
             PAIData,
@@ -39,7 +40,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false }: IIndicat
             onChangeDisaggregate,
             controlIndicatorsPai,
             projectIndicatorsData,
-            indicatorTypeValidation } = useIndicatorsPai(actionId,indicatorId,editMode);
+            indicatorTypeValidation } = useIndicatorsPai(actionId,updatePAIForm,indicatorId,editMode);
     
     return (
         <>

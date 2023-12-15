@@ -1,4 +1,4 @@
-import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, get, useFieldArray, useForm, useWatch } from "react-hook-form";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { ICreatePlanAction ,IAddAction } from "../interfaces/PAIInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
@@ -20,11 +20,12 @@ import { IProject } from "../interfaces/ProjectsInterfaces";
 import { InputInplaceComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
+import { useParams } from "react-router-dom";
 import ActionListPaiPage from "../pages/actionList-pai.page";
 
 
 
-export default function usePlanActionPAIData() {
+export default function usePlanActionPAIData({ status }) {
     useBreadCrumb({
         isPrimaryPage: false,
         name: "Formular Plan de Acción Institucional (PAI)",
@@ -40,16 +41,18 @@ export default function usePlanActionPAIData() {
     const [projectsPAIData, setProjectsPAIData] = useState<IDropdownProps[]>(null);
     const [projectsData, setProjectsData] = useState<IProject[]>(null);
     const [View, ViewData] = useState<boolean>(false);
+    const [loadData, setLoadData] = useState<boolean>(false);
     const [actionCount, setActionCount] = useState<number>(1);
     const [riskText, RisksTextData] = useState<string>("");
 
     const [CreatePlanActionFormData, setCreatePlanActionFormData] = useState<ICreatePlanAction>(null)
     const { getRiskPAI,getProcessPAI,getObjectivesPAI } = useEntitiesService();
     const { getProjectsByFilters } = useProjectsService();
-    const {CreatePAI,UpdatePAI} =  usePaiService();
+    const { CreatePAI, UpdatePAI, GetPAIById } =  usePaiService();
     const { getOptions } = useRoleService();
-    const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
+
     const { authorization, setMessage } = useContext(AppContext);
+    const { id: idPAI } = useParams();
     const {   
         disableSaveButton,
         setDisableSaveButton,
@@ -68,9 +71,14 @@ export default function usePlanActionPAIData() {
         showCancel,
         setShowCancel,
         formAction,
+        setFormAction,
         setDisableTempBtn,
         setIndicatorsFormComponent,
         IndicatorsFormComponent } = useContext(PAIContext);
+
+        useEffect(() => {
+            setFormAction(status)
+        }, [status]);
 
     const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
     const navigate = useNavigate();
@@ -99,6 +107,8 @@ export default function usePlanActionPAIData() {
         actionsPAi:PAIData?.actionsPAi ? PAIData.actionsPAi : null,
     }});
 
+    const updatePAIForm =  () => trigger();
+
     useEffect(() => {
         const subscription = watch((value: ICreatePlanAction ) => setPAIData(prev => {
             return { ...prev, ...value }
@@ -106,7 +116,67 @@ export default function usePlanActionPAIData() {
         return () => subscription.unsubscribe();
     }, [watch]);
 
+
+    useEffect(() => {
+        if (Number(idPAI) && status === "edit") {
+            GetPAIById(Number(idPAI))
+                .then((response) => {
+                    debugger;
+                    if (response.operation.code === EResponseCodes.OK) {
+                        const res = response.data;
+                        // const actionsRes =  res.actionsPAi.map((action,index) => {
+                        //     return {...action, index : index + 1 , action : index + 1}
+                        // })
+                        //setValue("actionsPAi",actionsRes);
+                        setValue("yearPAI", res.yearPAI);
+                        setValue("budgetPAI", res.budgetPAI);
+                        setValue("objectivePAI", res.objectivePAI);
+                        setValue("articulationPAI", res.articulationPAI);
+                        setValue("linePAI", res.linePAI);
+                        setValue("risksPAI", res.risksPAI);
+                        setValue("typePAI", res.typePAI);
+                        setValue("namePAI", res.namePAI);
+                        setPAIData(res);
+                        setLoadData(true);
+                        setDisableTempBtn(false);
+                        setDisableSaveButton(true);
+                        
+                    } else if (response.operation.code === EResponseCodes.FAIL) {
+                        setMessage({
+                            title: "No se pudo cargar el plan",
+                            description: <p className="text-primary biggest">{response.operation.message}</p>,
+                            background: true,
+                            show: true,
+                            OkTitle: "Aceptar",
+                            onOk: () => {
+                                setMessage({});
+                            },
+                            onClose: () => {
+                                setMessage({});
+                            },
+                        });
+                    }
+                })
+                .catch((error) => {
+                    setMessage({
+                        title: "Error petición plan",
+                        description: <p className="text-primary biggest">{error}</p>,
+                        background: true,
+                        show: true,
+                        OkTitle: "Aceptar",
+                        onOk: () => {
+                            setMessage({});
+                        },
+                        onClose: () => {
+                            setMessage({});
+                        },
+                    });
+                });
+        }
+    }, [idPAI]);
+
         const onSubmitSave = handleSubmit(async (data: ICreatePlanAction) => {
+            const dataPAI = {...PAIData}
             setMessage({
                 title: " Crear plan ",
                 description: "¿Deseas enviar el plan de acción institucional para revisión? ",
@@ -252,7 +322,7 @@ export default function usePlanActionPAIData() {
                     }
                 }
             } else {
-                const dataPai = { ...PAIData, user: authorization.user.numberDocument,status: 1 };
+                const dataPai = { ...data, user: authorization.user.numberDocument,status: 1 };
                 const res = await CreatePAI(dataPai);
                 setPAIData(prev => {
                     return { ...prev, id: res.data.id }
@@ -274,7 +344,7 @@ export default function usePlanActionPAIData() {
                 } else {
                     if (res.operation.message === ("Error: Ya existe un plan con este id.")) {
                         setMessage({
-                            title: "Validación BPIN.",
+                            title: "Validación id.",
                             description: <p className="text-primary biggest">Ya existe un plan con este id , por favor verifique.</p>,
                             background: true,
                             show: true,
@@ -308,6 +378,8 @@ export default function usePlanActionPAIData() {
     const onSubmitEdit = handleSubmit(async (data: ICreatePlanAction) => {
         
     });
+
+    
 
     useEffect(() => {
         getRiskPAI().then(response => {
@@ -397,6 +469,10 @@ export default function usePlanActionPAIData() {
 
     useEffect(() => {
         setValue("namePAI",null)
+        if(loadData == true){
+            setValue("objectivePAI","")
+            setValue("articulationPAI","")
+        }
         if (idType == 1) {
             setNamePAIData(projectsPAIData)
         } else if (idType == 2){
@@ -409,8 +485,7 @@ export default function usePlanActionPAIData() {
     const idName = watch("namePAI")
 
     useEffect(() => {
-        setValue("objectivePAI","")
-        setValue("articulationPAI","")
+       
         if (idType == 1 && idName != null) {
            const project = projectsData.find(project => project.id === idName);
            setValue("objectivePAI",(project.centerProblem))
@@ -443,7 +518,7 @@ export default function usePlanActionPAIData() {
         
     }
 
-    
+
   const createPlanActionColumns: ITableElement<IAddAction>[] = [
     {
       fieldName: "action",
@@ -456,7 +531,7 @@ export default function usePlanActionPAIData() {
             return (
                 <Controller
                     control={control}
-                    name={`actionsPAi.${row.action}.description`}
+                    name={`actionsPAi.${row.action - 1}.description`}
                     defaultValue={""}
                     render={({ field }) => {
                         return (
@@ -493,8 +568,9 @@ export default function usePlanActionPAIData() {
             )
         },
         onClick: (row) => {
-            setIndicatorsFormComponent(<IndicatorsPaiPage actionId={row?.id | row.action}/>);
+            setIndicatorsFormComponent(<IndicatorsPaiPage actionId={row?.id | row.action} updatePAIForm={updatePAIForm}/>);
         }
+        
     },
     {
       icon: "Detail",
@@ -527,13 +603,20 @@ export default function usePlanActionPAIData() {
                 OkTitle: "Aceptar",
                 onOk: () => {
                   setMessage({});
+                  const valueAction = getValues("actionsPAi").filter(action => action.index != row.index)
+                  setValue("actionsPAi",valueAction)
+                  setPAIData( prev =>{ 
+                        return{
+                            ...prev , actionsPAi : valueAction,
+                        } 
+                    })
                 },
                 onClose: () => {
                   setMessage({});
                 },
               });
-            removeActionPai(row.id);
           },
+          
         });
       },
 
@@ -552,18 +635,29 @@ export default function usePlanActionPAIData() {
 
 
   const onSubmitCreate = () => {
-    appendActionsPAi({ action: fieldsActionsPAi.length++  , description:""});
+    setValue("actionsPAi",getValues("actionsPAi").concat({ action: getValues("actionsPAi").length + 1  , description:"", index: getValues("actionsPAi").length + 1 , id: getValues("actionsPAi").length + 1}));
     //setTableData(tableData.concat({action:tableData.length + 1, description:""}));
   };
 
+
+
     useEffect(()=>{
-        if(isValid){
+        setDisableTempBtn(false);
+        const actions = getValues("actionsPAi");
+        const actionsIndicators = actions.filter(action => action.indicators?.length == 0);
+        if(getValues("actionsPAi").length > 0 ){
+            setDisableTempBtn(true);
+            setDisableSaveButton(true);
+            if(actionsIndicators.length != 0){
+                setSaveButtonAction(() => onSubmitSave);
+                setDisableSaveButton(false);
+            }
+        }else {
             setTempButtonAction( () => onSubmitTemp );
-            setSaveButtonAction(() => onSubmitSave); 
-        }
-        setDisableTempBtn(!isValid);
-        setDisableSaveButton(!isValid);
-    },[isValid])
+            setDisableSaveButton(true);
+            setDisableTempBtn(false);
+        } 
+    },[getValues("actionsPAi")])
 
     const onCancel = () => {
         setMessage({
@@ -584,18 +678,29 @@ export default function usePlanActionPAIData() {
     }
 
     useEffect(()=>{
-        setTempButtonAction( () => onSubmitTemp );
-        setSaveButtonAction(() => onSubmitSave); 
+        const actions = getValues("actionsPAi");
+        const actionsIndicators = actions.filter(action => action.indicators?.length == 0);
+        if(getValues("actionsPAi").length > 0 ){
+            setDisableTempBtn(true);
+            setDisableSaveButton(true);
+            if(actionsIndicators.length == 0){
+                setSaveButtonAction(() => onSubmitSave);
+                setDisableSaveButton(false);
+            }
+        }else {
+            setTempButtonAction( () => onSubmitTemp );
+            setDisableSaveButton(true);
+            setDisableTempBtn(false);
+        } 
         setActionCancel(()=> onCancel)
         setTempButtonText("Guardar temporalmente"); 
         setSaveButtonText("Guardar y regresar"); 
-        setDisableTempBtn(!isValid);
-        setDisableSaveButton(!isValid);
     },[IndicatorsFormComponent])
+
 
     const saveAction = () => {
        
     }
 
-    return { errors,fields, fieldsActionsPAi, append,View,riskText, NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, getValues, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, getValues , append,View,riskText, formAction,setFormAction,NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, setValue, cancelAction, saveAction,createPlanActionActions };
 }

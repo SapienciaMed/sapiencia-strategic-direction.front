@@ -125,8 +125,18 @@ function App() {
                 path={"/direccion-estrategica/pai/crear-pai"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
+                    element={<PAIContextProvider><CreatePlanAction status="new"  /></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/edit/:id"}
+                element={
+                  <PrivateRoute
+                    element={<PAIContextProvider><CreatePlanAction status="edit"  /></PAIContextProvider>}
+                    allowedAction={"PROYECTO_EDITAR"}
                   />
                 }
               />
@@ -146,7 +156,7 @@ function App() {
                 path={"/direccion-estrategica/consulta"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
+                    element={<PAIContextProvider><CreatePlanAction status="new"  /></PAIContextProvider>}
                     allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
                   />
                 }

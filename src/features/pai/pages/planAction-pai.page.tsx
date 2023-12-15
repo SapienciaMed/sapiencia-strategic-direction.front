@@ -45,9 +45,9 @@ function PlanActionPage(): React.JSX.Element {
                             <label className="text-black large bold">
                                 Consultar Planes
                             </label>
-                            { validateActionAccess("PROYECTO_CREAR") && 
+                            { validateActionAccess("CREAR_PLAN") && 
                                 <div className="title-button text-three large" onClick={() => { navigate('./crear-pai') }}>
-                                    <span style={{ marginRight: '0.5em' }} > Formular plan</span>
+                                        <span style={{ marginRight: '0.5em' }} > Formular plan</span>
                                     {<AiOutlinePlusCircle size={20} color="533893" />}
                                 </div>
                             }

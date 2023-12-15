@@ -257,7 +257,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`./edit/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
+            hideRow: (row) => !(row.status === 1) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
 
@@ -281,7 +281,7 @@ export function useProjectsData() {
 
     useEffect(() => {
         GetAllStatus().then(response => {
-            debugger;
+
             if (response.operation.code === EResponseCodes.OK) {
                 setStatusData(response.data.map(status => {
                     return {

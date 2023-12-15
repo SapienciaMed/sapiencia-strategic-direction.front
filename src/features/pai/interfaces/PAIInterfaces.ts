@@ -24,6 +24,7 @@ export interface IAddAction {
   id?: number;
   action: number;
   description: string;
+  index?: number;
   indicators?: IIndicatorsPAITemp[];
 }
 
