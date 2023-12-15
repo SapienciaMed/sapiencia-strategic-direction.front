@@ -1,26 +1,27 @@
-import { Controller, UseFieldArrayRemove, useFieldArray, 
-         useForm, 
-         useWatch } from "react-hook-form";
-import { useCallback, useContext, 
+import { useContext, 
          useEffect, 
          useState } from "react";
-import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { EResponseCodes } from "../../../common/constants/api.enum";
-import { IBimester, IDisaggregate, IIndicatorsPAI, 
+import { useFieldArray, 
+         useForm, 
+         useWatch } from "react-hook-form";
+import { IIndicatorIndicative, 
+         IIndicatorAction, 
+         IProject } from '../interfaces/ProjectsInterfaces';
+import { IBimester, 
+         IDisaggregate, 
          IIndicatorsPAITemp, 
          IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 import { indicatorsPAIValidator} from "../../../common/schemas";
 import { PAIContext } from "../contexts/pai.context";
 import { useEntitiesService } from "./entities-service.hook";
-import { IIndicatorIndicative, IIndicatorAction, IProject } from '../interfaces/ProjectsInterfaces';
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useProjectsService } from "./projects-service.hook";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
-import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { InputInplaceComponent } from "../../../common/components/Form";
-export default function useIndicatorsPai(actionId:number) {
+import { ITableElement } from "../../../common/interfaces/table.interfaces";
+import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
+
+export default function useIndicatorsPai(actionId:number,indicatorId?:number, editMode?:boolean) {
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
     const { PAIData, 
             setPAIData, 
@@ -29,6 +30,7 @@ export default function useIndicatorsPai(actionId:number) {
             setTempButtonText, 
             setSaveButtonText,
             setTempButtonAction, 
+            setIsValidIndicator,
             setSaveButtonAction,
             setDisableSaveButton,
             setIndicatorsFormComponent } = useContext(PAIContext);
@@ -37,12 +39,12 @@ export default function useIndicatorsPai(actionId:number) {
     const [ indicatorTypeValidation, setIndicatorTypeValidation ] = useState<boolean>(false);
     const [ projectData, setProjectData ] = useState<IProject>();
     const [ projectIndicatorsData, setProjectIndicatorsData ] = useState<IDropdownProps[]>();
-    const [ tableData, setTableData ] = useState<IDisaggregate[]>([]);
     const [ disaggregateColumns, setDisaggregateColumns] = useState<ITableElement<IDisaggregate>[]>([]);
     const { setMessage } = useContext(AppContext);
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
     const { GetProjectById } = useProjectsService()
+
     const {
         getValues,
         register,
@@ -58,16 +60,22 @@ export default function useIndicatorsPai(actionId:number) {
         mode: "all",
         defaultValues: {
             typePAI: PAIData?.typePAI,
-            totalPlannedGoal: 0,
-            actionId: actionId,
-            bimesters: [
+            projectIndicator: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.projectIndicator : null,
+            indicatorType: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.indicatorType : null,
+            indicatorDesc: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.indicatorDesc : "",
+            bimesters: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.bimesters : [
                 {bimester: "first",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
                 {bimester: "second", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
                 {bimester: "third",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
                 {bimester: "fourth", value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
                 {bimester: "fifth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []},
                 {bimester: "sixth",  value: null, disaggregate: [], showDisaggregate: 0, sumOfPercentage: 0, errors: []}
-            ]
+            ],
+            totalPlannedGoal: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.totalPlannedGoal : 0,
+            products: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.products : [],
+            responsibles: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.responsibles : [],
+            coresponsibles: editMode ? PAIData?.actionsPAi.at(actionId).indicators.at(indicatorId)?.coresponsibles : [],
+            actionId: actionId,
         }
     });
 
@@ -75,6 +83,8 @@ export default function useIndicatorsPai(actionId:number) {
         const subscription = watchIndicators(( values: IIndicatorsPAITemp ) => setPAIData(prev => {
             if(values?.indicatorDesc?.length > 0) trigger("projectIndicator");
             if(values?.projectIndicator) trigger("indicatorDesc");
+            if(editMode) prev.actionsPAi[actionId].indicators[indicatorId] = values;
+            setIsValidIndicator(isValid);
             return { ...prev }
         }));
         return () => subscription.unsubscribe();
@@ -87,7 +97,7 @@ export default function useIndicatorsPai(actionId:number) {
     useEffect(()=>{
         setDisableSaveButton(!isValid);
         setDisableTempBtn(!isValid);
-        if(!isValid) return;
+        if(!isValid || editMode) return;
         setSaveButtonAction( () => onSubmit );
         setTempButtonAction( () => onAddNewIndicator )
     },[isValid])
@@ -112,6 +122,7 @@ export default function useIndicatorsPai(actionId:number) {
     }, []);
 
     useEffect(()=>{
+        if(editMode) return;
         setTimeout(()=>{
             setActionCancel(()=>onCancel);
             setTempButtonText("Agregar otro indicador"); 
@@ -322,7 +333,11 @@ export default function useIndicatorsPai(actionId:number) {
         trigger("bimesters")
     }
 
-    const validateBimester = ( validationBimester: IBimester, indexBimester: number, sumOfPercentage: number ) => {
+    const validateBimester = ( 
+        validationBimester: IBimester, 
+        indexBimester: number, 
+        sumOfPercentage: number 
+    ) => {
         let errors = [];
         if(sumOfPercentage > validationBimester?.value || sumOfPercentage < validationBimester?.value ){
             errors.push(`Los porcentajes no coinciden. No pueden ser ${sumOfPercentage > validationBimester?.value ? "superior" : "inferior"} al total del bimestre.`)
@@ -330,7 +345,6 @@ export default function useIndicatorsPai(actionId:number) {
         if(validationBimester?.disaggregate.length  < 2){
             errors.push("Se debe realizar la desagregación del bimestre mínimo en dos registros.")
         }
-
         fieldsBimesters.at(indexBimester).errors = errors;
         setValue(`bimesters.${indexBimester}.errors`, errors);
     }
@@ -342,7 +356,6 @@ export default function useIndicatorsPai(actionId:number) {
         setValue,
         register,
         getValues,
-        tableData,
         setMessage,
         getFieldState,
         indicatorType,
