@@ -35,7 +35,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                 <div className='card-table'>
                     <FormComponent action={undefined} className="strategic-direction-grid-1 strategic-direction-grid-1-web">
                         <div className="title-area">
-                            <div className="text-black extra-large bold">{"Revisión plan de Acción Institucional (PAI)"}</div>
+                            <div className="text-black extra-large bold">{status === "revision" ? "Revisión 1 Plan de Acción Institucional (PAI)" : "Plan de Acción Institucional (PAI)"}</div>
                         </div>
                         <div className="card-table strategic-direction-grid-1 strategic-direction-grid-1-web">
                             <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
