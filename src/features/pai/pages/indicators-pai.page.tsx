@@ -167,7 +167,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false }: IIndicat
                                             className={`inputNumber-basic ${indicatorTypeValidation && "inputNumber-disaggregate"}`}
                                             disabled={true}
                                             useGrouping={false}
-                                            suffix="%"
+                                            suffix={indicatorTypeValidation?"%":""}
                                         />
                                     </div>
                                 </div>
