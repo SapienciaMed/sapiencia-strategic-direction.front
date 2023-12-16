@@ -37,6 +37,7 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
         createPlanActionActions,
         createPlanActionColumns,
         onSubmitCreate,
+        disableTempBtn,
         setFormAction,
         IndicatorsFormComponent
     } = usePlanActionPAIData({status});
@@ -312,8 +313,12 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                         </div>
                     </div>
                 </div>
-                <NavbarPai />
             </div>
+                {disableTempBtn ? (
+                    <NavbarPai editMode={true} />
+                    ) : (
+                    <NavbarPai />
+                )}
         </div>
 
     )

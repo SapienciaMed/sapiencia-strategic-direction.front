@@ -74,6 +74,7 @@ export default function usePlanActionPAIData({ status }) {
         setFormAction,
         setDisableTempBtn,
         setIndicatorsFormComponent,
+        disableTempBtn,
         IndicatorsFormComponent } = useContext(PAIContext);
 
         useEffect(() => {
@@ -121,7 +122,7 @@ export default function usePlanActionPAIData({ status }) {
         if (Number(idPAI) && status === "edit") {
             GetPAIById(Number(idPAI))
                 .then((response) => {
-                    debugger;
+
                     if (response.operation.code === EResponseCodes.OK) {
                         const res = response.data;
                         // const actionsRes =  res.actionsPAi.map((action,index) => {
@@ -322,6 +323,7 @@ export default function usePlanActionPAIData({ status }) {
                     }
                 }
             } else {
+
                 const dataPai = { ...data, user: authorization.user.numberDocument,status: 1 };
                 const res = await CreatePAI(dataPai);
                 setPAIData(prev => {
@@ -702,5 +704,5 @@ export default function usePlanActionPAIData({ status }) {
        
     }
 
-    return { errors,fields, getValues , append,View,riskText, formAction,setFormAction,NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, setValue, cancelAction, saveAction,createPlanActionActions };
+    return { errors,fields, getValues , append,View,riskText,disableTempBtn, formAction,setFormAction,NamePAIData,tableData,IndicatorsFormComponent,remove,changeActionsPAi,onSubmitCreate,createPlanActionColumns, riskFields, appendRisk,riskPAIData, getFieldState,register, yearsArray, control, setMessage, navigate, onSubmitEdit, setValue, cancelAction, saveAction,createPlanActionActions };
 }
