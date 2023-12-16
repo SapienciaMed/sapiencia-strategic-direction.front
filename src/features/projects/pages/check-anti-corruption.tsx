@@ -77,7 +77,7 @@ function ProjectsPage(): React.JSX.Element {
                 <div className="card-table">
                     <TableComponent
                         ref={tableComponentRef}
-                        url={`${process.env.urlApiStrategicDirection}/api/v1/project/get-project-paginated`}
+                        url={`${process.env.urlApiStrategicDirection}/api/v1/anti-corruption-plan/paginated`}
                         columns={tableColumns}
                         actions={tableActions}
                         isShowModal={true}
