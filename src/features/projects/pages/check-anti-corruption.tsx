@@ -1,11 +1,8 @@
 import React from "react";
 import { ButtonComponent, FormComponent, InputComponent, SelectComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { useProjectsData } from "../hooks/projects.hook";
+import { useAntiCorruptionPlanData } from "../hooks/anti-corruption-plan.hook";
 import TableComponent from "../../../common/components/table.component";
-import { Controller } from "react-hook-form";
-import { UploadComponent } from "../../../common/components/upload.component";
-import { Messages } from 'primereact/messages';
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function ProjectsPage(): React.JSX.Element {
@@ -27,39 +24,12 @@ function ProjectsPage(): React.JSX.Element {
             showDialog, 
             setShowDialog, 
             filesUploadData, 
-            setFilesUploadData, 
-            uploadFiles, 
+            setFilesUploadData,
             msgs, 
             setErrores,
-            validateActionAccess } = useProjectsData();
+            validateActionAccess } = useAntiCorruptionPlanData();
     return (
         <div className='main-page'>
-            {showDialog && <div className="modal modal-bg is-open">
-                <div className="modal-container upload-files-modal">
-                    <div className="modal-header"></div>
-                    <div className="modal-content">
-                        <div className="full-width">
-                            <span className="text-black biggest bold" onClick={() => setErrores("test")}>Adjuntar archivos</span>
-                            <Messages ref={msgs} />
-                            <div style={{ marginTop: "20px" }}>
-                                <UploadComponent
-                                    id="fileList"
-                                    setFilesData={setFilesUploadData}
-                                    setErrores={setErrores}
-                                    filesAccept="png, jpg, pdf, docx, xls, xlsx"
-                                    maxSize={20971520}
-                                    dropboxMessage="Arrastra y suelta el archivo aquí"
-                                    multiple
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button className="button-cancel medium " style={{ display: filesUploadData.length > 0 ? "" : "none" }} onClick={() => setShowDialog(false)}>Cancelar</button>
-                        <button className="button-ok small" onClick={filesUploadData.length > 0 ? uploadFiles : () => setShowDialog(false)}>{filesUploadData.length > 0 ? "Guardar" : "Cancelar"}</button>
-                    </div>
-                </div>
-            </div>}
             <div className='card-table'>
                 <div className="title-area">
                     <div className="text-black extra-large bold">Consultar Plan Anticorrupción y Atención al Ciudadano (PAAC)</div>

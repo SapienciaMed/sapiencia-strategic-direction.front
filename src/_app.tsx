@@ -12,6 +12,7 @@ import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
+import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -153,11 +154,11 @@ function App() {
               />
 
               <Route
-                path={"/direccion-estrategica/consulta"}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction status="new"  /></PAIContextProvider>}
-                    allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
+                    element={<CheckAntiCorruption />}
+                    allowedAction={"CONSULTAR_PLAN"}
                   />
                 }
               />
