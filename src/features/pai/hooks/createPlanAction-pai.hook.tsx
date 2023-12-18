@@ -136,7 +136,9 @@ export default function usePlanActionPAIData({ status }) {
                         setValue("linePAI", res.linePAI);
                         setValue("risksPAI", res.risksPAI);
                         setValue("typePAI", res.typePAI);
-                        setValue("namePAI", res.namePAI);
+                        setTimeout(()=> {
+                            setValue("namePAI", res.namePAI);
+                        },1000)
                         setPAIData(res);
                         setLoadData(true);
                         setDisableTempBtn(false);
@@ -273,9 +275,10 @@ export default function usePlanActionPAIData({ status }) {
             });
         });
 
-    const onSubmitTemp = handleSubmit(async (data: ICreatePlanAction) => {
-            if (data?.id) {
-                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1};
+    const onSubmitTemp =  async () => {
+            const data = getValues();
+            if (idPAI) {
+                const dataPai = { ...data, user: authorization.user.numberDocument ,status: 1,id:Number(idPAI)};
                 const res = await UpdatePAI(dataPai.id, dataPai);
                 if (res.operation.code === EResponseCodes.OK) {
                     setMessage({
@@ -375,7 +378,7 @@ export default function usePlanActionPAIData({ status }) {
                     }
                 }
             }
-    });
+    };
 
     const onSubmitEdit = handleSubmit(async (data: ICreatePlanAction) => {
         
@@ -480,27 +483,27 @@ export default function usePlanActionPAIData({ status }) {
         } else if (idType == 2){
             setNamePAIData(processPAIData);
         } 
-    }, [idType]);
+    }, [idType,projectsData]);
 
     
 
     const idName = watch("namePAI")
 
     useEffect(() => {
-       
+       if(!projectsData) return;
         if (idType == 1 && idName != null) {
-           const project = projectsData.find(project => project.id === idName);
+           const project = projectsData?.find(project => project.id === idName);
            setValue("objectivePAI",(project.centerProblem))
            setValue("articulationPAI",project.pdd_linea);
            ViewData(true);
             
         } else if (idType == 2 && idName != null){
-            const objective = objectivePAIData.find(project => project.value === idName).name;
+            const objective = objectivePAIData?.find(project => project.value === idName).name;
             setValue("objectivePAI",(objective))
             ViewData(false);
         } 
         
-    }, [idName]);
+    }, [idName,projectsData]);
 
     const idRisks = watch("selectedRisk")
 
