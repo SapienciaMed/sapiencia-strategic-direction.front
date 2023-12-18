@@ -23,7 +23,7 @@ function App() {
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
   const PlanAction = lazy(() => import("./features/pai/pages/planAction-pai.page"));
-  const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
+  const CrudPAIPage = lazy(() => import("./features/pai/pages/crud-pai.page"));
   const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
   const { publish } = useAppCominicator();
@@ -125,7 +125,7 @@ function App() {
                 path={"/direccion-estrategica/pai/crear-pai"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction status="new"  /></PAIContextProvider>}
+                    element={<PAIContextProvider><CrudPAIPage status="new"/></PAIContextProvider>}
                     allowedAction={"PROYECTO_HISTORICOS"}
                   />
                 }
@@ -135,7 +135,7 @@ function App() {
                 path={"/direccion-estrategica/pai/edit/:id"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction status="edit"  /></PAIContextProvider>}
+                    element={<PAIContextProvider><CrudPAIPage status="edit"/></PAIContextProvider>}
                     allowedAction={"PROYECTO_EDITAR"}
                   />
                 }
@@ -156,7 +156,7 @@ function App() {
                 path={"/direccion-estrategica/consulta"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction status="new"  /></PAIContextProvider>}
+                    element={<PAIContextProvider><CrudPAIPage status="new"  /></PAIContextProvider>}
                     allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
                   />
                 }
