@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IProject, IProjectFiltersDirection } from "../interfaces/ProjectsInterfaces";
+import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/ProjectsInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { useForm } from "react-hook-form";
 import { projectsValidator } from "../../../common/schemas";
-import { useProjectsService } from "./projects-service.hook";
+import { useProjectsService } from "../../projects/hooks/projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
@@ -49,7 +49,7 @@ export function useAntiCorruptionPlanData() {
             header: "Nombre del plan"
         },
         {
-            fieldName: "date",
+            fieldName: "dateFrom",
             header: "Fecha de formulación",
             renderCell: (row) => {
             return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
@@ -67,7 +67,7 @@ export function useAntiCorruptionPlanData() {
 
     const tableActions: ITableAction<IProject>[] = [
         {
-            customIcon: () => {
+            customIcon: (row) => {
                 return (
                     <>
                         <Tooltip target=".edit-tooltip" />
@@ -82,9 +82,7 @@ export function useAntiCorruptionPlanData() {
                     </>
                 )
             },
-            onClick: (row) => {
-                navigate(`./edit/${row.id}`);
-            },
+            onClick: (row) => {editDialog},
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
@@ -128,6 +126,54 @@ export function useAntiCorruptionPlanData() {
             ]);
         }
     }, [errores]);
+
+    const [editingProject, setEditingProject] = useState<IProject | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const openEditDialog = (row: IProject) => {
+        setEditingProject(row);
+        setIsEditing(true);
+    };
+
+    const closeEditDialog = () => {
+        setEditingProject(null);
+        setIsEditing(false);
+    };
+
+    const saveChanges = () => {
+        // Aquí debes guardar los cambios en el proyecto
+        // Puedes utilizar el estado editingProject para actualizar la tabla
+        // Una vez guardado, cierra el diálogo
+        closeEditDialog();
+    };
+
+    const editDialog = isEditing && editingProject && (
+        <div className="modal" style={{ display: 'block' }}>
+            <div className="modal-content">
+                {/* Aquí van los campos editables */}
+                <h2>Editar Proyecto</h2>
+                <label htmlFor="projectName">Nombre del Proyecto:</label>
+                <input
+                    type="text"
+                    id="projectName"
+                    value={editingProject.user}
+                    onChange={(e) => setEditingProject({ ...editingProject, user: e.target.value })}
+                />
+
+                <label htmlFor="projectDate">Fecha de Formulación:</label>
+                <input
+                    type="text"
+                    id="projectDate"
+                    value={editingProject.dateFrom}
+                    onChange={(e) => setEditingProject({ ...editingProject, dateFrom: e.target.value })}
+                />
+
+                {/* Botones de Guardar y Cancelar */}
+                <button onClick={saveChanges}>Guardar</button>
+                <button onClick={closeEditDialog}>Cancelar</button>
+            </div>
+        </div>
+    );
 
     return { navigate, 
              tableComponentRef, 

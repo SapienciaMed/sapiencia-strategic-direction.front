@@ -2,8 +2,8 @@ import useCrudService from "../../../common/hooks/crud-service.hook";
 import { MasterTable } from "../../../common/interfaces/MasterTableInterfaces";
 import { IFiles } from "../../../common/interfaces/storage.interfaces";
 import { ApiResponse } from "../../../common/utils/api-response";
-import { IHistoricalProject } from "../interfaces/HistoricProjectsInterfaces";
-import { IFinishProjectForm, IProject, IProjectFiltersHistorical, IProjectTemp } from "../interfaces/ProjectsInterfaces";
+import { IHistoricalProject } from "../../projects/interfaces/HistoricProjectsInterfaces";
+import { IFinishProjectForm, IProject, IProjectFiltersHistorical, IProjectTemp } from "../../projects/interfaces/ProjectsInterfaces";
 
 export function useAntiCorruptionPlanService() {
     const baseURL: string = process.env.urlApiStrategicDirection;

@@ -1,6 +1,6 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { ApiResponse } from "../../../common/utils/api-response";
-import { IAntiCorruptionPlanStatus } from "../interfaces/AntiCorruptionPlanStatusInterfaces";
+import { IAntiCorruptionPlanStatus } from "../../projects/interfaces/AntiCorruptionPlanStatusInterfaces";
 
 export function useAntiCorruptionPlanStatusService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
