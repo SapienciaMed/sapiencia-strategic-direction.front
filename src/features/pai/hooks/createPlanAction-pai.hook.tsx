@@ -121,6 +121,7 @@ export default function usePlanActionPAIData({ status }) {
                         setTimeout(() => {
                             setValue("namePAI", res.namePAI);
                         }, 1000);
+                        setValue("id", res.id);
                         setPAIData({...res, actionsPAi: actions});
                         setLoadData(true);
                         setDisableTempBtn(false);
@@ -450,7 +451,6 @@ export default function usePlanActionPAIData({ status }) {
     useEffect(() => {
         if ((!isValid) === disableSaveButton || IndicatorsFormComponent) return;
         setDisableSaveButton(!isValid);
-        setDisableTempBtn(!isValid);
     }, [isValid, disableSaveButton]);
 
     return {
