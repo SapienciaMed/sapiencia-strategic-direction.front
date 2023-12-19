@@ -18,8 +18,7 @@ interface IIndicatorsPaiProps {
     indicatorId?: number;
 }
 
-function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIForm }: IIndicatorsPaiProps): React.JSX.Element {
-
+function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIForm }: Readonly<IIndicatorsPaiProps>): React.JSX.Element {
     const { errors,
         PAIData,
         register,
@@ -41,7 +40,8 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
         onChangeDisaggregate,
         controlIndicatorsPai,
         projectIndicatorsData,
-        indicatorTypeValidation } = useIndicatorsPai(actionId, updatePAIForm, indicatorId, editMode);
+        indicatorTypeValidation
+    } = useIndicatorsPai(actionId, updatePAIForm, indicatorId, editMode);
 
     return (
         <div className={`${!editMode && "card-table"}`}>
@@ -65,7 +65,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                     classNameLabel={`text-black biggest bold ${!getValues("indicatorDesc") && "text-required"}`}
                                     data={projectIndicatorsData}
                                     filter={true}
-                                    disabled={!!getValues("indicatorDesc")}
+                                    disabled={PAIData?.typePAI !== 1}
                                 />
                             }
                             <SelectComponent
@@ -100,7 +100,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                             onChange={field.onChange}
                                             errors={errors}
                                             characters={400}
-                                            disabled={!!getValues("projectIndicator")}
+                                            disabled={PAIData?.typePAI !== 2}
                                         ></TextAreaComponent>
                                     );
                                 }}

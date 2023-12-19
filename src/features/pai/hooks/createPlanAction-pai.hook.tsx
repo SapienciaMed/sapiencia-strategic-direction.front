@@ -120,6 +120,7 @@ export default function usePlanActionPAIData({ status }) {
                         setValue("actionsPAi", actions);
                         setTimeout(() => {
                             setValue("namePAI", res.namePAI);
+                            trigger();
                         }, 1000);
                         setValue("id", res.id);
                         setPAIData({...res, actionsPAi: actions});
@@ -341,7 +342,7 @@ export default function usePlanActionPAIData({ status }) {
         {
             icon: "Detail",
             onClick: (row) => {
-                setIndicatorsFormComponent(<ActionListPaiPage actionId={row?.id | row.action} control={control} register={register} errors={errors} />);
+                setIndicatorsFormComponent(<ActionListPaiPage actionId={row.action-1} control={control} register={register} errors={errors} />);
             }
         },
         {
