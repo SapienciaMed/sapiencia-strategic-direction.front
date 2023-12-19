@@ -57,7 +57,8 @@ export default function usePlanActionPAIData({ status }) {
         setFormAction,
         setDisableTempBtn,
         setIndicatorsFormComponent,
-        IndicatorsFormComponent } = useContext(PAIContext);
+        IndicatorsFormComponent
+    } = useContext(PAIContext);
 
     useEffect(() => {
         setFormAction(status)
@@ -104,7 +105,6 @@ export default function usePlanActionPAIData({ status }) {
         if (Number(idPAI) && status === "edit") {
             GetPAIById(Number(idPAI))
                 .then((response) => {
-
                     if (response.operation.code === EResponseCodes.OK) {
                         const res = response.data;
                         setValue("yearPAI", res.yearPAI);
@@ -114,10 +114,15 @@ export default function usePlanActionPAIData({ status }) {
                         setValue("linePAI", res.linePAI);
                         setValue("risksPAI", res.risksPAI);
                         setValue("typePAI", res.typePAI);
+                        const actions = res.actionsPAi.map((action, index) => {
+                            return {...action, action: index + 1}
+                        })
+                        setValue("actionsPAi", actions);
                         setTimeout(() => {
                             setValue("namePAI", res.namePAI);
-                        }, 1000)
-                        setPAIData(res);
+                        }, 1000);
+                        setValue("id", res.id);
+                        setPAIData({...res, actionsPAi: actions});
                         setLoadData(true);
                         setDisableTempBtn(false);
                         setDisableSaveButton(true);
@@ -292,7 +297,7 @@ export default function usePlanActionPAIData({ status }) {
                 return (
                     <Controller
                         control={control}
-                        name={`actionsPAi.${row.action - 1}.description`}
+                        name={`actionsPAi.${row?.action - 1}.description`}
                         defaultValue={""}
                         render={({ field }) => {
                             return (
@@ -446,7 +451,6 @@ export default function usePlanActionPAIData({ status }) {
     useEffect(() => {
         if ((!isValid) === disableSaveButton || IndicatorsFormComponent) return;
         setDisableSaveButton(!isValid);
-        setDisableTempBtn(!isValid);
     }, [isValid, disableSaveButton]);
 
     return {
@@ -470,6 +474,7 @@ export default function usePlanActionPAIData({ status }) {
         onSubmitEdit,
         setValue,
         cancelAction,
-        createPlanActionActions
+        createPlanActionActions,
+        PAIData
     };
 }

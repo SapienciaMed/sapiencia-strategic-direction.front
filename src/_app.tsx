@@ -127,7 +127,7 @@ function App() {
                 element={
                   <PrivateRoute
                     element={<PAIContextProvider><CrudPAIPage status="new"/></PAIContextProvider>}
-                    allowedAction={"PROYECTO_HISTORICOS"}
+                    allowedAction={"CREAR_PLAN"}
                   />
                 }
               />
@@ -137,7 +137,7 @@ function App() {
                 element={
                   <PrivateRoute
                     element={<PAIContextProvider><CrudPAIPage status="edit"/></PAIContextProvider>}
-                    allowedAction={"PROYECTO_EDITAR"}
+                    allowedAction={"EDITAR_PLAN"}
                   />
                 }
               />
