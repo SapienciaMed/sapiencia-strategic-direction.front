@@ -385,7 +385,8 @@ export default function usePlanActionPAIData({ status }) {
     ];
 
     const onSubmitCreate = () => {
-        setValue("actionsPAi", getValues("actionsPAi").concat({ action: getValues("actionsPAi").length + 1, description: "", index: getValues("actionsPAi").length + 1, id: getValues("actionsPAi").length + 1 }));
+        const actions = getValues("actionsPAi") || [];
+        setValue("actionsPAi", actions.concat({ action: actions.length + 1, description: "", index: actions.length + 1, id: actions.length + 1 }));
     };
 
 
@@ -393,11 +394,11 @@ export default function usePlanActionPAIData({ status }) {
     useEffect(() => {
         setDisableTempBtn(false);
         const actions = getValues("actionsPAi");
-        const actionsIndicators = actions.filter(action => action.indicators?.length == 0);
-        if (getValues("actionsPAi").length > 0) {
+        const actionsIndicators = actions?.filter(action => action.indicators?.length == 0);
+        if (actions?.length > 0) {
             setDisableTempBtn(true);
             setDisableSaveButton(true);
-            if (actionsIndicators.length != 0) {
+            if (actionsIndicators?.length != 0) {
                 setDisableSaveButton(false);
             }
         } else {
@@ -426,8 +427,8 @@ export default function usePlanActionPAIData({ status }) {
 
     useEffect(() => {
         const actions = getValues("actionsPAi");
-        const actionsIndicators = actions.filter(action => action.indicators?.length == 0);
-        if (getValues("actionsPAi").length > 0) {
+        const actionsIndicators = actions?.filter(action => action.indicators?.length == 0);
+        if (actions?.length > 0) {
             setDisableTempBtn(true);
             setDisableSaveButton(true);
             if (actionsIndicators.length == 0) {
