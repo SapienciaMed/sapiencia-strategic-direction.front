@@ -8,11 +8,8 @@ import { projectsValidator } from "../../../common/schemas";
 import { usePaiService } from "./pai-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
 import { IoSearch } from "react-icons/io5";
 import { RiPencilLine } from "react-icons/ri";
-import { HiOutlineDocument } from "react-icons/hi";
-import { FcCancel } from "react-icons/fc";
 import { Tooltip } from "primereact/tooltip";
 import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
@@ -186,12 +183,14 @@ export function useProjectsData() {
 
 
     function loadTableData(searchCriteria?: object): void {
+        debugger;
         if (tableComponentRef.current) {
             tableComponentRef.current.loadData(searchCriteria);
         }
     }
 
-    const onSubmit = handleSubmit(async (data: IProjectFiltersDirection) => {
+    const onSubmit = handleSubmit(async (data: IActionPlanFilters) => {
+        debugger;
         if (ready) loadTableData(data);
     });
 
@@ -207,9 +206,9 @@ export function useProjectsData() {
                 }));
             } else {
                 setStatusData([]);
-                console.log(response.operation.message);
             }
         });
+        setReady(true);
     }, []);
 
     useEffect(() => {

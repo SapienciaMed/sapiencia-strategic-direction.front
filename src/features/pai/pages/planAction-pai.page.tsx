@@ -4,8 +4,6 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useProjectsData } from "../hooks/planAction.hook";
 import TableComponent from "../../../common/components/table.component";
 import { Controller } from "react-hook-form";
-import { UploadComponent } from "../../../common/components/upload.component";
-import { Messages } from 'primereact/messages';
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function PlanActionPage(): React.JSX.Element {
@@ -24,13 +22,7 @@ function PlanActionPage(): React.JSX.Element {
             register, 
             statusData, 
             errors, 
-            showDialog, 
-            setShowDialog, 
-            filesUploadData, 
-            setFilesUploadData, 
-            yearsArray,
-            msgs, 
-            setErrores,
+            yearsArray, 
             validateActionAccess } = useProjectsData();
     return (
         <div className='main-page'>

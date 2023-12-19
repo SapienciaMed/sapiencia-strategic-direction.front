@@ -8,7 +8,7 @@ export const CreatePAIValidator = yup.object({
     objectivePAI: yup.string().required("El campo es obligatorio"),
     actionsPAi: yup.array().required().min(1).of(
         yup.object().shape({
-          description: yup.string().notRequired(),
+          description: yup.string().required(),
           indicators: yup.array().test('min-indicators', 'Debe agregar al menos un indicador', function (value) {
             return value && value.length > 0;
           }),
