@@ -33,6 +33,8 @@ interface IPAIContext {
   setIsValidIndicator: Dispatch<SetStateAction<boolean>>;
   formAction: string;
   setFormAction: Dispatch<SetStateAction<string>>;
+  editId: number;
+  setEditId: Dispatch<SetStateAction<number>>;
 }
 interface IProps {
   children: ReactElement | ReactElement[];
@@ -63,6 +65,8 @@ export const PAIContext = createContext<IPAIContext>({
   setIsValidIndicator: () => { },
   formAction: null,
   setFormAction: () => { },
+  editId: null,
+  setEditId: () => { }
 });
 
 export function PAIContextProvider({ children }: Readonly<IProps>) {
@@ -78,6 +82,7 @@ export function PAIContextProvider({ children }: Readonly<IProps>) {
   const [showCancel, setShowCancel] = useState<boolean>(true);
   const [isValidIndicator, setIsValidIndicator] = useState<boolean>(true);
   const [formAction, setFormAction] = useState<string>(null);
+  const [editId, setEditId] = useState<number>(null);
   const values = useMemo<IPAIContext>(() => {
     return {
       disableSaveButton,
@@ -104,8 +109,10 @@ export function PAIContextProvider({ children }: Readonly<IProps>) {
       setIsValidIndicator,
       formAction,
       setFormAction,
+      editId,
+      setEditId
     };
-  }, [disableSaveButton, IndicatorsFormComponent, isValidIndicator, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction]);
+  }, [disableSaveButton, IndicatorsFormComponent, isValidIndicator, disableTempBtn, PAIData, tempButtonText, tempButtonAction, saveButtonText, saveButtonAction, actionCancel, showCancel, formAction, editId]);
 
   return <PAIContext.Provider value={values}>{children}</PAIContext.Provider>;
 }

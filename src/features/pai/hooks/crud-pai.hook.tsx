@@ -16,7 +16,9 @@ export default function useCrudPAIData({ status }) {
         disableTempBtn,
         IndicatorsFormComponent,
         PAIData,
-        setPAIData
+        setPAIData,
+        setEditId,
+        editId
     } = useContext(PAIContext);
     const { setMessage, authorization } = useContext(AppContext);
     const { CreatePAI, UpdatePAI } = usePaiService();
@@ -40,7 +42,7 @@ export default function useCrudPAIData({ status }) {
                         user: authorization.user.numberDocument,
                         status: 2,
                     };
-                    const res = await UpdatePAI(PAIData.id, formData);
+                    const res = await UpdatePAI(editId, formData);
                     if (res.operation.code === EResponseCodes.OK) {
                         setMessage({
                             title: "Plan de acción institucional",
@@ -120,10 +122,15 @@ export default function useCrudPAIData({ status }) {
     };
 
     const onSubmitTemp = async () => {
+        debugger
         const data = PAIData;
-        if (PAIData.id) {
-            const dataPai = { ...data, user: authorization.user.numberDocument, status: 1, id: Number(PAIData.id) };
+        if (editId) {
+            const dataPai = { ...data, user: authorization.user.numberDocument, status: 1, id: Number(editId) };
             const res = await UpdatePAI(dataPai.id, dataPai);
+            setPAIData(prev => {
+                return { ...prev, id: res.data.id }
+            });
+            setEditId(res.data.id);
             if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",
@@ -173,6 +180,7 @@ export default function useCrudPAIData({ status }) {
             setPAIData(prev => {
                 return { ...prev, id: res.data.id }
             });
+            setEditId(res.data.id);
             if (res.operation.code === EResponseCodes.OK) {
                 setMessage({
                     title: "Guardado temporal realizado con éxito",

@@ -57,7 +57,8 @@ export default function usePlanActionPAIData({ status }) {
         setFormAction,
         setDisableTempBtn,
         setIndicatorsFormComponent,
-        IndicatorsFormComponent
+        IndicatorsFormComponent,
+        setEditId
     } = useContext(PAIContext);
 
     useEffect(() => {
@@ -94,9 +95,11 @@ export default function usePlanActionPAIData({ status }) {
     const updatePAIForm = () => trigger();
 
     useEffect(() => {
-        const subscription = watch((value: ICreatePlanAction) => setPAIData(prev => {
-            return { ...prev, ...value }
-        }));
+        const subscription = watch((value: ICreatePlanAction) => {
+            return setPAIData(prev => {
+                return { ...prev, ...value };
+            });
+        });
         return () => subscription.unsubscribe();
     }, [watch]);
 
@@ -123,6 +126,7 @@ export default function usePlanActionPAIData({ status }) {
                             trigger();
                         }, 1000);
                         setValue("id", res.id);
+                        setEditId(res.id);
                         setPAIData({...res, actionsPAi: actions});
                         setLoadData(true);
                         setDisableTempBtn(false);
