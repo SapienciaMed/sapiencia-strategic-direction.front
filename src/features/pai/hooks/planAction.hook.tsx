@@ -122,6 +122,7 @@ export function useProjectsData() {
 
     const tableActions: ITableAction<ICreatePlanAction>[] = [
         {
+            
             customIcon: (row) => {
                 return (
                     <>

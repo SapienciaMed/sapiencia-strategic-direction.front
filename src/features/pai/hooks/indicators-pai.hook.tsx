@@ -195,7 +195,10 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
                     OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
-
+                        setSaveButtonAction(null);
+                        setTempButtonAction(null);
+                        setDisableTempBtn(true);
+                        setDisableSaveButton(true);
                     }
                 });
             }

@@ -141,6 +141,57 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             }
         }
     ];
+    const tableColumnsAdjustment: ITableElement<IRevisionFormPAI>[] = [
+        {
+            header: "Campo",
+            fieldName: "field",
+            renderCell: (row) => {
+                const field = fieldsData.find(field => field.value === row.field);
+                return <>{field ? field.name : ""}</>
+            }
+        },
+        {
+            header: "Observaciones",
+            fieldName: "observations",
+            renderCell: (row) => {
+                if(status === "revision") {
+                    const onChangeObservation = (observationValue: string) => {
+                        setTableData(prev => {
+                            const newData = prev.map(data => {
+                                if(data.field === row.field) {
+                                    return {...data, observations: observationValue}
+                                } else {
+                                    return data;
+                                }
+                            });
+                            return newData;
+                        })
+                    }
+                    return <ObservationsInplace value={row.observations} change={onChangeObservation} />
+                }
+                return <>{row.observations}</>
+            }
+        },
+        {
+            header: "Cambios realizados",
+            fieldName: "",
+            renderCell: (row) => {
+                const field = row.field.split(" || ");
+                const fieldName = field.length > 1 && pai.typePAI === 1 ? field[0] : field[1] || row.field;
+                const changes = correctionFields[indicator.id][fieldName];
+                return <>{changes ?? ""}</>;
+            }
+        },
+        {
+            header: "Comentarios",
+            fieldName: "",
+            renderCell: (row) => {
+                const field = row.field.split(" || ");
+                const fieldSelected = approveFields.find(item => item.field === field[0] || item.field === field[1]);
+                return <>{fieldSelected?.comments ?? ""}</>
+            }
+        }
+    ];
     const actionColumnCorrection: ITableAction<IRevisionFormPAI>[] = [
         {
             customIcon: (row) => {
@@ -690,7 +741,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 {
                     tableData.length > 0 && <div className="card-table">
                         <TableComponent
-                            columns={tableColumns}
+                            columns={status === "adjustment" ? tableColumnsAdjustment : tableColumns}
                             data={tableData}
                             title={status === "adjustment" ? "Revisión de campos" : "Campos a modificar"}
                             isShowModal={false}
