@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import usePlanActionPAIData from "../hooks/createPlanAction-pai.hook";
 import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
@@ -14,34 +14,24 @@ export interface IPropsPAI {
 
 function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Element {
     const { errors,
-        navigate,
         getFieldState,
         fields,
-        changeActionsPAi,
         riskText,
-        View,
-        NamePAIData,
+        view,
+        namePAIData,
         riskPAIData,
         riskFields,
-        tableData,
         appendRisk,
         append,
-        remove,
         yearsArray,
-        setMessage,
         formAction,
         control,
         register,
         getValues,
         createPlanActionActions,
         createPlanActionColumns,
-        onSubmitCreate,
-        disableTempBtn,
-        setFormAction,
-        IndicatorsFormComponent
+        onSubmitCreate
     } = usePlanActionPAIData({ status });
-
-
     return (
         <div>
             <div className='card-table'>
@@ -96,7 +86,7 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                                 className={`select-basic span-width`}
                                 label="Nombre proyecto/proceso"
                                 classNameLabel="text-black biggest bold text-required"
-                                data={NamePAIData}
+                                data={namePAIData}
                                 errors={errors}
                                 filter={true} />
                         </div>
@@ -154,7 +144,7 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={View}
+                                                disabled={view}
                                                 characters={200}
                                             >
                                             </TextAreaComponent>

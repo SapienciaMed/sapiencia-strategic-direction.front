@@ -14,7 +14,9 @@ function CrudPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Element {
         actionCancel,
         navigate,
         disableSaveButton,
-        saveButtonAction
+        saveButtonAction,
+        onSubmitSave,
+        onSubmitTemp
     } = useCrudPAIData({ status });
     return (
         <div className='crud-page full-height'>
@@ -29,7 +31,7 @@ function CrudPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Element {
                     className="button-main huge hover-three"
                     value={tempButtonText || "Guardar temporalmente"}
                     type="button"
-                    action={tempButtonAction}
+                    action={tempButtonAction || onSubmitTemp}
                     disabled={disableTempBtn}
                 /> : <div></div>}
                 <div className="buttons-bot">
@@ -56,7 +58,7 @@ function CrudPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Element {
                         className={`button-main extra_extra_large hover-three button-save`}
                         value={saveButtonText || "Guardar y regresar"}
                         type="button"
-                        action={saveButtonAction}
+                        action={saveButtonAction || onSubmitSave}
                         disabled={disableSaveButton}
                     />
                 </div>
