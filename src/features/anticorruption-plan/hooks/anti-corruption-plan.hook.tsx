@@ -19,6 +19,7 @@ import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { saveAs } from "file-saver"
 import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-status-service.hook";
+import EditModal from "./edit-modal";
 
 export function useAntiCorruptionPlanData() {
     const { authorization } = useContext(AppContext);
@@ -30,12 +31,13 @@ export function useAntiCorruptionPlanData() {
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
-    const { setMessage, validateActionAccess  } = useContext(AppContext);
+    const { setMessage, validateActionAccess } = useContext(AppContext);
     const { getAll } = useAntiCorruptionPlanStatusService();
     const today = DateTime.local();
     const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
+    const [visiblemodal, setVisibleModal] = useState<boolean>(false);
     const {
         handleSubmit,
         register,
@@ -52,7 +54,7 @@ export function useAntiCorruptionPlanData() {
             fieldName: "dateFrom",
             header: "Fecha de formulación",
             renderCell: (row) => {
-            return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
+                return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
             }
         },
         {
@@ -65,27 +67,39 @@ export function useAntiCorruptionPlanData() {
         },
     ];
 
+
     const tableActions: ITableAction<IProject>[] = [
         {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".edit-tooltip" />
-                        <div
-                            className="edit-tooltip"
-                            data-pr-tooltip="Editar"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#0CA529' }}
-                        >
-                            <RiPencilLine />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {openEditDialog},
+            customIcon: (row) => (
+                <>
+                    <Tooltip target=".edit-tooltip" />
+                    <div
+                        className="edit-tooltip"
+                        data-pr-tooltip="Editar"
+                        data-pr-position="bottom"
+                        style={{ color: '#0CA529' }}
+                        onClick={() => setVisibleModal(true)}
+                    >
+                        <RiPencilLine />
+                    </div>
+                    <EditModal
+                        showModal={visiblemodal}
+                        onClose={() => setVisibleModal(false)}
+                        onSave={saveChanges} // Asegúrate de pasar la función correcta aquí
+                        editingProject={editingProject}
+                        setEditingProject={setEditingProject}
+                        title={"Editar"}
+                        visible={visiblemodal}
+                        onCloseModal={() => setVisibleModal(false)}
+                    />
+
+                </>
+            ),
+            onClick: (row) => setVisibleModal(true),
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
+
 
     function loadTableData(searchCriteria?: object): void {
         if (tableComponentRef.current) {
@@ -120,7 +134,7 @@ export function useAntiCorruptionPlanData() {
 
     useEffect(() => {
         msgs.current?.clear();
-        if(errores) {
+        if (errores) {
             msgs.current?.show([
                 { severity: 'error', summary: 'Error', detail: errores, sticky: true, closable: false }
             ]);
@@ -131,66 +145,40 @@ export function useAntiCorruptionPlanData() {
     const [isEditing, setIsEditing] = useState(false);
 
     const openEditDialog = (row: IProject) => {
+        console.log("Abriendo modal de edición para:", row);
         setEditingProject(row);
         setIsEditing(true);
     };
 
     const closeEditDialog = () => {
-        setEditingProject(null);
-        setIsEditing(false);
     };
 
     const saveChanges = () => {
+        console.log("Guardando cambios en el proyecto:", editingProject);
         // Aquí debes guardar los cambios en el proyecto
         // Puedes utilizar el estado editingProject para actualizar la tabla
         // Una vez guardado, cierra el diálogo
         closeEditDialog();
     };
 
-    const editDialog = isEditing && editingProject && (
-        <div className="modal" style={{ display: 'block' }}>
-            <div className="modal-content">
-                {/* Aquí van los campos editables */}
-                <h2>Editar Proyecto</h2>
-                <label htmlFor="projectName">Nombre del Proyecto:</label>
-                <input
-                    type="text"
-                    id="projectName"
-                    value={editingProject.user}
-                    onChange={(e) => setEditingProject({ ...editingProject, user: e.target.value })}
-                />
-
-                <label htmlFor="projectDate">Fecha de Formulación:</label>
-                <input
-                    type="text"
-                    id="projectDate"
-                    value={editingProject.dateFrom}
-                    onChange={(e) => setEditingProject({ ...editingProject, dateFrom: e.target.value })}
-                />
-
-                {/* Botones de Guardar y Cancelar */}
-                <button onClick={saveChanges}>Guardar</button>
-                <button onClick={closeEditDialog}>Cancelar</button>
-            </div>
-        </div>
-    );
-
-    return { navigate, 
-             tableComponentRef, 
-             tableColumns, 
-             tableActions, 
-             onSubmit, 
-             reset, 
-             statusData, 
-             control, 
-             register, 
-             errors, 
-             showDialog, 
-             setShowDialog, 
-             filesUploadData, 
-             setFilesUploadData,
-             msgs, 
-             setErrores,
-             validateActionAccess };
+    return {
+        navigate,
+        tableComponentRef,
+        tableColumns,
+        tableActions,
+        onSubmit,
+        reset,
+        statusData,
+        control,
+        register,
+        errors,
+        showDialog,
+        setShowDialog,
+        filesUploadData,
+        setFilesUploadData,
+        msgs,
+        setErrores,
+        validateActionAccess
+    };
 }
 
