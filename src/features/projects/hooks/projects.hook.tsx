@@ -55,7 +55,7 @@ export function useProjectsData() {
             fieldName: "dateCreate",
             header: "Fecha de creación",
             renderCell: (row) => {
-                return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
+                return <>{row.status === 5 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
             }
         },
         {
