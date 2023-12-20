@@ -4,8 +4,6 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useProjectsData } from "../hooks/planAction.hook";
 import TableComponent from "../../../common/components/table.component";
 import { Controller } from "react-hook-form";
-import { UploadComponent } from "../../../common/components/upload.component";
-import { Messages } from 'primereact/messages';
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 function PlanActionPage(): React.JSX.Element {
@@ -24,14 +22,7 @@ function PlanActionPage(): React.JSX.Element {
             register, 
             statusData, 
             errors, 
-            showDialog, 
-            setShowDialog, 
-            filesUploadData, 
-            setFilesUploadData, 
-            uploadFiles, 
-            yearsArray,
-            msgs, 
-            setErrores,
+            yearsArray, 
             validateActionAccess } = useProjectsData();
     return (
         <div className='main-page'>
@@ -45,9 +36,9 @@ function PlanActionPage(): React.JSX.Element {
                             <label className="text-black large bold">
                                 Consultar Planes
                             </label>
-                            { validateActionAccess("PROYECTO_CREAR") && 
+                            { validateActionAccess("CREAR_PLAN") && 
                                 <div className="title-button text-three large" onClick={() => { navigate('./crear-pai') }}>
-                                    <span style={{ marginRight: '0.5em' }} > Formular plan</span>
+                                        <span style={{ marginRight: '0.5em' }} > Formular plan</span>
                                     {<AiOutlinePlusCircle size={20} color="533893" />}
                                 </div>
                             }

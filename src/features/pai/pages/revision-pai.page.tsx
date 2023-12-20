@@ -27,8 +27,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
         typePAIData,
         nameProjectsData,
         nameProcessData,
-        fieldsChange,
-        fieldsCorrected
+        validateActiveField
     } = useRevisionPAIData({ idPAI, status });
     return (
         <div className='crud-page full-height'>
@@ -36,7 +35,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                 <div className='card-table'>
                     <FormComponent action={undefined} className="strategic-direction-grid-1 strategic-direction-grid-1-web">
                         <div className="title-area">
-                            <div className="text-black extra-large bold">{"Revisión plan de Acción Institucional (PAI)"}</div>
+                            <div className="text-black extra-large bold">{status === "revision" ? "Revisión 1 Plan de Acción Institucional (PAI)" : "Plan de Acción Institucional (PAI)"}</div>
                         </div>
                         <div className="card-table strategic-direction-grid-1 strategic-direction-grid-1-web">
                             <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
@@ -56,7 +55,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                                 register={registerPAI}
                                                 onChange={field.onChange}
                                                 errors={errorsPAI}
-                                                disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
+                                                disabled={validateActiveField(field.name)}
                                             />
                                         );
                                     }}
@@ -70,7 +69,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                     prefix="$ "
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
-                                    disabled={!fieldsChange.includes("budgetPAI") || fieldsCorrected.includes("budgetPAI")}
+                                    disabled={validateActiveField("budgetPAI")}
                                 />
                                 <SelectComponent
                                     control={controlPAI}
@@ -81,7 +80,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                     data={typePAIData}
                                     errors={errorsPAI}
                                     filter={true}
-                                    disabled={!fieldsChange.includes("typePAI") || fieldsCorrected.includes("typePAI")}
+                                    disabled={validateActiveField("typePAI")}
                                 />
                             </div>
                             <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
@@ -94,7 +93,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                     data={getValues("typePAI") === 1 ? nameProjectsData : nameProcessData}
                                     errors={errorsPAI}
                                     filter={true}
-                                    disabled={!fieldsChange.includes("namePAI") || fieldsCorrected.includes("namePAI")}
+                                    disabled={validateActiveField("namePAI")}
                                 />
                             </div>
                             <Controller
@@ -113,7 +112,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                             register={registerPAI}
                                             onChange={field.onChange}
                                             errors={errorsPAI}
-                                            disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
+                                            disabled={validateActiveField(field.name)}
                                         >
                                         </TextAreaComponent>
                                     );
@@ -135,7 +134,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                             register={registerPAI}
                                             onChange={field.onChange}
                                             errors={errorsPAI}
-                                            disabled={!fieldsChange.includes(field.name) || fieldsCorrected.includes(field.name)}
+                                            disabled={validateActiveField(field.name)}
                                         >
                                         </TextAreaComponent>
                                     );
@@ -168,7 +167,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                                                 register={registerPAI}
                                                                 onChange={field.onChange}
                                                                 errors={errorsPAI}
-                                                                disabled={!fieldsChange.includes(`linePAI.${idField}`) || fieldsCorrected.includes(`linePAI.${idField}`)}
+                                                                disabled={validateActiveField(`linePAI.${idField}`)}
                                                             >
                                                             </TextAreaComponent>
                                                         );
@@ -206,7 +205,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                                                 register={registerPAI}
                                                                 onChange={field.onChange}
                                                                 errors={errorsPAI}
-                                                                disabled={!fieldsChange.includes(`risksPAI.${idField}`) || fieldsCorrected.includes(`risksPAI.${idField}`)}
+                                                                disabled={validateActiveField(`risksPAI.${idField}`)}
                                                             >
                                                             </TextAreaComponent>
                                                         );

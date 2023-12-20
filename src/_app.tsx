@@ -12,6 +12,7 @@ import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
+import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -23,7 +24,7 @@ function App() {
   const HistoricalProjectsPage = lazy(() => import("./features/projects/pages/historical-projects.page"));
   const SchedulesPAIPage = lazy(() => import("./features/pai/pages/schedules-pai.page"));
   const PlanAction = lazy(() => import("./features/pai/pages/planAction-pai.page"));
-  const CreatePlanAction = lazy(() => import("./features/pai/pages/createPlanAction-pai.page"));
+  const CrudPAIPage = lazy(() => import("./features/pai/pages/crud-pai.page"));
   const RevisionPAIPage = lazy(() => import("./features/pai/pages/revision-pai.page"));
 
   const { publish } = useAppCominicator();
@@ -125,8 +126,18 @@ function App() {
                 path={"/direccion-estrategica/pai/crear-pai"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
-                    allowedAction={"PROYECTO_HISTORICOS"}
+                    element={<PAIContextProvider><CrudPAIPage status="new"/></PAIContextProvider>}
+                    allowedAction={"CREAR_PLAN"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/edit/:id"}
+                element={
+                  <PrivateRoute
+                    element={<PAIContextProvider><CrudPAIPage status="edit"/></PAIContextProvider>}
+                    allowedAction={"EDITAR_PLAN"}
                   />
                 }
               />
@@ -143,18 +154,44 @@ function App() {
               />
 
               <Route
-                path={"/direccion-estrategica/consulta"}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion"}
                 element={
                   <PrivateRoute
-                    element={<PAIContextProvider><CreatePlanAction /></PAIContextProvider>}
-                    allowedAction={"CONSULTAR_PLAN_ANTI_CORRUPCION"}
+                    element={<CheckAntiCorruption />}
+                    allowedAction={"CONSULTAR_PLAN"}
                   />
                 }
               />
 
-              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="revision" /></RevisionPAIContextProvider>} />;
-              <Route path={"/direccion-estrategica/pai/correction/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="correction" /></RevisionPAIContextProvider>} />;
-              <Route path={"/direccion-estrategica/pai/adjustment/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="adjustment" /></RevisionPAIContextProvider>} />;
+              <Route
+                path={"/direccion-estrategica/pai/revision/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="revision" /></RevisionPAIContextProvider>}
+                    allowedAction={"REVISAR_PLAN"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/correction/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="correction" /></RevisionPAIContextProvider>}
+                    allowedAction={"CORREGIR_PLAN"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/adjustment/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="adjustment" /></RevisionPAIContextProvider>}
+                    allowedAction={"REVISAR_PLAN"}
+                  />
+                }
+              />
 
             </Routes>
           </Suspense>

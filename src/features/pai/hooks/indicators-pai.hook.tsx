@@ -21,7 +21,7 @@ import { useProjectsService } from "./projects-service.hook";
 import { ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 
-export default function useIndicatorsPai(actionId:number,indicatorId?:number, editMode?:boolean) {
+export default function useIndicatorsPai(actionId:number, updatePAIForm,indicatorId?:number, editMode?:boolean) {
     const resolver = useYupValidationResolver(indicatorsPAIValidator);
     const { PAIData, 
             setPAIData, 
@@ -182,9 +182,11 @@ export default function useIndicatorsPai(actionId:number,indicatorId?:number, ed
                 setMessage({});
             },
             onOk: () => {
+               
                 onSaveIndicator();
                 setIndicatorsFormComponent(null)
                 setSaveButtonText("Guardar y regresar");
+                if(updatePAIForm) updatePAIForm();
                 setMessage({
                     title: "Datos guardados",
                     description: "¡Indicador guardado exitosamente!",
@@ -193,6 +195,10 @@ export default function useIndicatorsPai(actionId:number,indicatorId?:number, ed
                     OkTitle: "Aceptar",
                     onOk: () => {
                         setMessage({});
+                        setSaveButtonAction(null);
+                        setTempButtonAction(null);
+                        setDisableTempBtn(true);
+                        setDisableSaveButton(true);
                     }
                 });
             }

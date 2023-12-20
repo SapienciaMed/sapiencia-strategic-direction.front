@@ -1,9 +1,9 @@
 import { IIndicatorsPAITemp, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
-import { IRevisionFormPAI } from "../interfaces/PAIInterfaces";
+import { IApproveRevisionPAI, IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent, InputRadioComponent, InputInplaceComponent } from "../../../common/components/Form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { revisionPAIValidator } from "../../../common/schemas";
+import { approvePAIValidator, revisionPAIValidator } from "../../../common/schemas";
 import { useContext, useEffect, useState } from "react";
 import { RevisionPAIContext } from "../contexts/revision-pai.context";
 import TableComponent from "../../../common/components/table.component";
@@ -16,6 +16,9 @@ import { file_check_fill } from "../../../common/components/icons/file_check_fil
 import { check_o } from "../../../common/components/icons/check_o";
 import { AppContext } from "../../../common/contexts/app.context";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import { EDirection } from "../../../common/constants/input.enum";
+import { dislike } from "../../../common/components/icons/dislike";
+import { like } from "../../../common/components/icons/like";
 
 interface IProps {
     indicator: IIndicatorsPAITemp;
@@ -24,6 +27,8 @@ interface IProps {
 
 function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<IProps>): React.JSX.Element {
     const ind: IIndicatorsPAITemp = { ...indicator };
+    const [tableData, setTableData] = useState<IRevisionFormPAI[]>([]);
+    const [approveItem, setApproveItem] = useState<IApproveRevisionPAI>(null);
     const [typesIndicatorData, setTypesIndicatorData] = useState<IDropdownProps[]>([]);
     const [projectIndicatorsData, setProjectIndicatorsData] = useState<IDropdownProps[]>([]);
     const [fieldsData, setFieldsData] = useState<IDropdownProps[]>([]);
@@ -37,7 +42,9 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         correctionFields,
         fieldsCorrected,
         setFieldsCorrected,
-        fieldsValues
+        fieldsValues,
+        setApproveFields,
+        approveFields
     } = useContext(RevisionPAIContext);
     const { setMessage } = useContext(AppContext);
     const { getIndicatorsType } = useEntitiesService();
@@ -65,10 +72,20 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         control: control,
         name: "coresponsibles",
     });
+    const resolverApprove = useYupValidationResolver(approvePAIValidator);
+    const {
+        register: registerApprove,
+        control: controlApprove,
+        formState: { errors: errorsApprove },
+        reset: resetApprove,
+        setValue: setValueApprove,
+        handleSubmit: handleSubmitApprove
+    } = useForm<IApproveRevisionPAI>({ resolver: resolverApprove, mode: "all" });
     const resolver = useYupValidationResolver(revisionPAIValidator);
     const {
         register: registerRevision,
         control: controlRevision,
+        setValue: setValueRevision,
         formState: { errors: errorsRevision },
         handleSubmit,
         reset
@@ -79,8 +96,19 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             return newRevision;
         });
         reset();
+        setValueRevision("observations", null);
     });
-    const tableData = revisionPAI.filter(revision => revision.idIndicator === indicator.id || (showGeneralFields && revision.idIndicator === null));
+    const onSubmitApprove = handleSubmitApprove(async (data: IApproveRevisionPAI) => {
+        const approveForm = data;
+        if (approveForm.approved !== undefined && approveForm.approved !== null && approveForm.comments !== "" && approveForm.comments !== undefined && approveForm.comments !== null) {
+            setApproveFields(prev => {
+                let newValues = prev.concat(approveForm);
+                return newValues;
+            });
+            resetApprove();
+            setApproveItem(null);
+        }
+    });
     const tableColumns: ITableElement<IRevisionFormPAI>[] = [
         {
             header: "Campo",
@@ -92,7 +120,76 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         },
         {
             header: "Observaciones",
-            fieldName: "observations"
+            fieldName: "observations",
+            renderCell: (row) => {
+                if(status === "revision") {
+                    const onChangeObservation = (observationValue: string) => {
+                        setTableData(prev => {
+                            const newData = prev.map(data => {
+                                if(data.field === row.field) {
+                                    return {...data, observations: observationValue}
+                                } else {
+                                    return data;
+                                }
+                            });
+                            return newData;
+                        })
+                    }
+                    return <ObservationsInplace value={row.observations} change={onChangeObservation} />
+                }
+                return <>{row.observations}</>
+            }
+        }
+    ];
+    const tableColumnsAdjustment: ITableElement<IRevisionFormPAI>[] = [
+        {
+            header: "Campo",
+            fieldName: "field",
+            renderCell: (row) => {
+                const field = fieldsData.find(field => field.value === row.field);
+                return <>{field ? field.name : ""}</>
+            }
+        },
+        {
+            header: "Observaciones",
+            fieldName: "observations",
+            renderCell: (row) => {
+                if(status === "revision") {
+                    const onChangeObservation = (observationValue: string) => {
+                        setTableData(prev => {
+                            const newData = prev.map(data => {
+                                if(data.field === row.field) {
+                                    return {...data, observations: observationValue}
+                                } else {
+                                    return data;
+                                }
+                            });
+                            return newData;
+                        })
+                    }
+                    return <ObservationsInplace value={row.observations} change={onChangeObservation} />
+                }
+                return <>{row.observations}</>
+            }
+        },
+        {
+            header: "Cambios realizados",
+            fieldName: "",
+            renderCell: (row) => {
+                const field = row.field.split(" || ");
+                const fieldName = field.length > 1 && pai.typePAI === 1 ? field[0] : field[1] || row.field;
+                const changes = correctionFields[indicator.id][fieldName];
+                return <>{changes ?? ""}</>;
+            }
+        },
+        {
+            header: "Comentarios",
+            fieldName: "",
+            renderCell: (row) => {
+                const field = row.field.split(" || ");
+                const fieldSelected = approveFields.find(item => item.field === field[0] || item.field === field[1]);
+                return <>{fieldSelected?.comments ?? ""}</>
+            }
         }
     ];
     const actionColumnCorrection: ITableAction<IRevisionFormPAI>[] = [
@@ -116,6 +213,11 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                         },
                         onOk: () => {
                             setFieldsCorrected(prev => {
+                                const fieldNameIndicator = row.field.split(" || ");
+                                if (fieldNameIndicator.length > 1) {
+                                    let corrected = [...prev, pai.typePAI === 1 ? fieldNameIndicator[0] : fieldNameIndicator[1]];
+                                    return corrected;
+                                }
                                 let corrected = [...prev, row.field];
                                 return corrected;
                             });
@@ -140,8 +242,49 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         }
     ];
     const actionColumnAdjustment: ITableAction<IRevisionFormPAI>[] = [
-
+        {
+            customIcon: (row) => {
+                const field = row.field.split(" || ");
+                const fieldSelected = approveFields.find(item => item.field === field[0] || item.field === field[1]);
+                if (fieldSelected) {
+                    if (fieldSelected.approved) {
+                        return like;
+                    } else {
+                        return dislike;
+                    }
+                }
+                return file_check_fill;
+            },
+            onClick: (row) => {
+                const field = row.field.split(" || ");
+                const fieldName = field.length > 1 && pai.typePAI === 1 ? field[0] : field[1] || row.field;
+                const item: IApproveRevisionPAI = {
+                    field: fieldName,
+                    observations: row.observations,
+                    changes: correctionFields[indicator.id][fieldName]
+                };
+                setApproveItem(item);
+            }
+        }
     ];
+    const validateActiveField = (idInput: string) => {
+        const approveIds = approveFields.reduce((result, current) => {
+            if (!current.approved) result.push(current.field);
+            return result;
+        }, []);
+        if (approveIds.includes(idInput)) {
+            return false;
+        }
+        if (idInput.split(".")[0] !== "projectIndicator" && idInput.split(".")[0] !== "indicatorDesc") {
+            if (!fieldsChange.includes(idInput)) {
+                return true;
+            }
+        }
+        if (fieldsCorrected.includes(idInput)) {
+            return true;
+        }
+        return false;
+    }
     const actionColumnsTable = {
         "revision": null,
         "correction": actionColumnCorrection,
@@ -256,9 +399,73 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 }
             });
         }
+        if (approveFields.length > 0) {
+            const values = Reflect.ownKeys(getValues());
+            approveFields.forEach(approve => {
+                const field = approve.field.split(".");
+                if (values.includes(field[0])) {
+                    if (field[0] === "bimesters") {
+                        const bimesters = getValues("bimesters");
+                        bimesters.forEach((bimester, index) => {
+                            if (String(bimester.id) === field[1]) setValue(`${field[0]}.${index}.value`, approve.adjustment);
+                        });
+                    } else if (field[0] === "products") {
+                        const products = getValues("products");
+                        products.forEach((product, index) => {
+                            if (String(product.id) === field[1]) setValue(`${field[0]}.${index}.product`, approve.adjustment);
+                        });
+                    } else if (field[0] === "responsibles") {
+                        const responsibles = getValues("responsibles");
+                        responsibles.forEach((responsible, index) => {
+                            if (String(responsible.id) === field[1]) setValue(`${field[0]}.${index}.responsible`, approve.adjustment);
+                        });
+                    } else if (field[0] === "coresponsibles") {
+                        const coresponsibles = getValues("coresponsibles");
+                        coresponsibles.forEach((coresponsible, index) => {
+                            if (String(coresponsible.id) === field[1]) setValue(`${field[0]}.${index}.coresponsible`, approve.adjustment);
+                        });
+                    } else {
+                        setValue(field[0], approve.adjustment);
+                    }
+                }
+            });
+        }
     }, []);
     useEffect(() => {
+        setTableData(revisionPAI.filter(revision => revision.idIndicator === indicator.id || (showGeneralFields && revision.idIndicator === null)));
+    }, [revisionPAI]);
+    useEffect(() => {
         const subscription = watch((value, { name }) => {
+            if (status === "adjustment") {
+                setApproveFields(prev => {
+                    const nameSplit = name.split(".");
+                    if (nameSplit.length === 1) {
+                        const field = name
+                            .replace(".line", "")
+                            .replace(".risk", "")
+                            .replace(".product", "")
+                            .replace(".responsible", "")
+                            .replace(".coresponsible", "")
+                            .replace(".value", "");
+                        const nameField = `${field}.${indicator.id}`;
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[name] }
+                            return newValues;
+                        }
+                    } else {
+                        const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                        const approveSelect = prev.findIndex(approve => approve.field === nameField);
+                        if (approveSelect !== undefined && approveSelect !== -1) {
+                            let newValues = [...prev];
+                            newValues[approveSelect] = { ...prev[approveSelect], adjustment: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                            return newValues;
+                        }
+                    }
+                    return prev;
+                });
+            }
             return setCorrectionFields(prev => {
                 const newValues = { ...prev[indicator.id] };
                 const nameField = name.split(".");
@@ -282,6 +489,14 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         });
         return () => subscription.unsubscribe();
     }, [watch]);
+
+    useEffect(() => {
+        if (!approveItem) return;
+        setValueApprove("field", approveItem.field);
+        setValueApprove("observations", approveItem.observations);
+        setValueApprove("changes", approveItem.changes);
+    }, [approveItem]);
+
     return (
         <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
             <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
@@ -294,7 +509,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                     data={projectIndicatorsData}
                     errors={errors}
                     filter={true}
-                    disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 1) || fieldsCorrected.includes(`projectIndicator.${indicator.id}`)}
+                    disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 1) || validateActiveField(`projectIndicator.${indicator.id}`)}
                 />
                 <SelectComponent
                     control={control}
@@ -305,7 +520,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                     data={typesIndicatorData}
                     errors={errors}
                     filter={true}
-                    disabled={!fieldsChange.includes(`indicatorType.${indicator.id}`) || fieldsCorrected.includes(`indicatorType.${indicator.id}`)}
+                    disabled={validateActiveField(`indicatorType.${indicator.id}`)}
                 />
             </div>
             <Controller
@@ -324,7 +539,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
-                            disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 2) || fieldsCorrected.includes(`indicatorDesc.${indicator.id}`)}
+                            disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 2) || validateActiveField(`indicatorDesc.${indicator.id}`)}
                         >
                         </TextAreaComponent>
                     );
@@ -348,7 +563,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                     suffix={`${indicator.typePAI === 2 ? "%" : ""}`}
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
-                                    disabled={!fieldsChange.includes(`bimesters.${idField}`) || fieldsCorrected.includes(`bimesters.${idField}`)}
+                                    disabled={validateActiveField(`bimesters.${idField}`)}
                                 />
                             )
                         })
@@ -391,7 +606,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={!fieldsChange.includes(`products.${idField}`) || fieldsCorrected.includes(`products.${idField}`)}
+                                                disabled={validateActiveField(`products.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -427,7 +642,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={!fieldsChange.includes(`responsibles.${idField}`) || fieldsCorrected.includes(`responsibles.${idField}`)}
+                                                disabled={validateActiveField(`responsibles.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -463,7 +678,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={!fieldsChange.includes(`coresponsibles.${idField}`) || fieldsCorrected.includes(`coresponsibles.${idField}`)}
+                                                disabled={validateActiveField(`coresponsibles.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -474,8 +689,8 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                     }
                 </div>
             </div>
-            <FormComponent action={undefined} id="revision-form" className="strategic-direction-grid-1 strategic-direction-grid-1-web">
-                {status === "revision" && <>
+            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
+                {status === "revision" && <FormComponent action={undefined} id="revision-form">
                     <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
                         <SelectComponent
                             control={controlRevision}
@@ -521,21 +736,198 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                             />
                         </div>
                     </div>
-                </>
+                </FormComponent>
                 }
-                {tableData.length > 0 && <div className="card-table">
-                    <TableComponent
-                        columns={tableColumns}
-                        data={tableData}
-                        title="Campos a modificar"
-                        isShowModal={false}
-                        actions={actionColumnsTable[status]}
-                        hideActions={status === "revision"}
-                    />
-                </div>}
-            </FormComponent>
+                {
+                    tableData.length > 0 && <div className="card-table">
+                        <TableComponent
+                            columns={status === "adjustment" ? tableColumnsAdjustment : tableColumns}
+                            data={tableData}
+                            title={status === "adjustment" ? "Revisión de campos" : "Campos a modificar"}
+                            isShowModal={false}
+                            actions={actionColumnsTable[status]}
+                            hideActions={status === "revision"}
+                        />
+                    </div>
+                }
+                {
+                    approveItem && <FormComponent action={undefined} id="approve-form" className="card-table strategic-direction-grid-1 strategic-direction-grid-1-web">
+                        <div className="strategic-direction-grid-1 strategic-direction-grid-3-web">
+                            <Controller
+                                control={controlApprove}
+                                name={"field"}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    const fieldName = fieldsData.find(fld => {
+                                        const fieldValueSelect = String(fld.value).split(" || ");
+                                        if (fieldValueSelect.length > 1) {
+                                            return fieldValueSelect[0] === field.value || fieldValueSelect[1] === field.value;
+                                        }
+                                        return fld.value === field.value
+                                    });
+                                    return (
+                                        <InputComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={fieldName ? fieldName.name : ""}
+                                            label="Campo"
+                                            className="input-basic"
+                                            classNameLabel="text-black biggest bold"
+                                            typeInput={"text"}
+                                            register={registerApprove}
+                                            onChange={field.onChange}
+                                            errors={errorsApprove}
+                                            disabled
+                                        />
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="strategic-direction-revision-pai-form">
+                            <Controller
+                                control={controlApprove}
+                                name={`observations`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <TextAreaComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Observaciones"
+                                            classNameLabel="text-black biggest bold"
+                                            className="text-area-basic"
+                                            register={registerApprove}
+                                            onChange={field.onChange}
+                                            errors={errorsApprove}
+                                            disabled
+                                        >
+                                        </TextAreaComponent>
+                                    );
+                                }}
+                            />
+                            <div style={{ textAlign: "center" }}></div>
+                        </div>
+                        <div className="strategic-direction-revision-pai-form">
+                            <Controller
+                                control={controlApprove}
+                                name={`changes`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <TextAreaComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Cambios realizados"
+                                            classNameLabel="text-black biggest bold"
+                                            className="text-area-basic"
+                                            register={registerApprove}
+                                            onChange={field.onChange}
+                                            errors={errorsApprove}
+                                            disabled
+                                        >
+                                        </TextAreaComponent>
+                                    );
+                                }}
+                            />
+                            <div style={{ textAlign: "center" }}></div>
+                        </div>
+                        <div className="strategic-direction-adjusment-pai-radios">
+                            <InputRadioComponent
+                                control={controlApprove}
+                                idInput="approved"
+                                value={true}
+                                direction={EDirection.row}
+                                label={"Aprobar"}
+                                classNameLabel="text-black biggest bold"
+                            />
+                            <InputRadioComponent
+                                control={controlApprove}
+                                idInput="approved"
+                                value={false}
+                                direction={EDirection.row}
+                                label={"No aprobar"}
+                                classNameLabel="text-black biggest bold"
+                            />
+                        </div>
+                        <div className="text-black big">
+                            <span>{errorsApprove?.approved?.message}</span>
+                        </div>
+
+                        <div className="strategic-direction-revision-pai-form">
+                            <Controller
+                                control={controlApprove}
+                                name={`comments`}
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return (
+                                        <TextAreaComponent
+                                            id={field.name}
+                                            idInput={field.name}
+                                            value={`${field.value}`}
+                                            label="Comentarios"
+                                            characters={5000}
+                                            classNameLabel="text-black biggest bold text-required"
+                                            className="text-area-basic"
+                                            register={registerApprove}
+                                            onChange={field.onChange}
+                                            errors={errorsApprove}
+                                        >
+                                        </TextAreaComponent>
+                                    );
+                                }}
+                            />
+                            <div style={{ textAlign: "center" }}>
+                                <ButtonComponent
+                                    className="button-main huge hover-three button-save"
+                                    value="Guardar"
+                                    type="button"
+                                    action={onSubmitApprove}
+                                    form="approve-form"
+                                />
+                            </div>
+                        </div>
+                    </FormComponent>
+                }
+            </div>
         </div>
     );
+}
+
+interface IObservationsInplace {
+    change: (observationValue: string) => void;
+    value: string;
+}
+
+function ObservationsInplace({ change, value }: Readonly<IObservationsInplace>) {
+    const { control, register, formState: { errors }, watch } = useForm<{ value: string }>({ defaultValues: { value: value }, mode: "all" });
+    const watchValue = watch("value");
+    useEffect(() => {
+        change(watchValue);
+    }, [watchValue]);
+    return (
+        <Controller
+            control={control}
+            name={`value`}
+            defaultValue={value}
+            render={({ field }) => {
+                return (
+                    <InputInplaceComponent
+                        id={field.name}
+                        idInput={field.name}
+                        value={`${field.value}`}
+                        label=""
+                        className="input-basic"
+                        typeInput={"text"}
+                        register={register}
+                        onChange={field.onChange}
+                        errors={errors}
+                    />
+                );
+            }}
+        />
+    )
 }
 
 export default IndicatorsRevisionComponent;

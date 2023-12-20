@@ -10,7 +10,7 @@ export function LabelComponent({
   value,
   className = "labelcss",
   htmlFor,
-}: ILabelProps): React.JSX.Element {
+}: Readonly<ILabelProps>): React.JSX.Element {
   return (
     <label htmlFor={htmlFor} className={className}>
       {value}

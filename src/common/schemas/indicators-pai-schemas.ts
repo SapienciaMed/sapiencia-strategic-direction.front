@@ -14,14 +14,11 @@ export const indicatorsPAIValidator = yup.object({
     indicatorType: yup.number()
     .required("El campo es obligatorio"),
     indicatorDesc: yup.string()
-    .test('required', 'El campo es obligatorio', function (value) {
-        const projectIndicator = this.parent.projectIndicator;
-        if (!projectIndicator) {
-            if(value === null || !value ){
-                return false;
-            }
-        }
-        return true;
+    .when(['typePAI'], ([typePAI], indicatorDesc ) => {
+        return ( typePAI == 1 )
+          ? indicatorDesc.notRequired().nullable()
+          : indicatorDesc
+              .required("El campo es obligatorio");
     }),
     bimesters: yup.array().required().of(
         yup.object().shape(({

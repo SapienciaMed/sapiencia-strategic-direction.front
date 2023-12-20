@@ -8,11 +8,8 @@ import { projectsValidator } from "../../../common/schemas";
 import { usePaiService } from "./pai-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
 import { IoSearch } from "react-icons/io5";
 import { RiPencilLine } from "react-icons/ri";
-import { HiOutlineDocument } from "react-icons/hi";
-import { FcCancel } from "react-icons/fc";
 import { Tooltip } from "primereact/tooltip";
 import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
@@ -122,6 +119,7 @@ export function useProjectsData() {
 
     const tableActions: ITableAction<ICreatePlanAction>[] = [
         {
+            
             customIcon: (row) => {
                 return (
                     <>
@@ -130,7 +128,6 @@ export function useProjectsData() {
                             className="review-tooltip"
                             data-pr-tooltip="Revisar Formulación"
                             data-pr-position="bottom"
-                            style={{ 'color': '#D72FD1' }}
                         >
                             <IoSearch />
                         </div>
@@ -155,97 +152,13 @@ export function useProjectsData() {
             }
         },
         {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".attach-tooltip" />
-                        <div
-                            className="attach-tooltip"
-                            data-pr-tooltip="Adjuntar archivos"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#533893' }}
-                        >
-                            <AiOutlinePaperClip />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_CARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".download-attach-tooltip" />
-                        <div
-                            className="download-attach-tooltip"
-                            data-pr-tooltip="Descargar ficha"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#FF7D06' }}
-                        >
-                            <HiOutlineDocument />
-                        </div>
-                    </>
-                )
-                hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
-            },
-            onClick: (row) => {
-                
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".download-file-tooltip" />
-                        <div
-                            className="download-file-tooltip"
-                            data-pr-tooltip="Descargar adjuntos"
-                            data-pr-position="bottom"
-                            style={{ 'color': '#058CC1' }}
-                        >
-                            <AiOutlineEye />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-                navigate(`adjuntos/${row.id}`);
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3 || row.status === 4) || (!validateActionAccess("PROYECTO_DESCARGA"))
-        },
-        {
-            customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".finish-tooltip" />
-                        <div
-                            className="finish-tooltip"
-                            data-pr-tooltip="Finalizar proyecto"
-                            data-pr-position="bottom"
-                        >
-                            <FcCancel />
-                        </div>
-                    </>
-                )
-            },
-            onClick: (row) => {
-                navigate(`finalizar-proyecto/${row.id}`);
-            },
-            hideRow: (row) => !(row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_FINALIZAR"))
-        },
-        {
             customIcon: () => {
                 return (
                     <>
                         <Tooltip target=".edit-tooltip" />
                         <div
                             className="edit-tooltip"
-                            data-pr-tooltip="Editar proyecto"
+                            data-pr-tooltip="Editar plan"
                             data-pr-position="bottom"
                             style={{ 'color': '#0CA529' }}
                         >
@@ -257,7 +170,7 @@ export function useProjectsData() {
             onClick: (row) => {
                 navigate(`./edit/${row.id}`);
             },
-            hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
+            hideRow: (row) => !(row.status === 1) || (!validateActionAccess("EDITAR_PLAN"))
         },
     ];
 
@@ -270,18 +183,20 @@ export function useProjectsData() {
 
 
     function loadTableData(searchCriteria?: object): void {
+        debugger;
         if (tableComponentRef.current) {
             tableComponentRef.current.loadData(searchCriteria);
         }
     }
 
-    const onSubmit = handleSubmit(async (data: IProjectFiltersDirection) => {
+    const onSubmit = handleSubmit(async (data: IActionPlanFilters) => {
+        debugger;
         if (ready) loadTableData(data);
     });
 
     useEffect(() => {
         GetAllStatus().then(response => {
-            debugger;
+
             if (response.operation.code === EResponseCodes.OK) {
                 setStatusData(response.data.map(status => {
                     return {
@@ -291,9 +206,9 @@ export function useProjectsData() {
                 }));
             } else {
                 setStatusData([]);
-                console.log(response.operation.message);
             }
         });
+        setReady(true);
     }, []);
 
     useEffect(() => {
@@ -309,64 +224,7 @@ export function useProjectsData() {
         }
     }, [errores]);
 
-    const uploadFiles = () => {
-        setShowDialog(false);
-        setMessage({
-            title: "Adjuntar archivos",
-            description: "¿Deseas adjuntar los archivos seleccionados al proyecto?",
-            show: true,
-            background: true,
-            cancelTitle: "Cancelar",
-            OkTitle: "Aceptar",
-            onOk: () => {
-                const form = new FormData();
-                const files = filesUploadData;
-                files.forEach(file => {
-                    form.append('files', file);
-                });
-                const token = localStorage.getItem("token");
-                const options = {
-                    method: 'POST',
-                    url: `${process.env.urlApiStrategicDirection}/api/v1/project/upload/${selectedRow?.id}`,
-                    headers: { 'content-type': 'multipart/form-data', Permissions: authorization.encryptedAccess, authorization: `Bearer ${token}` },
-                    data: form,
-                };
-                axios.request(options).then(response => {
-                    const data: ApiResponse<boolean> = response.data;
-                    if (data.operation.code === EResponseCodes.OK) {
-                        setFilesUploadData([]);
-                        setMessage({
-                            background: true,
-                            show: true,
-                            title: "Adjuntos del proyecto",
-                            description: "¡Archivos guardados exitosamente!",
-                            OkTitle: "Aceptar",
-                        });
-                    } else {
-                        setFilesUploadData([]);
-                        setMessage({
-                            background: true,
-                            show: true,
-                            title: "Adjuntos del proyecto",
-                            description: data.operation.message,
-                            OkTitle: "Aceptar"
-                        });
-                    }
-                }).catch(err => {
-                    setMessage({
-                        background: true,
-                        show: true,
-                        title: "Adjuntos del proyecto",
-                        description: String(err),
-                        OkTitle: "Aceptar"
-                    })
-                });
-            },
-            onCancel: () => {
-                setMessage({});
-            }
-        })
-    }
+
 
     return { navigate, 
              tableComponentRef, 
@@ -382,7 +240,6 @@ export function useProjectsData() {
              setShowDialog, 
              filesUploadData, 
              setFilesUploadData, 
-             uploadFiles, 
              msgs, 
              yearsArray,
              setErrores,

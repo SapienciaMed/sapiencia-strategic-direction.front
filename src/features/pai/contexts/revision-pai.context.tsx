@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction, createContext, useMemo, useState } from "react";
-import { ICreatePlanAction, IRevisionFormPAI } from "../interfaces/PAIInterfaces";
+import { IApproveRevisionPAI, ICreatePlanAction, IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { IPropsRevisionPAI } from "../pages/revision-pai.page";
 
@@ -20,6 +20,8 @@ interface IRevisionPAIContext {
     setFieldsCorrected: Dispatch<SetStateAction<string[]>>;
     fieldsValues: any[];
     setFieldsValues: Dispatch<SetStateAction<any[]>>;
+    approveFields: IApproveRevisionPAI[];
+    setApproveFields: Dispatch<SetStateAction<IApproveRevisionPAI[]>>;
 }
 
 interface IProps {
@@ -43,6 +45,8 @@ export const RevisionPAIContext = createContext<IRevisionPAIContext>({
     setFieldsCorrected: () => {},
     fieldsValues: [],
     setFieldsValues: () => {},
+    approveFields: [],
+    setApproveFields: () => {},
 })
 
 export function RevisionPAIContextProvider({ children }: Readonly<IProps>) {
@@ -54,6 +58,7 @@ export function RevisionPAIContextProvider({ children }: Readonly<IProps>) {
     const [correctionFields, setCorrectionFields] = useState<any>({});
     const [fieldsCorrected, setFieldsCorrected] = useState<string[]>([]);
     const [fieldsValues, setFieldsValues] = useState<any[]>([]);
+    const [approveFields, setApproveFields] = useState<IApproveRevisionPAI[]>([]);
     const values = useMemo<IRevisionPAIContext>(() => {
         return {
             revisionPAI,
@@ -71,9 +76,11 @@ export function RevisionPAIContextProvider({ children }: Readonly<IProps>) {
             fieldsCorrected,
             setFieldsCorrected,
             fieldsValues,
-            setFieldsValues
+            setFieldsValues,
+            approveFields,
+            setApproveFields
         };
-    }, [revisionPAI, pai, projectPAI, status, fieldsChange, correctionFields, fieldsCorrected, fieldsValues])
+    }, [revisionPAI, pai, projectPAI, status, fieldsChange, correctionFields, fieldsCorrected, fieldsValues, approveFields])
 
     return <RevisionPAIContext.Provider value={values}>{children}</RevisionPAIContext.Provider>;
 }

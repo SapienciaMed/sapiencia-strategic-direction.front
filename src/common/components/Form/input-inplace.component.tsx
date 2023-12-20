@@ -87,7 +87,7 @@ export function InputInplaceComponent({
     optionsRegister = {},
     max,
     min
-}: IInputProps<any>): React.JSX.Element {
+}: Readonly<IInputProps<any>>): React.JSX.Element {
     const messageError = () => {
         const keysError = idInput.split(".");
         let errs = errors;
