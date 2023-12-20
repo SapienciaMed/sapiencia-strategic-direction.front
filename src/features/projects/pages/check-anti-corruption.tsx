@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-corruption-plan.hook";
@@ -30,6 +30,7 @@ function ProjectsPage(): React.JSX.Element {
             msgs, 
             setErrores,
             validateActionAccess } = useAntiCorruptionPlanData();
+            const [isEditing, setIsEditing] = useState(false);
     return (
         <div className='main-page'>
             <div className='card-table'>
@@ -86,6 +87,7 @@ function ProjectsPage(): React.JSX.Element {
                         titleMessageModalNoResult="Resultados de búsqueda"
                         descriptionModalNoResult="No se generó resultado en la búsqueda"
                     />
+                    
                 </div>
             </div>
         </div>

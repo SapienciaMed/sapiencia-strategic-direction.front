@@ -82,7 +82,7 @@ export function useAntiCorruptionPlanData() {
                     </>
                 )
             },
-            onClick: (row) => {editDialog},
+            onClick: (row) => {openEditDialog},
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
