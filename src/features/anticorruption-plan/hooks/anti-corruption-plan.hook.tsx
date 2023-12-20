@@ -81,18 +81,17 @@ export function useAntiCorruptionPlanData() {
                         onClick={() => setVisibleModal(true)}
                     >
                         <RiPencilLine />
-                    </div>
+                    
                     <EditModal
                         showModal={visiblemodal}
-                        onClose={() => setVisibleModal(false)}
-                        onSave={saveChanges} // Asegúrate de pasar la función correcta aquí
+                        onSave={saveChanges}
                         editingProject={editingProject}
                         setEditingProject={setEditingProject}
                         title={"Editar"}
                         visible={visiblemodal}
                         onCloseModal={() => setVisibleModal(false)}
                     />
-
+                    </div>
                 </>
             ),
             onClick: (row) => setVisibleModal(true),

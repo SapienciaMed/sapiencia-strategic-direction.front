@@ -1,9 +1,9 @@
 import { Dialog } from "primereact/dialog";
 import { ButtonComponent } from "../../../common/components/Form";
+import "../style/edit-modal.modules.scss";
 
 const EditModal = ({
     showModal,
-    onClose,
     onSave,
     editingProject,
     setEditingProject,
@@ -34,9 +34,8 @@ const EditModal = ({
             }}
         >
             <>
-                <div className="modal">
-                    <h2>Editar Proyecto</h2>
-                    <label htmlFor="projectName">Nombre del Proyecto:</label>
+                <div className="modal_edit">
+                    <label htmlFor="projectName">Nombre</label>
                     <input
                         type="text"
                         id="user"
@@ -44,10 +43,18 @@ const EditModal = ({
                         onChange={handleInputChange}
                     />
 
-                    <label htmlFor="projectDate">Fecha de Formulación:</label>
+                    <label htmlFor="projectDate">Fecha</label>
                     <input
                         type="text"
                         id="dateFrom"
+                        value={editingProject?.dateFrom || ''}
+                        onChange={handleInputChange}
+                    />
+
+                    <label htmlFor="projectDate">Estado</label>
+                    <input
+                        type="text"
+                        id="status"
                         value={editingProject?.dateFrom || ''}
                         onChange={handleInputChange}
                     />
