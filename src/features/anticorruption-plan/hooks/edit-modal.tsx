@@ -1,5 +1,5 @@
 import { Dialog } from "primereact/dialog";
-import { ButtonComponent } from "../../../common/components/Form";
+import { ButtonComponent, InputComponent } from "../../../common/components/Form";
 import "../style/edit-modal.modules.scss";
 
 const EditModal = ({
@@ -34,7 +34,8 @@ const EditModal = ({
             }}
         >
             <>
-                <div className="modal_edit">
+            <div className="card-table">    
+                <div className="modal_edit  strategic-direction-grid-1 strategic-direction-grid-3-web">
                     <label htmlFor="projectName">Nombre</label>
                     <input
                         type="text"
@@ -68,6 +69,7 @@ const EditModal = ({
                         disabled={false}
                     />
                 </div>
+            </div>
             </>
         </Dialog>
     );
