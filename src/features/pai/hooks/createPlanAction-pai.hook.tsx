@@ -109,7 +109,9 @@ export default function usePlanActionPAIData({ status }) {
             GetPAIById(Number(idPAI))
                 .then((response) => {
                     if (response.operation.code === EResponseCodes.OK) {
+                        debugger;
                         const res = response.data;
+                        setLoadData(true);
                         setValue("yearPAI", res.yearPAI);
                         setValue("budgetPAI", res.budgetPAI);
                         setValue("objectivePAI", res.objectivePAI);
@@ -128,7 +130,7 @@ export default function usePlanActionPAIData({ status }) {
                         setValue("id", res.id);
                         setEditId(res.id);
                         setPAIData({...res, actionsPAi: actions});
-                        setLoadData(true);
+                        
                         setDisableTempBtn(false);
                         setDisableSaveButton(true);
 
@@ -240,7 +242,7 @@ export default function usePlanActionPAIData({ status }) {
 
     useEffect(() => {
         setValue("namePAI", null)
-        if (loadData) {
+        if (!loadData) {
             setValue("objectivePAI", "")
             setValue("articulationPAI", "")
         }
@@ -257,6 +259,7 @@ export default function usePlanActionPAIData({ status }) {
 
     useEffect(() => {
         if (!projectsData) return;
+        setLoadData(false);
         if (idType == 1 && idName != null) {
             const project = projectsData?.find(project => project.id === idName);
             setValue("objectivePAI", (project.centerProblem))
