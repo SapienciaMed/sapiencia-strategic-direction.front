@@ -163,9 +163,35 @@ function App() {
                 }
               />
 
-              <Route path={"/direccion-estrategica/pai/revision/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="revision" /></RevisionPAIContextProvider>} />;
-              <Route path={"/direccion-estrategica/pai/correction/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="correction" /></RevisionPAIContextProvider>} />;
-              <Route path={"/direccion-estrategica/pai/adjustment/:id"} element={<RevisionPAIContextProvider><RevisionPAIPage status="adjustment" /></RevisionPAIContextProvider>} />;
+              <Route
+                path={"/direccion-estrategica/pai/revision/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="revision" /></RevisionPAIContextProvider>}
+                    allowedAction={"REVISAR_PLAN"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/correction/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="correction" /></RevisionPAIContextProvider>}
+                    allowedAction={"CORREGIR_PLAN"}
+                  />
+                }
+              />
+
+              <Route
+                path={"/direccion-estrategica/pai/adjustment/:id"}
+                element={
+                  <PrivateRoute
+                    element={<RevisionPAIContextProvider><RevisionPAIPage status="adjustment" /></RevisionPAIContextProvider>}
+                    allowedAction={"REVISAR_PLAN"}
+                  />
+                }
+              />
 
             </Routes>
           </Suspense>
