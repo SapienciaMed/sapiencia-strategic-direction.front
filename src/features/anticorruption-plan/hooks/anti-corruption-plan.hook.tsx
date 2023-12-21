@@ -93,9 +93,8 @@ export function useAntiCorruptionPlanData() {
                                 <RiPencilLine />
                             </div>
                             <EditModal
+                                control={control}
                                 onSave={saveChanges}
-                                //editingProject={editingProject}
-                                //setEditingProject={setEditingProject}
                                 antiCorruptionPlan={antiCorruptionPlan}
                                 setAntiCorruptionPlan={setAntiCorruptionPlan}
                                 title={"Editar"}

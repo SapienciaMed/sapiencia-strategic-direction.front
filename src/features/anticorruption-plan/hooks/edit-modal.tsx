@@ -1,5 +1,5 @@
 import { Dialog } from "primereact/dialog";
-import { ButtonComponent, InputComponent } from "../../../common/components/Form";
+import { ButtonComponent, DatePickerComponent, InputComponent, SelectComponent } from "../../../common/components/Form";
 import "../style/edit-modal.scss";
 import { useEffect, useState } from "react";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
@@ -13,7 +13,8 @@ const EditModal = ({
     title,
     visible,
     onCloseModal,
-    setVisible
+    setVisible,
+    control,
 }) => {
     const handleInputChange = (e) => {
         setAntiCorruptionPlan((prevProject) => ({
@@ -25,6 +26,7 @@ const EditModal = ({
     const closeModal = () => { 
         setVisible(2);
     };
+    console.log("fecha",antiCorruptionPlan?.date)
     const { getAll } = useAntiCorruptionPlanStatusService();
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [ready, setReady] = useState<boolean>(false);
@@ -64,7 +66,7 @@ const EditModal = ({
                 <div className="card-table">
                     <div className="modal_edit  strategic-direction-grid-1 strategic-direction-grid-3-web">
                         <div className="input_content">
-                            <label htmlFor="projectName">Nombre</label>
+                            <label className="label_modal" htmlFor="projectName">Nombre</label>
                             <input className="input_component"
                                 type="text"
                                 id="name"
@@ -74,22 +76,37 @@ const EditModal = ({
                         </div>
 
                         <div className="input_content">
-                            <label htmlFor="projectDate">Fecha</label>
-                            <input className="input_component"
-                                type="text"
+                            {/* <DatePickerComponent
+                                control={control}
+                                idInput="date"
+                                dateFormat="dd/mm/yy"
+                                className="dataPicker-basic span-width"
+                                label="Fecha"
+                                classNameLabel="text-black biggest bold"
+                                minDate={new Date()}
+                                value={antiCorruptionPlan?.date ? new Date(antiCorruptionPlan.date) : null}
+                                onChange={handleInputChange}
+                            /> */}
+                            <label className="label_modal" htmlFor="projectName">Nombre</label>
+                            <input className="input_component date_picker"
+                                type="date"
                                 id="date"
                                 value={antiCorruptionPlan?.date || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
 
+
                         <div className="input_content">
-                            <label htmlFor="projectDate">Estado</label>
-                            <input className="input_component"
-                                type="text"
-                                id="status"
+                            <SelectComponent
+                                control={control}
+                                idInput={"status"}
+                                className={`select-basic span-width`}
+                                label="Estado"
+                                classNameLabel="text-black biggest bold"
+                                data={statusData}
                                 value={antiCorruptionPlan?.status || ''}
-                                onChange={handleInputChange}
+                                filter={true}
                             />
                         </div>
 
