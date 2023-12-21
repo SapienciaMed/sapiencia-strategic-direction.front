@@ -12,16 +12,12 @@ import { DateTime } from "luxon";
 import { AppContext } from "../../../common/contexts/app.context";
 import { useSchedulesService } from "./schedules-service.hook";
 import { useNavigate } from "react-router";
+import { Tooltip } from "primereact/tooltip";
+import { RiPencilLine } from "react-icons/ri";
+import { PiTrash } from "react-icons/pi";
 
-interface ISchedulesTablePAI {
+interface ISchedulesTablePAI extends ISchedulesPAI {
     consecutive: number;
-    id?: number;
-    idRol: number;
-    idStatus: number;
-    bimester: number;
-    startDate: DateTime;
-    endDate: DateTime;
-    userCreate?: string;
 }
 
 export default function useSchedulesPAIData() {
@@ -31,6 +27,7 @@ export default function useSchedulesPAIData() {
         url: "/direccion-estrategica/pai/cronogramas",
     });
 
+    const [disableSave, setDisableSave] = useState<boolean>(false);
     const [rolData, setRolData] = useState<IDropdownProps[]>([]);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [tableData, setTableData] = useState<ISchedulesTablePAI[]>([]);
@@ -55,7 +52,20 @@ export default function useSchedulesPAIData() {
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
-        setTableData(tableData.concat({ ...data, consecutive: tableData.length }));
+        const existing = tableData.find(item => item.bimester === data.bimester && item.startDate === data.startDate && item.endDate === data.endDate && item.idRol === data.idRol && item.idStatus === data.idStatus);
+        if (existing) return setMessage({
+            title: "Cronograma del plan de acción institucional",
+            description: "¡Este registro ya existe!",
+            show: true,
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onOk: () => {
+                setMessage({});
+            }
+        });
+        setTableData(tableData.concat({ ...data, consecutive: tableData.length, delete: false }));
         setTimeout(() => {
             reset();
         }, 100);
@@ -72,6 +82,7 @@ export default function useSchedulesPAIData() {
             editData[indice].startDate = data.startDate;
             setTableData(editData);
             setEditSchedule(null);
+            setDisableSave(false);
             setTimeout(() => {
                 reset();
             }, 100);
@@ -81,6 +92,7 @@ export default function useSchedulesPAIData() {
     const resetForm = () => {
         reset();
         setEditSchedule(null);
+        setDisableSave(false);
     }
 
     const tableColumns: ITableElement<ISchedulesTablePAI>[] = [
@@ -127,7 +139,21 @@ export default function useSchedulesPAIData() {
     ]
     const tableActions: ITableAction<ISchedulesTablePAI>[] = [
         {
-            icon: "Edit",
+            customIcon: () => {
+                return (
+                    <>
+                        <Tooltip target=".edit-tooltip" />
+                        <div
+                            className="edit-tooltip"
+                            data-pr-tooltip="Editar"
+                            data-pr-position="bottom"
+                            style={{ 'color': '#D72FD1' }}
+                        >
+                            <RiPencilLine className="button grid-button button-edit" />
+                        </div>
+                    </>
+                )
+            },
             onClick: (row) => {
                 clearErrors();
                 setValue("id", row.id);
@@ -137,9 +163,37 @@ export default function useSchedulesPAIData() {
                 setValue("idStatus", row.idStatus);
                 setValue("startDate", row.startDate);
                 setEditSchedule(row.consecutive);
+                setDisableSave(true);
+            }
+        },
+        {
+            customIcon: () => {
+                return (
+                    <>
+                        <Tooltip target=".delete-tooltip" />
+                        <div
+                            className="delete-tooltip"
+                            data-pr-tooltip="Eliminar"
+                            data-pr-position="bottom"
+                            style={{ 'color': '#D72FD1' }}
+                        >
+                            <PiTrash className="button grid-button button-delete" />
+                        </div>
+                    </>
+                )
+            },
+            onClick: (row) => {
+                let indice = tableData.findIndex(objeto => objeto.consecutive === row.consecutive);
+                if (indice !== -1) {
+                    const editData = tableData;
+                    editData[indice].delete = true;
+                    setTableData(editData);
+                    clearErrors();
+                }
             }
         }
     ];
+    
     const bimesterData: IDropdownProps[] = [
         {
             name: "1",
@@ -199,9 +253,9 @@ export default function useSchedulesPAIData() {
 
     const saveAction = () => {
         if (JSON.stringify(constTableData?.map(data => {
-            return {endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester}
+            return { endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester, delete: data.delete }
         })) !== JSON.stringify(tableData.map(data => {
-            return {endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester}
+            return { endDate: data.endDate, idRol: data.idRol, id: data.id, idStatus: data.idStatus, startDate: data.startDate, bimester: data.bimester, delete: data.delete }
         }))) {
             setMessage({
                 title: "Guardar datos",
@@ -215,7 +269,7 @@ export default function useSchedulesPAIData() {
                 },
                 onOk: () => {
                     crudSchedules(tableData.map(data => {
-                        return {...data, userCreate: authorization.user.numberDocument}
+                        return { ...data, userCreate: authorization.user.numberDocument }
                     })).then(response => {
                         if (response.operation.code === EResponseCodes.OK) {
                             setMessage({
@@ -225,7 +279,6 @@ export default function useSchedulesPAIData() {
                                 background: true,
                                 OkTitle: "Aceptar",
                                 onOk: () => {
-                                    navigate("./../..");
                                     setMessage({});
                                 }
                             });
@@ -281,15 +334,34 @@ export default function useSchedulesPAIData() {
         getSchedules().then(response => {
             if (response.operation.code === EResponseCodes.OK) {
                 const data = response.data.map((schedule, index) => {
-                    return { ...schedule, consecutive: index };
+                    return { ...schedule, consecutive: index, delete: false };
                 })
                 const data2 = response.data.map((schedule, index) => {
-                    return { ...schedule, consecutive: index };
+                    return { ...schedule, consecutive: index, delete: false };
                 })
                 setTableData(data);
                 setConstTableData(data2);
             }
         }).catch(err => console.log(err));
     }, []);
-    return { errors, resetForm, control, onSubmitCreate, tableColumns, tableActions, rolData, statusData, bimesterData, tableData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction };
+    return {
+        errors,
+        resetForm,
+        control,
+        onSubmitCreate,
+        tableColumns,
+        tableActions,
+        rolData,
+        statusData,
+        bimesterData,
+        tableData,
+        createPermission,
+        editSchedule,
+        onSubmitEdit,
+        getValues,
+        setValue,
+        cancelAction,
+        saveAction,
+        disableSave
+    };
 }
