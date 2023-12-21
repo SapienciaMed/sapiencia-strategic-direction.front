@@ -1,18 +1,19 @@
 import { Dialog } from "primereact/dialog";
 import { ButtonComponent, InputComponent } from "../../../common/components/Form";
 import "../style/edit-modal.modules.scss";
+import { useEffect } from "react";
 
 const EditModal = ({
     showModal,
     onSave,
-    editingProject,
-    setEditingProject,
+    antiCorruptionPlan,
+    setAntiCorruptionPlan,
     title,
     visible,
     onCloseModal,
 }) => {
     const handleInputChange = (e) => {
-        setEditingProject((prevProject) => ({
+        setAntiCorruptionPlan((prevProject) => ({
             ...prevProject,
             [e.target.id]: e.target.value,
         }));
@@ -39,16 +40,16 @@ const EditModal = ({
                     <label htmlFor="projectName">Nombre</label>
                     <input
                         type="text"
-                        id="user"
-                        value={editingProject?.user || ''}
+                        id="name"
+                        value={antiCorruptionPlan?.name || ''}
                         onChange={handleInputChange}
                     />
 
                     <label htmlFor="projectDate">Fecha</label>
                     <input
                         type="text"
-                        id="dateFrom"
-                        value={editingProject?.dateFrom || ''}
+                        id="date"
+                        value={antiCorruptionPlan?.date || ''}
                         onChange={handleInputChange}
                     />
 
@@ -56,7 +57,7 @@ const EditModal = ({
                     <input
                         type="text"
                         id="status"
-                        value={editingProject?.dateFrom || ''}
+                        value={antiCorruptionPlan?.status || ''}
                         onChange={handleInputChange}
                     />
 
