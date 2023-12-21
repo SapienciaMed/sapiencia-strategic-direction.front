@@ -37,7 +37,9 @@ export function useAntiCorruptionPlanData() {
     const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
-    const [visiblemodal, setVisibleModal] = useState<boolean>(false);
+    const [visiblemodal, setVisibleModal] = useState(false);
+    const [close, setClose] = useState<IProject | number>(1);
+
     const {
         handleSubmit,
         register,
@@ -67,7 +69,11 @@ export function useAntiCorruptionPlanData() {
         },
     ];
 
-
+    const closeModal = () => {
+        setVisibleModal(false);
+        console.log("ejecutando")
+    };
+    console.log("visiblemodal", visiblemodal);
     const tableActions: ITableAction<IProject>[] = [
         {
             customIcon: (row) => (
@@ -78,20 +84,19 @@ export function useAntiCorruptionPlanData() {
                         data-pr-tooltip="Editar"
                         data-pr-position="bottom"
                         style={{ color: '#0CA529' }}
-                        onClick={() => setVisibleModal(true)}
+                        onClick={() => { setVisibleModal(true); setClose(1); openEditDialog(row)}}
                     >
                         <RiPencilLine />
-                    
+                    </div>
                     <EditModal
-                        showModal={visiblemodal}
                         onSave={saveChanges}
                         editingProject={editingProject}
                         setEditingProject={setEditingProject}
                         title={"Editar"}
                         visible={visiblemodal}
-                        onCloseModal={() => setVisibleModal(false)}
+                        onCloseModal={closeModal}
+                        setVisible={setClose}
                     />
-                    </div>
                 </>
             ),
             onClick: (row) => setVisibleModal(true),
@@ -140,6 +145,13 @@ export function useAntiCorruptionPlanData() {
         }
     }, [errores]);
 
+    useEffect(() => {
+        if (close === 2) {
+            console.log("Cerrando modal de edición");
+            setVisibleModal(false);
+        }
+    }, [close]);
+
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -147,16 +159,15 @@ export function useAntiCorruptionPlanData() {
         console.log("Abriendo modal de edición para:", row);
         setEditingProject(row);
         setIsEditing(true);
+        setVisibleModal(true);
     };
 
     const closeEditDialog = () => {
+        setVisibleModal(false);
     };
 
     const saveChanges = () => {
         console.log("Guardando cambios en el proyecto:", editingProject);
-        // Aquí debes guardar los cambios en el proyecto
-        // Puedes utilizar el estado editingProject para actualizar la tabla
-        // Una vez guardado, cierra el diálogo
         closeEditDialog();
     };
 

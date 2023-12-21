@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from "react";
+import { boolean } from "yup";
 
 interface ILabelProps {
   value: string;
@@ -8,6 +9,7 @@ interface ILabelProps {
   id?: string;
   form?: string;
   disabled?: boolean;
+  visible?: boolean;
 }
 
 export function ButtonComponent({
@@ -17,7 +19,8 @@ export function ButtonComponent({
   action = () => {},
   id,
   form,
-  disabled
+  disabled,
+  visible,
 }: ILabelProps): React.JSX.Element {
   const handleButtonClick = (event: SyntheticEvent) => {
     if (type !== "submit") event.preventDefault();

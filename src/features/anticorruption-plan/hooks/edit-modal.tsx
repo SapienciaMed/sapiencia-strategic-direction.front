@@ -1,15 +1,19 @@
 import { Dialog } from "primereact/dialog";
 import { ButtonComponent, InputComponent } from "../../../common/components/Form";
-import "../style/edit-modal.modules.scss";
+import "../style/edit-modal.scss";
+import { useEffect, useState } from "react";
+import { IDropdownProps } from "../../../common/interfaces/select.interface";
+import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-status-service.hook";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 const EditModal = ({
-    showModal,
     onSave,
     editingProject,
     setEditingProject,
     title,
     visible,
     onCloseModal,
+    setVisible
 }) => {
     const handleInputChange = (e) => {
         setEditingProject((prevProject) => ({
@@ -17,16 +21,40 @@ const EditModal = ({
             [e.target.id]: e.target.value,
         }));
     };
+    const [count, setCount] = useState(setVisible);
+    const closeModal = () => { 
+        setVisible(2);
+    };
+    const { getAll } = useAntiCorruptionPlanStatusService();
+    const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
+    const [ready, setReady] = useState<boolean>(false);
+    useEffect(() => {
+        getAll().then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                setStatusData(response.data.map(status => {
+                    return {
+                        name: status.description,
+                        value: status.id
+                    }
+                }));
+            } else {
+                setStatusData([]);
+                console.log(response.operation.message);
+            }
+            setReady(true);
+        });
+    }, []);
 
+    console.log("info", editingProject);
     return (
         <Dialog
             header={title}
             visible={visible}
-            style={{ width: "689px" }}
-            onHide={onCloseModal}
+            style={{ width: "850px", borderRadius: "16px", padding: "10px", backgroundColor: "#FFF" }}
+            onHide={closeModal}
             pt={{
                 headerTitle: {
-                    className: "text-title-modal text--black text-center",
+                    className: "text-title-modal text--black text-center title-modal",
                 },
                 closeButtonIcon: {
                     className: "color--primary close-button-modal",
@@ -34,42 +62,53 @@ const EditModal = ({
             }}
         >
             <>
-            <div className="card-table">    
-                <div className="modal_edit  strategic-direction-grid-1 strategic-direction-grid-3-web">
-                    <label htmlFor="projectName">Nombre</label>
-                    <input
-                        type="text"
-                        id="user"
-                        value={editingProject?.user || ''}
-                        onChange={handleInputChange}
-                    />
+                <div className="card-table">
+                    <div className="modal_edit  strategic-direction-grid-1 strategic-direction-grid-3-web">
+                        <div className="input_content">
+                            <label htmlFor="projectName">Nombre</label>
+                            <input className="input_component"
+                                type="text"
+                                id="name"
+                                value={editingProject?.name || ''}
+                                onChange={handleInputChange}
+                            />
+                        </div>
 
-                    <label htmlFor="projectDate">Fecha</label>
-                    <input
-                        type="text"
-                        id="dateFrom"
-                        value={editingProject?.dateFrom || ''}
-                        onChange={handleInputChange}
-                    />
+                        <div className="input_content">
+                            <label htmlFor="projectDate">Fecha</label>
+                            <input className="input_component"
+                                type="text"
+                                id="dateFrom"
+                                value={editingProject?.date || ''}
+                                onChange={handleInputChange}
+                            />
+                        </div>
 
-                    <label htmlFor="projectDate">Estado</label>
-                    <input
-                        type="text"
-                        id="status"
-                        value={editingProject?.dateFrom || ''}
-                        onChange={handleInputChange}
-                    />
+                        <div className="input_content">
+                            <label htmlFor="projectDate">Estado</label>
+                            <input className="input_component"
+                                type="text"
+                                id="status"
+                                value={editingProject?.status || ''}
+                                onChange={handleInputChange}
+                            />
+                        </div>
 
-                    <button onClick={onSave}>Guardar</button>
+
+                    </div>
+                </div>
+                <div className="content_button">
+                    <button className="button_save" onClick={onSave}>Guardar</button>
                     <ButtonComponent
-                        className={`button-main py-12 px-16 font-size-16`}
+                        className={`button_cancel`}
                         value="Cancelar"
                         type="button"
-                        action={onCloseModal}
+                        action={closeModal}
                         disabled={false}
+                        visible={true}
                     />
                 </div>
-            </div>
+
             </>
         </Dialog>
     );
