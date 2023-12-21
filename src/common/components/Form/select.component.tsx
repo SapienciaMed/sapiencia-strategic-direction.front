@@ -22,6 +22,7 @@ interface ISelectProps<T> {
   fieldArray?: boolean;
   filter?: boolean;
   emptyMessage?: string;
+  value?: any;
   onChange?: () => void;
 }
 
@@ -49,6 +50,7 @@ export function SelectComponent({
   children,
   errors = {},
   disabled,
+  value,
   fieldArray,
   filter,
   emptyMessage = "Sin resultados.",

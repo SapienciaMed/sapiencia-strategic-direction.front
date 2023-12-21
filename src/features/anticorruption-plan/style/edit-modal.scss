@@ -17,6 +17,12 @@ div#pr_id_2_header {
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     appearance: none;
     border-radius: 6px;
+    margin-top: 9px;
+    height: 40px;
+}
+
+.input_component:hover{
+    border: 1px solid #6366f1;
 }
 
 .input_component:focus{
@@ -71,4 +77,11 @@ button.button_cancel:hover {
     background-color: #533893;
     color: #fff;
     border: none;
+}
+
+label.label_modal {
+    font-family: "RubikMedium",sans-serif !important;
+    font-size: 1.25rem;
+    color: #000;
+    font-weight: 700;
 }
