@@ -39,14 +39,14 @@ function ProjectsPage(): React.JSX.Element {
                     <div className="modal-header"></div>
                     <div className="modal-content">
                         <div className="full-width">
-                            <span className="text-black biggest bold" onClick={() => setErrores("test")}>Adjuntar archivos</span>
+                            <span className="text-black biggest bold">Adjuntar archivos</span>
                             <Messages ref={msgs} />
                             <div style={{ marginTop: "20px" }}>
                                 <UploadComponent
                                     id="fileList"
                                     setFilesData={setFilesUploadData}
                                     setErrores={setErrores}
-                                    filesAccept="png, jpg, pdf, docx, xls, xlsx"
+                                    filesAccept="png, jpg, pdf, doc, docx, xls, xlsx, xlsm"
                                     maxSize={20971520}
                                     dropboxMessage="Arrastra y suelta el archivo aquí"
                                     multiple

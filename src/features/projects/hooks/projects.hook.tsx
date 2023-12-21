@@ -29,7 +29,7 @@ export function useProjectsData() {
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
-    const { setMessage, validateActionAccess  } = useContext(AppContext);
+    const { setMessage, validateActionAccess } = useContext(AppContext);
     const { GetAllStatus } = useProjectsService();
     const today = DateTime.local();
     const formattedDate = today.toFormat('ddMMyyyy');
@@ -92,8 +92,8 @@ export function useProjectsData() {
             onClick: (row) => {
 
                 const token = localStorage.getItem("token");
-                  
-                  fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {
+
+                fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf/${row.id}/generate-pdf-register-project`, {
                     method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
                     headers: new Headers({
                         "Content-Type": "application/json",
@@ -101,12 +101,12 @@ export function useProjectsData() {
                         Permissions: authorization.encryptedAccess,
                         authorization: `Bearer ${token}`
                     }),
-                  }).then(async response => {
+                }).then(async response => {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     window.open(url, "_blank");
-                    saveAs(blob, `${"Registro proyecto_"+row?.bpin+"_"+formattedDate}.pdf`);
-                  }).catch(err => {
+                    saveAs(blob, `${"Registro proyecto_" + row?.bpin + "_" + formattedDate}.pdf`);
+                }).catch(err => {
                     setMessage({
                         title: "¡Ha ocurrido un error!",
                         description: String(err),
@@ -161,7 +161,7 @@ export function useProjectsData() {
             },
             onClick: (row) => {
                 const token = localStorage.getItem("token");
-                  
+
                 fetch(`${process.env.urlApiStrategicDirection}/api/v1/pdf/generate-pdf-consolidate/${row.id}/generate-pdf-consolidate`, {
                     method: 'GET',  // O utiliza 'POST' u otro método según tus necesidades
                     headers: new Headers({
@@ -170,12 +170,12 @@ export function useProjectsData() {
                         Permissions: authorization.encryptedAccess,
                         authorization: `Bearer ${token}`
                     }),
-                  }).then(async response => {
+                }).then(async response => {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     window.open(url, "_blank")
-                    saveAs(blob, `${"Ficha técnica_"+row?.bpin+"_"+formattedDate}.pdf`);
-                  }).catch(err => {
+                    saveAs(blob, `${"Ficha técnica_" + row?.bpin + "_" + formattedDate}.pdf`);
+                }).catch(err => {
                     setMessage({
                         title: "¡Ha ocurrido un error!",
                         description: String(err),
@@ -287,7 +287,7 @@ export function useProjectsData() {
 
     useEffect(() => {
         msgs.current?.clear();
-        if(errores) {
+        if (errores) {
             msgs.current?.show([
                 { severity: 'error', summary: 'Error', detail: errores, sticky: true, closable: false }
             ]);
@@ -353,23 +353,25 @@ export function useProjectsData() {
         })
     }
 
-    return { navigate, 
-             tableComponentRef, 
-             tableColumns, 
-             tableActions, 
-             onSubmit, 
-             reset, 
-             statusData, 
-             control, 
-             register, 
-             errors, 
-             showDialog, 
-             setShowDialog, 
-             filesUploadData, 
-             setFilesUploadData, 
-             uploadFiles, 
-             msgs, 
-             setErrores,
-             validateActionAccess };
+    return {
+        navigate,
+        tableComponentRef,
+        tableColumns,
+        tableActions,
+        onSubmit,
+        reset,
+        statusData,
+        control,
+        register,
+        errors,
+        showDialog,
+        setShowDialog,
+        filesUploadData,
+        setFilesUploadData,
+        uploadFiles,
+        msgs,
+        setErrores,
+        validateActionAccess
+    };
 }
 
