@@ -8,15 +8,15 @@ import { EResponseCodes } from "../../../common/constants/api.enum";
 
 const EditModal = ({
     onSave,
-    editingProject,
-    setEditingProject,
+    antiCorruptionPlan,
+    setAntiCorruptionPlan,
     title,
     visible,
     onCloseModal,
     setVisible
 }) => {
     const handleInputChange = (e) => {
-        setEditingProject((prevProject) => ({
+        setAntiCorruptionPlan((prevProject) => ({
             ...prevProject,
             [e.target.id]: e.target.value,
         }));
@@ -45,7 +45,6 @@ const EditModal = ({
         });
     }, []);
 
-    console.log("info", editingProject);
     return (
         <Dialog
             header={title}
@@ -69,7 +68,7 @@ const EditModal = ({
                             <input className="input_component"
                                 type="text"
                                 id="name"
-                                value={editingProject?.name || ''}
+                                value={antiCorruptionPlan?.name || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -78,8 +77,8 @@ const EditModal = ({
                             <label htmlFor="projectDate">Fecha</label>
                             <input className="input_component"
                                 type="text"
-                                id="dateFrom"
-                                value={editingProject?.date || ''}
+                                id="date"
+                                value={antiCorruptionPlan?.date || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -89,7 +88,7 @@ const EditModal = ({
                             <input className="input_component"
                                 type="text"
                                 id="status"
-                                value={editingProject?.status || ''}
+                                value={antiCorruptionPlan?.status || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
