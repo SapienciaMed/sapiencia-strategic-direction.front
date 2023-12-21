@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/ProjectsInterfaces";
+import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { useForm } from "react-hook-form";
@@ -19,6 +20,7 @@ import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { saveAs } from "file-saver"
 import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-status-service.hook";
+import { useAntiCorruptionPlanService } from "./anti-corruption-plan-service.hook";
 import EditModal from "./edit-modal";
 
 export function useAntiCorruptionPlanData() {
@@ -33,29 +35,29 @@ export function useAntiCorruptionPlanData() {
     const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess } = useContext(AppContext);
     const { getAll } = useAntiCorruptionPlanStatusService();
+    const { update } = useAntiCorruptionPlanService();
     const today = DateTime.local();
     const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
-    const [visiblemodal, setVisibleModal] = useState<boolean>(false);
+    const [visiblemodal, setVisibleModal] = useState(false);
+    const [close, setClose] = useState<IProject | number>(1);
+
     const {
         handleSubmit,
         register,
         formState: { errors },
         reset,
         control
-    } = useForm<IProjectFiltersDirection>({ resolver });
-    const tableColumns: ITableElement<IProject>[] = [
+    } = useForm<any>({ resolver });
+    const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
         {
             fieldName: "name",
             header: "Nombre del plan"
         },
         {
-            fieldName: "dateFrom",
+            fieldName: "date",
             header: "Fecha de formulación",
-            renderCell: (row) => {
-                return <>{row.status === 1 ? "" : DateTime.fromISO(row.dateCreate).toLocaleString()}</>;
-            }
         },
         {
             fieldName: "status",
@@ -67,34 +69,51 @@ export function useAntiCorruptionPlanData() {
         },
     ];
 
+    const closeModal = () => {
+        setVisibleModal(false);
+        console.log("ejecutando")
+    };
+    console.log("visiblemodal", visiblemodal);
+    
 
-    const tableActions: ITableAction<IProject>[] = [
+    const tableActions: ITableAction<IAntiCorruptionPlan>[] = [
         {
-            customIcon: (row) => (
-                <>
-                    <Tooltip target=".edit-tooltip" />
-                    <div
-                        className="edit-tooltip"
-                        data-pr-tooltip="Editar"
-                        data-pr-position="bottom"
-                        style={{ color: '#0CA529' }}
-                        onClick={() => setVisibleModal(true)}
-                    >
-                        <RiPencilLine />
-                    
-                    <EditModal
-                        showModal={visiblemodal}
-                        onSave={saveChanges}
-                        editingProject={editingProject}
-                        setEditingProject={setEditingProject}
-                        title={"Editar"}
-                        visible={visiblemodal}
-                        onCloseModal={() => setVisibleModal(false)}
-                    />
-                    </div>
-                </>
-            ),
-            onClick: (row) => setVisibleModal(true),
+            customIcon: (row) => {
+                return (
+                    (
+                        <>
+                            <Tooltip target=".edit-tooltip" />
+                            <div
+                                className="edit-tooltip"
+                                data-pr-tooltip="Editar"
+                                data-pr-position="bottom"
+                                style={{ color: '#0CA529' }}
+                                onClick={() => { setVisibleModal(true); setClose(1); openEditDialog(row)}}
+                            >
+                                <RiPencilLine />
+                            </div>
+                            <EditModal
+                                onSave={saveChanges}
+                                //editingProject={editingProject}
+                                //setEditingProject={setEditingProject}
+                                antiCorruptionPlan={antiCorruptionPlan}
+                                setAntiCorruptionPlan={setAntiCorruptionPlan}
+                                title={"Editar"}
+                                visible={visiblemodal}
+                                onCloseModal={closeModal}
+                                setVisible={setClose}
+                            />
+                            
+                        </>
+                    )
+                )
+            }
+            ,
+            onClick: (row) => {
+                console.log('row onclick', row)
+                setAntiCorruptionPlan(row)
+                setVisibleModal(true)
+            },
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
@@ -140,24 +159,38 @@ export function useAntiCorruptionPlanData() {
         }
     }, [errores]);
 
+    useEffect(() => {
+        if (close === 2) {
+            console.log("Cerrando modal de edición");
+            setVisibleModal(false);
+        }
+    }, [close]);
+
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
+    
+    const [antiCorruptionPlan, setAntiCorruptionPlan] = useState<IAntiCorruptionPlan | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const openEditDialog = (row: IProject) => {
+    const openEditDialog = (row: IAntiCorruptionPlan) => {
         console.log("Abriendo modal de edición para:", row);
-        setEditingProject(row);
+        setAntiCorruptionPlan(row);
         setIsEditing(true);
+        setVisibleModal(true);
     };
 
     const closeEditDialog = () => {
+        setVisibleModal(false);
     };
 
     const saveChanges = () => {
-        console.log("Guardando cambios en el proyecto:", editingProject);
-        // Aquí debes guardar los cambios en el proyecto
-        // Puedes utilizar el estado editingProject para actualizar la tabla
-        // Una vez guardado, cierra el diálogo
-        closeEditDialog();
+        update(antiCorruptionPlan).then((response) =>{
+            if (response.operation.code === EResponseCodes.OK) {
+                closeEditDialog();
+            } else {
+                console.log(response.operation.message);
+            }
+            
+        });
     };
 
     return {

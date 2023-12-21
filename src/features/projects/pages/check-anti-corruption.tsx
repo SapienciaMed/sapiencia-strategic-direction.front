@@ -31,6 +31,7 @@ function ProjectsPage(): React.JSX.Element {
             setErrores,
             validateActionAccess } = useAntiCorruptionPlanData();
             const [isEditing, setIsEditing] = useState(false);
+
     return (
         <div className='main-page'>
             <div className='card-table'>
