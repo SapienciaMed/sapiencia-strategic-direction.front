@@ -70,8 +70,8 @@ export const indicatorsPAIValidator = yup.object({
     coresponsibles: yup.array().of(
         yup.object().shape(({
             coresponsible: yup.string()
-            .required("El campo es obligatorio")
+            .notRequired()
             .max(100, "Solo se permiten 100 caracteres"),
         }))
-    ).min(1, "Debes agregar al menos un corresponsable ")
+    )
 });

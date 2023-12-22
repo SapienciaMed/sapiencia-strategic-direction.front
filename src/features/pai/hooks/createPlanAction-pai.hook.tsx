@@ -15,7 +15,7 @@ import { IEntities } from "../interfaces/Entities";
 import { useProjectsService } from "./projects-service.hook";
 import { usePaiService } from "./pai-service.hook"
 import { IProject } from "../interfaces/ProjectsInterfaces";
-import { InputInplaceComponent } from "../../../common/components/Form";
+import { InputComponent, InputInplaceComponent } from "../../../common/components/Form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
 import { useParams } from "react-router-dom";
@@ -312,7 +312,7 @@ export default function usePlanActionPAIData({ status }) {
                         defaultValue={""}
                         render={({ field }) => {
                             return (
-                                <InputInplaceComponent
+                                <InputComponent
                                     id={field.name}
                                     idInput={field.name}
                                     value={`${field.value}`}
@@ -322,6 +322,7 @@ export default function usePlanActionPAIData({ status }) {
                                     register={register}
                                     onChange={field.onChange}
                                     errors={errors}
+                                    placeholder="Escribe aquí"
                                 />
                             );
                         }}
