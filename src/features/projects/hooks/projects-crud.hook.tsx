@@ -294,12 +294,12 @@ export function useProjectsCrudData() {
                 updateStatus()
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
-                setDisableContinue(true);
             }
         });
     }
+
+    
     const updateStatus = async () => {
         const data = {
             ...projectData,
@@ -353,10 +353,12 @@ export function useProjectsCrudData() {
             OkTitle: "Aceptar",
             onOk: () => {
                 navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
+                setDisableContinue(false);
                 setMessage({});
             },
             onClose: () => {
                 navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
+                setDisableContinue(false);
                 setMessage({});
             }
         });
