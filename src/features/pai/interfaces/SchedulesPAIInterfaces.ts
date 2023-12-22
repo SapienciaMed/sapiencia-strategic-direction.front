@@ -10,4 +10,5 @@ export interface ISchedulesPAI {
     userCreate?: string;
     dateCreate?: DateTime;
     dateModified?: DateTime;
+    delete?: boolean;
 }

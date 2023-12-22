@@ -5,7 +5,7 @@ import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-
 import TableComponent from "../../../common/components/table.component";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { Controller } from "react-hook-form";
-//import styles from '../../../anticorruption-plan/style/add-activities.module.scss';
+//import styles from "../../anticorruption-plan/estilos/";
 
 function addActivity(): React.JSX.Element {
     useBreadCrumb({

@@ -8,7 +8,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 
 interface IDateProps<T> {
   idInput: string;
-  control: Control<any>;
+  control?: Control<any>;
   dateFormat: string;
   className?: string;
   placeholder?: string;
@@ -24,6 +24,7 @@ interface IDateProps<T> {
   minDate?: Date;
   fieldArray?: boolean;
   optionsRegister?: {};
+  value?: Date;
   shouldUnregister?: boolean;
   view?: "date" | "month" | "year";
   onChange?: (e: any) => void;
@@ -59,6 +60,7 @@ export function DatePickerComponent({
   disabledDays,
   optionsRegister,
   shouldUnregister,
+  value,
   view = "date",
   onChange,
 }: IDateProps<any>): React.JSX.Element {
@@ -72,7 +74,7 @@ export function DatePickerComponent({
     shouldUnregister,
     rules: optionsRegister,
   });
-
+  
   return (
     <div
       className={

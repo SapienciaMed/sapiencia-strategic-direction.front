@@ -1,0 +1,87 @@
+div#pr_id_2_header {
+    font-family: 'RubikMedium' !important;
+    color: #000;
+}
+
+.p-dialog-header {
+    border-bottom: none !important;
+    padding: 0.8rem !important;
+}
+
+.input_component{
+    font-size: 1rem;
+    color: #495057;
+    background: #ffffff;
+    padding: 0.75rem 0.75rem;
+    border: 1px solid #ced4da;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    border-radius: 6px;
+    margin-top: 9px;
+    height: 40px;
+}
+
+.input_component:hover{
+    border: 1px solid #6366f1;
+}
+
+.input_component:focus{
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem #c7d2fe;
+    border-color: #6366f1;
+}
+
+.content_button {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    column-gap: 35px;
+}
+
+button.button_save {
+    width: 100%;
+    height: 2.5em;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #533893;
+    color: #fff;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    min-width: 80px;
+    max-width: 200px;
+    transition: background-color .3s ease;
+}
+
+button.button_cancel {
+    width: 100%;
+    height: 2.5em;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 30px;
+    cursor: pointer;
+    min-width: 80px;
+    max-width: 200px;
+    transition: background-color .3s ease;
+}
+
+button.button_cancel:hover {
+    background-color: #533893;
+    color: #fff;
+    border: none;
+}
+
+label.label_modal {
+    font-family: "RubikMedium",sans-serif !important;
+    font-size: 1.25rem;
+    color: #000;
+    font-weight: 700;
+}

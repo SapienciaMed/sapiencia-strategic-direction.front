@@ -4,7 +4,26 @@ import { ButtonComponent, DatePickerComponent, FormComponent, SelectComponent } 
 import TableComponent from "../../../common/components/table.component";
 
 function SchedulesPAIPage(): React.JSX.Element {
-    const { errors, resetForm, control, onSubmitCreate, tableColumns, tableActions, rolData, statusData, bimesterData, tableData, createPermission, editSchedule, onSubmitEdit, getValues, setValue, cancelAction, saveAction } = useSchedulesPAIData();
+    const {
+        errors,
+        resetForm,
+        control,
+        onSubmitCreate,
+        tableColumns,
+        tableActions,
+        rolData,
+        statusData,
+        bimesterData,
+        tableData,
+        createPermission,
+        editSchedule,
+        onSubmitEdit,
+        getValues,
+        setValue,
+        cancelAction,
+        saveAction,
+        disableSave
+    } = useSchedulesPAIData();
     return (
         <div className='crud-page full-height'>
             <div className='main-page full-height'>
@@ -89,12 +108,12 @@ function SchedulesPAIPage(): React.JSX.Element {
                         <TableComponent
                             columns={tableColumns}
                             actions={tableActions}
-                            data={tableData}
+                            data={tableData.filter(data => !data.delete)}
                             isShowModal={false}
                             hideActions={!createPermission}
                         />
                     </div>}
-                    <div className="projects-footer-mobile mobile" style={{marginTop: "2rem"}}>
+                    <div className="projects-footer-mobile mobile" style={{ marginTop: "2rem" }}>
                         <div className="mobile-actions">
                             <span className="bold text-center button" onClick={cancelAction}>
                                 Cancelar
@@ -104,6 +123,7 @@ function SchedulesPAIPage(): React.JSX.Element {
                                 className="button-main huge hover-three"
                                 type="button"
                                 action={saveAction}
+                                disabled={disableSave}
                             />
                         </div>
                     </div>
@@ -120,6 +140,7 @@ function SchedulesPAIPage(): React.JSX.Element {
                         value={"Guardar"}
                         type="button"
                         action={saveAction}
+                        disabled={disableSave}
                     />
                 </div>
             </div>

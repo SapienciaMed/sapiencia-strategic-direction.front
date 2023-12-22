@@ -6,7 +6,7 @@ export function useApplicationsData() {
     [
       {
         id: 1,
-        name: "Módulo de proyectos",
+        name: "Módulo de Dirección Estratégica",
         order: 10,
         url: ""
       },
