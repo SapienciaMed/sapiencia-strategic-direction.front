@@ -295,7 +295,6 @@ export function useProjectsCrudData() {
                 setTextContinue(null);
                 setActionCancel(null);
                 setMessage({});
-                setDisableContinue(false);
             }
         });
     }
@@ -354,10 +353,12 @@ export function useProjectsCrudData() {
             OkTitle: "Aceptar",
             onOk: () => {
                 navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
+                setDisableContinue(false);
                 setMessage({});
             },
             onClose: () => {
                 navigate(`/direccion-estrategica/proyectos/edit/${res?.data?.id}`)
+                setDisableContinue(false);
                 setMessage({});
             }
         });
