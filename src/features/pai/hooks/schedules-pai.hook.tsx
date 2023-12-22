@@ -4,7 +4,7 @@ import { ISchedulesPAI } from "../interfaces/SchedulesPAIInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { schedulePAIValidator } from "../../../common/schemas";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
-import { useContext, useEffect, useState } from "react";
+import { BaseSyntheticEvent, useContext, useEffect, useState } from "react";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -27,7 +27,7 @@ export default function useSchedulesPAIData() {
         url: "/direccion-estrategica/pai/cronogramas",
     });
 
-    const [disableSave, setDisableSave] = useState<boolean>(false);
+    const [hiddenAdd, setHiddenAdd] = useState<boolean>(false);
     const [rolData, setRolData] = useState<IDropdownProps[]>([]);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [tableData, setTableData] = useState<ISchedulesTablePAI[]>([]);
@@ -38,17 +38,18 @@ export default function useSchedulesPAIData() {
     const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
     const { authorization, setMessage } = useContext(AppContext);
 
-    const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_PLAN");
+    const createPermission = authorization?.allowedActions?.find(action => action === "CREAR_CRONOGRAMAPAI");
     const navigate = useNavigate();
     const resolver = useYupValidationResolver(schedulePAIValidator);
     const {
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
         reset,
         control,
         setValue,
         getValues,
-        clearErrors
+        clearErrors,
+        trigger
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
@@ -82,7 +83,7 @@ export default function useSchedulesPAIData() {
             editData[indice].startDate = data.startDate;
             setTableData(editData);
             setEditSchedule(null);
-            setDisableSave(false);
+            setHiddenAdd(false);
             setTimeout(() => {
                 reset();
             }, 100);
@@ -92,7 +93,7 @@ export default function useSchedulesPAIData() {
     const resetForm = () => {
         reset();
         setEditSchedule(null);
-        setDisableSave(false);
+        setHiddenAdd(false);
     }
 
     const tableColumns: ITableElement<ISchedulesTablePAI>[] = [
@@ -162,8 +163,9 @@ export default function useSchedulesPAIData() {
                 setValue("idRol", row.idRol);
                 setValue("idStatus", row.idStatus);
                 setValue("startDate", row.startDate);
+                trigger();
                 setEditSchedule(row.consecutive);
-                setDisableSave(true);
+                setHiddenAdd(true);
             }
         },
         {
@@ -362,6 +364,7 @@ export default function useSchedulesPAIData() {
         setValue,
         cancelAction,
         saveAction,
-        disableSave
+        isValid,
+        hiddenAdd,
     };
 }

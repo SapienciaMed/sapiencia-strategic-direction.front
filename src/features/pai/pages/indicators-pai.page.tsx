@@ -302,7 +302,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
 
                         <div className='card-table'>
                             <div className="title-area">
-                                <label className="text-black extra-large bold text-required">
+                                <label className="text-black extra-large bold">
                                     Corresponsable
                                 </label>
 
@@ -319,24 +319,16 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                             control={controlIndicatorsPai}
                                             name={`coresponsibles.${index}.coresponsible`}
                                             defaultValue=""
-                                            rules={{
-                                                required: {
-                                                    value: true,
-                                                    message: "El campo es obligatorio"
-                                                }
-                                            }}
                                             render={({ field }) => {
-                                                const isEmpty = !field.value;
                                                 const isOverLimit = field.value?.length > 100;
-                                                const isFieldDirty = getFieldState(`coresponsibles.${index}.coresponsible`);
                                                 return (
                                                     <TextAreaComponent
                                                         id={field.name}
                                                         idInput={field.name}
                                                         value={`${field.value}`}
                                                         label={`Corresponsable No. ${index + 1}`}
-                                                        className={`text-area-basic  ${isEmpty && isFieldDirty.isDirty ? "undefined error" : ""} ${isOverLimit ? "undefined error" : ""} `}
-                                                        classNameLabel="text-black biggest bold text-required"
+                                                        className={`text-area-basic ${isOverLimit ? "undefined error" : ""} `}
+                                                        classNameLabel="text-black biggest bold"
                                                         rows={4}
                                                         placeholder="Escribe aquí"
                                                         register={register}
@@ -344,11 +336,6 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                                         errors={errors}
                                                         characters={100}
                                                     >
-                                                        {isEmpty && isFieldDirty.isDirty && (
-                                                            <p className="error-message bold not-margin-padding">
-                                                                El campo es obligatorio
-                                                            </p>
-                                                        )}
                                                         {isOverLimit && (
                                                             <p className="error-message bold not-margin-padding">
                                                                 Solo se permiten 100 caracteres
