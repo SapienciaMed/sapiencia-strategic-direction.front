@@ -16,6 +16,7 @@ const fileIcon = {
   pdf: pdfIcon,
   xls: xlsIcon,
   xlsx: xlsxIcon,
+  xlsm: xlsIcon,
   docx: docxIcon,
   doc: docxIcon
 }
