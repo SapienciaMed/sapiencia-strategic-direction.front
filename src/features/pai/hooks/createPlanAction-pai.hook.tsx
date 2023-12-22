@@ -20,6 +20,9 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import IndicatorsPaiPage from "../pages/indicators-pai.page";
 import { useParams } from "react-router-dom";
 import ActionListPaiPage from "../pages/actionList-pai.page";
+import { Tooltip } from "primereact/tooltip";
+import { AiOutlineEye } from "react-icons/ai";
+import { PiTrash } from "react-icons/pi";
 
 
 
@@ -330,15 +333,16 @@ export default function usePlanActionPAIData({ status }) {
 
     const createPlanActionActions: ITableAction<IAddAction>[] = [
         {
-            customIcon: (row) => {
+        customIcon: (row) => {
                 return (
-                    <div
+                    <><Tooltip target=".create-action" /><div
                         className="create-action"
+                        data-pr-tooltip="Agregar Acción"
                         data-pr-position="bottom"
                         style={{ 'color': '#D72FD1' }}
                     >
                         <AiOutlinePlusCircle />
-                    </div>
+                    </div></>
                 )
             },
             onClick: (row) => {
@@ -347,13 +351,33 @@ export default function usePlanActionPAIData({ status }) {
 
         },
         {
-            icon: "Detail",
+            customIcon: (row) => {
+                return (
+                    <><Tooltip target=".detail-action" /><div
+                        className="detail-action"
+                        data-pr-tooltip="Detalle Acción"
+                        data-pr-position="bottom"
+                    >
+                        <AiOutlineEye className="button grid-button button-detail" />
+                    </div></>
+                )
+            },
             onClick: (row) => {
                 setIndicatorsFormComponent(<ActionListPaiPage actionId={row.action-1} control={control} register={register} errors={errors} />);
             }
         },
         {
-            icon: "Delete",
+            customIcon: (row) => {
+                return (
+                    <><Tooltip target=".delete-action" /><div
+                        className="delete-action"
+                        data-pr-tooltip="Eliminar Acción"
+                        data-pr-position="bottom"
+                    >
+                        <PiTrash className="button grid-button button-delete" />
+                    </div></>
+                )
+            },
             onClick: (row) => {
                 setMessage({
                     background: true,
