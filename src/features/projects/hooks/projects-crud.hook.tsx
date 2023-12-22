@@ -294,12 +294,13 @@ export function useProjectsCrudData() {
                 updateStatus()
                 setTextContinue(null);
                 setActionCancel(null);
-                setActionContinue(null);
                 setMessage({});
-                setDisableContinue(true);
+                setDisableContinue(false);
             }
         });
     }
+
+    
     const updateStatus = async () => {
         const data = {
             ...projectData,
