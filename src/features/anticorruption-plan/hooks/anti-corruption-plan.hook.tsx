@@ -88,7 +88,8 @@ export function useAntiCorruptionPlanData() {
                                 data-pr-tooltip="Editar"
                                 data-pr-position="bottom"
                                 style={{ color: '#0CA529' }}
-                                onClick={() => { setVisibleModal(true); setClose(1); openEditDialog(row)}}
+                                //onClick={() => { setVisibleModal(true); setClose(1); openEditDialog(row)}}
+                                data-url={row.id}
                             >
                                 <RiPencilLine />
                             </div>
@@ -108,11 +109,7 @@ export function useAntiCorruptionPlanData() {
                 )
             }
             ,
-            onClick: (row) => {
-                console.log('row onclick', row)
-                setAntiCorruptionPlan(row)
-                setVisibleModal(true)
-            },
+            onClick: (row) => {},
             hideRow: (row) => !(row.status === 1 || row.status === 2 || row.status === 3) || (!validateActionAccess("PROYECTO_EDITAR"))
         },
     ];
