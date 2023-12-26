@@ -4,7 +4,7 @@ import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/Pr
 import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm  } from "react-hook-form";
 import { projectsValidator } from "../../../common/schemas";
 import { useProjectsService } from "../../projects/hooks/projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -50,6 +50,7 @@ export function useAntiCorruptionPlanData() {
         reset,
         control
     } = useForm<any>({ resolver });
+
     const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
         {
             fieldName: "name",
@@ -68,6 +69,12 @@ export function useAntiCorruptionPlanData() {
             }
         },
     ];
+
+    const yearsArray: IDropdownProps[] = [];
+
+    for (let year = 2024; year <= 2100; year++) {
+        yearsArray.push({ name: year.toString(), value: year });
+    }
 
     const closeModal = () => {
         setVisibleModal(false);
@@ -210,7 +217,8 @@ export function useAntiCorruptionPlanData() {
         setFilesUploadData,
         msgs,
         setErrores,
-        validateActionAccess
+        validateActionAccess,
+        yearsArray
     };
 }
 

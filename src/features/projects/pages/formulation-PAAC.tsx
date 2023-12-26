@@ -7,7 +7,8 @@ import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-
 const FormulationPAAC = () => {
     const { navigate,
             control, 
-            statusData, 
+            statusData,
+            yearsArray,
             errors } = useAntiCorruptionPlanData();
     const [components, setComponents] = useState([]);
     const [componentCount, setComponentCount] = useState(1);
@@ -80,7 +81,7 @@ const FormulationPAAC = () => {
                     className={`select-basic span-width`}
                     label="Año"
                     classNameLabel="text-black biggest bold"
-                    data={statusData}
+                    data={yearsArray}
                     errors={errors}
                     filter={true}
                 />
