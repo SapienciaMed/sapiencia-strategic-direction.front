@@ -103,7 +103,7 @@ const FormulationPAAC = () => {
     const onSave = () => {
         store(components).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                console.log('response.data', response.data)
+                // console.log('response.data', response.data)
             } else {
                 console.log(response.operation.message);
             }
@@ -111,7 +111,7 @@ const FormulationPAAC = () => {
 
         deleteAllByIds(deletedComponents).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                console.log('response.data', response.data)
+                // console.log('response.data', response.data)
             } else {
                 console.log(response.operation.message);
             }
