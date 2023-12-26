@@ -378,7 +378,6 @@ export function ProblemDescriptionComponent({ disableNext, enableNext }: IProps)
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                                characters={800}
                             >
                             </TextAreaComponent>
                         );

@@ -52,7 +52,7 @@ export const registerValidator = yup.object({
 });
 
 export const problemDescriptionValidator = yup.object({
-    problemDescription: yup.string().required("El campo es obligatorio").max(800, "Solo se permiten 800 caracteres"),
+    problemDescription: yup.string().required("El campo es obligatorio"),
     magnitude: yup.string().required("El campo es obligatorio").max(500, "Solo se permiten 500 caracteres"),
     centerProblem: yup.string().required("El campo es obligatorio").max(300, "Solo se permiten 300 caracteres"),
 });
@@ -121,7 +121,6 @@ export const planDevelopmentValidator = yup.object({
 export const capacityValidator = yup.object({
     descriptionCapacity: yup
         .string()
-        .max(600, "Solo se permiten 600 caracteres")
         .required("El campo es obligatorio"),
     unitCapacity: yup
         .string()
@@ -174,15 +173,13 @@ export const actorsFormValidator = yup.object({
         .max(100, "Solo se permiten 100 caracteres"),
     expectation: yup
         .string()
-        .required("El campo es obligatorio")
-        .max(300, "Solo se permiten 300 caracteres"),
+        .required("El campo es obligatorio"),
     position: yup
         .string()
         .required("Debe seleccionar una opción"),
     contribution: yup
         .string()
-        .required("El campo es obligatorio")
-        .max(300, "Solo se permiten 300 caracteres"),
+        .required("El campo es obligatorio"),
 });
 
 export const actorsValidator = yup.object({
@@ -253,8 +250,7 @@ export const technicalAnalysisValidator = yup.object({
         .required("El campo es obligatorio")
         .max(300, "Solo se permiten 300 caracteres"),
     resumeAlternative: yup.string()
-        .required("El campo es obligatorio")
-        .max(5000, "Solo se permiten 5000 caracteres"),
+        .required("El campo es obligatorio"),
 });
 
 
