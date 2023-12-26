@@ -13,6 +13,7 @@ import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
 import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
+import FormulationPAAC from "./features/projects/pages/formulation-PAAC";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -161,6 +162,11 @@ function App() {
                     allowedAction={"CONSULTAR_PLAN"}
                   />
                 }
+              />
+
+              <Route
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
+                element={<FormulationPAAC />}
               />
 
               <Route
