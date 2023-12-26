@@ -539,7 +539,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 yearOfOffBudget = Number(i.replace("year", ""));
             }
         }
-        const totalCost = activity.detailActivities.reduce((sum, i) => sum + Number(i.unitCost * i.amount), 0)
+        const totalCost = activity.detailActivities?.reduce((sum, i) => sum + Number(i.unitCost * i.amount), 0)
         if (totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget) {
             validationResult = true;
             validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
@@ -629,6 +629,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                     label="0"
                                     className="input-basic"
                                     typeInput={"number"}
+                                    placeholder="Escribe aquí"
                                     register={register}
                                     onChange={field.onChange}
                                     errors={errors}
@@ -653,6 +654,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         mode="currency"
                         currency="COP"
                         locale="es-CO"
+                        placeholder="Escribe aquí"
                         minFractionDigits={2}
                     />
                 )
@@ -917,6 +919,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className={`input-basic ${view && "background-textArea"}`}
                                             classNameLabel={`text-black biggest bold ${validityRequired && "text-required"}`}
                                             typeInput={"number"}
+                                            placeholder="Escribe aquí"
                                             register={register}
                                             onChange={field.onChange}
                                             errors={errors}

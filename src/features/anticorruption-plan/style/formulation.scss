@@ -1,0 +1,97 @@
+.mt-15 {
+    margin-top: 15px;
+}
+
+.select_PAAC{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+}
+
+.text-buttom-circle{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+    gap: 8px;
+    font: normal normal 600 1rem/120% "RubikMedium",sans-serif;
+    color: var(--highlight-bg);
+    margin-top: 23px;
+    text-align: end;
+}
+
+.input-PAA{
+    font-size: 1rem;
+    color: #495057;
+    background: #ffffff;
+    padding: 0.75rem 0.75rem;
+    border: 1px solid #ced4da;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    border-radius: 6px;
+    height: 40px;
+}
+
+.input-PAA:hover{
+    border: 1px solid #6366f1;
+}
+
+.input-PAA:focus{
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem #c7d2fe;
+    border-color: #6366f1;
+}
+
+.p-datatable-thead-PAA{
+    max-width: 260.667px;
+    min-height: 260.667px;
+    width: 260.667px;
+    text-align: center;
+    padding: 0.8rem 0.8rem;
+    border: 1px solid #e9ecef;
+    border-width: 0 0 0 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+    background: #ffffff;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.p-datatable-PAA{
+    max-width: 267.5px;
+    min-height: 267.5px;
+    width: 267.5px;
+    background: #f8f8f8;
+    color: #495057;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    border-width: 0 0 1px 0;
+    padding: 0.5rem 0.5rem;
+}
+
+.icon-content{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-top: 9px;
+}
+
+.container-button-bot .buttons-bot {
+    width: 27rem !important;
+}
+
+.table-PAA{
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+    border: 0px;
+    border-radius: 0px;
+    background: rgba(0,0,0,0);
+}

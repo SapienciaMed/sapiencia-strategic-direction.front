@@ -140,7 +140,6 @@ export function TechnicalAnalysisComponent({
                     register={register}
                     onChange={field.onChange}
                     errors={errors}
-                    characters={5000}
                     disabled={isADisabledInput}
                   >
                   </TextAreaComponent>

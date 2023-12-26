@@ -165,7 +165,7 @@ function App() {
               />
 
               <Route
-                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/:id"}
                 element={<FormulationPAAC />}
               />
 
