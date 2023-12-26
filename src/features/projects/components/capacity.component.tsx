@@ -117,7 +117,6 @@ export function CapacityComponent({ disableNext, enableNext }: IProps): React.JS
                   register={register}
                   onChange={field.onChange}
                   errors={errors}
-                  characters={600}
                 >
                 </TextAreaComponent>
               );
