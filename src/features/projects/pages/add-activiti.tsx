@@ -5,14 +5,9 @@ import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-
 import TableComponent from "../../../common/components/table.component";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { Controller } from "react-hook-form";
-//import styles from "../../anticorruption-plan/estilos/";
+import "../../anticorruption-plan/style/add-activities.scss";
 
-function addActivity(): React.JSX.Element {
-    useBreadCrumb({
-        isPrimaryPage: true,
-        name: "Consultar Plan Anticorrupción y Atención al Ciudadano (PAAC)",
-        url: "/direccion-estrategica/Consultar/",
-    });
+function AddActivity(): React.JSX.Element {
     const { navigate, 
             tableComponentRef, 
             tableColumns, 
@@ -43,7 +38,7 @@ function addActivity(): React.JSX.Element {
 									id="referencia"
 									idInput="referencia"
 									label="Descripción de activida"
-									className=""
+									className="input-textarea"
 									classNameLabel="text--black text-required"
 									register={register}
 									errors={errors}
@@ -54,7 +49,7 @@ function addActivity(): React.JSX.Element {
 							}/>
 						
 						<span
-							className=""
+							className="alert-textarea"
 						>
 							Max 1000 caracteres
 						</span>
@@ -65,18 +60,13 @@ function addActivity(): React.JSX.Element {
                                     Indicadores de producto <span>*</span>
                                     
                                 </label>
-                                { validateActionAccess("PROYECTO_CREAR") && 
-                                    <div className="title-button text-three large" onClick={() => { navigate('./crear-proyecto') }}>
-                                        <span style={{ marginRight: '0.5em' }} >Agregar Indicador</span>
-                                        {<AiOutlinePlusCircle size={20} color="533893" />}
-                                    </div>
-                                }
+                               
                             </div>
                                 <TextAreaComponent
                                         id="referencia"
                                         idInput="referencia"
                                         label="Descripción de indicador"
-                                        className=""
+                                        className="input-textarea"
                                         classNameLabel="text--black text-required"
                                         register={register}
                                         errors={errors}
@@ -87,20 +77,20 @@ function addActivity(): React.JSX.Element {
                                 }/>
                             
                             <span
-                                className=""
+                                className="alert-textarea"
                             >
-                                Max 1000 caracteres
+                                Max 500 caracteres
                             </span>
 
                             <div className="select-sections" style={{display: 'flex',
-                            justifyContent: 'flex-start', columnGap: '50px'}}>
+                            justifyContent: 'flex-start', columnGap: '50px', flexWrap: 'wrap'}}>
                                 <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
                                 <SelectComponent
                                     control={control}
                                     idInput={"status"}
-                                    className={`select-basic span-width`}
+                                    className={`select-basic span-width `}
                                     label="Meta Cuatrimestre 1"
-                                    classNameLabel="text-black biggest bold"
+                                    classNameLabel="text-black biggest bold color-1"
                                     data={statusData}
                                     errors={errors}
                                     filter={true}
@@ -112,7 +102,55 @@ function addActivity(): React.JSX.Element {
                                     idInput={"status"}
                                     className={`select-basic span-width`}
                                     label="Unidad de medida"
-                                    classNameLabel="text-black biggest bold"
+                                    classNameLabel="text-black biggest bold color-1"
+                                    data={statusData}
+                                    errors={errors}
+                                    filter={true}
+                                />
+                                </div>
+                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <SelectComponent
+                                    control={control}
+                                    idInput={"status"}
+                                    className={`select-basic span-width`}
+                                    label="Meta Cuatrimestre 2"
+                                    classNameLabel="text-black biggest bold color-2"
+                                    data={statusData}
+                                    errors={errors}
+                                    filter={true}
+                                />
+                                </div>
+                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <SelectComponent
+                                    control={control}
+                                    idInput={"status"}
+                                    className={`select-basic span-width`}
+                                    label="Unidad de medida"
+                                    classNameLabel="text-black biggest bold color-2"
+                                    data={statusData}
+                                    errors={errors}
+                                    filter={true}
+                                />
+                                </div>
+                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <SelectComponent
+                                    control={control}
+                                    idInput={"status"}
+                                    className={`select-basic span-width`}
+                                    label="Meta Cuatrimestre 3"
+                                    classNameLabel="text-black biggest bold color-3"
+                                    data={statusData}
+                                    errors={errors}
+                                    filter={true}
+                                />
+                                </div>
+                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <SelectComponent
+                                    control={control}
+                                    idInput={"status"}
+                                    className={`select-basic span-width`}
+                                    label="Unidad de medida"
+                                    classNameLabel="text-black biggest bold color-3"
                                     data={statusData}
                                     errors={errors}
                                     filter={true}
@@ -155,4 +193,4 @@ function addActivity(): React.JSX.Element {
     )
 }
 
-export default React.memo(addActivity);
+export default React.memo(AddActivity);

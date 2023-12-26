@@ -14,6 +14,7 @@ import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
 import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
 import FormulationPAAC from "./features/projects/pages/formulation-PAAC";
+import AddActivity from "./features/projects/pages/add-activiti";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -167,6 +168,11 @@ function App() {
               <Route
                 path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
                 element={<FormulationPAAC />}
+              />
+
+              <Route
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/agregar-actividad"}
+                element={<AddActivity />}
               />
 
               <Route
