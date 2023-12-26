@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/ProjectsInterfaces";
 import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
@@ -73,7 +73,10 @@ export function useAntiCorruptionPlanData() {
         setVisibleModal(false);
         console.log("ejecutando")
     };
-    console.log("visiblemodal", visiblemodal);
+
+    const handleClick = () => {
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan');
+    };
     
 
     const tableActions: ITableAction<IAntiCorruptionPlan>[] = [
@@ -88,10 +91,11 @@ export function useAntiCorruptionPlanData() {
                                 data-pr-tooltip="Editar"
                                 data-pr-position="bottom"
                                 style={{ color: '#0CA529' }}
-                                //onClick={() => { setVisibleModal(true); setClose(1); openEditDialog(row)}}
+                                onClick={ handleClick}
                                 data-url={row.id}
                             >
                                 <RiPencilLine />
+
                             </div>
                             <EditModal
                                 control={control}

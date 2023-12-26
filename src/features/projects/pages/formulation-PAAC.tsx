@@ -5,7 +5,7 @@ import { InputNumberComponent } from "../../../common/components/Form/input-numb
 import { Controller } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "../components/table-expansible.component";
-//import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-expansible-table.component";
+import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-expansible.component";
 import { Tooltip } from "primereact/tooltip";
 import usePlanActionPAIData from "../../pai/hooks/createPlanAction-pai.hook";
 import { typePAIData } from "../../pai/data/dropdowns-revision-pai";
@@ -14,7 +14,8 @@ export interface IPropsPAI {
     status: "new" | "edit";
 }
 
-function FormulationPAAC({ status }: Readonly<IPropsPAI>): React.JSX.Element {
+function FormulationPAAC(): React.JSX.Element {
+    //{ status }: Readonly<IPropsPAI>
     const { errors,
         getFieldState,
         fields,
@@ -38,7 +39,7 @@ function FormulationPAAC({ status }: Readonly<IPropsPAI>): React.JSX.Element {
         <div>
             <div className='card-table'>
                 <div className="title-area">
-                    <div className="text-black extra-large bold">{formAction === "new" ? "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)" : "Editar Plan de Acción Institucional (PAI)"}</div>
+                    <div className="text-black extra-large bold">{formAction === "new" ? "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)" : "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)"}</div>
                 </div>
                 {<FormComponent action={undefined}>
 
@@ -109,7 +110,7 @@ function FormulationPAAC({ status }: Readonly<IPropsPAI>): React.JSX.Element {
                             </div>
                         </FormComponent>
                                     
-                        {<TableExpansibleComponent
+                        {<AntiCorruptionExpansibleTable
                             actions={createPlanActionActions}
                             columns={createPlanActionColumns}
                             data={getValues("actionsPAi") || []} />}
