@@ -33,6 +33,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { IGenericList } from "../../../common/interfaces/global.interface";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { AppContext } from "../../../common/contexts/app.context";
+import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
 
 interface IProps {
   disableNext: () => void;
@@ -231,25 +232,22 @@ export function PoblationComponent({
         <div className="poblation-container">
           <div>
             <Controller
-              control={control}
-              name={"objectivePeople"}
-              defaultValue={null}
-              render={({ field }) => {
-                return (
-                  <InputComponent
-                    id={field.name}
-                    idInput={field.name}
-                    value={`${field.value}`}
-                    label="Número de personas objetivo"
-                    className="input-basic"
-                    classNameLabel="text-black biggest bold text-required"
-                    typeInput={"number"}
-                    register={register}
-                    onChange={field.onChange}
-                    errors={errors} />
-                );
-              }}
-            />
+                control={control}
+                name={"objectivePeople"}
+                defaultValue={0}
+                render={({ field }) => {
+                    return (
+                        <InputNumberComponent
+                            idInput={field.name}
+                            control={control}
+                            label="Número de personas objetivo"
+                            errors={errors}
+                            classNameLabel="text-black biggest bold text-required "
+                            className="inputNumber-basic background-textArea"
+                            minFractionDigits={0} />
+                    );
+                }} />
+
           </div>
           <div>
             <Controller

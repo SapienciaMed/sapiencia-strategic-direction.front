@@ -399,6 +399,7 @@ function NeedObjectivesComponent({ returnData, setForm, item }: IPropsNeedsObjec
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
+                                min={0}
                             />
                         );
                     }}
