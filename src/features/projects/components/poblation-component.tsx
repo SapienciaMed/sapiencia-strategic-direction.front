@@ -244,6 +244,7 @@ export function PoblationComponent({
                             errors={errors}
                             classNameLabel="text-black biggest bold text-required "
                             className="inputNumber-basic background-textArea"
+                            placeholder="Escribe aquí"
                             minFractionDigits={0} />
                     );
                 }} />
