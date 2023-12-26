@@ -1,125 +1,121 @@
-import React from "react";
-
-import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { Controller } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import TableExpansibleComponent from "../components/table-expansible.component";
+import React, { useContext, useEffect, useState } from "react";
 import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-expansible.component";
-import { Tooltip } from "primereact/tooltip";
-import usePlanActionPAIData from "../../pai/hooks/createPlanAction-pai.hook";
-import { typePAIData } from "../../pai/data/dropdowns-revision-pai";
+import { AppContext } from "../../../common/contexts/app.context";
+import { SelectComponent } from "../../../common/components/Form";
+import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-corruption-plan.hook";
 
-export interface IPropsPAI {
-    status: "new" | "edit";
-}
+const FormulationPAAC = () => {
+    const { navigate,
+            control, 
+            statusData, 
+            errors } = useAntiCorruptionPlanData();
+    const [components, setComponents] = useState([]);
+    const [componentCount, setComponentCount] = useState(1);
+    const [deleteConfirmation, setDeleteConfirmation] = useState({});
+    const { setMessage } = useContext(AppContext);
 
-function FormulationPAAC(): React.JSX.Element {
-    //{ status }: Readonly<IPropsPAI>
-    const { errors,
-        getFieldState,
-        fields,
-        riskText,
-        view,
-        namePAIData,
-        riskPAIData,
-        riskFields,
-        appendRisk,
-        append,
-        yearsArray,
-        formAction,
-        control,
-        register,
-        getValues,
-        createPlanActionActions,
-        createPlanActionColumns,
-        onSubmitCreate
-    } = usePlanActionPAIData({ status });
+    const handleAddComponent = () => {
+        const newComponent = {
+            id: componentCount,
+            index: componentCount,
+        };
+
+        setComponents((prevComponents) => [...prevComponents, newComponent]);
+        setComponentCount((prevCount) => prevCount + 1);
+    };
+
+    const handleDeleteComponent = (idToDelete) => {
+        setMessage({
+            background: true,
+            cancelTitle: "Cancelar",
+            description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            },
+            show: true,
+            title: "¿Eliminar acción?",
+            onOk: () => {
+                setMessage({
+                    title: "Acción del PAI",
+                    description: "¡Eliminada exitosamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Aceptar",
+                    onClose: () => {
+                        setMessage({});
+                    },
+                });
+    
+                deleteRow(idToDelete); // Llamada para eliminar el componente
+            },
+        });
+    };
+    
+
+    const deleteRow = (idToDelete) => {
+        setComponents((prevComponents) =>
+            prevComponents.filter(
+                (component) => component.id !== idToDelete
+            )
+        );
+    };
+
+    useEffect(() => {
+        if (components.length === 0) {
+            setComponentCount(1);
+        }
+    }, [components]);
+
     return (
         <div>
-            <div className='card-table'>
-                <div className="title-area">
-                    <div className="text-black extra-large bold">{formAction === "new" ? "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)" : "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)"}</div>
-                </div>
-                {<FormComponent action={undefined}>
-
-                    <div className="card-table" style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
-                        <div className="create-pai-risks">
-                            <SelectComponent
-                                control={control}
-                                idInput={"selectedRisk"}
-                                className={`select-basic span-width`}
-                                label="Año"
-                                classNameLabel="text-black biggest bold text-required"
-                                data={riskPAIData}
-                                errors={errors}
-                                filter={true} />
-
-                        </div>
-                        {riskFields.map((fields, index) => {
-                            const lineNumber = index + 1;
-                            return (
-                                <div key={fields.id} style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
-                                    <Controller
-                                        control={control}
-                                        name={`risksPAI.${index}.risk`}
-                                        defaultValue=""
-                                        render={({ field }) => {
-                                            return (
-                                                <TextAreaComponent
-                                                    id={field.name}
-                                                    idInput={field.name}
-                                                    label={`Riesgo No. ${lineNumber}`}
-                                                    classNameLabel="text-black biggest bold"
-                                                    value={`${field.value}`}
-                                                    className="text-area-basic"
-                                                    placeholder="Escribe aquí"
-                                                    register={register}
-                                                    fieldArray={true}
-                                                    onChange={field.onChange}
-                                                    errors={errors}
-
-                                                >
-
-                                                </TextAreaComponent>
-                                            );
-                                        }} />
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    <div className="card-table">
-                        <FormComponent action={undefined} className="problem-description-container">
-
-                            <div className="title-area">
-                                <label className="text-black biggest bold text-required">
-                                Componentes
-                                </label>
-
-                                <div className="actions-pai">
-
-                                    {/* <div className="title-button text-main large" onClick={() => {
-                                                }}>
-                                                    Consolidado de acciones PAI <AiOutlinePlusCircle />
-                                                </div> */}
-                                    <div className="title-button text-main large" onClick={onSubmitCreate}>
-                                        Agregar componente <AiOutlinePlusCircle />
-                                    </div>
-                                </div>
-                            </div>
-                        </FormComponent>
-                                    
-                        {<AntiCorruptionExpansibleTable
-                            actions={createPlanActionActions}
-                            columns={createPlanActionColumns}
-                            data={getValues("actionsPAi") || []} />}
-                    </div>
-
-                </FormComponent>}
-            </div>
+            <h2>Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)</h2>
+            <section>
+                <SelectComponent
+                    control={control}
+                    idInput={"status"}
+                    className={`select-basic span-width`}
+                    label="Año"
+                    classNameLabel="text-black biggest bold"
+                    data={statusData}
+                    errors={errors}
+                    filter={true}
+                />
+            </section>
+            <section>
+                <h3>Componentes</h3>
+                <button onClick={handleAddComponent}>
+                    Agregar componente
+                </button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No. Componente</th>
+                            <th>Descripción de componente</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {components.map((component) => (
+                            <AntiCorruptionExpansibleTable
+                                key={component.id}
+                                index={component.index}
+                                onDelete={() => handleDeleteComponent(component.id)}
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            </section>
         </div>
-    )
-}
+    );
+};
 
-export default React.memo(FormulationPAAC);
+export default FormulationPAAC;
+
+
+
+
+
