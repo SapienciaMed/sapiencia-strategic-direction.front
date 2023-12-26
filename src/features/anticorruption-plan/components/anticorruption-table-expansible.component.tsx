@@ -14,7 +14,7 @@ interface IAntiCorruptionExpansibleTableProps {
 const AntiCorruptionExpansibleTable = ({ index, description, onDelete }: IAntiCorruptionExpansibleTableProps) => {
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan');
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/agregar-actividad');
     };
 
     return (
