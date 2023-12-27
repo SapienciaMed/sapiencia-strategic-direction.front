@@ -4,7 +4,7 @@ import { ISchedulesPAI } from "../interfaces/SchedulesPAIInterfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { schedulePAIValidator } from "../../../common/schemas";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
-import { BaseSyntheticEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
 import useRoleService from "../../../common/hooks/role-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -34,7 +34,7 @@ export default function useSchedulesPAIData() {
     const [constTableData, setConstTableData] = useState<ISchedulesTablePAI[]>([]);
     const [editSchedule, setEditSchedule] = useState<number>(null);
 
-    const { getOptions } = useRoleService();
+    const { getRolesByAplication } = useRoleService();
     const { getScheduleStatuses, getSchedules, crudSchedules } = useSchedulesService();
     const { authorization, setMessage } = useContext(AppContext);
 
@@ -53,10 +53,10 @@ export default function useSchedulesPAIData() {
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
-        const existing = tableData.find(item => item.bimester === data.bimester && item.startDate === data.startDate && item.endDate === data.endDate && item.idRol === data.idRol && item.idStatus === data.idStatus);
+        const existing = tableData.some(item => item.idStatus === data.idStatus);
         if (existing) return setMessage({
             title: "Cronograma del plan de acción institucional",
-            description: "¡Este registro ya existe!",
+            description: "¡Ya existe un registro con el estado seleccionado!",
             show: true,
             OkTitle: "Aceptar",
             onCancel: () => {
@@ -312,15 +312,14 @@ export default function useSchedulesPAIData() {
     }
 
     useEffect(() => {
-        getOptions(Number(process.env.aplicationId)).then(response => {
+        getRolesByAplication(Number(process.env.aplicationId)).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
-                const paiActions = response.data.find(item => item.id === 1028).actions; // 1028 es el id para Planes de acción institucional en la tabla de OPC_OPCIONES
-                setRolData(paiActions ? paiActions.map(item => {
+                setRolData(response.data.map(item => {
                     return {
                         name: item.name,
                         value: item.id
-                    }
-                }) : [])
+                    };
+                }))
             }
         }).catch(err => console.log(err));
         getScheduleStatuses().then(response => {
