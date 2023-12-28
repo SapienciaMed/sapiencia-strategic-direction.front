@@ -126,7 +126,7 @@ export function useProjectsData() {
                         <Tooltip target=".review-tooltip" />
                         <div
                             className="review-tooltip"
-                            data-pr-tooltip="Revisar Formulación"
+                            data-pr-tooltip="Corregir plan"
                             data-pr-position="bottom"
                         >
                             <IoSearch />

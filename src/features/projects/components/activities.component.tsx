@@ -622,18 +622,18 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         defaultValue={0}
                         render={({ field }) => {
                             return (
-                                <InputInplaceComponent
+                                <InputComponent
                                     id={field.name}
                                     idInput={field.name}
                                     value={`${field.value}`}
-                                    label="0"
                                     className="input-basic"
                                     typeInput={"number"}
-                                    placeholder="Escribe aquí"
                                     register={register}
                                     onChange={field.onChange}
                                     errors={errors}
+                                    placeholder="Escribe aquí"
                                 />
+                             
                             );
                         }}
                     />
@@ -645,10 +645,9 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             header: "Presupuesto",
             renderCell: (row) => {
                 return (
-                    <InputNumberInplaceComponent
+                    <InputNumberComponent
                         idInput={budgetsYears[row.year]}
                         control={control}
-                        label="$ 0"
                         errors={errors}
                         className="inputNumber-basic"
                         mode="currency"
