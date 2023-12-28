@@ -53,7 +53,7 @@ export default function useSchedulesPAIData() {
     } = useForm<ISchedulesPAI>({ resolver, mode: "all" });
 
     const onSubmitCreate = handleSubmit(async (data: ISchedulesPAI) => {
-        const existing = tableData.some(item => item.idStatus === data.idStatus);
+        const existing = tableData.some(item => item.idStatus === data.idStatus && item.idRol === data.idRol);
         if (existing) return setMessage({
             title: "Cronograma del plan de acción institucional",
             description: "¡Ya existe un registro con el estado seleccionado!",
