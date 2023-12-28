@@ -183,14 +183,14 @@ export function useProjectsData() {
 
 
     function loadTableData(searchCriteria?: object): void {
-        debugger;
+       
         if (tableComponentRef.current) {
             tableComponentRef.current.loadData(searchCriteria);
         }
     }
 
     const onSubmit = handleSubmit(async (data: IActionPlanFilters) => {
-        debugger;
+       
         if (ready) loadTableData(data);
     });
 
