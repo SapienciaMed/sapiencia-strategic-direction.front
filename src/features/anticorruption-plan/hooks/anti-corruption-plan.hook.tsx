@@ -86,7 +86,7 @@ export function useAntiCorruptionPlanData() {
     };
 
     const handleClick = (id: number) => {
-        navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/${id}`);
+        navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/editar/${id}`);
     };
     
 

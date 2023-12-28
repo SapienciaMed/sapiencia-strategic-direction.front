@@ -32,6 +32,10 @@ function ProjectsPage(): React.JSX.Element {
             validateActionAccess } = useAntiCorruptionPlanData();
             const [isEditing, setIsEditing] = useState(false);
 
+            const handleClick = () => {
+                navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/`);
+            };
+
     return (
         <div className='main-page'>
             <div className='card-table'>
@@ -45,7 +49,7 @@ function ProjectsPage(): React.JSX.Element {
                             Consultar plan
                             </label>
                             { validateActionAccess("PROYECTO_CREAR") && 
-                                <div className="title-button text-three large" onClick={() => { navigate('./crear-proyecto') }}>
+                                <div className="title-button text-three large" onClick={handleClick}>
                                     <span style={{ marginRight: '0.5em' }} >Formular plan anticorrupción y atención al ciudadano</span>
                                     {<AiOutlinePlusCircle size={20} color="533893" />}
                                 </div>

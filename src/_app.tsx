@@ -13,7 +13,8 @@ import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
 import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai.context";
 import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
-import FormulationPAAC from "./features/projects/pages/formulation-PAAC";
+import FormulationPAAC from "./features/projects/pages/formulation-PAAC-edition";
+import FormulationPAACEdition from "./features/projects/pages/formulation-PAAC-edition";
 import AddActivity from "./features/projects/pages/add-activiti";
 
 function App() {
@@ -166,7 +167,12 @@ function App() {
               />
 
               <Route
-                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/:id"}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/editar/:id"}
+                element={<FormulationPAACEdition />}
+              />
+
+              <Route
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/"}
                 element={<FormulationPAAC />}
               />
 

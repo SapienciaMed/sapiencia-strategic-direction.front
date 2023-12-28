@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import AntiCorruptionGeneralExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-general-expansible.component";
+import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-expansible.component";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { AppContext } from "../../../common/contexts/app.context";
 import { ButtonComponent, SelectComponent } from "../../../common/components/Form";
@@ -9,7 +9,7 @@ import "../../anticorruption-plan/style/formulation.scss";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
-const FormulationPAAC = () => {
+const FormulationPAACEdition = () => {
     const { navigate,
         control,
         statusData,
@@ -153,7 +153,7 @@ const FormulationPAAC = () => {
                                 </thead>
                                 <tbody>
                                     {components.length > 0 && components.map((component) => (
-                                        <AntiCorruptionGeneralExpansibleTable
+                                        <AntiCorruptionExpansibleTable
                                             key={component.id}
                                             description={component.description}
                                             index={component.index}
@@ -165,6 +165,14 @@ const FormulationPAAC = () => {
                         </div>
                     </section>
                     <div className="container-button-bot space-between">
+                        <div>
+                        <ButtonComponent
+                                className={`button-main huge hover-three button-save`}
+                                value={"Guardar temporalmente"}
+                                type="button"
+                                action={onSave}
+                            />
+                        </div>
                         <div className="buttons-bot">
                             <span className="bold text-center button" onClick={handleClick}>
                                 Cancelar
@@ -186,7 +194,7 @@ const FormulationPAAC = () => {
     );
 };
 
-export default FormulationPAAC;
+export default FormulationPAACEdition;
 
 
 
