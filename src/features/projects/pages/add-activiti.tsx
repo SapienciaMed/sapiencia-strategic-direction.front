@@ -25,6 +25,10 @@ function AddActivity(): React.JSX.Element {
             msgs, 
             setErrores,
             validateActionAccess } = useAntiCorruptionPlanData();
+
+    const handleClick = () => {
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion');
+    };
     return (
         <div className='main-page'>
             <div className="main-page">
@@ -177,6 +181,7 @@ function AddActivity(): React.JSX.Element {
             </div>                     
             <div className="strategic-direction-search-buttons">
                         <span className="bold text-center button" onClick={() => {
+                            handleClick();
                             reset();
                             onSubmit();
                         }}>

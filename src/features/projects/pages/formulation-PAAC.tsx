@@ -103,6 +103,27 @@ const FormulationPAAC = () => {
         });
     };
 
+    const handleCancel = () => {
+        setMessage({
+            background: true,
+            cancelTitle: "Cancelar",
+            description: "¿Estás seguro de cancelar? No se guardarán los datos.",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            },
+            show: true,
+            title: "Cancelar acción",
+            onOk: () => {
+                setMessage({});
+                handleClick();
+            },
+        });
+    };
+
     return (
         <>
             <div className="main-page">
@@ -149,7 +170,7 @@ const FormulationPAAC = () => {
                     <div className="container-button-bot space-between">
                         <div></div>
                         <div className="buttons-bot">
-                            <span className="bold text-center button" onClick={handleClick}>
+                            <span className="bold text-center button" onClick={handleCancel}>
                                 Cancelar
                             </span>
                             <ButtonComponent
