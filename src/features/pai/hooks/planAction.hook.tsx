@@ -121,18 +121,35 @@ export function useProjectsData() {
         {
             
             customIcon: (row) => {
-                return (
-                    <>
-                        <Tooltip target=".review-tooltip" />
-                        <div
-                            className="review-tooltip"
-                            data-pr-tooltip="Corregir plan"
-                            data-pr-position="bottom"
-                        >
-                            <IoSearch />
-                        </div>
-                    </>
-                )
+                if(row.status == 2 || row.status == 4){
+                    return (
+                    
+                        <>
+                            <Tooltip target=".review-tooltip" />
+                            <div
+                                className="review-tooltip"
+                                data-pr-tooltip="Revisar plan"
+                                data-pr-position="bottom"
+                            >
+                                <IoSearch />
+                            </div>
+                        </>
+                    )
+                }else if (row.status === 3){
+                    return (
+                        <>
+                            <Tooltip target=".review-tooltip" />
+                            <div
+                                className="review-tooltip"
+                                data-pr-tooltip="Corregir plan"
+                                data-pr-position="bottom"
+                            >
+                                <IoSearch />
+                            </div>
+                        </>
+                    )
+                }
+              
             },
             onClick: (row) => {
                 const urlRevision = {
