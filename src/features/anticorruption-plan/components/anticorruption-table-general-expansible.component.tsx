@@ -8,29 +8,14 @@ import "../style/formulation.scss";
 interface IAntiCorruptionExpansibleTableProps {
     index: any;
     description: string,
-    onDelete: () => void;
 }
 
-const AntiCorruptionGeneralExpansibleTable = ({ index, description, onDelete }: IAntiCorruptionExpansibleTableProps) => {
+const AntiCorruptionGeneralExpansibleTable = ({ index, description}: IAntiCorruptionExpansibleTableProps) => {
 
     return (
         <tr>
-            <td className="p-datatable-PAA">No. Componente {index}</td>
             <td className="p-datatable-PAA">
                 <input type="text" className="input-PAA" placeholder="Escribe aquí" defaultValue={description} />
-            </td>
-            <td className="p-datatable-PAA">
-                <div className="icon-content">
-                    <><Tooltip target=".delete-action" /><div
-                        className="delete-action"
-                        data-pr-tooltip="Eliminar Acción"
-                        data-pr-position="bottom"
-                        style={{ 'color': '#e53935' }}
-                        onClick={onDelete}
-                    >
-                        <PiTrash className="button grid-button button-delete" />
-                    </div></>
-                </div>
             </td>
         </tr>
     );

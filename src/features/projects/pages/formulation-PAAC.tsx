@@ -24,49 +24,20 @@ const FormulationPAAC = () => {
     const [componentCount, setComponentCount] = useState(1);
     const [deleteConfirmation, setDeleteConfirmation] = useState({});
     const [deletedComponents, setDeletedComponents] = useState<string[]>([])
+    const [hasAddedComponent, setHasAddedComponent] = useState(false);
     const { setMessage } = useContext(AppContext);
 
     const handleAddComponent = () => {
-        const newComponent = {
-            id: componentCount,
-            index: componentCount,
-        };
+        if (!hasAddedComponent) {
+            const newComponent = {
+                id: componentCount,
+                index: componentCount,
+            };
 
-        setComponents((prevComponents) => [...prevComponents, newComponent]);
-        setComponentCount((prevCount) => prevCount + 1);
-    };
-
-    const handleDeleteComponent = (idToDelete) => {
-        setMessage({
-            background: true,
-            cancelTitle: "Cancelar",
-            description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
-            OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
-            show: true,
-            title: "¿Eliminar acción?",
-            onOk: () => {
-                setMessage({
-                    title: "Acción del PAI",
-                    description: "¡Eliminada exitosamente!",
-                    show: true,
-                    background: true,
-                    OkTitle: "Aceptar",
-                    onClose: () => {
-                        setMessage({});
-                    },
-                });
-
-                deletedComponents.push(idToDelete)
-                setDeletedComponents(deletedComponents);
-                deleteRow(idToDelete);
-            },
-        });
+            setComponents((prevComponents) => [...prevComponents, newComponent]);
+            setComponentCount((prevCount) => prevCount + 1);
+            setHasAddedComponent(true);
+        }
     };
 
 
@@ -89,6 +60,10 @@ const FormulationPAAC = () => {
         navigate('/direccion-estrategica/planes/plan-anticorrupcion');
     };
 
+    const handleClickNext = () => {
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/editar/:id');
+    };
+
     useEffect(() => {
         getAllByPlanId(id).then(response => {
             if (response.operation.code === EResponseCodes.OK) {
@@ -101,22 +76,32 @@ const FormulationPAAC = () => {
     }, [id]);
 
     const onSave = () => {
-        store({ components, planId: Number(id)}).then(response => {
-            if (response.operation.code === EResponseCodes.OK) {
-                console.log('response.data', response.data)
+        store({ components, planId: Number(id) }).then((response) => {
+            if (response && response.operation && response.operation.code === EResponseCodes.OK) {
+                setMessage({
+                    title: "Guardado exitoso",
+                    description: "¡El componente se ha guardado correctamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Aceptar",
+                    onOk: () => {
+                        setMessage({});
+                        handleClickNext();
+                    },
+                });
             } else {
-                console.log(response.operation.message);
+                console.log(response && response.operation && response.operation.message);
             }
         });
 
-        deleteAllByIds(deletedComponents).then(response => {
+        deleteAllByIds(deletedComponents).then((response) => {
             if (response.operation.code === EResponseCodes.OK) {
-                console.log('response.data', response.data)
+                console.log("response.data", response.data);
             } else {
                 console.log(response.operation.message);
             }
         });
-    }
+    };
 
     return (
         <>
@@ -139,16 +124,14 @@ const FormulationPAAC = () => {
                     </div>
                     <section className="card-table mt-15">
                         <h3>Componentes</h3>
-                        <div className="text-buttom-circle" onClick={handleAddComponent}>
+                        <div className={`text-buttom-circle buttom-formularPAA ${hasAddedComponent ? 'disabled' : ''}`} onClick={handleAddComponent}>
                             Agregar componente <AiOutlinePlusCircle />
                         </div>
                         <div className="card-table mt-15">
                             <table className="table-PAA">
                                 <thead>
                                     <tr>
-                                        <th className="p-datatable-thead-PAA">No. Componente</th>
                                         <th className="p-datatable-thead-PAA">Descripción de componente</th>
-                                        <th className="p-datatable-thead-PAA">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -157,7 +140,6 @@ const FormulationPAAC = () => {
                                             key={component.id}
                                             description={component.description}
                                             index={component.index}
-                                            onDelete={() => handleDeleteComponent(component.id)}
                                         />
                                     ))}
                                 </tbody>
@@ -165,6 +147,7 @@ const FormulationPAAC = () => {
                         </div>
                     </section>
                     <div className="container-button-bot space-between">
+                        <div></div>
                         <div className="buttons-bot">
                             <span className="bold text-center button" onClick={handleClick}>
                                 Cancelar
@@ -175,7 +158,6 @@ const FormulationPAAC = () => {
                                 type="button"
                                 action={() => {
                                     onSave();
-                                    handleClick();
                                 }}
                             />
                         </div>

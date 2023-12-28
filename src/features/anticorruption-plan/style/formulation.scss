@@ -95,3 +95,8 @@
     border-radius: 0px;
     background: rgba(0,0,0,0);
 }
+
+.text-buttom-circle.buttom-formularPAA.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
