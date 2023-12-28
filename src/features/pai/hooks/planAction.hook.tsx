@@ -135,7 +135,7 @@ export function useProjectsData() {
                             </div>
                         </>
                     )
-                }else if (row.status === 3){
+                }else if (row.status == 3){
                     return (
                         <>
                             <Tooltip target=".review-tooltip" />
@@ -160,12 +160,7 @@ export function useProjectsData() {
                 navigate(urlRevision[row.status]);
             },
             hideRow: (row) => {
-                if(row.status === 2 || row.status === 4) {
                     return !validateActionAccess("REVISAR_PLAN")
-                } else if (row.status === 3) {
-                    if(validateActionAccess("CORREGIR_PLAN")) return validateActionAccess("REVISAR_PLAN");
-                }
-                return true;
             }
         },
         {

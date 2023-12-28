@@ -491,6 +491,7 @@ export default function usePlanActionPAIData({ status }) {
                                 
                                 if (nextAction && nextAction.description === "") {
                                   setValue(`actionsPAi.${nextActionIndex}.description`, "");
+                                  setValue(`actionsPAi.${nextActionIndex}.edit`, false);
                                 }
                                 console.log(getValues("actionsPAi"));
                               },
