@@ -23,6 +23,7 @@ import ActionListPaiPage from "../pages/actionList-pai.page";
 import { Tooltip } from "primereact/tooltip";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiTrash } from "react-icons/pi";
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -41,6 +42,8 @@ export default function usePlanActionPAIData({ status }) {
     const [view, setView] = useState<boolean>(false);
     const [loadData, setLoadData] = useState<boolean>(false);
     const [riskText, setRiskText] = useState<string>("");
+    const [actionsPAi, setActionsPAi] = useState([]);
+
 
     const { getRiskPAI, getProcessPAI, getObjectivesPAI } = useEntitiesService();
     const { getProjectsByFilters } = useProjectsService();
@@ -112,7 +115,7 @@ export default function usePlanActionPAIData({ status }) {
             GetPAIById(Number(idPAI))
                 .then((response) => {
                     if (response.operation.code === EResponseCodes.OK) {
-                        debugger;
+                        
                         const res = response.data;
                         setLoadData(true);
                         setValue("yearPAI", res.yearPAI);
@@ -230,12 +233,12 @@ export default function usePlanActionPAIData({ status }) {
         yearsArray.push({ name: year.toString(), value: year });
     }
 
-    const { fields, append } = useFieldArray({
+    const { fields, append , remove: removeLine} = useFieldArray({
         control,
         name: "linePAI",
     });
 
-    const { fields: riskFields, append: appendRisk } = useFieldArray({
+    const { fields: riskFields, append: appendRisk , remove: removeRisk} = useFieldArray({
         control,
         name: "risksPAI",
     });
@@ -311,16 +314,58 @@ export default function usePlanActionPAIData({ status }) {
                         name={`actionsPAi.${row?.action - 1}.description`}
                         defaultValue={""}
                         render={({ field }) => {
+                            
                             return (
                                 <InputComponent
-                                    id={field.name}
-                                    idInput={field.name}
-                                    value={`${field.value}`}
-                                    label=""
-                                    className="input-basic"
-                                    typeInput={"text"}
-                                    register={register}
-                                    onChange={field.onChange}
+                                id={field.name}
+                                idInput={field.name}
+                                value={field.value}
+                                label=""
+                                className="input-basic"
+                                typeInput="text"
+                                register={register}
+                                // onChange={(e) => {
+                                //     const actionIndex = row?.action;
+                                //     const actionId = row?.idAcc;
+                                //     if (e.target.value.length > 0) {
+                                //         setValue(`actionsPAi.${actionIndex}.edit`, true);
+                                //     } else {
+                                //         setValue(`actionsPAi.${actionIndex}.edit`, false);
+                                //     }
+                                //     console.log(getValues("actionsPAi"));
+                                //     return field.onChange(e.target.value);
+                                // }}
+                                onChange={(e) => {
+                                    const actionIndex = row?.index;
+                                
+                                    // Obtener el estado actual de actionsPAi
+                                    const currentActions = getValues("actionsPAi") || [];
+                                
+                                    // Crear un nuevo array con las actualizaciones
+                                    const updatedActions = currentActions.map((action, index) => {
+                                        if (index === actionIndex) {
+                                            // Actualizar solo la descripción en la acción específica
+                                            return {
+                                                ...action,
+                                                description: e.target.value,
+                                            };
+                                        }
+                                        return action;
+                                    });
+                                
+                                    // Actualizar el estado utilizando la función de setActionsPAi
+                                    setValue("actionsPAi",updatedActions);
+                                
+                                    // Verificar si hay algún elemento con el mismo índice y idAcc
+                                    const existingItem = updatedActions.find((action) => action.index === actionIndex && action.idAcc === row?.idAcc);
+                                
+                                    if (existingItem) {
+                                        // Actualizar el estado de edit solo si existe el elemento
+                                        setValue(`actionsPAi.${actionIndex}.edit`, e.target.value.length > 0);
+                                        field.onChange(e.target.value);
+                                    }
+                                }}
+                                    
                                     errors={errors}
                                     placeholder="Escribe aquí"
                                 />
@@ -334,18 +379,27 @@ export default function usePlanActionPAIData({ status }) {
 
     const createPlanActionActions: ITableAction<IAddAction>[] = [
         {
-        customIcon: (row) => {
-                return (
-                    <><Tooltip target=".create-action" /><div
+            customIcon: (row) => {
+              
+                if (row.edit) {
+                  return (
+                    <>
+                      <Tooltip target=".create-action" />
+                      <div
                         className="create-action"
                         data-pr-tooltip="Agregar Acción"
                         data-pr-position="bottom"
-                        style={{ 'color': '#D72FD1' }}
-                    >
+                        style={{ color: '#D72FD1' }}
+                      >
                         <AiOutlinePlusCircle />
-                    </div></>
-                )
+                      </div>
+                    </>
+                  );
+                }
+                
+                return null;
             },
+
             onClick: (row) => {
                 setIndicatorsFormComponent(<IndicatorsPaiPage actionId={row?.id | row.action} updatePAIForm={updatePAIForm} />);
             }
@@ -353,15 +407,19 @@ export default function usePlanActionPAIData({ status }) {
         },
         {
             customIcon: (row) => {
-                return (
-                    <><Tooltip target=".detail-action" /><div
-                        className="detail-action"
-                        data-pr-tooltip="Detalle Acción"
-                        data-pr-position="bottom"
-                    >
-                        <AiOutlineEye className="button grid-button button-detail" />
-                    </div></>
-                )
+                if (row.edit) {
+                    return (
+                        <><Tooltip target=".detail-action" /><div
+                            className="detail-action"
+                            data-pr-tooltip="Detalle Acción"
+                            data-pr-position="bottom"
+                        >
+                            <AiOutlineEye className="button grid-button button-detail" />
+                        </div></>
+                    )
+                }
+                
+                return null;
             },
             onClick: (row) => {
                 setIndicatorsFormComponent(<ActionListPaiPage actionId={row.action-1} control={control} register={register} errors={errors} />);
@@ -369,15 +427,20 @@ export default function usePlanActionPAIData({ status }) {
         },
         {
             customIcon: (row) => {
-                return (
-                    <><Tooltip target=".delete-action" /><div
-                        className="delete-action"
-                        data-pr-tooltip="Eliminar Acción"
-                        data-pr-position="bottom"
-                    >
-                        <PiTrash className="button grid-button button-delete" />
-                    </div></>
-                )
+                if ( row.edit) {
+                    return (
+                        <><Tooltip target=".delete-action" /><div
+                            className="delete-action"
+                            data-pr-tooltip="Eliminar Acción"
+                            data-pr-position="bottom"
+                        >
+                            <PiTrash className="button grid-button button-delete" />
+                        </div></>
+                    )
+                }
+                
+                return null;
+
             },
             onClick: (row) => {
                 setMessage({
@@ -402,14 +465,36 @@ export default function usePlanActionPAIData({ status }) {
                             OkTitle: "Aceptar",
                             onOk: () => {
                                 setMessage({});
-                                const valueAction = getValues("actionsPAi").filter(action => action.index != row.index)
-                                setValue("actionsPAi", valueAction)
-                                setPAIData(prev => {
-                                    return {
-                                        ...prev, actionsPAi: valueAction,
-                                    }
-                                })
-                            },
+                                const actions = getValues("actionsPAi");
+                                
+                                // Filtrar la acción que se debe eliminar
+                                const updatedActions = actions.filter((action) => action.idAcc !== row.idAcc);
+                                
+                                // Actualizar los índices de las acciones restantes
+                                const updatedActionsWithCorrectIndices = updatedActions.map((action, index) => {
+                                  return {
+                                    ...action,
+                                    action: index + 1,
+                                    index,
+                                  };
+                                });
+                                
+                                setValue("actionsPAi", updatedActionsWithCorrectIndices);
+                                setPAIData((prev) => ({
+                                  ...prev,
+                                  actionsPAi: updatedActionsWithCorrectIndices,
+                                }));
+                                
+                                // Validar si el campo eliminado está vacío antes de asignar el valor al siguiente campo
+                                const nextActionIndex = row.index; // Puedes ajustar esto según tu lógica
+                                const nextAction = updatedActionsWithCorrectIndices.find(action => action.index === nextActionIndex);
+                                
+                                if (nextAction && nextAction.description === "") {
+                                  setValue(`actionsPAi.${nextActionIndex}.description`, "");
+                                  setValue(`actionsPAi.${nextActionIndex}.edit`, false);
+                                }
+                                console.log(getValues("actionsPAi"));
+                              },
                             onClose: () => {
                                 setMessage({});
                             },
@@ -422,9 +507,21 @@ export default function usePlanActionPAIData({ status }) {
         },
     ];
 
+    // const onSubmitCreate = () => {
+    //     const actions = getValues("actionsPAi") || [];
+    //     setValue("actionsPAi", actions.concat({ action: actions.length + 1, description: "", index: actions.length, id: actions.length + 1 , edit: false , idAcc:uuidv4() }));
+    // };
+
     const onSubmitCreate = () => {
         const actions = getValues("actionsPAi") || [];
-        setValue("actionsPAi", actions.concat({ action: actions.length + 1, description: "", index: actions.length + 1, id: actions.length + 1 }));
+        const newIndex = actions.length + 1;
+    
+        const existingItem = actions.find((action) => action.index === newIndex - 1);
+    
+        if (!existingItem) {
+            const newAction = { action: newIndex, description: "", index: newIndex - 1, id: newIndex, edit: false, idAcc: uuidv4() };
+            setValue("actionsPAi", [...actions, newAction]);
+        }
     };
 
 
@@ -508,6 +605,9 @@ export default function usePlanActionPAIData({ status }) {
         setValue,
         cancelAction,
         createPlanActionActions,
-        PAIData
+        PAIData,
+        setMessage,
+        removeLine,
+        removeRisk
     };
 }

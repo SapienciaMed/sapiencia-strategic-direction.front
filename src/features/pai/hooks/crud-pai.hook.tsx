@@ -122,7 +122,7 @@ export default function useCrudPAIData({ status }) {
     };
 
     const onSubmitTemp = async () => {
-        debugger
+       
         const data = PAIData;
         if (editId) {
             const dataPai = { ...data, user: authorization.user.numberDocument, status: 1, id: Number(editId) };

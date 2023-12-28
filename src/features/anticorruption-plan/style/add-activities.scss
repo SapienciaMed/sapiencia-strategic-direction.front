@@ -1,0 +1,46 @@
+.grid {
+	display: grid;
+}
+
+.mb-10 {
+	margin-bottom: 10px;
+}
+
+.alert-textarea {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.input-textarea {
+	width: 100%;
+	height: 124px;
+	border-radius: 6px;
+	border: 1px solid #b5bac5;
+	font-size: 15px;
+	padding: 5px 5px;
+	transition: background-color .2s,color .2s,border-color .2s,box-shadow .2s;
+}
+
+.input-textarea:hover {
+	border: 1px solid #955bec;
+}
+
+.input-textarea:enabled:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem #e0c4fd;
+    border-color: #955bec;
+}
+
+.color-1{
+	color: #25B773;
+}
+
+.color-2{
+	color: #01B1C9;
+}
+
+.color-3{
+	color: #F47602;
+}

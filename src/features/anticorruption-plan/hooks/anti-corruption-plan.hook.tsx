@@ -4,7 +4,7 @@ import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/Pr
 import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm  } from "react-hook-form";
 import { projectsValidator } from "../../../common/schemas";
 import { useProjectsService } from "../../projects/hooks/projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
@@ -19,8 +19,10 @@ import { AppContext } from "../../../common/contexts/app.context";
 import axios from "axios";
 import { ApiResponse } from "../../../common/utils/api-response";
 import { saveAs } from "file-saver"
+import { useParams } from "react-router-dom";
 import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-status-service.hook";
 import { useAntiCorruptionPlanService } from "./anti-corruption-plan-service.hook";
+import { useAntiCorruptionPlanComponentService } from "./anti-corruption-plan-component-service.hook";
 import EditModal from "./edit-modal";
 
 export function useAntiCorruptionPlanData() {
@@ -36,12 +38,14 @@ export function useAntiCorruptionPlanData() {
     const { setMessage, validateActionAccess } = useContext(AppContext);
     const { getAll } = useAntiCorruptionPlanStatusService();
     const { update } = useAntiCorruptionPlanService();
+    const { getAllByPlanId, deleteAllByIds, store } = useAntiCorruptionPlanComponentService();
     const today = DateTime.local();
     const formattedDate = today.toFormat('ddMMyyyy');
     const resolver = useYupValidationResolver(projectsValidator);
     const navigate = useNavigate();
     const [visiblemodal, setVisibleModal] = useState(false);
     const [close, setClose] = useState<IProject | number>(1);
+    const { id } = useParams() 
 
     const {
         handleSubmit,
@@ -50,6 +54,7 @@ export function useAntiCorruptionPlanData() {
         reset,
         control
     } = useForm<any>({ resolver });
+
     const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
         {
             fieldName: "name",
@@ -69,13 +74,19 @@ export function useAntiCorruptionPlanData() {
         },
     ];
 
+    const yearsArray: IDropdownProps[] = [];
+
+    for (let year = 2024; year <= 2100; year++) {
+        yearsArray.push({ name: year.toString(), value: year });
+    }
+
     const closeModal = () => {
         setVisibleModal(false);
         console.log("ejecutando")
     };
 
-    const handleClick = () => {
-        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan');
+    const handleClick = (id: number) => {
+        navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/${id}`);
     };
     
 
@@ -91,7 +102,7 @@ export function useAntiCorruptionPlanData() {
                                 data-pr-tooltip="Editar"
                                 data-pr-position="bottom"
                                 style={{ color: '#0CA529' }}
-                                onClick={ handleClick}
+                                onClick={() => handleClick(row.id)}
                                 data-url={row.id}
                             >
                                 <RiPencilLine />
@@ -210,7 +221,13 @@ export function useAntiCorruptionPlanData() {
         setFilesUploadData,
         msgs,
         setErrores,
-        validateActionAccess
+        validateActionAccess,
+        yearsArray,
+        antiCorruptionPlan,
+        getAllByPlanId,
+        deleteAllByIds,
+        store,
+        id,
     };
 }
 

@@ -83,8 +83,9 @@ export function useTransferData() {
     }, []);
 
     useEffect(() => {
+        
         setDisableContinue(!isValid);
-        if(projectData?.status == 2){
+        if(projectData?.status == 2 || projectData?.status == 3){
             setDisableContinue(isValid);
         }
         setTextContinue(projectData?.status == 2 || projectData?.status == 3 ? "Guardar" : "Enviar");

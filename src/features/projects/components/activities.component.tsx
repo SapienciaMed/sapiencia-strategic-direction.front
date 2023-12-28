@@ -539,7 +539,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                 yearOfOffBudget = Number(i.replace("year", ""));
             }
         }
-        const totalCost = activity.detailActivities.reduce((sum, i) => sum + Number(i.unitCost * i.amount), 0)
+        const totalCost = activity.detailActivities?.reduce((sum, i) => sum + Number(i.unitCost * i.amount), 0)
         if (totalCost > budgetForValidityYear?.budget || totalCost < budgetForValidityYear?.budget) {
             validationResult = true;
             validationType = totalCost > budgetForValidityYear?.budget ? "major" : "minor";
@@ -622,17 +622,18 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                         defaultValue={0}
                         render={({ field }) => {
                             return (
-                                <InputInplaceComponent
+                                <InputComponent
                                     id={field.name}
                                     idInput={field.name}
                                     value={`${field.value}`}
-                                    label="0"
                                     className="input-basic"
                                     typeInput={"number"}
                                     register={register}
                                     onChange={field.onChange}
                                     errors={errors}
+                                    placeholder="Escribe aquí"
                                 />
+                             
                             );
                         }}
                     />
@@ -644,15 +645,15 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
             header: "Presupuesto",
             renderCell: (row) => {
                 return (
-                    <InputNumberInplaceComponent
+                    <InputNumberComponent
                         idInput={budgetsYears[row.year]}
                         control={control}
-                        label="$ 0"
                         errors={errors}
                         className="inputNumber-basic"
                         mode="currency"
                         currency="COP"
                         locale="es-CO"
+                        placeholder="Escribe aquí"
                         minFractionDigits={2}
                     />
                 )
@@ -917,6 +918,7 @@ function ActivityMGAComponent({ returnData, setForm, item, view }: IActivityMGAO
                                             className={`input-basic ${view && "background-textArea"}`}
                                             classNameLabel={`text-black biggest bold ${validityRequired && "text-required"}`}
                                             typeInput={"number"}
+                                            placeholder="Escribe aquí"
                                             register={register}
                                             onChange={field.onChange}
                                             errors={errors}

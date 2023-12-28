@@ -1,125 +1,202 @@
-import React from "react";
-
-import { ButtonComponent, FormComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import { Controller } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import TableExpansibleComponent from "../components/table-expansible.component";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-expansible.component";
-import { Tooltip } from "primereact/tooltip";
-import usePlanActionPAIData from "../../pai/hooks/createPlanAction-pai.hook";
-import { typePAIData } from "../../pai/data/dropdowns-revision-pai";
+import { EResponseCodes } from "../../../common/constants/api.enum";
+import { AppContext } from "../../../common/contexts/app.context";
+import { ButtonComponent, SelectComponent } from "../../../common/components/Form";
+import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-corruption-plan.hook";
+import "../../anticorruption-plan/style/formulation.scss";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
-export interface IPropsPAI {
-    status: "new" | "edit";
-}
-
-function FormulationPAAC(): React.JSX.Element {
-    //{ status }: Readonly<IPropsPAI>
-    const { errors,
-        getFieldState,
-        fields,
-        riskText,
-        view,
-        namePAIData,
-        riskPAIData,
-        riskFields,
-        appendRisk,
-        append,
-        yearsArray,
-        formAction,
+const FormulationPAAC = () => {
+    const { navigate,
         control,
-        register,
-        getValues,
-        createPlanActionActions,
-        createPlanActionColumns,
-        onSubmitCreate
-    } = usePlanActionPAIData({ status });
-    return (
-        <div>
-            <div className='card-table'>
-                <div className="title-area">
-                    <div className="text-black extra-large bold">{formAction === "new" ? "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)" : "Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)"}</div>
-                </div>
-                {<FormComponent action={undefined}>
+        statusData,
+        yearsArray,
+        antiCorruptionPlan,
+        getAllByPlanId,
+        deleteAllByIds,
+        store,
+        id,
+        errors } = useAntiCorruptionPlanData();
+    const [components, setComponents] = useState([]);
+    const [componentCount, setComponentCount] = useState(1);
+    const [deleteConfirmation, setDeleteConfirmation] = useState({});
+    const [deletedComponents, setDeletedComponents] = useState<string[]>([])
+    const { setMessage } = useContext(AppContext);
 
-                    <div className="card-table" style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
-                        <div className="create-pai-risks">
+    const handleAddComponent = () => {
+        const newComponent = {
+            id: componentCount,
+            index: componentCount,
+        };
+
+        setComponents((prevComponents) => [...prevComponents, newComponent]);
+        setComponentCount((prevCount) => prevCount + 1);
+    };
+
+    const handleDeleteComponent = (idToDelete) => {
+        setMessage({
+            background: true,
+            cancelTitle: "Cancelar",
+            description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            },
+            show: true,
+            title: "¿Eliminar acción?",
+            onOk: () => {
+                setMessage({
+                    title: "Acción del PAI",
+                    description: "¡Eliminada exitosamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Aceptar",
+                    onClose: () => {
+                        setMessage({});
+                    },
+                });
+
+                deletedComponents.push(idToDelete)
+                setDeletedComponents(deletedComponents);
+                deleteRow(idToDelete);
+            },
+        });
+    };
+
+
+    const deleteRow = (idToDelete) => {
+        setComponents((prevComponents) =>
+            prevComponents.filter(
+                (component) => component.id !== idToDelete
+            )
+        );
+    };
+
+    useEffect(() => {
+        if (components.length === 0) {
+            setComponentCount(1);
+        }
+    }, [components]);
+
+    
+    const handleClick = () => {
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion');
+    };
+
+    useEffect(() => {
+        getAllByPlanId(id).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                console.log('response.data', response.data)
+                setComponents([...components, ...response.data]);
+            } else {
+                console.log(response.operation.message);
+            }
+        });
+    }, [id]);
+
+    const onSave = () => {
+        store({ components, planId: Number(id)}).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                console.log('response.data', response.data)
+            } else {
+                console.log(response.operation.message);
+            }
+        });
+
+        deleteAllByIds(deletedComponents).then(response => {
+            if (response.operation.code === EResponseCodes.OK) {
+                console.log('response.data', response.data)
+            } else {
+                console.log(response.operation.message);
+            }
+        });
+    }
+
+    return (
+        <>
+            <div className="main-page">
+                <div className="card-table">
+                    <h2>Formular Plan Anticorrupción y Atención al Ciudadano (PAAC)</h2>
+                    <div className="card-table">
+                        <section className="select_PAAC">
                             <SelectComponent
                                 control={control}
-                                idInput={"selectedRisk"}
+                                idInput={"status"}
                                 className={`select-basic span-width`}
                                 label="Año"
-                                classNameLabel="text-black biggest bold text-required"
-                                data={riskPAIData}
+                                classNameLabel="text-black biggest bold"
+                                data={yearsArray}
                                 errors={errors}
-                                filter={true} />
-
+                                filter={true}
+                            />
+                        </section>
+                    </div>
+                    <section className="card-table mt-15">
+                        <h3>Componentes</h3>
+                        <div className="text-buttom-circle" onClick={handleAddComponent}>
+                            Agregar componente <AiOutlinePlusCircle />
                         </div>
-                        {riskFields.map((fields, index) => {
-                            const lineNumber = index + 1;
-                            return (
-                                <div key={fields.id} style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
-                                    <Controller
-                                        control={control}
-                                        name={`risksPAI.${index}.risk`}
-                                        defaultValue=""
-                                        render={({ field }) => {
-                                            return (
-                                                <TextAreaComponent
-                                                    id={field.name}
-                                                    idInput={field.name}
-                                                    label={`Riesgo No. ${lineNumber}`}
-                                                    classNameLabel="text-black biggest bold"
-                                                    value={`${field.value}`}
-                                                    className="text-area-basic"
-                                                    placeholder="Escribe aquí"
-                                                    register={register}
-                                                    fieldArray={true}
-                                                    onChange={field.onChange}
-                                                    errors={errors}
-
-                                                >
-
-                                                </TextAreaComponent>
-                                            );
-                                        }} />
-                                </div>
-                            );
-                        })}
+                        <div className="card-table mt-15">
+                            <table className="table-PAA">
+                                <thead>
+                                    <tr>
+                                        <th className="p-datatable-thead-PAA">No. Componente</th>
+                                        <th className="p-datatable-thead-PAA">Descripción de componente</th>
+                                        <th className="p-datatable-thead-PAA">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {components.length > 0 && components.map((component) => (
+                                        <AntiCorruptionExpansibleTable
+                                            key={component.id}
+                                            description={component.description}
+                                            index={component.index}
+                                            onDelete={() => handleDeleteComponent(component.id)}
+                                        />
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <div className="container-button-bot space-between">
+                        <div>
+                        <ButtonComponent
+                                className={`button-main huge hover-three button-save`}
+                                value={"Guardar temporalmente"}
+                                type="button"
+                                action={onSave}
+                            />
+                        </div>
+                        <div className="buttons-bot">
+                            <span className="bold text-center button" onClick={handleClick}>
+                                Cancelar
+                            </span>
+                            <ButtonComponent
+                                className={`button-main huge hover-three button-save`}
+                                value={"Guardar y regresar"}
+                                type="button"
+                                action={() => {
+                                    onSave();
+                                    handleClick();
+                                }}
+                            />
+                        </div>
                     </div>
-
-                    <div className="card-table">
-                        <FormComponent action={undefined} className="problem-description-container">
-
-                            <div className="title-area">
-                                <label className="text-black biggest bold text-required">
-                                Componentes
-                                </label>
-
-                                <div className="actions-pai">
-
-                                    {/* <div className="title-button text-main large" onClick={() => {
-                                                }}>
-                                                    Consolidado de acciones PAI <AiOutlinePlusCircle />
-                                                </div> */}
-                                    <div className="title-button text-main large" onClick={onSubmitCreate}>
-                                        Agregar componente <AiOutlinePlusCircle />
-                                    </div>
-                                </div>
-                            </div>
-                        </FormComponent>
-                                    
-                        {<AntiCorruptionExpansibleTable
-                            actions={createPlanActionActions}
-                            columns={createPlanActionColumns}
-                            data={getValues("actionsPAi") || []} />}
-                    </div>
-
-                </FormComponent>}
+                </div>
             </div>
-        </div>
-    )
-}
+        </>
+    );
+};
 
-export default React.memo(FormulationPAAC);
+export default FormulationPAAC;
+
+
+
+
+

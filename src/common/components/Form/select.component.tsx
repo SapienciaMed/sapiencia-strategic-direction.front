@@ -24,6 +24,8 @@ interface ISelectProps<T> {
   emptyMessage?: string;
   value?: any;
   onChange?: () => void;
+  style?: any;
+  labelStyle?: React.CSSProperties;
 }
 
 function LabelElement({ label, idInput, classNameLabel }): React.JSX.Element {
@@ -53,6 +55,8 @@ export function SelectComponent({
   value,
   fieldArray,
   filter,
+  style,
+  labelStyle,
   emptyMessage = "Sin resultados.",
   onChange = () => {}
 }: ISelectProps<any>): React.JSX.Element {
