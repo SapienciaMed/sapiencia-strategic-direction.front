@@ -37,7 +37,7 @@ function AddActivity(): React.JSX.Element {
                             <TextAreaComponent
 									id="referencia"
 									idInput="referencia"
-									label="Descripción de activida"
+									label="Descripción de actividad"
 									className="input-textarea"
 									classNameLabel="text--black text-required"
 									register={register}

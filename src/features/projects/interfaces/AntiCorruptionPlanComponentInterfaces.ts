@@ -10,3 +10,8 @@ export interface IAntiCorruptionPlanComponentTemp {
   description?: string,
   pac_id?: number,
 }
+
+export interface IStore {
+  components: IAntiCorruptionPlanComponentTemp[];
+  planId: number;
+}

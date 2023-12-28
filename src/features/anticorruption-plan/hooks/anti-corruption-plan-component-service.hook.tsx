@@ -1,6 +1,6 @@
 import useCrudService from "../../../common/hooks/crud-service.hook";
 import { ApiResponse } from "../../../common/utils/api-response";
-import { IAntiCorruptionPlanComponent, IAntiCorruptionPlanComponentTemp } from "../../projects/interfaces/AntiCorruptionPlanComponentInterfaces";
+import { IAntiCorruptionPlanComponent, IAntiCorruptionPlanComponentTemp, IStore } from "../../projects/interfaces/AntiCorruptionPlanComponentInterfaces";
 
 export function useAntiCorruptionPlanComponentService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
@@ -23,9 +23,9 @@ export function useAntiCorruptionPlanComponentService() {
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, ids);
     }
 
-    async function store(components: IAntiCorruptionPlanComponentTemp[]): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
+    async function store(data: IStore): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
         const endpoint: string = "/store";
-        return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, components);
+        return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
 
 
