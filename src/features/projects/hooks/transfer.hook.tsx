@@ -83,7 +83,7 @@ export function useTransferData() {
     }, []);
 
     useEffect(() => {
-        debugger;
+        
         setDisableContinue(!isValid);
         if(projectData?.status == 2 || projectData?.status == 3){
             setDisableContinue(isValid);

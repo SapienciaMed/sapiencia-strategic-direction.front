@@ -7,6 +7,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import TableExpansibleComponent from "../../projects/components/table-expansible.component";
 import { Tooltip } from "primereact/tooltip";
 import { typePAIData } from "../data/dropdowns-revision-pai";
+import { FaTrashAlt } from "react-icons/fa";
 
 export interface IPropsPAI {
     status: "new" | "edit";
@@ -30,7 +31,10 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
         getValues,
         createPlanActionActions,
         createPlanActionColumns,
-        onSubmitCreate
+        onSubmitCreate,
+        setMessage,
+        removeLine,
+        removeRisk
     } = usePlanActionPAIData({ status });
     return (
         <div>
@@ -208,9 +212,44 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                                                     )}
                                                 </TextAreaComponent>
                                             );
-                                        }} />
+                                        } } />
+                                        
+                                            <div className="div-acciones">
+                                            <label className="text-black biggest bold">Acciones</label>
+                                            <div onClick={() => {
+                                                setMessage({
+                                                    title: "Eliminar registro",
+                                                    description: "¿Deseas continuar?",
+                                                    show: true,
+                                                    background: true,
+                                                    OkTitle: "Aceptar",
+                                                    cancelTitle: "Cancelar",
+                                                    onOk: () => {
+                                                        removeLine(index);
+                                                        setMessage({
+                                                            title: "Registro eliminado",
+                                                            description: "¡Registro eliminado exitosamente!",
+                                                            show: true,
+                                                            background: true,
+                                                            OkTitle: "Aceptar",
+                                                            onOk: () => {
+                                                                setMessage({});
+                                                            }
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                        setMessage({});
+                                                    }
+                                                });
+                                            } } className="div-acciones">
+                                                <div className="actions-poblations ">
+                                                    <FaTrashAlt className="button grid-button button-delete" />
+                                                </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            );
+                                    
+                           );
                         })}
                     </div>
 

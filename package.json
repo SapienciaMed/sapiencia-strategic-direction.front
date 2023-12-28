@@ -73,6 +73,7 @@
     "single-spa": "^5.9.3",
     "single-spa-react": "^4.3.1",
     "url-loader": "^4.1.1",
+    "uuid": "^9.0.1",
     "yup": "^1.3.2"
   },
   "types": "dist/sapiencia-strategic-direction.d.ts"
