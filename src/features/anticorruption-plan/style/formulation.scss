@@ -99,4 +99,28 @@
 .text-buttom-circle.buttom-formularPAA.disabled {
     opacity: 0.5;
     pointer-events: none;
-  }
+}
+
+.container-button-bot {
+    display: flex;
+}
+
+.p-dropdown {
+    max-width: 281px;
+    min-width: 190px;
+}
+
+@media screen and (max-width: 649px) {
+    .container-button-bot{
+        flex-direction: column;
+        height: 7rem;
+    }
+}
+
+@media screen and (max-width: 631px) {
+    .table-PAA{
+        width: 440px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

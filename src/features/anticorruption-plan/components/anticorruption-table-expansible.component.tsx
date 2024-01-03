@@ -19,11 +19,11 @@ const AntiCorruptionExpansibleTable = ({ index, description, onDelete }: IAntiCo
 
     return (
         <tr>
-            <td className="p-datatable-PAA">No. Componente {index}</td>
-            <td className="p-datatable-PAA">
+            <td className="p-datatable-PAA stacked-table-item1">No. Componente {index}</td>
+            <td className="p-datatable-PAA stacked-table-item2">
                 <input type="text" className="input-PAA" placeholder="Escribe aquí" defaultValue={description} />
             </td>
-            <td className="p-datatable-PAA">
+            <td className="p-datatable-PAA stacked-table-item3">
                 <div className="icon-content">
                     <><Tooltip target=".create-action" /><div
                         className="create-action"
