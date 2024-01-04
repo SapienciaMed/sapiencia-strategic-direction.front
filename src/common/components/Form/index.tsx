@@ -5,6 +5,7 @@ export * from "./check.component";
 export * from "./form.component";
 export * from "./input-showpassword.component";
 export * from "./select.component";
+export * from "./tree-select.component";
 export * from "./transfer-box.component";
 export * from "./fieldset.component";
 export * from "./input-date.component";

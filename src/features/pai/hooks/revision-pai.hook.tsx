@@ -1,8 +1,7 @@
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { usePaiService } from "./pai-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
-import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import ActionsRevisionComponent from "../components/actions-revision.component";
 import { RevisionPAIContext } from "../contexts/revision-pai.context";
 import { useEntitiesService } from "./entities-service.hook";
@@ -16,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { IProject } from "../interfaces/ProjectsInterfaces";
 import { IPropsRevisionPAI } from "../pages/revision-pai.page";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
+import { TextAreaComponent } from "../../../common/components/Form";
+import { IComponentListTemplate } from "../../../common/interfaces/global.interface";
 
 interface IProps extends IPropsRevisionPAI {
     idPAI: string;
@@ -29,9 +30,11 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     });
     const [updatePAI, setUpdatePAI] = useState<number>(null);
     const [adjustmentLoaded, setAdjustmentLoaded] = useState<boolean>(false);
-    const [accordionsActions, setAccordionsActions] = useState<IAccordionTemplate[]>([]);
     const [nameProjectsData, setNameProjectsData] = useState<IDropdownProps[]>([]);
     const [nameProcessData, setNameProcessData] = useState<IDropdownProps[]>([]);
+    const [linesData, setLinesData] = useState<React.JSX.Element[]>([]);
+    const [risksData, setRisksData] = useState<React.JSX.Element[]>([]);
+    const [actionsData, setActionsData] = useState<IComponentListTemplate[]>([]);
     const [projectsData, setProjectsData] = useState<IProject[]>([]);
     const {
         setPai,
@@ -62,14 +65,6 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         getValues,
         watch
     } = useForm<any>({ mode: "all" });
-    const { fields: fieldsLines } = useFieldArray({
-        control: controlPAI,
-        name: "linePAI",
-    });
-    const { fields: fieldsRisks } = useFieldArray({
-        control: controlPAI,
-        name: "risksPAI",
-    });
 
     const navigate = useNavigate();
     const watchProject = watch("namePAI");
@@ -90,11 +85,67 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 setValue("actionsPAi", res.actionsPAi);
                 setValue("typePAI", res.typePAI);
                 setValue("namePAI", res.namePAI);
-                setAccordionsActions(res.actionsPAi.map((action, index) => {
+                setLinesData(res.linePAI.map((line, index) => {
+                    const idField = getValues(`linePAI.${index}.id`);
+                    return (
+                        <Controller
+                            key={line.id}
+                            control={controlPAI}
+                            name={`linePAI.${index}.line`}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label={`Línea No. ${index + 1}`}
+                                        classNameLabel="text-black biggest bold"
+                                        className="text-area-basic"
+                                        register={registerPAI}
+                                        onChange={field.onChange}
+                                        errors={errorsPAI}
+                                        disabled={validateActiveField(`linePAI.${idField}`)}
+                                    >
+                                    </TextAreaComponent>
+                                );
+                            }}
+                        />
+                    );
+                }));
+                setRisksData(res.risksPAI.map((risk, index) => {
+                    const idField = getValues(`risksPAI.${index}.id`);
+                    return (
+                        <Controller
+                            key={risk.id}
+                            control={controlPAI}
+                            name={`risksPAI.${index}.risk`}
+                            defaultValue=""
+                            render={({ field }) => {
+                                return (
+                                    <TextAreaComponent
+                                        id={field.name}
+                                        idInput={field.name}
+                                        value={`${field.value}`}
+                                        label={`Riesgo No. ${index + 1}`}
+                                        classNameLabel="text-black biggest bold"
+                                        className="text-area-basic"
+                                        register={registerPAI}
+                                        onChange={field.onChange}
+                                        errors={errorsPAI}
+                                        disabled={validateActiveField(`risksPAI.${idField}`)}
+                                    >
+                                    </TextAreaComponent>
+                                );
+                            }}
+                        />
+                    );
+                }));
+                setActionsData(res.actionsPAi.map((action, index) => {
                     return {
                         id: index,
                         name: `Acción No. ${index + 1}`,
-                        content: <ActionsRevisionComponent action={action} index={index} />
+                        content: <ActionsRevisionComponent action={action} index={index} key={action.id}/>
                     }
                 }));
                 setPai(res);
@@ -117,13 +168,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                     const resRevision = res.revision.find(rev => rev.completed === false && rev.version === 1);
                     if (resRevision) {
                         setUpdatePAI(resRevision.id);
-                        let revPAI = [];
-                        const jsonRevision = JSON.parse(JSON.stringify(resRevision.json));
-                        const ownKeysRevPAI = Reflect.ownKeys(jsonRevision);
-                        ownKeysRevPAI.forEach(key => {
-                            jsonRevision[key].forEach((indicator: IRevisionFormPAI) => revPAI.push({ ...indicator, idIndicator: Number(key) }));
-                        })
-                        setRevisionPAI(revPAI);
+                        setRevisionPAI(JSON.parse(JSON.stringify(resRevision.json)));
                     }
                 } else if (status === "correction") {
                     const paiCorrections = res.revision.filter(rev => rev.version === 2 && rev.completed === true);
@@ -447,11 +492,11 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
     }, [fieldsValues]);
 
     useEffect(() => {
-        if(approveFields.length > 0 && adjustmentLoaded === false){
+        if (approveFields.length > 0 && adjustmentLoaded === false) {
             const values = Reflect.ownKeys(getValues());
             approveFields.forEach(approve => {
                 const field = approve.field.split(".");
-                if(values.includes(field[0])) {
+                if (values.includes(field[0])) {
                     if (field[0] === "risksPAI") {
                         const risks = getValues("risksPAI");
                         risks.forEach((risk, index) => {
@@ -500,26 +545,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
 
     const onSaveTempRevision = () => {
         if (updatePAI !== null && updatePAI !== undefined) {
-            let jsonPAI = {};
-            revisionPAI.forEach(revision => {
-                if (Reflect.has(jsonPAI, revision.idIndicator)) {
-                    jsonPAI[revision.idIndicator].push({
-                        field: revision.field,
-                        observations: revision.observations
-                    });
-                } else {
-                    jsonPAI[revision.idIndicator] = [{
-                        field: revision.field,
-                        observations: revision.observations
-                    }];
-                }
-            });
             const data: IRevisionPAI = {
                 idPai: Number(idPAI),
                 completed: false,
                 userCreate: authorization.user.numberDocument,
                 version: 1,
-                json: JSON.stringify(jsonPAI)
+                json: JSON.stringify(revisionPAI)
             };
             UpdateRevisionPAI(updatePAI, data).then(response => {
                 if (response.operation.code === EResponseCodes.OK) {
@@ -554,26 +585,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 }
             });
         } else {
-            let jsonPAI = {};
-            revisionPAI.forEach(revision => {
-                if (Reflect.has(jsonPAI, revision.idIndicator)) {
-                    jsonPAI[revision.idIndicator].push({
-                        field: revision.field,
-                        observations: revision.observations
-                    });
-                } else {
-                    jsonPAI[revision.idIndicator] = [{
-                        field: revision.field,
-                        observations: revision.observations
-                    }];
-                }
-            })
             const data: IRevisionPAI = {
                 idPai: Number(idPAI),
                 completed: false,
                 userCreate: authorization.user.numberDocument,
                 version: 1,
-                json: JSON.stringify(jsonPAI)
+                json: JSON.stringify(revisionPAI)
             }
             CreateRevisionPAI(data).then(response => {
                 if (response.operation.code === EResponseCodes.OK) {
@@ -1325,9 +1342,9 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         controlPAI,
         registerPAI,
         errorsPAI,
-        fieldsLines,
-        fieldsRisks,
-        accordionsActions,
+        actionsData,
+        linesData,
+        risksData,
         onSaveTemp,
         onSubmit,
         onCancel,

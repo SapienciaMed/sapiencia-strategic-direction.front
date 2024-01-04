@@ -1,5 +1,5 @@
 export interface ITableElement<T> {
-  header: string;
+  header: string | React.JSX.Element;
   fieldName: string;
   required?: boolean;
   sorteable?: boolean;

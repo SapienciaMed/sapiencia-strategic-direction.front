@@ -1,10 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useRevisionPAIData from "../hooks/revision-pai.hook";
-import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent, TreeSelectComponent } from "../../../common/components/Form";
 import { Controller } from "react-hook-form";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
-import AccordionsComponent from "../../../common/components/accordions.component";
+import ComponentPagination from "../../../common/components/component-pagination.component";
+import ComponentList from "../../../common/components/component-list.component";
+import TableComponent from "../../../common/components/table.component";
+import useRevisionObservationsPAIData from "../hooks/revision-pai-observations.hook";
 
 export interface IPropsRevisionPAI {
     status: "revision" | "correction" | "adjustment";
@@ -16,9 +19,9 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
         controlPAI,
         registerPAI,
         errorsPAI,
-        fieldsLines,
-        fieldsRisks,
-        accordionsActions,
+        actionsData,
+        linesData,
+        risksData,
         onSaveTemp,
         onSubmit,
         onCancel,
@@ -29,6 +32,17 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
         nameProcessData,
         validateActiveField
     } = useRevisionPAIData({ idPAI, status });
+    const {
+        controlRevision,
+        fieldsData,
+        errorsRevision,
+        registerRevision,
+        tableData,
+        tableColumnsAdjustment,
+        tableColumns,
+        actionColumnsTable,
+        onSubmitRevision
+    } = useRevisionObservationsPAIData({ idPAI, status });
     return (
         <div className='crud-page full-height'>
             <div className='main-page full-height'>
@@ -146,37 +160,7 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                 <div className="text-black large bold">Articulación plan estratégico</div>
                             </div>
                             <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
-                                {
-                                    fieldsLines.map((item, index) => {
-                                        const idField = getValues(`linePAI.${index}.id`);
-                                        return (
-                                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
-                                                <Controller
-                                                    control={controlPAI}
-                                                    name={`linePAI.${index}.line`}
-                                                    defaultValue=""
-                                                    render={({ field }) => {
-                                                        return (
-                                                            <TextAreaComponent
-                                                                id={field.name}
-                                                                idInput={field.name}
-                                                                value={`${field.value}`}
-                                                                label={`Línea No. ${index + 1}`}
-                                                                classNameLabel="text-black biggest bold"
-                                                                className="text-area-basic"
-                                                                register={registerPAI}
-                                                                onChange={field.onChange}
-                                                                errors={errorsPAI}
-                                                                disabled={validateActiveField(`linePAI.${idField}`)}
-                                                            >
-                                                            </TextAreaComponent>
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    })
-                                }
+                                <ComponentPagination components={linesData} orientation="top" />
                             </div>
                         </div>
                         <div className="card-table">
@@ -184,46 +168,77 @@ function RevisionPAIPage({ status }: Readonly<IPropsRevisionPAI>): React.JSX.Ele
                                 <div className="text-black large bold">Riesgos asociados</div>
                             </div>
                             <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
-                                {
-                                    fieldsRisks.map((item, index) => {
-                                        const idField = getValues(`risksPAI.${index}.id`);
-                                        return (
-                                            <div className="strategic-direction-grid-1 strategic-direction-grid-1-web" key={item.id}>
-                                                <Controller
-                                                    control={controlPAI}
-                                                    name={`risksPAI.${index}.risk`}
-                                                    defaultValue=""
-                                                    render={({ field }) => {
-                                                        return (
-                                                            <TextAreaComponent
-                                                                id={field.name}
-                                                                idInput={field.name}
-                                                                value={`${field.value}`}
-                                                                label={`Riesgo No. ${index + 1}`}
-                                                                classNameLabel="text-black biggest bold"
-                                                                className="text-area-basic"
-                                                                register={registerPAI}
-                                                                onChange={field.onChange}
-                                                                errors={errorsPAI}
-                                                                disabled={validateActiveField(`risksPAI.${idField}`)}
-                                                            >
-                                                            </TextAreaComponent>
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    })
-                                }
+                                <ComponentPagination components={risksData} orientation="top" />
                             </div>
                         </div>
-                        <div className="title-area">
-                            <div className="text-black extra-large bold">Acciones del PAI</div>
-                        </div>
-                        <div className="card-table">
-                            <AccordionsComponent data={accordionsActions} />
+                        <div>
+                            <div className="title-area">
+                                <div className="text-black large bold">Acciones del PAI</div>
+                            </div>
+                            <ComponentList components={actionsData} orientation="right" title="Acciones" className="card-table" />
                         </div>
                     </FormComponent>
+                    <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
+                        {status === "revision" && <FormComponent action={undefined} id="revision-form">
+                            <div className="strategic-direction-grid-1 strategic-direction-grid-3-web" style={{marginTop: "1rem"}}>
+                                <TreeSelectComponent
+                                    control={controlRevision}
+                                    idInput={"field"}
+                                    className={`select-basic span-width`}
+                                    label="Campo"
+                                    classNameLabel={`text-black biggest bold text-required`}
+                                    data={fieldsData}
+                                    errors={errorsRevision}
+                                />
+                            </div>
+                            <div className="strategic-direction-revision-pai-form" style={{marginTop: "1rem"}}>
+                                <Controller
+                                    control={controlRevision}
+                                    name={`observations`}
+                                    defaultValue=""
+                                    render={({ field }) => {
+                                        return (
+                                            <TextAreaComponent
+                                                id={field.name}
+                                                idInput={field.name}
+                                                value={`${field.value}`}
+                                                label="Observaciones"
+                                                characters={5000}
+                                                classNameLabel="text-black biggest bold text-required"
+                                                className="text-area-basic"
+                                                register={registerRevision}
+                                                onChange={field.onChange}
+                                                errors={errorsRevision}
+                                            >
+                                            </TextAreaComponent>
+                                        );
+                                    }}
+                                />
+                                <div style={{ textAlign: "center" }}>
+                                    <ButtonComponent
+                                        className="button-main huge hover-three button-save"
+                                        value="Agregar observación"
+                                        type="button"
+                                        action={onSubmitRevision}
+                                        form="revision-form"
+                                    />
+                                </div>
+                            </div>
+                        </FormComponent>
+                        }
+                        {
+                            tableData.length > 0 && <div className="card-table">
+                                <TableComponent
+                                    columns={status === "adjustment" ? tableColumnsAdjustment : tableColumns}
+                                    data={tableData}
+                                    title={status === "adjustment" ? "Revisión de campos" : "Campos a modificar"}
+                                    isShowModal={false}
+                                    actions={actionColumnsTable[status]}
+                                    hideActions={status === "revision"}
+                                />
+                            </div>
+                        }
+                    </div>
                 </div>
                 {status === "revision" && <div className="card-table strategic-direction-complete-revision-pai">
                     <p className="text-black large bold text-center">Para formular la versión 1 del PAI haz clic <span className="strategic-direction-complete-revision-pai-button" onClick={onComplete}>aquí</span></p>

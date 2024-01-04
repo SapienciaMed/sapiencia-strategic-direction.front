@@ -6,6 +6,7 @@ import { IAccordionTemplate } from "../../../common/interfaces/accordions.interf
 import IndicatorsRevisionComponent from "./indicators-revision.component";
 import AccordionsComponent from "../../../common/components/accordions.component";
 import { RevisionPAIContext } from "../contexts/revision-pai.context";
+import ComponentPagination from "../../../common/components/component-pagination.component";
 
 interface IProps {
     action: IAddAction;
@@ -13,7 +14,7 @@ interface IProps {
 }
 
 function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JSX.Element {
-    const [accordionsIndicators, setAccordionsIndicators] = useState<IAccordionTemplate[]>([]);
+    const [accordionsIndicators, setAccordionsIndicators] = useState<React.JSX.Element[]>([]);
     const { fieldsChange, setCorrectionFields, fieldsValues, fieldsCorrected, approveFields, status: { status }, setApproveFields } = useContext(RevisionPAIContext);
     const {
         register,
@@ -25,11 +26,7 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
     } = useForm<IAddAction>({ mode: "all", defaultValues: action });
     useEffect(() => {
         setAccordionsIndicators(getValues("indicators").map((indicator, indexIndicator) => {
-            return {
-                id: indexIndicator,
-                name: `Indicador No. ${indexIndicator + 1}`,
-                content: <IndicatorsRevisionComponent indicator={indicator} showGeneralFields={indexIndicator === 0 && index == 0} />
-            };
+            return <IndicatorsRevisionComponent indicator={indicator} showGeneralFields={indexIndicator === 0 && index == 0} />
         }));
         if (fieldsValues.length > 0) {
             const values = Reflect.ownKeys(getValues()).map(item => `${String(item)}.${action.indicators[0].id}`);
@@ -40,11 +37,11 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                 }
             });
         }
-        if(approveFields.length > 0){
+        if (approveFields.length > 0) {
             const values = Reflect.ownKeys(getValues()).map(item => `${String(item)}.${action.indicators[0].id}`);
             approveFields.forEach(approve => {
                 const field: any = approve.field.split(".")[0];
-                if(values.includes(approve.field)) {
+                if (values.includes(approve.field)) {
                     setValue(field, approve.adjustment);
                 }
             });
@@ -126,29 +123,32 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
     }, [watch]);
     return (
         <>
-            <Controller
-                control={control}
-                name={"description"}
-                defaultValue=""
-                render={({ field }) => {
-                    return (
-                        <TextAreaComponent
-                            id={field.name}
-                            idInput={field.name}
-                            value={`${field.value}`}
-                            label="Descripción de la acción"
-                            classNameLabel="text-black biggest bold"
-                            className="text-area-basic"
-                            register={register}
-                            onChange={field.onChange}
-                            errors={errors}
-                            disabled={validateActiveField(`${field.name}.${action.indicators[0].id}`)}
-                        />
-                    );
-                }}
-            />
+            <span className="text-black large bold">{`Accion No. ${index + 1}`}</span>
+            <div style={{ marginTop: "1rem" }}>
+                <Controller
+                    control={control}
+                    name={"description"}
+                    defaultValue=""
+                    render={({ field }) => {
+                        return (
+                            <TextAreaComponent
+                                id={field.name}
+                                idInput={field.name}
+                                value={`${field.value}`}
+                                label="Descripción de la acción"
+                                classNameLabel="text-black biggest bold"
+                                className="text-area-basic"
+                                register={register}
+                                onChange={field.onChange}
+                                errors={errors}
+                                disabled={validateActiveField(`${field.name}.${action.indicators[0].id}`)}
+                            />
+                        );
+                    }}
+                />
+            </div>
             <div style={{ marginTop: "1.5rem" }}>
-                <AccordionsComponent data={accordionsIndicators} />
+                <ComponentPagination components={accordionsIndicators} orientation="top" />
             </div>
         </>
     );

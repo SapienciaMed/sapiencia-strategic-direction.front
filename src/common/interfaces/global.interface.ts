@@ -31,3 +31,8 @@ export interface IAdditionalField {
   fieldName?: string;
 }
 
+export interface IComponentListTemplate {
+  id: string | number;
+  name: string;
+  content: React.JSX.Element;
+}
