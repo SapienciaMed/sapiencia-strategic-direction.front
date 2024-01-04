@@ -1,27 +1,27 @@
 import { Tooltip } from "primereact/tooltip";
-import React from "react";
+import React, { Component, useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { PiTrash } from "react-icons/pi";
 import { Navigate, useNavigate } from "react-router-dom";
 import "../style/formulation.scss"; 
 
 interface IAntiCorruptionExpansibleTableProps {
+    id?: number;
     index: any;
+    _id?: string;
     description: string,
     onDelete: () => void;
+    onChange?: (component_id, value: string) => void
+    handleAddActivity?: (component_id: string) => void
 }
 
-const AntiCorruptionExpansibleTable = ({ index, description, onDelete }: IAntiCorruptionExpansibleTableProps) => {
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/agregar-actividad');
-    };
+const AntiCorruptionExpansibleTable = ({ _id, index, description, onDelete, onChange, handleAddActivity }: IAntiCorruptionExpansibleTableProps) => {
 
     return (
         <tr>
             <td className="p-datatable-PAA stacked-table-item1">No. Componente {index}</td>
             <td className="p-datatable-PAA stacked-table-item2">
-                <input type="text" className="input-PAA" placeholder="Escribe aquí" defaultValue={description} />
+                <input onChange={(e) => onChange(_id, e.target.value)} type="text" className="input-PAA" placeholder="Escribe aquí" defaultValue={description} />
             </td>
             <td className="p-datatable-PAA stacked-table-item3">
                 <div className="icon-content">
@@ -30,7 +30,7 @@ const AntiCorruptionExpansibleTable = ({ index, description, onDelete }: IAntiCo
                         data-pr-tooltip="Agregar actividad"
                         data-pr-position="bottom"
                         style={{ 'color': '#D72FD1', cursor: 'pointer' }}
-                        onClick={handleClick}
+                        onClick={() => handleAddActivity(_id)}
                     >
                         <AiOutlinePlusCircle />
                     </div></>

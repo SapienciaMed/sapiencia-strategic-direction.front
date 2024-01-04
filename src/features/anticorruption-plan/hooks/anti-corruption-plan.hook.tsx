@@ -1,15 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/ProjectsInterfaces";
-import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
+import { IAntiCorruptionPlan, IAntiCorruptionPlanTemp, ICreate, IAntiCorruptionPlanFields, IIndicator, IResponsible, IActivity, IComponent } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { Controller, useFieldArray, useForm  } from "react-hook-form";
-import { projectsValidator } from "../../../common/schemas";
+import { antiCorruptionPlanValidator } from "../../../common/schemas";
 import { useProjectsService } from "../../projects/hooks/projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip, } from "react-icons/ai";
 import { RiPencilLine } from "react-icons/ri";
 import { HiOutlineDocument } from "react-icons/hi";
 import { FcCancel } from "react-icons/fc";
@@ -24,6 +24,8 @@ import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-statu
 import { useAntiCorruptionPlanService } from "./anti-corruption-plan-service.hook";
 import { useAntiCorruptionPlanComponentService } from "./anti-corruption-plan-component-service.hook";
 import EditModal from "./edit-modal";
+import * as uuid from 'uuid';
+import moment from "moment";
 
 export function useAntiCorruptionPlanData() {
     const { authorization } = useContext(AppContext);
@@ -34,37 +36,65 @@ export function useAntiCorruptionPlanData() {
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
-    const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess } = useContext(AppContext);
     const { getAll } = useAntiCorruptionPlanStatusService();
-    const { update } = useAntiCorruptionPlanService();
+    const { update, create: createPAAC } = useAntiCorruptionPlanService();
     const { getAllByPlanId, deleteAllByIds, store } = useAntiCorruptionPlanComponentService();
     const today = DateTime.local();
-    const formattedDate = today.toFormat('ddMMyyyy');
-    const resolver = useYupValidationResolver(projectsValidator);
+    const resolver = useYupValidationResolver(antiCorruptionPlanValidator);
     const navigate = useNavigate();
     const [visiblemodal, setVisibleModal] = useState(false);
     const [close, setClose] = useState<IProject | number>(1);
     const { id } = useParams() 
-
+    const [createPlanId, setCreatePlanId] = useState<string>(uuid.v4())
+    const [components, setComponents] = useState<IComponent[]>([]);
+    const [componentCount, setComponentCount] = useState(1);
+    const [deletedComponents, setDeletedComponents] = useState<string[]>([]);
+    const [indicators, setIndicators] = useState<IIndicator[]>([]);
+    const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
+    const [activities, setActivities] = useState<IActivity[]>([])
+    
     const {
         handleSubmit,
         register,
         formState: { errors },
         reset,
-        control
-    } = useForm<any>({ resolver });
+        control,
+        getValues,
+        watch,
+    } = useForm<IAntiCorruptionPlanFields>({ resolver });
+
+    const handleAddComponent = () => {
+        const newComponent = {
+            id: componentCount,
+            index: componentCount,
+            uuid: uuid.v4(),
+            plan_uuid: createPlanId,
+            description: getValues('component_desc'),
+        };
+
+        setComponents((prevComponents) => [...prevComponents, newComponent]);
+        setComponentCount((prevCount) => prevCount + 1);
+    };
+
+    const deleteRow = (idToDelete) => {
+        setComponents((prevComponents) =>
+            prevComponents.filter(
+                (component) => component.uuid !== idToDelete
+            )
+        );
+    };
+
+    useEffect(() => {
+        if (components.length === 0) {
+            setComponentCount(1);
+        }
+    }, [components]);
 
     const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
-        {
-            fieldName: "name",
-            header: "Nombre del plan"
-        },
-        {
-            fieldName: "date",
-            header: "Fecha de formulación",
-        },
-        {
+        { fieldName: "name", header: "Nombre del plan" },
+        { fieldName: "date", header: "Fecha de formulación", },
+        { 
             fieldName: "status",
             header: "Estado",
             renderCell: (row) => {
@@ -203,7 +233,7 @@ export function useAntiCorruptionPlanData() {
             
         });
     };
-
+    
     return {
         navigate,
         tableComponentRef,
@@ -228,6 +258,21 @@ export function useAntiCorruptionPlanData() {
         deleteAllByIds,
         store,
         id,
+        createPAAC,
+        createPlanId,
+        handleAddComponent,
+        components,
+        setDeletedComponents,
+        deletedComponents,
+        deleteRow,
+        setComponents,
+        component_desc: watch('component_desc'),
+        indicators,
+        setIndicators,
+        responsibles,
+        setResponsibles,
+        activities,
+        setActivities,
     };
 }
 

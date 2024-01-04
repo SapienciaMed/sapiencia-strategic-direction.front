@@ -7,12 +7,13 @@ import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { Controller } from "react-hook-form";
 import '../../anticorruption-plan/style/style.scss';
 
-function ProjectsPage(): React.JSX.Element {
+function AntiCorruptionPlanPage(): React.JSX.Element {
     useBreadCrumb({
         isPrimaryPage: true,
         name: "Consultar Plan Anticorrupción y Atención al Ciudadano (PAAC)",
         url: "/direccion-estrategica/Consultar/",
     });
+
     const { navigate, 
             tableComponentRef, 
             tableColumns, 
@@ -30,11 +31,8 @@ function ProjectsPage(): React.JSX.Element {
             msgs, 
             setErrores,
             validateActionAccess } = useAntiCorruptionPlanData();
-            const [isEditing, setIsEditing] = useState(false);
 
-            const handleClick = () => {
-                navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/`);
-            };
+    const [isEditing, setIsEditing] = useState(false);
 
     return (
         <div className='main-page'>
@@ -49,7 +47,7 @@ function ProjectsPage(): React.JSX.Element {
                             Consultar plan
                             </label>
                             { validateActionAccess("PROYECTO_CREAR") && 
-                                <div className="title-button text-three large" onClick={handleClick}>
+                                <div className="title-button text-three large" onClick={() => navigate(`/direccion-estrategica/planes/plan-anticorrupcion/formular-plan`)}>
                                     <span style={{ marginRight: '0.5em' }} >Formular plan anticorrupción y atención al ciudadano</span>
                                     {<AiOutlinePlusCircle size={20} color="533893" />}
                                 </div>
@@ -99,4 +97,4 @@ function ProjectsPage(): React.JSX.Element {
     )
 }
 
-export default React.memo(ProjectsPage);
+export default React.memo(AntiCorruptionPlanPage);
