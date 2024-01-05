@@ -59,6 +59,14 @@ export function useAntiCorruptionPlanData() {
         setIndicators,
         setResponsibles,
         setActivities,
+        setDeletedActivityIds,
+        setDeletedComponentIds,
+        setDeletedIndicatorIds,
+        setDeletedResponsibleIds,
+        deletedActivityIds,
+        deletedComponentIds,
+        deletedIndicatorIds,
+        deletedResponsibleIds,
     } = useContext(AntiCorruptionPlanContext);
     
     const {
@@ -122,7 +130,7 @@ export function useAntiCorruptionPlanData() {
                             </div>
                             <EditModal
                                 control={control}
-                                onSave={saveChanges}
+                                onSave={() => {}}
                                 antiCorruptionPlan={antiCorruptionPlan}
                                 setAntiCorruptionPlan={setAntiCorruptionPlan}
                                 title={"Editar"}
@@ -205,17 +213,6 @@ export function useAntiCorruptionPlanData() {
         setVisibleModal(false);
     };
 
-    const saveChanges = () => {
-        update(antiCorruptionPlan).then((response) =>{
-            if (response.operation.code === EResponseCodes.OK) {
-                closeEditDialog();
-            } else {
-                console.log(response.operation.message);
-            }
-            
-        });
-    };
-    
     return {
         navigate,
         tableComponentRef,
@@ -250,7 +247,15 @@ export function useAntiCorruptionPlanData() {
         responsibles,
         setResponsibles,
         activities,
-        setActivities
+        setActivities,
+        setDeletedActivityIds,
+        setDeletedComponentIds,
+        setDeletedIndicatorIds,
+        setDeletedResponsibleIds,
+        deletedActivityIds,
+        deletedComponentIds,
+        deletedIndicatorIds,
+        deletedResponsibleIds,
     };
 }
 

@@ -19,7 +19,7 @@ interface Props {
 }
 
 function AddResponsibles(props: Props): React.JSX.Element {
-    const { navigate, validateActionAccess, responsibles, setResponsibles } = useAntiCorruptionPlanData();
+    const { navigate, validateActionAccess, responsibles, setResponsibles, setDeletedResponsibleIds, deletedResponsibleIds} = useAntiCorruptionPlanData();
     const resolver = useYupValidationResolver(antiCorruptionPlanIndicatorValidator);
 
     const {
@@ -44,6 +44,9 @@ function AddResponsibles(props: Props): React.JSX.Element {
                 cursor: 'pointer', display: 'flex',
                 justifyContent: 'flex-end', alignItems: 'flex-end'}}
                 onClick={() => {
+                    if (responsibles.find((r) => r.uuid  === responsible_uuid)?.pac_id) {
+                        setDeletedResponsibleIds([...deletedResponsibleIds, responsible_uuid])
+                    }
                     setResponsibles([...responsibles.filter((r) => r.uuid !== responsible_uuid)]);
                 }}
             >

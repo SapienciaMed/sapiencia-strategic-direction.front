@@ -112,7 +112,6 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
                                                 register={register}
                                                 onChange={(e) => {
                                                     field.onChange(e);
-                                                    // onChange(e.target.value)
                                                     const index = activities.findIndex((a) => a.uuid == selectedActivity)
                                                     activities[index].description = e.target.value;
                                                     setActivities([...activities])

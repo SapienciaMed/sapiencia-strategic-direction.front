@@ -167,12 +167,12 @@ function App() {
               />
 
               <Route
-                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/editar/:id"}
-                element={<FormulationPAACEdition />}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
+                element={<AntiCorruptionPlanContextProvider><FormulationPAAC /></AntiCorruptionPlanContextProvider>}
               />
 
               <Route
-                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
+                path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan/editar/:id"}
                 element={<AntiCorruptionPlanContextProvider><FormulationPAAC /></AntiCorruptionPlanContextProvider>}
               />
 
