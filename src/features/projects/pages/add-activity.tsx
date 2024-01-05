@@ -66,7 +66,6 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
             title: "Cancelar acción",
             onOk: () => {
                 setMessage({});
-                handleClick();
                 onCancel
             },
         });
