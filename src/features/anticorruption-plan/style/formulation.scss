@@ -45,6 +45,11 @@
     border-color: #6366f1;
 }
 
+.disabled-button:hover {
+    cursor: not-allowed;
+    background-color: gray !important;
+}
+
 .p-datatable-thead-PAA{
     max-width: 260.667px;
     min-height: 260.667px;

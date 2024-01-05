@@ -52,8 +52,8 @@ const FormulationPAACEdition = () => {
             title: "¿Eliminar acción?",
             onOk: () => {
                 setMessage({
-                    title: "Acción del PAI",
-                    description: "¡Eliminada exitosamente!",
+                    title: "Componente del PAAC",
+                    description: "¡Eliminado exitosamente!",
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",

@@ -52,7 +52,8 @@ export function useAntiCorruptionPlanData() {
     const [deletedComponents, setDeletedComponents] = useState<string[]>([]);
     const [indicators, setIndicators] = useState<IIndicator[]>([]);
     const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
-    const [activities, setActivities] = useState<IActivity[]>([])
+    const [activities, setActivities] = useState<IActivity[]>([]);
+    const [componentAdded, setComponentAdded] = useState(false);
     
     const {
         handleSubmit,
@@ -75,6 +76,7 @@ export function useAntiCorruptionPlanData() {
 
         setComponents((prevComponents) => [...prevComponents, newComponent]);
         setComponentCount((prevCount) => prevCount + 1);
+        setComponentAdded(true);
     };
 
     const deleteRow = (idToDelete) => {
@@ -83,6 +85,9 @@ export function useAntiCorruptionPlanData() {
                 (component) => component.uuid !== idToDelete
             )
         );
+        if (components.length <= 1) {
+            setComponentAdded(false);
+        }
     };
 
     useEffect(() => {
@@ -273,6 +278,8 @@ export function useAntiCorruptionPlanData() {
         setResponsibles,
         activities,
         setActivities,
+        componentAdded,
+        setComponentAdded,
     };
 }
 

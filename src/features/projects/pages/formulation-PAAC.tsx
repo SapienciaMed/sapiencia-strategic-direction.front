@@ -30,12 +30,15 @@ const FormulationPAACEdition = () => {
         deleteRow,
         activities,
         setActivities,
+        componentAdded,
+        setComponentAdded,
         errors } = useAntiCorruptionPlanData();
 
 
     const { setMessage } = useContext(AppContext);
     const [selectedComponent, setSelectedComponent] = useState<string>('')
     const [selectedActivity, setSelectedActivity] = useState<string>('');
+    const [isComponentSelected, setIsComponentSelected] = useState(false);
 
     const handleDeleteComponent = (idToDelete) => {
         setMessage({
@@ -53,8 +56,8 @@ const FormulationPAACEdition = () => {
             title: "¿Eliminar acción?",
             onOk: () => {
                 setMessage({
-                    title: "Acción del PAI",
-                    description: "¡Eliminada exitosamente!",
+                    title: "Componente del PAAC",
+                    description: "¡Eliminado exitosamente!",
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",
@@ -135,10 +138,12 @@ const FormulationPAACEdition = () => {
                                     ]}
                                     errors={errors}
                                     filter={true}
+                                    onChange={() => setIsComponentSelected(true)}
                                 />
-                                <div className="text-buttom-circle" onClick={handleAddComponent}>
+                                <div className="text-buttom-circle" onClick={handleAddComponent} style={{ opacity: isComponentSelected ? 1 : 0.5, pointerEvents: isComponentSelected ? 'auto' : 'none' }}>
                                     Agregar componente <AiOutlinePlusCircle />
                                 </div>
+
                                 <div className="card-table mt-15">
                                     <table className="table-PAA">
                                         <thead>
@@ -174,9 +179,10 @@ const FormulationPAACEdition = () => {
                             <div className="container-button-bot space-between">
                                 <div>
                                 <ButtonComponent
-                                        className={`button-main huge hover-three button-save`}
+                                        className={`button-main huge hover-three button-save ${componentAdded ? '' : 'disabled-button'}`}
                                         value={"Guardar temporalmente"}
                                         type="button"
+                                        disabled={!componentAdded}
                                         // action={onSave}
                                     />
                                 </div>
@@ -185,9 +191,10 @@ const FormulationPAACEdition = () => {
                                         Cancelar
                                     </span>
                                     <ButtonComponent
-                                        className={`button-main huge hover-three button-save`}
+                                        className={`button-main huge hover-three button-save ${componentAdded ? '' : 'disabled-button'}`}
                                         value={"Guardar y regresar"}
                                         type="button"
+                                        disabled={!componentAdded}
                                         // action={() => {
                                         //     // onSave();
                                         //     handleClick();

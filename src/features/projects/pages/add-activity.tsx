@@ -26,17 +26,20 @@ function AddActivity(props: Props): React.JSX.Element {
     const resolver = useYupValidationResolver(antiCorruptionPlanActivityValidator);
 
     const {
-		register,
-		control,
-		watch,
-		setValue,
-		formState: { errors, isValid },
-	} = useForm<any>({ resolver, mode: "all" });
-    
+        register,
+        control,
+        watch,
+        setValue,
+        formState: { errors, isValid },
+    } = useForm<any>({
+        resolver,
+        mode: "all",
+    });
+
     const { setMessage } = useContext(AppContext);
     const [responsables, setResponsables] = useState([]);
-    const {selectedActivity, selectedComponent, onSave, onCancel } = props;
-    
+    const { selectedActivity, selectedComponent, onSave, onCancel } = props;
+
     const handleCancel = () => {
         setMessage({
             background: true,
@@ -91,35 +94,38 @@ function AddActivity(props: Props): React.JSX.Element {
                         <Controller
                             control={control}
                             name="description_activity"
-                            render={({ field }) => {
-                                return (
+                            render={({ field }) => (
+                                <>
                                     <TextAreaComponent
                                         id={field.name}
                                         idInput={field.name}
-                                        value={`${field.value}`}
+                                        value={field.value}
                                         label="Descripción de actividad"
                                         classNameLabel="text-black biggest bold text-required"
-                                        className="text-area-basic"
-                                        register={register}
-                                        onChange={field.onChange}
-                                        errors={errors}
+                                        className={`text-area-basic ${errors.description_activity ? 'error' : ''}`}
+                                        {...field}
                                     />
-                                );
-                            }}
+                                    {errors.description_activity && (
+                                        <span className="alert-textarea error-text">
+                                            La descripción es obligatoria
+                                        </span>
+                                    )}
+                                </>
+                            )}
                         />
-						<span
-							className="alert-textarea"
-						>
-							Max 1000 caracteres
-						</span>
+                        <span
+                            className="alert-textarea"
+                        >
+                            Max 1000 caracteres
+                        </span>
                     </div>
 
                     <div className="card-table" style={{ marginTop: 40 }}>
                         <AddIndicators selectedActivity={selectedActivity} />
                     </div>
                 </div>
-                
-            </div>                     
+
+            </div>
             <div className="strategic-direction-search-buttons">
                 <span className="bold text-center button" onClick={() => {
                     handleCancel();
@@ -132,7 +138,7 @@ function AddActivity(props: Props): React.JSX.Element {
                     type="submit"
                     action={handleSave}
                 />
-            </div> 
+            </div>
         </div>
     )
 }

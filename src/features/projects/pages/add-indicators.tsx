@@ -13,6 +13,17 @@ import { antiCorruptionPlanIndicatorValidator } from "../../../common/schemas";
 import AddResponsibles from "./add-responsibles";
 import * as uuid from 'uuid';
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
+const schema = Yup.object().shape({
+    description: Yup.string().required('La descripción es obligatoria'),
+    quarterly_goal1: Yup.number().required('El campo es obligatorio'),
+    quarterly_goal2: Yup.number().required('El campo es obligatorio'),
+    quarterly_goal3: Yup.number().required('El campo es obligatorio'),
+});
+
+const resolver = yupResolver(schema);
 
 interface Props {
     selectedActivity: string;
@@ -21,25 +32,26 @@ interface Props {
 
 function AddIndicator(props: Props): React.JSX.Element {
     const { navigate, validateActionAccess, indicators, setIndicators, responsibles, setResponsibles } = useAntiCorruptionPlanData();
-    const resolver = useYupValidationResolver(antiCorruptionPlanIndicatorValidator);
+    //const resolver = useYupValidationResolver(antiCorruptionPlanIndicatorValidator);
 
     const {
-		register,
-		control,
-		watch,
-		setValue,
+        register,
+        control,
+        watch,
+        setValue,
         getValues,
-		formState: { errors, isValid },
-	} = useForm<any>({ resolver, mode: "all" });
-    
+        formState: { errors, isValid },
+    } = useForm({ 
+        resolver, mode: "all" 
+    });
+
     const { setMessage } = useContext(AppContext);
     const { selectedActivity } = props;
     const [selectedIndicator, setSelectedIndicator] = useState<string>('')
     const units = [
-        {name: 'Porcentaje', value: 'Porcentaje'},
-        {name: 'Numerico', value: 'Numerico'}
+        { name: 'Porcentaje', value: 'Porcentaje' },
+        { name: 'Numerico', value: 'Numerico' }
     ];
-
 
     const handleCancel = () => {
         setMessage({
@@ -96,13 +108,13 @@ function AddIndicator(props: Props): React.JSX.Element {
     const loadData = () => {
         const indicator = indicators?.find((i) => i.uuid == selectedIndicator);
 
-        setValue('description_indicator',indicator?.description)
-        setValue('quarterly_goal1',indicator?.quarterly_goal1)
-        setValue('unit1',indicator?.unit1)
-        setValue('quarterly_goal2',indicator?.quarterly_goal2)
-        setValue('unit2',indicator?.unit2)
-        setValue('quarterly_goal3',indicator?.quarterly_goal3)
-        setValue('unit3',indicator?.unit3)
+        setValue('description_indicator', indicator?.description)
+        setValue('quarterly_goal1', indicator?.quarterly_goal1)
+        setValue('unit1', indicator?.unit1)
+        setValue('quarterly_goal2', indicator?.quarterly_goal2)
+        setValue('unit2', indicator?.unit2)
+        setValue('quarterly_goal3', indicator?.quarterly_goal3)
+        setValue('unit3', indicator?.unit3)
     }
 
     const addIndicator = () => {
@@ -151,7 +163,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                     <label className="text-black large bold">
                         Indicadores de producto *
                     </label>
-                    { validateActionAccess("PROYECTO_CREAR") && 
+                    {validateActionAccess("PROYECTO_CREAR") &&
                         <div className="title-button text-three large" onClick={addIndicator}>
                             <span style={{ marginRight: '0.5em' }} >Agregar indicador</span>
                             {<AiOutlinePlusCircle size={20} color="533893" />}
@@ -159,7 +171,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                     }
                 </div>
 
-                
+
                 <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
                     {indicators.map((indicator, index) => {
                         return (
@@ -168,8 +180,8 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 style={{
                                     width: 40, height: 40, borderRadius: '100%',
                                     border: 'none', textAlign: 'center', fontSize: '14px',
-                                    backgroundColor: indicator.uuid == selectedIndicator ? '#533893': '#E2E2E2',
-                                    color: indicator.uuid == selectedIndicator ? 'white': 'black',
+                                    backgroundColor: indicator.uuid == selectedIndicator ? '#533893' : '#E2E2E2',
+                                    color: indicator.uuid == selectedIndicator ? 'white' : 'black',
                                     justifyContent: 'center', alignItems: 'center', display: 'flex', cursor: 'pointer',
                                     margin: 7
                                 }}
@@ -185,9 +197,11 @@ function AddIndicator(props: Props): React.JSX.Element {
                     selectedIndicator !== '' ? (
                         <div
                             className="delete-action"
-                            style={{ 'color': '#e53935', fontSize: '1rem',
-                            cursor: 'pointer', display: 'flex',
-                            justifyContent: 'flex-end', alignItems: 'flex-end'}}
+                            style={{
+                                'color': '#e53935', fontSize: '1rem',
+                                cursor: 'pointer', display: 'flex',
+                                justifyContent: 'flex-end', alignItems: 'flex-end'
+                            }}
                             onClick={() => handleOnDelete()}>
                             Eliminar <PiTrash className="button grid-button button-delete" />
                         </div>
@@ -200,20 +214,23 @@ function AddIndicator(props: Props): React.JSX.Element {
                             <Controller
                                 control={control}
                                 name="description"
-                                defaultValue={indicators.find((i) => i.uuid == selectedIndicator).description}
+                                defaultValue={indicators.find((i) => i.uuid === selectedIndicator).description}
                                 render={({ field }) => {
                                     return (
-                                        <TextAreaComponent
-                                            id={field.name}
-                                            idInput={field.name}
-                                            value={`${field.value}`}
-                                            label="Descripción de indicador"
-                                            classNameLabel="text-black biggest bold text-required"
-                                            className="text-area-basic"
-                                            register={register}
-                                            onChange={field.onChange}
-                                            errors={errors}
-                                        />
+                                        <>
+                                            <TextAreaComponent
+                                                id={field.name}
+                                                idInput={field.name}
+                                                value={field.value}
+                                                label="Descripción de indicador"
+                                                classNameLabel="text-black biggest bold text-required"
+                                                className={`text-area-basic ${errors?.description ? 'error' : ''}`}
+                                                {...field}
+                                            />
+                                            {errors.description && (
+                                                <span className="error-text">El campo es obligatorio</span>
+                                            )}
+                                        </>
                                     );
                                 }}
                             />
@@ -223,20 +240,21 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 Max 1000 caracteres
                             </span>
 
-                        
-                            <div className="select-sections" style={{display: 'flex', justifyContent: 'flex-start', columnGap: '50px', flexWrap: 'wrap'}}>
 
-                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
-                                    <InputNumberComponent
-                                        idInput="quarterly_goal1"
-                                        control={control}
-                                        label="Meta Cuatrimestre 1"
-                                        errors={errors}
-                                        classNameLabel="text-black biggest bold"
-                                        className={`inputNumber-basic`}
-                                    />
+                            <div className="select-sections" style={{ display: 'flex', justifyContent: 'flex-start', columnGap: '50px'}}>
+
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
+                                <InputNumberComponent
+                                    idInput="quarterly_goal1"
+                                    control={control}
+                                    label="Meta Cuatrimestre 1"
+                                    errors={errors}
+                                    placeholder=""
+                                    classNameLabel="text-black biggest bold color-1 text-required"
+                                    className={`inputNumber-basic ${errors?.quarterly_goal1 ? 'error' : ''}`}
+                                />
                                 </div>
-                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
                                     <SelectComponent
                                         control={control}
                                         idInput="unit1"
@@ -250,25 +268,25 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 </div>
                             </div>
 
-                            <div className="select-sections" style={{display: 'flex', justifyContent: 'flex-start', columnGap: '50px', flexWrap: 'wrap'}}>
-                            <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                            <div className="select-sections" style={{ display: 'flex', justifyContent: 'flex-start', columnGap: '50px'}}>
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
                                     <InputNumberComponent
                                         idInput="quarterly_goal2"
                                         control={control}
                                         label="Meta Cuatrimestre 2"
                                         errors={errors}
                                         placeholder=""
-                                        classNameLabel="text-black biggest bold"
-                                        className={`inputNumber-basic`}
+                                        classNameLabel="text-black biggest bold color-2 text-required"
+                                        className={`inputNumber-basic ${errors?.quarterly_goal2 ? 'error' : ''}`}
                                     />
                                 </div>
-                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
                                     <SelectComponent
                                         control={control}
                                         idInput="unit2"
                                         className={`select-basic span-width`}
                                         label="Unidad de medida"
-                                        classNameLabel="text-black biggest bold color-1"
+                                        classNameLabel="text-black biggest bold color-2"
                                         data={units}
                                         errors={errors}
                                         filter={true}
@@ -276,25 +294,25 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 </div>
                             </div>
 
-                            <div className="select-sections" style={{display: 'flex', justifyContent: 'flex-start', columnGap: '50px', flexWrap: 'wrap'}}>
-                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                            <div className="select-sections" style={{ display: 'flex', justifyContent: 'flex-start', columnGap: '50px'}}>
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
                                     <InputNumberComponent
                                         idInput="quarterly_goal3"
                                         control={control}
                                         label="Meta Cuatrimestre 3"
                                         errors={errors}
                                         placeholder=""
-                                        classNameLabel="text-black biggest bold"
-                                        className={`inputNumber-basic`}
+                                        classNameLabel="text-black biggest bold color-3 text-required"
+                                        className={`inputNumber-basic ${errors?.quarterly_goal3 ? 'error' : ''}`}
                                     />
                                 </div>
-                                <div className="" style={{marginTop: '2%', width: '100%', maxWidth: '330px'}}>
+                                <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
                                     <SelectComponent
                                         control={control}
                                         idInput="unit3"
                                         className={`select-basic span-width`}
                                         label="Unidad de medida"
-                                        classNameLabel="text-black biggest bold color-1"
+                                        classNameLabel="text-black biggest bold color-3"
                                         data={units}
                                         errors={errors}
                                         filter={true}
@@ -302,18 +320,18 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 </div>
                             </div>
                         </>
-                    ): null
+                    ) : null
                 }
 
                 {
                     selectedIndicator !== '' ? (
                         <>
-                            <div className="card-table" style={{marginTop: '5%'}}>
+                            <div className="card-table" style={{ marginTop: '5%' }}>
                                 <div className="title-area">
                                     <label className="text-black large bold">
-                                    Responsable
+                                        Responsable
                                     </label>
-                                    { validateActionAccess("PROYECTO_CREAR") && 
+                                    {validateActionAccess("PROYECTO_CREAR") &&
                                         <div className="title-button text-three large" onClick={addResponsible}>
                                             <span style={{ marginRight: '0.5em' }} >Agregar Responsable</span>
                                             {<AiOutlinePlusCircle size={20} color="533893" />}
@@ -321,12 +339,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     }
                                 </div>
 
-                                {responsibles.length > 0 &&  responsibles.filter((responsible) => responsible.indicator_uuid === selectedIndicator).map((r, index) => (
-                                    <AddResponsibles key={`${r.uuid}-${index}`} name={r.name}/>
+                                {responsibles.length > 0 && responsibles.filter((responsible) => responsible.indicator_uuid === selectedIndicator).map((r, index) => (
+                                    <AddResponsibles key={`${r.uuid}-${index}`} name={r.name} />
                                 ))}
                             </div>
 
-                            
+
 
                             <div className="strategic-direction-search-buttons">
                                 <span className="bold text-center button" onClick={() => {
@@ -340,12 +358,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     type="submit"
                                     action={save}
                                 />
-                            </div>  
+                            </div>
                         </>
                     ) : null
                 }
-            </div>                     
-                               
+            </div>
+
 
         </div>
     )
