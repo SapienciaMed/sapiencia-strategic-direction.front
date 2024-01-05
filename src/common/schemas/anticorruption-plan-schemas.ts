@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const antiCorruptionPlanValidator = yup.object({
-    year: yup.string().required(),
+    year: yup.number().required(),
     component_desc: yup.string().required()
 });
 

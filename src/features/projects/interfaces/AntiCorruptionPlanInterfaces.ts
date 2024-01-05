@@ -8,12 +8,14 @@ export interface IAntiCorruptionPlan {
 }
 
 export interface IResponsible {
+  pac_id?: number;
   uuid?: string;
   description: string;
   ipa_uuid: string
 }
 
 export interface IIndicator {
+  pac_id?: number;
   uuid: string;
   description?: string;
   quarterly_goal1?: number;
@@ -26,12 +28,14 @@ export interface IIndicator {
 }
 
 export interface IActivity {
+  pac_id?: number;
   uuid: string;
   description: string;
   cpac_uuid: string
 }
 
 export interface IComponent {
+  pac_id?: number;
   index: number;
   uuid: string;
   description: string;

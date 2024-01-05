@@ -10,6 +10,15 @@ interface IContext {
     setIndicators: Dispatch<SetStateAction<IIndicator[]>>;
     setResponsibles: Dispatch<SetStateAction<IResponsible[]>>;
     setActivities: Dispatch<SetStateAction<IActivity[]>>;
+    deletedComponentIds: string[];
+    deletedIndicatorIds: string[];
+    deletedResponsibleIds: string[];
+    deletedActivityIds: string[];
+    setDeletedComponentIds: Dispatch<SetStateAction<string[]>>;
+    setDeletedIndicatorIds: Dispatch<SetStateAction<string[]>>;
+    setDeletedResponsibleIds: Dispatch<SetStateAction<string[]>>;
+    setDeletedActivityIds: Dispatch<SetStateAction<string[]>>;
+
 }
 
 interface IProps {
@@ -25,6 +34,14 @@ export const AntiCorruptionPlanContext = createContext<IContext>({
     setIndicators: () => {},
     setResponsibles: () => {},
     setActivities: () => {},
+    deletedComponentIds: [],
+    deletedActivityIds: [],
+    deletedIndicatorIds: [],
+    deletedResponsibleIds: [],
+    setDeletedComponentIds: () => {},
+    setDeletedIndicatorIds: () => {},
+    setDeletedResponsibleIds: () => {},
+    setDeletedActivityIds: () => {},
 })
 
 
@@ -34,6 +51,10 @@ export function AntiCorruptionPlanContextProvider({ children }: Readonly<IProps>
     const [indicators, setIndicators] = useState<IIndicator[]>([]);
     const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
     const [activities, setActivities] = useState<IActivity[]>([]);
+    const [deletedComponentIds, setDeletedComponentIds] = useState<string[]>([]);
+    const [deletedActivityIds, setDeletedActivityIds] = useState<string[]>([]);
+    const [deletedIndicatorIds, setDeletedIndicatorIds] = useState<string[]>([]);
+    const [deletedResponsibleIds, setDeletedResponsibleIds] = useState<string[]>([]);
 
     const values = useMemo<IContext>(() => {
         return {
@@ -41,14 +62,22 @@ export function AntiCorruptionPlanContextProvider({ children }: Readonly<IProps>
             indicators,
             responsibles,
             activities,
+            deletedComponentIds,
+            deletedActivityIds,
+            deletedIndicatorIds,
+            deletedResponsibleIds,
             setComponents,
             setIndicators,
             setResponsibles,
             setActivities,
+            setDeletedComponentIds,
+            setDeletedIndicatorIds,
+            setDeletedResponsibleIds,
+            setDeletedActivityIds,
         };
-    }, [components,
-        indicators,
-        responsibles, activities, setComponents, setIndicators, setResponsibles, setActivities])
+    }, [components, indicators, responsibles, activities, setComponents, setIndicators, setResponsibles, setActivities,
+        setDeletedComponentIds, setDeletedIndicatorIds, setDeletedResponsibleIds, setDeletedActivityIds
+    ])
 
     return <AntiCorruptionPlanContext.Provider value={values}>{children}</AntiCorruptionPlanContext.Provider>;
 }

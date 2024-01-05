@@ -34,7 +34,7 @@ interface Props {
 }
 
 function AddIndicator(props: Props): React.JSX.Element {
-    const { navigate, validateActionAccess, indicators, setIndicators, responsibles, setResponsibles } = useAntiCorruptionPlanData();
+    const { navigate, validateActionAccess, indicators, setIndicators, responsibles, setResponsibles, setDeletedIndicatorIds, deletedIndicatorIds } = useAntiCorruptionPlanData();
 
     const {
         register,
@@ -54,6 +54,7 @@ function AddIndicator(props: Props): React.JSX.Element {
         { name: 'Porcentaje', value: 'Porcentaje' },
         { name: 'Numero', value: 'Numero' }
     ];
+
 
     const handleCancel = () => {
         setMessage({
@@ -91,6 +92,9 @@ function AddIndicator(props: Props): React.JSX.Element {
             show: true,
             title: "Aceptar",
             onOk: () => {
+                if (indicators.find((r) => r.uuid  === selectedIndicator)?.pac_id) {
+                    setDeletedIndicatorIds([...deletedIndicatorIds, selectedIndicator])
+                }
                 setMessage({});
                 setSelectedIndicator('');
                 setIndicators([...indicators.filter(i => i.uuid !== selectedIndicator)]);
@@ -100,7 +104,6 @@ function AddIndicator(props: Props): React.JSX.Element {
 
 
     useEffect(() => {
-        setValue('description', 'asdasdasd')
         addIndicator();
     }, [])
 
@@ -155,11 +158,8 @@ function AddIndicator(props: Props): React.JSX.Element {
         indicators[index].unit2 = getValues('unit2');
         indicators[index].quarterly_goal3 = getValues('quarterly_goal3');
         indicators[index].unit3 = getValues('unit3');
-        
         setIndicators([...indicators])
     }
-
-    console.log('indicators', indicators)
 
     return (
         <div className='main-page'>
@@ -362,22 +362,6 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     <AddResponsibles key={`${r.uuid}-${index}`} name={r.description} responsible_uuid={r.uuid} />
                                 ))}
                             </div>
-
-                            {/* 
-
-                            <div className="strategic-direction-search-buttons">
-                                <span className="bold text-center button" onClick={() => {
-                                    handleCancel();
-                                }}>
-                                    Cancelar
-                                </span>
-                                <ButtonComponent
-                                    className="button-main huge hover-three"
-                                    value="Guardar"
-                                    type="submit"
-                                    action={save}
-                                />
-                            </div> */}
                         </>
                     ) : null
                 }

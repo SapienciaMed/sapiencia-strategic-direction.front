@@ -10,18 +10,22 @@ export function useAntiCorruptionPlanService() {
     const anticorruptionPlanUrl: string = "/api/v1/anti-corruption-plan";
     const { get, post, put, deleted } = useCrudService(baseURL);
 
+    async function getById(plan_id: string): Promise<ApiResponse<IAntiCorruptionPlan>> {
+        const endpoint: string = `/get-by-id/${plan_id}`;
+        return get(`${anticorruptionPlanUrl}${endpoint}`);
+    }
 
     async function create(data: IAntiCorruptionPlanTemp): Promise<ApiResponse<IAntiCorruptionPlan>> {
         const endpoint: string = "/create";
         return post(`${anticorruptionPlanUrl}${endpoint}`, data);
     }
 
-    async function update(data: IAntiCorruptionPlan): Promise<ApiResponse<any[]>>{
-        const endpoint: string = `/update/${data.id}`;
-        return put(`${anticorruptionPlanUrl}${endpoint}`, data);
+    async function update(id: string, year: string): Promise<ApiResponse<any[]>>{
+        const endpoint: string = `/update/${id}`;
+        return put(`${anticorruptionPlanUrl}${endpoint}`, { year });
     }
     
-    return { update, create }
+    return { update, create, getById }
 }
 
 export function useAntiCorruptionPlanComponentService() {
@@ -29,6 +33,10 @@ export function useAntiCorruptionPlanComponentService() {
     const antiCorruptionPlanComponentUrl: string = "/api/v1/anti-corruption-plan-component";
     const { get, post, put, deleted } = useCrudService(baseURL);
 
+    async function getByPlanId(plan_id: string): Promise<ApiResponse<any>> {
+        const endpoint: string = `/get-by-plan-id/${plan_id}`;
+        return get(`${antiCorruptionPlanComponentUrl}${endpoint}`);
+    }
 
     async function deleteAllByIds(ids: string[]): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
         const endpoint: string = "/delete-all-by-ids";
@@ -40,13 +48,18 @@ export function useAntiCorruptionPlanComponentService() {
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
 
-    return { deleteAllByIds, store }
+    return { deleteAllByIds, store, getByPlanId }
 }
 
 export function useAntiCorruptionPlanActivityService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
     const antiCorruptionPlanComponentUrl: string = "/api/v1/anti-corruption-plan-activity";
-    const { post} = useCrudService(baseURL);
+    const { post, get} = useCrudService(baseURL);
+
+    async function getByPlanId(plan_id: string): Promise<ApiResponse<any>> {
+        const endpoint: string = `/get-by-plan-id/${plan_id}`;
+        return get(`${antiCorruptionPlanComponentUrl}${endpoint}`);
+    }
 
 
     async function deleteAllByIds(ids: string[]): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
@@ -59,14 +72,18 @@ export function useAntiCorruptionPlanActivityService() {
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
 
-    return { deleteAllByIds, store }
+    return { deleteAllByIds, store, getByPlanId }
 }
 
 export function useAntiCorruptionPlanIndicatorService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
     const antiCorruptionPlanComponentUrl: string = "/api/v1/anti-corruption-plan-indicator";
-    const { post} = useCrudService(baseURL);
+    const { post, get } = useCrudService(baseURL);
 
+    async function getByPlanId(plan_id: string): Promise<ApiResponse<any>> {
+        const endpoint: string = `/get-by-plan-id/${plan_id}`;
+        return get(`${antiCorruptionPlanComponentUrl}${endpoint}`);
+    }
 
     async function deleteAllByIds(ids: string[]): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
         const endpoint: string = "/delete-all-by-ids";
@@ -78,13 +95,18 @@ export function useAntiCorruptionPlanIndicatorService() {
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
 
-    return { deleteAllByIds, store }
+    return { deleteAllByIds, store, getByPlanId }
 }
 
 export function useAntiCorruptionPlanResponsibleService() {
     const baseURL: string = process.env.urlApiStrategicDirection;
     const antiCorruptionPlanComponentUrl: string = "/api/v1/anti-corruption-plan-responsible";
-    const { post} = useCrudService(baseURL);
+    const { post, get } = useCrudService(baseURL);
+
+    async function getByPlanId(plan_id: string): Promise<ApiResponse<any>> {
+        const endpoint: string = `/get-by-plan-id/${plan_id}`;
+        return get(`${antiCorruptionPlanComponentUrl}${endpoint}`);
+    }
 
 
     async function deleteAllByIds(ids: string[]): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
@@ -97,6 +119,6 @@ export function useAntiCorruptionPlanResponsibleService() {
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
 
-    return { deleteAllByIds, store }
+    return { deleteAllByIds, store, getByPlanId }
 }
 
