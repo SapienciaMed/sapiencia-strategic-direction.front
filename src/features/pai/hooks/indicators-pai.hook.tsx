@@ -44,6 +44,7 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
     const [ indicatorType, setIndicatorType ] = useState<IPAIIndicatorType>()
     const { getIndicatorsType, getProjectIndicators } = useEntitiesService();
     const { GetProjectById } = useProjectsService()
+    
 
     const {
         getValues,
@@ -264,7 +265,7 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
         name: "bimesters"
     });
 
-    const { fields: fieldsProducts, append: appendProducts} = useFieldArray({
+    const { fields: fieldsProducts, append: appendProducts, remove: removeProducts} = useFieldArray({
         control: controlIndicatorsPai,
         name: "products",
     });
@@ -273,7 +274,7 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
         name: "products"
     });
     
-    const { fields: fieldsResponsible, append: appendResponsible} = useFieldArray({
+    const { fields: fieldsResponsible, append: appendResponsible , remove: removeResponsible} = useFieldArray({
         control: controlIndicatorsPai,
         name: "responsibles",
     });
@@ -282,7 +283,7 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
         name: "responsibles"
     });
     
-    const { fields: fieldsCoResponsible, append: appendCoResponsible} = useFieldArray({
+    const { fields: fieldsCoResponsible, append: appendCoResponsible, remove: removeCoResponsible}  = useFieldArray({
         control: controlIndicatorsPai,
         name: "coresponsibles",
     });
@@ -389,5 +390,8 @@ export default function useIndicatorsPai(actionId:number, updatePAIForm,indicato
         setDisaggregateColumns,
         coResponsibleFieldArray,
         indicatorTypeValidation,
+        removeProducts,
+        removeResponsible,
+        removeCoResponsible,
     }
 }

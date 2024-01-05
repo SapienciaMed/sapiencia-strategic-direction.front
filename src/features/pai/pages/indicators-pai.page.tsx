@@ -10,6 +10,7 @@ import { InputNumberComponent } from "../../../common/components/Form/input-numb
 import useIndicatorsPai from "../hooks/indicators-pai.hook";
 import disaggregate from '../../../public/images/icons/disaggregate.svg';
 import TableDisaggregate from "../components/table-disaggregate";
+import { FaTrashAlt } from "react-icons/fa";
 
 interface IIndicatorsPaiProps {
     actionId: number;
@@ -23,6 +24,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
         PAIData,
         register,
         getValues,
+        setMessage,
         getFieldState,
         appendProducts,
         fieldsProducts,
@@ -40,7 +42,10 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
         onChangeDisaggregate,
         controlIndicatorsPai,
         projectIndicatorsData,
-        indicatorTypeValidation
+        indicatorTypeValidation,
+        removeProducts,
+        removeResponsible,
+        removeCoResponsible,
     } = useIndicatorsPai(actionId, updatePAIForm, indicatorId, editMode);
 
     return (
@@ -188,7 +193,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
 
                             {fieldsProducts.map((fields, index) => {
                                 return (
-                                    <div key={fields.id}>
+                                    <div key={fields.id} className="delete-container">
                                         <Controller
                                             control={controlIndicatorsPai}
                                             name={`products.${index}.product`}
@@ -232,6 +237,43 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                                 );
                                             }}
                                         />
+                                        <div className="delete-div ">
+                                            <div className="form-group column">
+                                                <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
+                                                    <div onClick={() => {
+                                                        setMessage({
+                                                            title: "Eliminar registro",
+                                                            description: "¿Deseas continuar?",
+                                                            show: true,
+                                                            background: true,
+                                                            OkTitle: "Aceptar",
+                                                            cancelTitle: "Cancelar",
+                                                            onOk: () => {
+                                                                removeProducts(index);
+                                                                setMessage({
+                                                                    title: "Registro eliminado",
+                                                                    description: "¡Registro eliminado exitosamente!",
+                                                                    show: true,
+                                                                    background: true,
+                                                                    OkTitle: "Aceptar",
+                                                                    onOk: () => {
+                                                                        setMessage({});
+                                                                    }
+                                                                });
+                                                            },
+                                                            onCancel: () => {
+                                                                setMessage({});
+                                                            }
+                                                        });
+                                                    } } className="actions-needs">
+                                                        <div className="actions-poblations ">
+                                                            <div className="container-div">
+                                                                <FaTrashAlt className="button grid-button button-delete" />
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                </div>
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -251,7 +293,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                             </div>
                             {fieldsResponsible.map((fields, index) => {
                                 return (
-                                    <div key={fields.id}>
+                                    <div key={fields.id} className="delete-container">
                                         <Controller
                                             control={controlIndicatorsPai}
                                             name={`responsibles.${index}.responsible`}
@@ -295,6 +337,43 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                                 );
                                             }}
                                         />
+                                        <div className="delete-div ">
+                                            <div className="form-group column">
+                                                <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
+                                                    <div onClick={() => {
+                                                        setMessage({
+                                                            title: "Eliminar registro",
+                                                            description: "¿Deseas continuar?",
+                                                            show: true,
+                                                            background: true,
+                                                            OkTitle: "Aceptar",
+                                                            cancelTitle: "Cancelar",
+                                                            onOk: () => {
+                                                                removeResponsible(index);
+                                                                setMessage({
+                                                                    title: "Registro eliminado",
+                                                                    description: "¡Registro eliminado exitosamente!",
+                                                                    show: true,
+                                                                    background: true,
+                                                                    OkTitle: "Aceptar",
+                                                                    onOk: () => {
+                                                                        setMessage({});
+                                                                    }
+                                                                });
+                                                            },
+                                                            onCancel: () => {
+                                                                setMessage({});
+                                                            }
+                                                        });
+                                                    } } className="actions-needs">
+                                                        <div className="actions-poblations ">
+                                                            <div className="container-div">
+                                                                <FaTrashAlt className="button grid-button button-delete" />
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                </div>
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -314,7 +393,7 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                             </div>
                             {fieldsCoResponsible.map((fields, index) => {
                                 return (
-                                    <div key={fields.id}>
+                                    <div key={fields.id} className="delete-container">
                                         <Controller
                                             control={controlIndicatorsPai}
                                             name={`coresponsibles.${index}.coresponsible`}
@@ -345,6 +424,43 @@ function IndicatorsPaiPage({ actionId, indicatorId, editMode = false, updatePAIF
                                                 );
                                             }}
                                         />
+                                        <div className="delete-div ">
+                                            <div className="form-group column">
+                                                <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
+                                                    <div onClick={() => {
+                                                        setMessage({
+                                                            title: "Eliminar registro",
+                                                            description: "¿Deseas continuar?",
+                                                            show: true,
+                                                            background: true,
+                                                            OkTitle: "Aceptar",
+                                                            cancelTitle: "Cancelar",
+                                                            onOk: () => {
+                                                                removeCoResponsible(index);
+                                                                setMessage({
+                                                                    title: "Registro eliminado",
+                                                                    description: "¡Registro eliminado exitosamente!",
+                                                                    show: true,
+                                                                    background: true,
+                                                                    OkTitle: "Aceptar",
+                                                                    onOk: () => {
+                                                                        setMessage({});
+                                                                    }
+                                                                });
+                                                            },
+                                                            onCancel: () => {
+                                                                setMessage({});
+                                                            }
+                                                        });
+                                                    } } className="actions-needs">
+                                                        <div className="actions-poblations ">
+                                                            <div className="container-div">
+                                                                <FaTrashAlt className="button grid-button button-delete" />
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                </div>
+                                        </div>
                                     </div>
                                 )
                             })}

@@ -160,6 +160,7 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                         </div>
                     </div>
 
+                    
                     <div className="card-table " style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
                         <div className="title-area">
                             <label className="text-black biggest bold text-required">
@@ -172,85 +173,90 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                                 Agregar Línea <AiOutlinePlusCircle />
                             </div>
                         </div>
-                        {fields.map((fields, index) => {
-                            const lineNumber = index + 1;
-                            return (
-                                <div key={fields.id}>
-                                    <Controller
-                                        control={control}
-                                        name={`linePAI.${index}.line`}
-                                        defaultValue=""
-                                        render={({ field }) => {
-                                            const isEmpty = !field.value; // Reemplazar con la lógica adecuada si el valor debe ser tratado como vacío
-                                            const isOverLimit = field.value?.length > 100;
-                                            const isFieldDirty = getFieldState(`linePAI.${index}.line`);
-                                            return (
-                                                <TextAreaComponent
-                                                    id={field.name}
-                                                    idInput={field.name}
-                                                    label={`Línea No. ${lineNumber}`}
-                                                    classNameLabel="text-black biggest bold text-required"
-                                                    value={`${field.value}`}
-                                                    className={`text-area-basic ${isEmpty && isFieldDirty.isDirty ? "undefined error" : ""} ${isOverLimit ? "undefined error" : ""} `}
-                                                    placeholder="Escribe aquí"
-                                                    register={register}
-                                                    fieldArray={true}
-                                                    onChange={field.onChange}
-                                                    errors={errors}
-                                                    characters={100}
+                        <div className="problem-description-container">
+                            {fields.map((fields, index) => {
+                                const lineNumber = index + 1;
+                                return (
+                                    <div key={fields.id} className="delete-container">
+                                        <Controller
+                                            control={control}
+                                            name={`linePAI.${index}.line`}
+                                            defaultValue=""
+                                            render={({ field }) => {
+                                                const isEmpty = !field.value; // Reemplazar con la lógica adecuada si el valor debe ser tratado como vacío
+                                                const isOverLimit = field.value?.length > 100;
+                                                const isFieldDirty = getFieldState(`linePAI.${index}.line`);
+                                                return (
+                                                    <TextAreaComponent
+                                                        id={field.name}
+                                                        idInput={field.name}
+                                                        label={`Línea No. ${lineNumber}`}
+                                                        classNameLabel="text-black biggest bold text-required"
+                                                        value={`${field.value}`}
+                                                        className={`text-area-basic ${isEmpty && isFieldDirty.isDirty ? "undefined error" : ""} ${isOverLimit ? "undefined error" : ""} `}
+                                                        placeholder="Escribe aquí"
+                                                        register={register}
+                                                        fieldArray={true}
+                                                        onChange={field.onChange}
+                                                        errors={errors}
+                                                        characters={100}
 
-                                                >
-                                                    {isEmpty && isFieldDirty.isDirty && (
-                                                        <p className="error-message bold not-margin-padding">
-                                                            El campo es obligatorio
-                                                        </p>
-                                                    )}
-                                                    {isOverLimit && (
-                                                        <p className="error-message bold not-margin-padding">
-                                                            Solo se permiten 100 caracteres
-                                                        </p>
-                                                    )}
-                                                </TextAreaComponent>
-                                            );
-                                        } } />
+                                                    >
+                                                        {isEmpty && isFieldDirty.isDirty && (
+                                                            <p className="error-message bold not-margin-padding">
+                                                                El campo es obligatorio
+                                                            </p>
+                                                        )}
+                                                        {isOverLimit && (
+                                                            <p className="error-message bold not-margin-padding">
+                                                                Solo se permiten 100 caracteres
+                                                            </p>
+                                                        )}
+                                                    </TextAreaComponent>
+                                                );
+                                            } } />
                                         
-                                            <div className="div-acciones">
-                                            <label className="text-black biggest bold">Acciones</label>
-                                            <div onClick={() => {
-                                                setMessage({
-                                                    title: "Eliminar registro",
-                                                    description: "¿Deseas continuar?",
-                                                    show: true,
-                                                    background: true,
-                                                    OkTitle: "Aceptar",
-                                                    cancelTitle: "Cancelar",
-                                                    onOk: () => {
-                                                        removeLine(index);
+                                        <div className="delete-div ">
+                                            <div className="form-group column">
+                                                <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
+                                                    <div onClick={() => {
                                                         setMessage({
-                                                            title: "Registro eliminado",
-                                                            description: "¡Registro eliminado exitosamente!",
+                                                            title: "Eliminar registro",
+                                                            description: "¿Deseas continuar?",
                                                             show: true,
                                                             background: true,
                                                             OkTitle: "Aceptar",
+                                                            cancelTitle: "Cancelar",
                                                             onOk: () => {
+                                                                removeLine(index);
+                                                                setMessage({
+                                                                    title: "Registro eliminado",
+                                                                    description: "¡Registro eliminado exitosamente!",
+                                                                    show: true,
+                                                                    background: true,
+                                                                    OkTitle: "Aceptar",
+                                                                    onOk: () => {
+                                                                        setMessage({});
+                                                                    }
+                                                                });
+                                                            },
+                                                            onCancel: () => {
                                                                 setMessage({});
                                                             }
                                                         });
-                                                    },
-                                                    onCancel: () => {
-                                                        setMessage({});
-                                                    }
-                                                });
-                                            } } className="div-acciones">
-                                                <div className="actions-poblations ">
-                                                    <FaTrashAlt className="button grid-button button-delete" />
+                                                    } } className="actions-needs">
+                                                        <div className="actions-poblations ">
+                                                            <div className="container-div">
+                                                                <FaTrashAlt className="button grid-button button-delete" />
+                                                            </div>
+                                                        </div>
                                                 </div>
-                                        </div>
+                                            </div>
                                     </div>
                                 </div>
-                                    
-                           );
-                        })}
+                            );
+                            })}
+                        </div>
                     </div>
 
                     <div className="card-table" style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
@@ -276,7 +282,7 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                         {riskFields.map((fields, index) => {
                             const lineNumber = index + 1;
                             return (
-                                <div key={fields.id} style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+                                <div key={fields.id} style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delete-container">
                                     <Controller
                                         control={control}
                                         name={`risksPAI.${index}.risk`}
@@ -301,6 +307,43 @@ function CreatePlanActionPAIPage({ status }: Readonly<IPropsPAI>): React.JSX.Ele
                                                 </TextAreaComponent>
                                             );
                                         }} />
+                                        <div className="delete-div ">
+                                            <div className="form-group column">
+                                                <label className="text-black biggest bold" style={{textAlign: "center"}}>Acciones</label>
+                                                    <div onClick={() => {
+                                                        setMessage({
+                                                            title: "Eliminar registro",
+                                                            description: "¿Deseas continuar?",
+                                                            show: true,
+                                                            background: true,
+                                                            OkTitle: "Aceptar",
+                                                            cancelTitle: "Cancelar",
+                                                            onOk: () => {
+                                                                removeRisk(index);
+                                                                setMessage({
+                                                                    title: "Registro eliminado",
+                                                                    description: "¡Registro eliminado exitosamente!",
+                                                                    show: true,
+                                                                    background: true,
+                                                                    OkTitle: "Aceptar",
+                                                                    onOk: () => {
+                                                                        setMessage({});
+                                                                    }
+                                                                });
+                                                            },
+                                                            onCancel: () => {
+                                                                setMessage({});
+                                                            }
+                                                        });
+                                                    } } className="actions-needs">
+                                                        <div className="actions-poblations ">
+                                                            <div className="container-div">
+                                                                <FaTrashAlt className="button grid-button button-delete" />
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                    </div>
                                 </div>
                             );
                         })}
