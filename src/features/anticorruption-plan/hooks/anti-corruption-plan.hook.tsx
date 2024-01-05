@@ -48,12 +48,6 @@ export function useAntiCorruptionPlanData() {
     const [close, setClose] = useState<IProject | number>(1);
     const { id } = useParams() 
     const [createPlanId, setCreatePlanId] = useState<string>(uuid.v4())
-    // const [components, setComponents] = useState<IComponent[]>([]);
-    
-    // const [indicators, setIndicators] = useState<IIndicator[]>([]);
-    // const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
-    // const [activities, setActivities] = useState<IActivity[]>([]);
-    
 
 
     const {
