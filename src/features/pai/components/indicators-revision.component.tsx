@@ -1,13 +1,9 @@
 import { IIndicatorsPAITemp, IPAIIndicatorType } from "../interfaces/IndicatorsPAIInterfaces";
-import { IApproveRevisionPAI, IRevisionFormPAI } from "../interfaces/PAIInterfaces";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent, InputRadioComponent, InputInplaceComponent } from "../../../common/components/Form";
-import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
-import { approvePAIValidator, revisionPAIValidator } from "../../../common/schemas";
+import { SelectComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useContext, useEffect, useState } from "react";
 import { RevisionPAIContext } from "../contexts/revision-pai.context";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { generalFieldsData } from "../data/dropdowns-revision-pai";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { useEntitiesService } from "../hooks/entities-service.hook";
 import { InputNumberComponent } from "../../../common/components/Form/input-number.component";
@@ -15,14 +11,13 @@ import { AppContext } from "../../../common/contexts/app.context";
 
 interface IProps {
     indicator: IIndicatorsPAITemp;
-    showGeneralFields: boolean;
+    actionId: number;
 }
 
-function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<IProps>): React.JSX.Element {
+function IndicatorsRevisionComponent({ indicator, actionId }: Readonly<IProps>): React.JSX.Element {
     const ind: IIndicatorsPAITemp = { ...indicator };
     const [typesIndicatorData, setTypesIndicatorData] = useState<IDropdownProps[]>([]);
     const [projectIndicatorsData, setProjectIndicatorsData] = useState<IDropdownProps[]>([]);
-    const [fieldsData, setFieldsData] = useState<IDropdownProps[]>([]);
     const {
         revisionPAI,
         setRevisionPAI,
@@ -63,7 +58,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         control: control,
         name: "coresponsibles",
     });
-    
+
     const validateActiveField = (idInput: string) => {
         const approveIds = approveFields.reduce((result, current) => {
             if (!current.approved) result.push(current.field);
@@ -106,7 +101,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
             setProjectIndicatorsData(arrayIndicators);
         }
     }, []);
-    
+
     useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (status === "adjustment") {
@@ -140,9 +135,8 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                 });
             }
             return setCorrectionFields(prev => {
-                const newValues = { ...prev[indicator.id] };
-                const nameField = name.split(".");
-                if (nameField.length === 1) {
+                const nameSplit = name.split(".");
+                if (nameSplit.length === 1) {
                     const field = name
                         .replace(".line", "")
                         .replace(".risk", "")
@@ -150,20 +144,36 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                         .replace(".responsible", "")
                         .replace(".coresponsible", "")
                         .replace(".value", "");
-                    Reflect.set(newValues, `${field}.${indicator.id}`, value[field]);
+                    const nameField = `${field}.${indicator.id}`;
+                    const correctionSelect = prev.findIndex(correction => correction.field === nameField);
+                    if (correctionSelect !== undefined && correctionSelect !== -1) {
+                        let newValues = [...prev];
+                        newValues[correctionSelect] = { ...prev[correctionSelect], correction: value[name] }
+                        return newValues;
+                    } else {
+                        let newValues = [...prev];
+                        newValues.push({field: `${actionId}-${indicator.id}-${field}.${indicator.id}`, correction: value[name]});
+                        return newValues;
+                    }
                 } else {
-                    const item = value[nameField[0]][nameField[1]];
-                    Reflect.set(newValues, `${nameField[0]}.${item.id}`, value[nameField[0]][nameField[1]][nameField[2]]);
+                    const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                    const correctionSelect = prev.findIndex(correction => correction.field === nameField);
+                    if (correctionSelect !== undefined && correctionSelect !== -1) {
+                        let newValues = [...prev];
+                        newValues[correctionSelect] = { ...prev[correctionSelect], correction: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                        return newValues;
+                    } else {
+                        let newValues = [...prev];
+                        newValues.push({field: `${actionId}-${indicator.id}-${nameField}.${indicator.id}`, correction: value[name]});
+                        return newValues;
+                    }
                 }
-                const valueReturn = { ...prev };
-                Reflect.set(valueReturn, indicator.id, newValues);
-                return valueReturn;
             });
         });
         return () => subscription.unsubscribe();
     }, [watch]);
 
-    
+
 
     return (
         <div className="strategic-direction-grid-1 strategic-direction-grid-1-web">
@@ -177,7 +187,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                     data={projectIndicatorsData}
                     errors={errors}
                     filter={true}
-                    disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 1) || validateActiveField(`projectIndicator.${indicator.id}`)}
+                    disabled={(!fieldsChange.includes(`${actionId}-${indicator.id}-projectIndicator.${indicator.id} || ${actionId}-${indicator.id}-indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 1) || validateActiveField(`projectIndicator.${indicator.id}`)}
                 />
                 <SelectComponent
                     control={control}
@@ -188,7 +198,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                     data={typesIndicatorData}
                     errors={errors}
                     filter={true}
-                    disabled={validateActiveField(`indicatorType.${indicator.id}`)}
+                    disabled={validateActiveField(`${actionId}-${indicator.id}-indicatorType.${indicator.id}`)}
                 />
             </div>
             <Controller
@@ -207,7 +217,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                             register={register}
                             onChange={field.onChange}
                             errors={errors}
-                            disabled={(!fieldsChange.includes(`projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 2) || validateActiveField(`indicatorDesc.${indicator.id}`)}
+                            disabled={(!fieldsChange.includes(`${actionId}-${indicator.id}-projectIndicator.${indicator.id} || ${actionId}-${indicator.id}-indicatorDesc.${indicator.id}`) ? true : pai.typePAI !== 2) || validateActiveField(`indicatorDesc.${indicator.id}`)}
                         >
                         </TextAreaComponent>
                     );
@@ -231,7 +241,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                     suffix={`${indicator.typePAI === 2 ? "%" : ""}`}
                                     classNameLabel="text-black biggest bold"
                                     className={`inputNumber-basic`}
-                                    disabled={validateActiveField(`bimesters.${idField}`)}
+                                    disabled={validateActiveField(`${actionId}-${indicator.id}-bimesters.${idField}`)}
                                 />
                             )
                         })
@@ -274,7 +284,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={validateActiveField(`products.${idField}`)}
+                                                disabled={validateActiveField(`${actionId}-${indicator.id}-products.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -310,7 +320,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={validateActiveField(`responsibles.${idField}`)}
+                                                disabled={validateActiveField(`${actionId}-${indicator.id}-responsibles.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -346,7 +356,7 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
                                                 register={register}
                                                 onChange={field.onChange}
                                                 errors={errors}
-                                                disabled={validateActiveField(`coresponsibles.${idField}`)}
+                                                disabled={validateActiveField(`${actionId}-${indicator.id}-coresponsibles.${idField}`)}
                                             >
                                             </TextAreaComponent>
                                         );
@@ -360,9 +370,5 @@ function IndicatorsRevisionComponent({ indicator, showGeneralFields }: Readonly<
         </div>
     );
 }
-
-
-
-
 
 export default IndicatorsRevisionComponent;

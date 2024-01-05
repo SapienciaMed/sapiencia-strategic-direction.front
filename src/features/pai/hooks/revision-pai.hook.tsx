@@ -65,7 +65,6 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
         getValues,
         watch
     } = useForm<any>({ mode: "all" });
-
     const navigate = useNavigate();
     const watchProject = watch("namePAI");
     const watchType = watch("typePAI");
@@ -145,7 +144,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                     return {
                         id: index,
                         name: `Acción No. ${index + 1}`,
-                        content: <ActionsRevisionComponent action={action} index={index} key={action.id}/>
+                        content: <ActionsRevisionComponent action={action} index={index} key={action.id} />
                     }
                 }));
                 setPai(res);
@@ -190,39 +189,28 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                     const resRevision = res.revision.find(rev => rev.completed === true && rev.version === 1);
                     if (resCorrection && resRevision) {
                         setUpdatePAI(resCorrection.id);
-                        let revPAI = [];
                         const jsonCorrection = JSON.parse(JSON.stringify(resRevision.json));
-                        const ownKeysRevPAI = Reflect.ownKeys(jsonCorrection);
-                        ownKeysRevPAI.forEach(key => {
-                            jsonCorrection[key].forEach((indicator: IRevisionFormPAI) => revPAI.push({ ...indicator, idIndicator: Number(key) }));
-                        })
-                        setRevisionPAI(revPAI);
-                        let flds = [];
-                        revPAI.forEach(rev => {
-                            flds.push(rev.field);
+                        setRevisionPAI(jsonCorrection);
+                        let flds = jsonCorrection.map((revision) => {
+                            return revision.field;
                         });
                         setFieldsChange(flds);
                         const jsonCorrectionPrev = JSON.parse(JSON.stringify(resCorrection.json));
                         setCorrectionFields(jsonCorrectionPrev);
-                        let fieldsCorrectionPrev = [];
-                        let fieldsValuesPrev = [];
-                        Reflect.ownKeys(jsonCorrectionPrev).forEach(key => Reflect.ownKeys(jsonCorrectionPrev[key]).forEach(key2 => {
-                            fieldsCorrectionPrev.push(key2);
-                            fieldsValuesPrev.push({ field: key2, value: jsonCorrectionPrev[key][key2] });
-                        }));
+                        const fieldsCorrectionPrev = jsonCorrectionPrev.map(item => item.field);
+                        const fieldsValuesPrev = jsonCorrectionPrev.map(item => {
+                            return {
+                                field: item.field,
+                                value: item.correction
+                            }
+                        });
                         setFieldsCorrected(fieldsCorrectionPrev);
                         setFieldsValues(fieldsValuesPrev);
                     } else if (resRevision) {
-                        let revPAI = [];
-                        const jsonRevision = JSON.parse(JSON.stringify(resRevision.json));
-                        const ownKeysRevPAI = Reflect.ownKeys(jsonRevision);
-                        ownKeysRevPAI.forEach(key => {
-                            jsonRevision[key].forEach((indicator: IRevisionFormPAI) => revPAI.push({ ...indicator, idIndicator: Number(key) }));
-                        })
-                        setRevisionPAI(revPAI);
-                        let flds = [];
-                        revPAI.forEach(rev => {
-                            flds.push(rev.field);
+                        const jsonRes = JSON.parse(JSON.stringify(resRevision.json));
+                        setRevisionPAI(jsonRes);
+                        let flds = jsonRes.map((revision) => {
+                            return revision.field;
                         });
                         setFieldsChange(flds);
                     } else {
@@ -377,7 +365,7 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
             }
         } else if (status === "correction") {
             if (validateActionAccess("CORREGIR_PLAN")) {
-                if (validateActionAccess("REVISAR_PLAN")) {
+                if (!validateActionAccess("REVISAR_PLAN")) {
                     navigate(`./../../`);
                     return setMessage({
                         title: "Formulario no disponible",
@@ -442,10 +430,8 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                     });
                 }
                 return setCorrectionFields(prev => {
-                    const indicatorId = getValues("actionsPAi")[0].indicators[0].id;
-                    const newValues = { ...prev[indicatorId] };
-                    const nameField = name.split(".");
-                    if (nameField.length === 1) {
+                    const nameSplit = name.split(".");
+                    if (nameSplit.length === 1) {
                         const field = name
                             .replace(".line", "")
                             .replace(".risk", "")
@@ -453,14 +439,30 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                             .replace(".responsible", "")
                             .replace(".coresponsible", "")
                             .replace(".value", "");
-                        Reflect.set(newValues, field, value[field]);
-                    } else {
-                        const item = value[nameField[0]][nameField[1]];
-                        Reflect.set(newValues, `${nameField[0]}.${item.id}`, value[nameField[0]][nameField[1]][nameField[2]]);
-                    }
-                    const valueReturn = { ...prev };
-                    Reflect.set(valueReturn, indicatorId, newValues);
-                    return valueReturn;
+                            const nameField = `${field}`;
+                            const correctionSelect = prev.findIndex(correction => correction.field === nameField);
+                            if (correctionSelect !== undefined && correctionSelect !== -1) {
+                                let newValues = [...prev];
+                                newValues[correctionSelect] = { ...prev[correctionSelect], correction: value[name] }
+                                return newValues;
+                            } else {
+                                let newValues = [...prev];
+                                newValues.push({field: field, correction: value[name]});
+                                return newValues;
+                            }
+                        } else {
+                            const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                            const correctionSelect = prev.findIndex(correction => correction.field === correction);
+                            if (correctionSelect !== undefined && correctionSelect !== -1) {
+                                let newValues = [...prev];
+                                newValues[correctionSelect] = { ...prev[correctionSelect], adjustment: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                                return newValues;
+                            } else {
+                                let newValues = [...prev];
+                                newValues.push({field: nameField, correction: value[name]});
+                                return newValues;
+                            }
+                        }
                 });
             });
             return () => subscription.unsubscribe();
@@ -629,27 +631,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
 
     const onSaveTempCorrection = () => {
         if (updatePAI !== null && updatePAI !== undefined) {
-            let jsonPAI = {};
-            const correction = { ...correctionFields };
-            Reflect.deleteProperty(correction, "pai");
-            Reflect.ownKeys(correction).forEach((key, index) => {
-                const correctionObject = { ...correction[key] };
-                Reflect.ownKeys(correctionObject).forEach(key2 => {
-                    if (!fieldsCorrected.includes(String(key2))) Reflect.deleteProperty(correctionObject, String(key2));
-                });
-                const paiCorrection = correctionObject["pai"];
-                if (index === 0) {
-                    Reflect.set(jsonPAI, key, { ...correctionObject, paiCorrection });
-                } else {
-                    Reflect.set(jsonPAI, key, { ...correctionObject });
-                }
-            });
             const data: IRevisionPAI = {
                 idPai: Number(idPAI),
                 completed: false,
                 userCreate: authorization.user.numberDocument,
                 version: 2,
-                json: JSON.stringify(jsonPAI)
+                json: JSON.stringify(correctionFields.filter(item => fieldsCorrected.includes(item.field)))
             };
             UpdateRevisionPAI(updatePAI, data).then(response => {
                 if (response.operation.code === EResponseCodes.OK) {
@@ -684,27 +671,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 }
             });
         } else {
-            let jsonPAI = {};
-            const correction = { ...correctionFields };
-            Reflect.deleteProperty(correction, "pai");
-            Reflect.ownKeys(correction).forEach((key, index) => {
-                const correctionObject = { ...correction[key] };
-                Reflect.ownKeys(correctionObject).forEach(key2 => {
-                    if (!fieldsCorrected.includes(String(key2))) Reflect.deleteProperty(correctionObject, String(key2));
-                });
-                const paiCorrection = correctionObject["pai"];
-                if (index === 0) {
-                    Reflect.set(jsonPAI, key, { ...correctionObject, paiCorrection });
-                } else {
-                    Reflect.set(jsonPAI, key, { ...correctionObject });
-                }
-            });
             const data: IRevisionPAI = {
                 idPai: Number(idPAI),
                 completed: false,
                 userCreate: authorization.user.numberDocument,
                 version: 2,
-                json: JSON.stringify(jsonPAI)
+                json: JSON.stringify(correctionFields.filter(item => fieldsCorrected.includes(item.field)))
             }
             CreateRevisionPAI(data).then(response => {
                 if (response.operation.code === EResponseCodes.OK) {
@@ -844,26 +816,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
             cancelTitle: "Cancelar",
             onOk: () => {
                 if (updatePAI !== null && updatePAI !== undefined) {
-                    let jsonPAI = {};
-                    revisionPAI.forEach(revision => {
-                        if (Reflect.has(jsonPAI, revision.idIndicator)) {
-                            jsonPAI[revision.idIndicator].push({
-                                field: revision.field,
-                                observations: revision.observations
-                            });
-                        } else {
-                            jsonPAI[revision.idIndicator] = [{
-                                field: revision.field,
-                                observations: revision.observations
-                            }];
-                        }
-                    })
                     const data: IRevisionPAI = {
                         idPai: Number(idPAI),
                         completed: true,
                         userCreate: authorization.user.numberDocument,
                         version: 1,
-                        json: JSON.stringify(jsonPAI)
+                        json: JSON.stringify(revisionPAI)
                     }
                     UpdateRevisionPAI(updatePAI, data).then(response => {
                         if (response.operation.code === EResponseCodes.OK) {
@@ -898,26 +856,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                         }
                     });
                 } else {
-                    let jsonPAI = {};
-                    revisionPAI.forEach(revision => {
-                        if (Reflect.has(jsonPAI, revision.idIndicator)) {
-                            jsonPAI[revision.idIndicator].push({
-                                field: revision.field,
-                                observations: revision.observations
-                            });
-                        } else {
-                            jsonPAI[revision.idIndicator] = [{
-                                field: revision.field,
-                                observations: revision.observations
-                            }];
-                        }
-                    })
                     const data: IRevisionPAI = {
                         idPai: Number(idPAI),
                         completed: true,
                         userCreate: authorization.user.numberDocument,
                         version: 1,
-                        json: JSON.stringify(jsonPAI)
+                        json: JSON.stringify(revisionPAI)
                     }
                     CreateRevisionPAI(data).then(response => {
                         if (response.operation.code === EResponseCodes.OK) {
@@ -988,27 +932,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                 cancelTitle: "Cancelar",
                 onOk: () => {
                     if (updatePAI !== null && updatePAI !== undefined) {
-                        let jsonPAI = {};
-                        const correction = { ...correctionFields };
-                        Reflect.deleteProperty(correction, "pai");
-                        Reflect.ownKeys(correction).forEach((key, index) => {
-                            const correctionObject = { ...correction[key] };
-                            Reflect.ownKeys(correctionObject).forEach(key2 => {
-                                if (!fieldsCorrected.includes(String(key2))) Reflect.deleteProperty(correctionObject, String(key2));
-                            });
-                            const paiCorrection = correctionObject["pai"];
-                            if (index === 0) {
-                                Reflect.set(jsonPAI, key, { ...correctionObject, paiCorrection });
-                            } else {
-                                Reflect.set(jsonPAI, key, { ...correctionObject });
-                            }
-                        });
                         const data: IRevisionPAI = {
                             idPai: Number(idPAI),
                             completed: true,
                             userCreate: authorization.user.numberDocument,
                             version: 2,
-                            json: JSON.stringify(jsonPAI)
+                            json: JSON.stringify(correctionFields)
                         };
                         UpdateRevisionPAI(updatePAI, data).then(response => {
                             if (response.operation.code === EResponseCodes.OK) {
@@ -1043,27 +972,12 @@ export default function useRevisionPAIData({ idPAI, status }: Readonly<IProps>) 
                             }
                         });
                     } else {
-                        let jsonPAI = {};
-                        const correction = { ...correctionFields };
-                        Reflect.deleteProperty(correction, "pai");
-                        Reflect.ownKeys(correction).forEach((key, index) => {
-                            const correctionObject = { ...correction[key] };
-                            Reflect.ownKeys(correctionObject).forEach(key2 => {
-                                if (!fieldsCorrected.includes(String(key2))) Reflect.deleteProperty(correctionObject, String(key2));
-                            });
-                            const paiCorrection = correctionObject["pai"];
-                            if (index === 0) {
-                                Reflect.set(jsonPAI, key, { ...correctionObject, paiCorrection });
-                            } else {
-                                Reflect.set(jsonPAI, key, { ...correctionObject });
-                            }
-                        });
                         const data: IRevisionPAI = {
                             idPai: Number(idPAI),
                             completed: true,
                             userCreate: authorization.user.numberDocument,
                             version: 2,
-                            json: JSON.stringify(jsonPAI)
+                            json: JSON.stringify(correctionFields)
                         }
                         CreateRevisionPAI(data).then(response => {
                             if (response.operation.code === EResponseCodes.OK) {

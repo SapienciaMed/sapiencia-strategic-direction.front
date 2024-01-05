@@ -39,7 +39,7 @@ export const RevisionPAIContext = createContext<IRevisionPAIContext>({
     setStatus: () => {},
     fieldsChange: [],
     setFieldsChange: () => {},
-    correctionFields: {},
+    correctionFields: [],
     setCorrectionFields: () => {},
     fieldsCorrected: [],
     setFieldsCorrected: () => {},
@@ -55,7 +55,7 @@ export function RevisionPAIContextProvider({ children }: Readonly<IProps>) {
     const [projectPAI, setProjectPAI] = useState<IProject>(null);
     const [status, setStatus] = useState<IPropsRevisionPAI>(null);
     const [fieldsChange, setFieldsChange] = useState<string[]>([]);
-    const [correctionFields, setCorrectionFields] = useState<any>({});
+    const [correctionFields, setCorrectionFields] = useState<any>([]);
     const [fieldsCorrected, setFieldsCorrected] = useState<string[]>([]);
     const [fieldsValues, setFieldsValues] = useState<any[]>([]);
     const [approveFields, setApproveFields] = useState<IApproveRevisionPAI[]>([]);

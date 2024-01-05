@@ -2,9 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { IAddAction } from "../interfaces/PAIInterfaces";
 import { Controller, useForm } from "react-hook-form";
 import { TextAreaComponent } from "../../../common/components/Form";
-import { IAccordionTemplate } from "../../../common/interfaces/accordions.interfaces";
 import IndicatorsRevisionComponent from "./indicators-revision.component";
-import AccordionsComponent from "../../../common/components/accordions.component";
 import { RevisionPAIContext } from "../contexts/revision-pai.context";
 import ComponentPagination from "../../../common/components/component-pagination.component";
 
@@ -25,8 +23,8 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
         setValue
     } = useForm<IAddAction>({ mode: "all", defaultValues: action });
     useEffect(() => {
-        setAccordionsIndicators(getValues("indicators").map((indicator, indexIndicator) => {
-            return <IndicatorsRevisionComponent indicator={indicator} showGeneralFields={indexIndicator === 0 && index == 0} />
+        setAccordionsIndicators(getValues("indicators").map((indicator) => {
+            return <IndicatorsRevisionComponent indicator={indicator} actionId={action.id} key={indicator.id}/>
         }));
         if (fieldsValues.length > 0) {
             const values = Reflect.ownKeys(getValues()).map(item => `${String(item)}.${action.indicators[0].id}`);
@@ -98,10 +96,8 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                 });
             }
             return setCorrectionFields(prev => {
-                const indicatorId = getValues("indicators")[0].id;
-                const newValues = { ...prev[indicatorId] };
-                const nameField = name.split(".");
-                if (nameField.length === 1) {
+                const nameSplit = name.split(".");
+                if (nameSplit.length === 1) {
                     const field = name
                         .replace(".line", "")
                         .replace(".risk", "")
@@ -109,14 +105,29 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                         .replace(".responsible", "")
                         .replace(".coresponsible", "")
                         .replace(".value", "");
-                    Reflect.set(newValues, `${field}.${action.indicators[0].id}`, value[field]);
+                    const correctionSelect = prev.findIndex(correction => correction.field === field);
+                    if (correctionSelect !== undefined && correctionSelect !== -1) {
+                        let newValues = [...prev];
+                        newValues[correctionSelect] = { ...prev[correctionSelect], correction: value[name] }
+                        return newValues;
+                    } else {
+                        let newValues = [...prev];
+                        newValues.push({field: `${action.id}-${field}.${action.id}`, correction: value[name]});
+                        return newValues;
+                    }
                 } else {
-                    const item = value[nameField[0]][nameField[1]];
-                    Reflect.set(newValues, `${nameField[0]}.${item.id}`, value[nameField[0]][nameField[1]][nameField[2]]);
+                    const nameField = `${nameSplit[0]}.${value[nameSplit[0]][nameSplit[1]].id}`
+                    const correctionSelect = prev.findIndex(correction => correction.field === nameField);
+                    if (correctionSelect !== undefined && correctionSelect !== -1) {
+                        let newValues = [...prev];
+                        newValues[correctionSelect] = { ...prev[correctionSelect], correction: value[nameSplit[0]][nameSplit[1]][nameSplit[2]] }
+                        return newValues;
+                    } else {
+                        let newValues = [...prev];
+                        newValues.push({field: `${action.id}-${nameField}.${action.id}`, correction: value[name]});
+                        return newValues;
+                    }
                 }
-                const valueReturn = { ...prev };
-                Reflect.set(valueReturn, indicatorId, newValues);
-                return valueReturn;
             });
         });
         return () => subscription.unsubscribe();
@@ -141,7 +152,7 @@ function ActionsRevisionComponent({ action, index }: Readonly<IProps>): React.JS
                                 register={register}
                                 onChange={field.onChange}
                                 errors={errors}
-                                disabled={validateActiveField(`${field.name}.${action.indicators[0].id}`)}
+                                disabled={validateActiveField(`${action.id}-${field.name}.${action.id}`)}
                             />
                         );
                     }}

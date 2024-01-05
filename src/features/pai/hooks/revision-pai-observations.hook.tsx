@@ -244,43 +244,43 @@ export default function useRevisionObservationsPAIData({ idPAI, status }: Readon
             },
             onClick: (row) => {
                 const field = row.field.split(" || ");
-                // if (correctionFields[indicator.id] && (Reflect.has(correctionFields[indicator.id], field[0]) || Reflect.has(correctionFields[indicator.id], field[1]))) {
-                //     setMessage({
-                //         title: "Hacer cambios",
-                //         description: "¿Deseas confirmar que haz realizado el cambio?",
-                //         show: true,
-                //         OkTitle: "Aceptar",
-                //         cancelTitle: "Cancelar",
-                //         onCancel: () => {
-                //             setMessage({});
-                //         },
-                //         onOk: () => {
-                //             setFieldsCorrected(prev => {
-                //                 const fieldNameIndicator = row.field.split(" || ");
-                //                 if (fieldNameIndicator.length > 1) {
-                //                     let corrected = [...prev, pai.typePAI === 1 ? fieldNameIndicator[0] : fieldNameIndicator[1]];
-                //                     return corrected;
-                //                 }
-                //                 let corrected = [...prev, row.field];
-                //                 return corrected;
-                //             });
-                //             setMessage({});
-                //         },
-                //     });
-                // } else {
-                //     setMessage({
-                //         title: "Hacer cambios",
-                //         description: "Debes cambiar el valor del campo antes de confirmar los cambios.",
-                //         show: true,
-                //         OkTitle: "Aceptar",
-                //         onCancel: () => {
-                //             setMessage({});
-                //         },
-                //         onOk: () => {
-                //             setMessage({});
-                //         },
-                //     });
-                // }
+                if ((correctionFields.some(item => item.field === field[0]) || correctionFields.some(item => item.field === field[1]))) {
+                    setMessage({
+                        title: "Hacer cambios",
+                        description: "¿Deseas confirmar que haz realizado el cambio?",
+                        show: true,
+                        OkTitle: "Aceptar",
+                        cancelTitle: "Cancelar",
+                        onCancel: () => {
+                            setMessage({});
+                        },
+                        onOk: () => {
+                            setFieldsCorrected(prev => {
+                                const fieldNameIndicator = row.field.split(" || ");
+                                if (fieldNameIndicator.length > 1) {
+                                    let corrected = [...prev, pai.typePAI === 1 ? fieldNameIndicator[0] : fieldNameIndicator[1]];
+                                    return corrected;
+                                }
+                                let corrected = [...prev, row.field];
+                                return corrected;
+                            });
+                            setMessage({});
+                        },
+                    });
+                } else {
+                    setMessage({
+                        title: "Hacer cambios",
+                        description: "Debes cambiar el valor del campo antes de confirmar los cambios.",
+                        show: true,
+                        OkTitle: "Aceptar",
+                        onCancel: () => {
+                            setMessage({});
+                        },
+                        onOk: () => {
+                            setMessage({});
+                        },
+                    });
+                }
             }
         }
     ];
@@ -391,7 +391,7 @@ export default function useRevisionObservationsPAIData({ idPAI, status }: Readon
                 });
                 const indicatorFieldsData: TreeNodeRevision[] = [
                     {
-                        key: `${action.id}-${indicator.id}-projectIndicator.${indicator.id} || indicatorDesc.${indicator.id}`,
+                        key: `${action.id}-${indicator.id}-projectIndicator.${indicator.id} || ${action.id}-${indicator.id}-indicatorDesc.${indicator.id}`,
                         label: "Indicador proyecto/Descripción indicador",
                         root: `Accion ${index + 1} > Indicador ${indexIndicator + 1} > Indicador proyecto/Descripción indicador`
                     },
