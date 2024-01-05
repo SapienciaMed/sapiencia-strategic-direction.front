@@ -19,6 +19,15 @@ import { useForm } from "react-hook-form";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { antiCorruptionPlanValidator } from "../../../common/schemas";
 import { EResponseCodes } from "../../../common/constants/api.enum";
+import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
+
+interface IComponent {
+    id: number;
+    index: number;
+    uuid: string;
+    description: string;
+}
+
 
 const FormulationPAACEdition = () => {
     const { navigate, yearsArray, components, setComponents, activities, responsibles, indicators, setActivities } = useAntiCorruptionPlanData();
@@ -30,8 +39,6 @@ const FormulationPAACEdition = () => {
     const { store: createAnticorruptionPlanActivities } = useAntiCorruptionPlanActivityService();
     const { store: createAnticorruptionPlanIndicators } = useAntiCorruptionPlanIndicatorService();
     const { store: createAnticorruptionPlanResponsibles } = useAntiCorruptionPlanResponsibleService();
-    
-    
 
     const { setMessage } = useContext(AppContext);
     const [selectedComponent, setSelectedComponent] = useState<string>('')
@@ -40,7 +47,15 @@ const FormulationPAACEdition = () => {
     const [componentAdded, setComponentAdded] = useState(false);
     const [componentCount, setComponentCount] = useState(1);
     const [deletedComponents, setDeletedComponents] = useState<string[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [modalInputValue, setModalInputValue] = useState("");
 
+    useBreadCrumb({
+        isPrimaryPage: true,
+        name: "Formular plan anticorrupción y atención al ciudadano",
+        url: "/direccion-estrategica/Formular/",
+    });
+    
     useEffect(() => {
         if (components.length === 0) {
             setComponentCount(1);
@@ -73,6 +88,13 @@ const FormulationPAACEdition = () => {
             },
         });
     };
+
+    const newComponent: IComponent = {
+        id: componentCount,
+        index: 1,
+        uuid: "some-uuid",
+        description: modalInputValue,
+    };   
 
     const handleCancel = () => {
         setMessage({
@@ -151,6 +173,25 @@ const FormulationPAACEdition = () => {
         setComponentAdded(true);
     };
 
+    const handleModalCancel = () => {
+        setMessage({
+            background: true,
+            cancelTitle: "Cancelar",
+            description: "¿Desea cancelar la acción? No se guardarán los datos",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+                setShowModal(false);
+            },
+            onClose: () => {
+                setMessage({});
+                setShowModal(false);
+            },
+            show: true,
+            title: "Cancelar acción",
+        });
+    };
+
     const deleteRow = (idToDelete) => {
         setComponents((prevComponents) =>
             prevComponents.filter(
@@ -162,6 +203,53 @@ const FormulationPAACEdition = () => {
         }
     };
 
+    const [options, setOptions] = useState([
+        { name: 'Opción 1', value: 'opcion1' },
+        { name: 'Opción 2', value: 'opcion2' },
+    ]);
+
+    const handleModalAccept = () => {
+        if (modalInputValue.trim() !== "") {
+            const newOption = {
+                name: modalInputValue,
+                value: modalInputValue,
+            };
+
+            const updatedOptions = [
+                ...options,
+                newOption,
+            ];
+
+            // Actualiza el estado 'options' con la nueva opción
+            setOptions(updatedOptions);
+            setMessage({
+                title: "Éxito",
+                description: "Se agregó el componente a la lista exitosamente",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onClose: () => {
+                    setMessage({});
+                    setShowModal(false);
+                },
+            });
+        } else {
+            setMessage({
+                title: "Error",
+                description: "No se puede dejar el campo vacío",
+                show: true,
+                background: true,
+                OkTitle: "Aceptar",
+                onClose: () => {
+                    setMessage({});
+                    setShowModal(false);
+                },
+            });
+        }
+        setShowModal(false);
+        setModalInputValue("");
+    };
+    
     const handleSave = () => {
         console.log('components', components)
         console.log('activities', activities)
@@ -232,19 +320,26 @@ const FormulationPAACEdition = () => {
                             </div>
                             <section className="card-table mt-15">
                                 <h3>Componentes</h3>
-                                <SelectComponent
-                                    control={control}
-                                    idInput={"component_desc"}
-                                    className={`select-basic span-width`}
-                                    label="Lista de componentes"
-                                    classNameLabel="text-black biggest bold text-required"
-                                    data={[
-                                        { name: 'name 1', value: 'name 1' }
-                                    ]}
-                                    errors={errors}
-                                    filter={true}
-                                    onChange={() => setIsComponentSelected(true)}
-                                />
+                                <div className="select_group">
+                                    <SelectComponent
+                                        control={control}
+                                        idInput={"component_desc"}
+                                        className={`select-basic span-width`}
+                                        label="Lista de componentes"
+                                        classNameLabel="text-black biggest bold text-required"
+                                        data={options}
+                                        errors={errors}
+                                        filter={true}
+                                        onChange={() => setIsComponentSelected(true)}
+                                    />
+                                    <ButtonComponent
+                                        className="button-main huge hover-three button-add"
+                                        value="Agregar"
+                                        type="submit"
+                                        action={() => setShowModal(true)}
+                                    />
+                                    
+                                </div>
                                 <div className="text-buttom-circle" onClick={handleAddComponent} style={{ opacity: isComponentSelected ? 1 : 0.5, pointerEvents: isComponentSelected ? 'auto' : 'none' }}>
                                     Agregar componente <AiOutlinePlusCircle />
                                 </div>
@@ -281,6 +376,34 @@ const FormulationPAACEdition = () => {
                                     </table>
                                 </div>
                             </section>
+                            {showModal && (
+                            <div className="modal-overlay">
+                                <div className="modal-content-select">
+                                    <div className="body-main-modal">
+                                        <h3 className="title-modal">Agregar componente a la lista</h3>
+                                        <div className="content-input">
+                                            <input
+                                                className="input-modal input-PAA"
+                                                type="text"
+                                                value={modalInputValue}
+                                                onChange={(e) => setModalInputValue(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="content-button-modal">
+                                            <span className="bold text-center button modal-cancelar-button" onClick={handleModalCancel}>
+                                                Cancelar
+                                            </span>
+                                            <ButtonComponent
+                                                className="button-main huge hover-three button-add"
+                                                value="Aceptar"
+                                                type="submit"
+                                                action={handleModalAccept}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            )}
                             <div className="container-button-bot space-between">
                                 <div>
                                 <ButtonComponent

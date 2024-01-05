@@ -27,6 +27,11 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
     const resolver = useYupValidationResolver(antiCorruptionPlanActivityValidator);
     const {activityCount } = props;
     
+    useBreadCrumb({
+        isPrimaryPage: true,
+        name: "Actividad plan anticorrupción y atención al ciudadano",
+        url: "/direccion-estrategica/Actividad/",
+    });
 
     const {
         register,
