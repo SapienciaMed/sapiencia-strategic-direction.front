@@ -94,15 +94,56 @@ const FormulationPAACEdition = () => {
         });
     };
 
+    const [activityCount, setActivityCount] = useState(0);
+
     const handleAddActivity = (component_uuid?: string) => {
-        const uuidActivity =  uuid.v4();
+        const uuidActivity = uuid.v4();
         setSelectedActivity(uuidActivity);
-        setActivities([...activities, {
-            uuid: uuidActivity,
-            description: '',
-            component_uuid: component_uuid || selectedComponent,
-        }]);
-    }
+        setActivities([
+            ...activities,
+            {
+                uuid: uuidActivity,
+                description: "",
+                component_uuid: component_uuid || selectedComponent,
+            },
+        ]);
+        setActivityCount(activityCount + 1);
+    };
+
+    const handleDeleteActivity = (activity) => {
+        setMessage({
+            background: true,
+            cancelTitle: "Cancelar",
+            description: "¿Deseas eliminar la Actividad? No se podrá recuperar",
+            OkTitle: "Aceptar",
+            onCancel: () => {
+                setMessage({});
+            },
+            onClose: () => {
+                setMessage({});
+            },
+            show: true,
+            title: "¿Eliminar actividad?",
+            onOk: () => {
+                setMessage({
+                    title: "Actividad del PAAC",
+                    description: "¡Actividad eliminada exitosamente!",
+                    show: true,
+                    background: true,
+                    OkTitle: "Aceptar",
+                    onClose: () => {
+                        setMessage({});
+                    },
+                });
+    
+                setActivities(activities.filter((ac) => ac.uuid !== activity.uuid));
+    
+                if (selectedActivity === activity.uuid) {
+                    setSelectedActivity('');
+                }
+            },
+        });
+    };
 
     return (
         <>
@@ -226,6 +267,7 @@ const FormulationPAACEdition = () => {
                                         }}
                                         selectedActivity={selectedActivity}
                                         selectedComponent={selectedComponent}
+                                        activityCount={activityCount}
                                     />
                                 ) : null
                             }
@@ -251,15 +293,16 @@ const FormulationPAACEdition = () => {
                                             </div>
                                             <div
                                                 className="delete-action"
-                                                style={{ 'color': '#e53935', fontSize: '24px', marginLeft: 7,
-                                                cursor: 'pointer', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}
-                                                onClick={() => {
-                                                    setActivities(activities.filter((ac) => ac.uuid !== a.uuid));
-
-                                                    if (selectedActivity == a.uuid) {
-                                                        setSelectedActivity('');
-                                                    }
+                                                style={{
+                                                    color: "#e53935",
+                                                    fontSize: "24px",
+                                                    marginLeft: 7,
+                                                    cursor: "pointer",
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
+                                                    alignItems: "flex-end",
                                                 }}
+                                                onClick={() => handleDeleteActivity(a)}
                                             >
                                                 <PiTrash className="button grid-button button-delete" />
                                             </div>

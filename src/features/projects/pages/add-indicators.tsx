@@ -21,6 +21,9 @@ const schema = Yup.object().shape({
     quarterly_goal1: Yup.number().required('El campo es obligatorio'),
     quarterly_goal2: Yup.number().required('El campo es obligatorio'),
     quarterly_goal3: Yup.number().required('El campo es obligatorio'),
+    unit1: Yup.string().required('El campo es obligatorio'),
+    unit2: Yup.string().required('El campo es obligatorio'),
+    unit3: Yup.string().required('El campo es obligatorio'),
 });
 
 const resolver = yupResolver(schema);
@@ -258,12 +261,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     <SelectComponent
                                         control={control}
                                         idInput="unit1"
-                                        className={`select-basic span-width`}
                                         label="Unidad de medida"
-                                        classNameLabel="text-black biggest bold color-1"
+                                        classNameLabel="text-black biggest bold color-1 text-required"
                                         data={units}
                                         errors={errors}
                                         filter={true}
+                                        className={`select-basic span-width ${errors?.unit1 ? 'error' : ''}`}
                                     />
                                 </div>
                             </div>
@@ -284,12 +287,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     <SelectComponent
                                         control={control}
                                         idInput="unit2"
-                                        className={`select-basic span-width`}
                                         label="Unidad de medida"
-                                        classNameLabel="text-black biggest bold color-2"
+                                        classNameLabel="text-black biggest bold color-2 text-required"
                                         data={units}
                                         errors={errors}
                                         filter={true}
+                                        className={`select-basic span-width ${errors?.unit2 ? 'error' : ''}`}
                                     />
                                 </div>
                             </div>
@@ -310,12 +313,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     <SelectComponent
                                         control={control}
                                         idInput="unit3"
-                                        className={`select-basic span-width`}
                                         label="Unidad de medida"
-                                        classNameLabel="text-black biggest bold color-3"
+                                        classNameLabel="text-black biggest bold color-3 text-required"
                                         data={units}
                                         errors={errors}
                                         filter={true}
+                                        className={`select-basic span-width ${errors?.unit3 ? 'error' : ''}`}
                                     />
                                 </div>
                             </div>
@@ -344,7 +347,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                 ))}
                             </div>
 
-
+{/* 
 
                             <div className="strategic-direction-search-buttons">
                                 <span className="bold text-center button" onClick={() => {
@@ -358,7 +361,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     type="submit"
                                     action={save}
                                 />
-                            </div>
+                            </div> */}
                         </>
                     ) : null
                 }

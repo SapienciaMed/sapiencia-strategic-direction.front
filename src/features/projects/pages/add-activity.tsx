@@ -21,9 +21,15 @@ interface Props {
     onCancel: () => void;
 }
 
-function AddActivity(props: Props): React.JSX.Element {
+interface ActivityCountProps extends Props {
+    activityCount: number;
+}
+
+function AddActivity(props: ActivityCountProps): React.JSX.Element {
     const { navigate, validateActionAccess } = useAntiCorruptionPlanData();
     const resolver = useYupValidationResolver(antiCorruptionPlanActivityValidator);
+    const {activityCount } = props;
+    
 
     const {
         register,
@@ -39,6 +45,10 @@ function AddActivity(props: Props): React.JSX.Element {
     const { setMessage } = useContext(AppContext);
     const [responsables, setResponsables] = useState([]);
     const { selectedActivity, selectedComponent, onSave, onCancel } = props;
+
+    const handleClick = () => {
+        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan');
+    };
 
     const handleCancel = () => {
         setMessage({
@@ -56,6 +66,7 @@ function AddActivity(props: Props): React.JSX.Element {
             title: "Cancelar acción",
             onOk: () => {
                 setMessage({});
+                handleClick();
                 onCancel
             },
         });
@@ -64,8 +75,8 @@ function AddActivity(props: Props): React.JSX.Element {
     const handleSave = () => {
         setMessage({
             background: true,
-            cancelTitle: "Cancelar",
-            description: "¿Desea cancelar la acción?, No se guardarán los datos.",
+            cancelTitle: "Guardar",
+            description: "¿Desea guardar los cambios?",
             OkTitle: "Aceptar",
             onCancel: () => {
                 setMessage({});
@@ -74,7 +85,7 @@ function AddActivity(props: Props): React.JSX.Element {
                 setMessage({});
             },
             show: true,
-            title: "Cancelar acción",
+            title: "Guardar acción",
             onOk: () => {
                 setMessage({});
                 onCancel();
@@ -82,13 +93,20 @@ function AddActivity(props: Props): React.JSX.Element {
         });
     };
 
+    const getNumberFromId = (id) => {
+        const parts = id.split('-');
+        const lastPart = parts[parts.length - 1];
+        const number = parseInt(lastPart, 16);
+        return isNaN(number) ? id : number;
+    };
+  
 
     return (
         <div className='main-page'>
             <div className="main-page">
                 <div className="card-table">
                     <div className="title-area">
-                        <div className="text-black extra-large bold">Componente No. {selectedActivity} - Agregar actividad</div>
+                    <div className="text-black extra-large bold">Componente No. {activityCount} - Agregar actividad</div>
                     </div>
                     <div className="card-table">
                         <Controller
