@@ -1,0 +1,15 @@
+@media screen and (min-width: 830px) {
+    .spc-common-table .p-paginator.between {
+        display: flex;
+    }
+    
+}
+
+@media screen and (max-width: 830px) {
+    .spc-common-table .p-paginator.between {
+        justify-content: center !important;
+    }
+    
+}
+
+

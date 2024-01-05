@@ -8,6 +8,7 @@ import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-
 import "../../anticorruption-plan/style/formulation.scss";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 
 const FormulationPAACEdition = () => {
     const { navigate,
@@ -25,6 +26,12 @@ const FormulationPAACEdition = () => {
     const [deleteConfirmation, setDeleteConfirmation] = useState({});
     const [deletedComponents, setDeletedComponents] = useState<string[]>([])
     const { setMessage } = useContext(AppContext);
+
+    useBreadCrumb({
+        isPrimaryPage: true,
+        name: "Editar plan anticorrupción y atención al ciudadano",
+        url: "/direccion-estrategica/Editar/",
+    });
 
     const handleAddComponent = () => {
         const newComponent = {
@@ -52,8 +59,8 @@ const FormulationPAACEdition = () => {
             title: "¿Eliminar acción?",
             onOk: () => {
                 setMessage({
-                    title: "Acción del PAI",
-                    description: "¡Eliminada exitosamente!",
+                    title: "Componente del PAAC",
+                    description: "¡Eliminado exitosamente!",
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",

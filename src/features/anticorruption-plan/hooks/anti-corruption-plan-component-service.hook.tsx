@@ -27,7 +27,11 @@ export function useAntiCorruptionPlanComponentService() {
         const endpoint: string = "/store";
         return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
     }
+    async function create(data: IAntiCorruptionPlanComponentTemp): Promise<ApiResponse<IAntiCorruptionPlanComponent[]>> {
+        const endpoint: string = "/create";
+        return post(`${antiCorruptionPlanComponentUrl}${endpoint}`, data);
+    }
 
 
-    return { getAll, getAllByPlanId, deleteAllByIds, store }
+    return { getAll, getAllByPlanId, deleteAllByIds, store, create }
 }

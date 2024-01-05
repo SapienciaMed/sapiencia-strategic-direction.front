@@ -1,15 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IProject, IProjectFiltersDirection } from "../../projects/interfaces/ProjectsInterfaces";
-import { IAntiCorruptionPlan } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
+import { IAntiCorruptionPlan, IAntiCorruptionPlanTemp, ICreate, IAntiCorruptionPlanFields, IIndicator, IResponsible, IActivity, IComponent } from "../../projects/interfaces/AntiCorruptionPlanInterfaces";
 import { ITableAction, ITableElement } from "../../../common/interfaces/table.interfaces";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { Controller, useFieldArray, useForm  } from "react-hook-form";
-import { projectsValidator } from "../../../common/schemas";
+import { antiCorruptionPlanValidator } from "../../../common/schemas";
 import { useProjectsService } from "../../projects/hooks/projects-service.hook";
 import { EResponseCodes } from "../../../common/constants/api.enum";
 import { IDropdownProps } from "../../../common/interfaces/select.interface";
-import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlineEye, AiOutlinePaperClip, } from "react-icons/ai";
 import { RiPencilLine } from "react-icons/ri";
 import { HiOutlineDocument } from "react-icons/hi";
 import { FcCancel } from "react-icons/fc";
@@ -24,6 +24,9 @@ import { useAntiCorruptionPlanStatusService } from "./anti-corruption-plan-statu
 import { useAntiCorruptionPlanService } from "./anti-corruption-plan-service.hook";
 import { useAntiCorruptionPlanComponentService } from "./anti-corruption-plan-component-service.hook";
 import EditModal from "./edit-modal";
+import * as uuid from 'uuid';
+import moment from "moment";
+import { AntiCorruptionPlanContext } from "../../anticorruption-plan/contexts/anticorruption-plan.context";
 
 export function useAntiCorruptionPlanData() {
     const { authorization } = useContext(AppContext);
@@ -34,37 +37,54 @@ export function useAntiCorruptionPlanData() {
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [statusData, setStatusData] = useState<IDropdownProps[]>([]);
     const [filesUploadData, setFilesUploadData] = useState<File[]>([]);
-    const [selectedRow, setSelectedRow] = useState<IProject>(null);
     const { setMessage, validateActionAccess } = useContext(AppContext);
     const { getAll } = useAntiCorruptionPlanStatusService();
-    const { update } = useAntiCorruptionPlanService();
+    const { update, create: createPAAC } = useAntiCorruptionPlanService();
     const { getAllByPlanId, deleteAllByIds, store } = useAntiCorruptionPlanComponentService();
     const today = DateTime.local();
-    const formattedDate = today.toFormat('ddMMyyyy');
-    const resolver = useYupValidationResolver(projectsValidator);
+    const resolver = useYupValidationResolver(antiCorruptionPlanValidator);
     const navigate = useNavigate();
     const [visiblemodal, setVisibleModal] = useState(false);
     const [close, setClose] = useState<IProject | number>(1);
     const { id } = useParams() 
+    const [createPlanId, setCreatePlanId] = useState<string>(uuid.v4())
 
+
+    const {
+        components,
+        indicators,
+        responsibles,
+        activities,
+        setComponents,
+        setIndicators,
+        setResponsibles,
+        setActivities,
+        setDeletedActivityIds,
+        setDeletedComponentIds,
+        setDeletedIndicatorIds,
+        setDeletedResponsibleIds,
+        deletedActivityIds,
+        deletedComponentIds,
+        deletedIndicatorIds,
+        deletedResponsibleIds,
+    } = useContext(AntiCorruptionPlanContext);
+    
     const {
         handleSubmit,
         register,
         formState: { errors },
         reset,
-        control
-    } = useForm<any>({ resolver });
+        control,
+        getValues,
+        watch,
+    } = useForm<IAntiCorruptionPlanFields>({ resolver });
+
+   
 
     const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
-        {
-            fieldName: "name",
-            header: "Nombre del plan"
-        },
-        {
-            fieldName: "date",
-            header: "Fecha de formulación",
-        },
-        {
+        { fieldName: "name", header: "Nombre del plan" },
+        { fieldName: "date", header: "Fecha de formulación", },
+        { 
             fieldName: "status",
             header: "Estado",
             renderCell: (row) => {
@@ -110,7 +130,7 @@ export function useAntiCorruptionPlanData() {
                             </div>
                             <EditModal
                                 control={control}
-                                onSave={saveChanges}
+                                onSave={() => {}}
                                 antiCorruptionPlan={antiCorruptionPlan}
                                 setAntiCorruptionPlan={setAntiCorruptionPlan}
                                 title={"Editar"}
@@ -193,17 +213,6 @@ export function useAntiCorruptionPlanData() {
         setVisibleModal(false);
     };
 
-    const saveChanges = () => {
-        update(antiCorruptionPlan).then((response) =>{
-            if (response.operation.code === EResponseCodes.OK) {
-                closeEditDialog();
-            } else {
-                console.log(response.operation.message);
-            }
-            
-        });
-    };
-
     return {
         navigate,
         tableComponentRef,
@@ -228,6 +237,25 @@ export function useAntiCorruptionPlanData() {
         deleteAllByIds,
         store,
         id,
+        createPAAC,
+        createPlanId,
+        components,
+        setComponents,
+        component_desc: watch('component_desc'),
+        indicators,
+        setIndicators,
+        responsibles,
+        setResponsibles,
+        activities,
+        setActivities,
+        setDeletedActivityIds,
+        setDeletedComponentIds,
+        setDeletedIndicatorIds,
+        setDeletedResponsibleIds,
+        deletedActivityIds,
+        deletedComponentIds,
+        deletedIndicatorIds,
+        deletedResponsibleIds,
     };
 }
 
