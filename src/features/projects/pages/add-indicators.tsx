@@ -35,7 +35,6 @@ interface Props {
 
 function AddIndicator(props: Props): React.JSX.Element {
     const { navigate, validateActionAccess, indicators, setIndicators, responsibles, setResponsibles } = useAntiCorruptionPlanData();
-    //const resolver = useYupValidationResolver(antiCorruptionPlanIndicatorValidator);
 
     const {
         register,
@@ -53,7 +52,7 @@ function AddIndicator(props: Props): React.JSX.Element {
     const [selectedIndicator, setSelectedIndicator] = useState<string>('')
     const units = [
         { name: 'Porcentaje', value: 'Porcentaje' },
-        { name: 'Numerico', value: 'Numerico' }
+        { name: 'Numero', value: 'Numero' }
     ];
 
     const handleCancel = () => {
@@ -94,13 +93,14 @@ function AddIndicator(props: Props): React.JSX.Element {
             onOk: () => {
                 setMessage({});
                 setSelectedIndicator('');
-                setIndicators(indicators.filter(i => i.uuid !== selectedIndicator));
+                setIndicators([...indicators.filter(i => i.uuid !== selectedIndicator)]);
             },
         });
     };
 
 
     useEffect(() => {
+        setValue('description', 'asdasdasd')
         addIndicator();
     }, [])
 
@@ -111,7 +111,7 @@ function AddIndicator(props: Props): React.JSX.Element {
     const loadData = () => {
         const indicator = indicators?.find((i) => i.uuid == selectedIndicator);
 
-        setValue('description_indicator', indicator?.description)
+        setValue('description', indicator?.description)
         setValue('quarterly_goal1', indicator?.quarterly_goal1)
         setValue('unit1', indicator?.unit1)
         setValue('quarterly_goal2', indicator?.quarterly_goal2)
@@ -125,14 +125,14 @@ function AddIndicator(props: Props): React.JSX.Element {
         setSelectedIndicator(_id);
         setIndicators([...indicators, {
             uuid: _id,
-            description: 'Description',
+            description: '',
             quarterly_goal1: 0,
             unit1: 'Porcentaje',
             quarterly_goal2: 0,
             unit2: 'Porcentaje',
             quarterly_goal3: 0,
             unit3: 'Porcentaje',
-            activity_uuid: selectedActivity,
+            acpa_uuid: selectedActivity,
         }])
     }
 
@@ -141,8 +141,8 @@ function AddIndicator(props: Props): React.JSX.Element {
 
         setResponsibles([...responsibles, {
             uuid: _id,
-            name: '',
-            indicator_uuid: selectedIndicator,
+            description: '',
+            ipa_uuid: selectedIndicator,
         }])
     }
 
@@ -155,8 +155,11 @@ function AddIndicator(props: Props): React.JSX.Element {
         indicators[index].unit2 = getValues('unit2');
         indicators[index].quarterly_goal3 = getValues('quarterly_goal3');
         indicators[index].unit3 = getValues('unit3');
+        
         setIndicators([...indicators])
     }
+
+    console.log('indicators', indicators)
 
     return (
         <div className='main-page'>
@@ -176,7 +179,7 @@ function AddIndicator(props: Props): React.JSX.Element {
 
 
                 <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                    {indicators.map((indicator, index) => {
+                    {indicators.filter((i) => i.acpa_uuid === selectedActivity ).map((indicator, index) => {
                         return (
                             <div
                                 key={`${indicator.uuid}-${index}`}
@@ -188,7 +191,10 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     justifyContent: 'center', alignItems: 'center', display: 'flex', cursor: 'pointer',
                                     margin: 7
                                 }}
-                                onClick={() => setSelectedIndicator(indicator.uuid)}
+                                onClick={() => {
+                                    setSelectedIndicator(indicator.uuid);
+                                    loadData();
+                                }}
                             >
                                 {index + 1}
                             </div>
@@ -217,18 +223,22 @@ function AddIndicator(props: Props): React.JSX.Element {
                             <Controller
                                 control={control}
                                 name="description"
-                                defaultValue={indicators.find((i) => i.uuid === selectedIndicator).description}
+                                defaultValue={indicators.find((i) => i.uuid === selectedIndicator)?.description}
                                 render={({ field }) => {
                                     return (
                                         <>
                                             <TextAreaComponent
                                                 id={field.name}
                                                 idInput={field.name}
+                                                register={register}
+                                                onChange={(e) => {
+                                                    field.onChange(e)
+                                                    save();
+                                                }}
                                                 value={field.value}
                                                 label="Descripción de indicador"
                                                 classNameLabel="text-black biggest bold text-required"
                                                 className={`text-area-basic ${errors?.description ? 'error' : ''}`}
-                                                {...field}
                                             />
                                             {errors.description && (
                                                 <span className="error-text">El campo es obligatorio</span>
@@ -255,6 +265,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     placeholder=""
                                     classNameLabel="text-black biggest bold color-1 text-required"
                                     className={`inputNumber-basic ${errors?.quarterly_goal1 ? 'error' : ''}`}
+                                    onChange={() => save()}
                                 />
                                 </div>
                                 <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
@@ -267,6 +278,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                         errors={errors}
                                         filter={true}
                                         className={`select-basic span-width ${errors?.unit1 ? 'error' : ''}`}
+                                        onChange={() => save()}
                                     />
                                 </div>
                             </div>
@@ -281,6 +293,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                         placeholder=""
                                         classNameLabel="text-black biggest bold color-2 text-required"
                                         className={`inputNumber-basic ${errors?.quarterly_goal2 ? 'error' : ''}`}
+                                        onChange={() => save()}
                                     />
                                 </div>
                                 <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
@@ -293,6 +306,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                         errors={errors}
                                         filter={true}
                                         className={`select-basic span-width ${errors?.unit2 ? 'error' : ''}`}
+                                        onChange={() => save()}
                                     />
                                 </div>
                             </div>
@@ -307,6 +321,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                         placeholder=""
                                         classNameLabel="text-black biggest bold color-3 text-required"
                                         className={`inputNumber-basic ${errors?.quarterly_goal3 ? 'error' : ''}`}
+                                        onChange={() => save()}
                                     />
                                 </div>
                                 <div className="" style={{ marginTop: '2%', width: '100%', maxWidth: '330px' }}>
@@ -319,6 +334,7 @@ function AddIndicator(props: Props): React.JSX.Element {
                                         errors={errors}
                                         filter={true}
                                         className={`select-basic span-width ${errors?.unit3 ? 'error' : ''}`}
+                                        onChange={() => save()}
                                     />
                                 </div>
                             </div>
@@ -342,12 +358,12 @@ function AddIndicator(props: Props): React.JSX.Element {
                                     }
                                 </div>
 
-                                {responsibles.length > 0 && responsibles.filter((responsible) => responsible.indicator_uuid === selectedIndicator).map((r, index) => (
-                                    <AddResponsibles key={`${r.uuid}-${index}`} name={r.name} />
+                                {responsibles.length > 0 && responsibles.filter((responsible) => responsible.ipa_uuid === selectedIndicator).map((r, index) => (
+                                    <AddResponsibles key={`${r.uuid}-${index}`} name={r.description} responsible_uuid={r.uuid} />
                                 ))}
                             </div>
 
-{/* 
+                            {/* 
 
                             <div className="strategic-direction-search-buttons">
                                 <span className="bold text-center button" onClick={() => {

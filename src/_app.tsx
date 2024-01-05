@@ -8,6 +8,7 @@ import ModalMessageComponent from "./common/components/modal-message.component";
 import ApplicationProvider from "./application-provider";
 import useAppCominicator from "./common/hooks/app-communicator.hook";
 import { ProjectsContextProvider } from "./features/projects/contexts/projects.context";
+import { AntiCorruptionPlanContextProvider } from "./features/anticorruption-plan/contexts/anticorruption-plan.context";
 import PrivateRoute from "./common/utils/auth-private-guard";
 import { addLocale } from 'primereact/api';
 import { PAIContextProvider } from "./features/pai/contexts/pai.context";
@@ -15,7 +16,6 @@ import { RevisionPAIContextProvider } from "./features/pai/contexts/revision-pai
 import CheckAntiCorruption from "./features/projects/pages/check-anti-corruption";
 import FormulationPAAC from "./features/projects/pages/formulation-PAAC";
 import FormulationPAACEdition from "./features/projects/pages/formulation-PAAC-edition";
-import AddActivity from "./features/projects/pages/add-activity";
 
 function App() {
   const HomePage = lazy(() => import("./features/home/pages/home.page"));
@@ -173,7 +173,7 @@ function App() {
 
               <Route
                 path={"/direccion-estrategica/planes/plan-anticorrupcion/formular-plan"}
-                element={<FormulationPAAC />}
+                element={<AntiCorruptionPlanContextProvider><FormulationPAAC /></AntiCorruptionPlanContextProvider>}
               />
 
               <Route

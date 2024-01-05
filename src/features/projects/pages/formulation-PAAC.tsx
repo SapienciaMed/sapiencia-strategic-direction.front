@@ -1,44 +1,51 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AntiCorruptionExpansibleTable from "../../anticorruption-plan/components/anticorruption-table-expansible.component";
-import { EResponseCodes } from "../../../common/constants/api.enum";
 import { AppContext } from "../../../common/contexts/app.context";
-import { ButtonComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
+import { ButtonComponent, SelectComponent } from "../../../common/components/Form";
 import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-corruption-plan.hook";
 import "../../anticorruption-plan/style/formulation.scss";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import * as uuid from 'uuid';
 import AddActivity from "./add-activity";
 import { PiTrash } from "react-icons/pi";
+import {
+    useAntiCorruptionPlanService, useAntiCorruptionPlanComponentService, useAntiCorruptionPlanActivityService,
+    useAntiCorruptionPlanIndicatorService, useAntiCorruptionPlanResponsibleService
+} from "../../anticorruption-plan/hooks/anti-corruption-plan-service.hook";
+import moment from "moment";
+import { IAntiCorruptionPlanFields } from "../interfaces/AntiCorruptionPlanInterfaces";
+import { useForm } from "react-hook-form";
+import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
+import { antiCorruptionPlanValidator } from "../../../common/schemas";
+import { EResponseCodes } from "../../../common/constants/api.enum";
 
 const FormulationPAACEdition = () => {
-    const { navigate,
-        control,
-        statusData,
-        yearsArray,
-        antiCorruptionPlan,
-        getAllByPlanId,
-        deleteAllByIds,
-        store,
-        createPAAC,
-        components,
-        setComponents,
-        setDeletedComponents,
-        deletedComponents,
-        handleAddComponent,
-        deleteRow,
-        activities,
-        setActivities,
-        componentAdded,
-        setComponentAdded,
-        errors } = useAntiCorruptionPlanData();
+    const { navigate, yearsArray, components, setComponents, activities, responsibles, indicators, setActivities } = useAntiCorruptionPlanData();
+    const resolver = useYupValidationResolver(antiCorruptionPlanValidator);
+    const { formState: { errors }, control, getValues } = useForm<IAntiCorruptionPlanFields>({ resolver });
 
+    const { create: createAnticorruptionPlan } = useAntiCorruptionPlanService();
+    const { store: createAnticorruptionPlanComponents } = useAntiCorruptionPlanComponentService();
+    const { store: createAnticorruptionPlanActivities } = useAntiCorruptionPlanActivityService();
+    const { store: createAnticorruptionPlanIndicators } = useAntiCorruptionPlanIndicatorService();
+    const { store: createAnticorruptionPlanResponsibles } = useAntiCorruptionPlanResponsibleService();
+    
+    
 
     const { setMessage } = useContext(AppContext);
     const [selectedComponent, setSelectedComponent] = useState<string>('')
     const [selectedActivity, setSelectedActivity] = useState<string>('');
     const [isComponentSelected, setIsComponentSelected] = useState(false);
+    const [componentAdded, setComponentAdded] = useState(false);
+    const [componentCount, setComponentCount] = useState(1);
+    const [deletedComponents, setDeletedComponents] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (components.length === 0) {
+            setComponentCount(1);
+        }
+    }, [components]);
 
     const handleDeleteComponent = (idToDelete) => {
         setMessage({
@@ -46,12 +53,8 @@ const FormulationPAACEdition = () => {
             cancelTitle: "Cancelar",
             description: "¿Deseas eliminar la acción y la información que contiene? No se podrá recuperar",
             OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
+            onCancel: () => { setMessage({}); },
+            onClose: () => { setMessage({}); },
             show: true,
             title: "¿Eliminar acción?",
             onOk: () => {
@@ -61,9 +64,7 @@ const FormulationPAACEdition = () => {
                     show: true,
                     background: true,
                     OkTitle: "Aceptar",
-                    onClose: () => {
-                        setMessage({});
-                    },
+                    onClose: () => { setMessage({}); },
                 });
 
                 deletedComponents.push(idToDelete)
@@ -79,12 +80,8 @@ const FormulationPAACEdition = () => {
             cancelTitle: "Cancelar",
             description: "¿Estás seguro de cancelar? No se guardarán los datos.",
             OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
+            onCancel: () => { setMessage({}); },
+            onClose: () => { setMessage({}); },
             show: true,
             title: "Cancelar acción",
             onOk: () => {
@@ -96,7 +93,7 @@ const FormulationPAACEdition = () => {
 
     const [activityCount, setActivityCount] = useState(0);
 
-    const handleAddActivity = (component_uuid?: string) => {
+    const handleAddActivity = (cpac_uuid?: string) => {
         const uuidActivity = uuid.v4();
         setSelectedActivity(uuidActivity);
         setActivities([
@@ -104,7 +101,7 @@ const FormulationPAACEdition = () => {
             {
                 uuid: uuidActivity,
                 description: "",
-                component_uuid: component_uuid || selectedComponent,
+                cpac_uuid: cpac_uuid || selectedComponent,
             },
         ]);
         setActivityCount(activityCount + 1);
@@ -116,12 +113,8 @@ const FormulationPAACEdition = () => {
             cancelTitle: "Cancelar",
             description: "¿Deseas eliminar la Actividad? No se podrá recuperar",
             OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
+            onCancel: () => { setMessage({}); },
+            onClose: () => { setMessage({}); },
             show: true,
             title: "¿Eliminar actividad?",
             onOk: () => {
@@ -145,6 +138,77 @@ const FormulationPAACEdition = () => {
         });
     };
 
+    const handleAddComponent = () => {
+        const newComponent = {
+            id: componentCount,
+            index: componentCount,
+            uuid: uuid.v4(),
+            description: getValues('component_desc'),
+        };
+
+        setComponents((prevComponents) => [...prevComponents, newComponent]);
+        setComponentCount((prevCount) => prevCount + 1);
+        setComponentAdded(true);
+    };
+
+    const deleteRow = (idToDelete) => {
+        setComponents((prevComponents) =>
+            prevComponents.filter(
+                (component) => component.uuid !== idToDelete
+            )
+        );
+        if (components.length <= 1) {
+            setComponentAdded(false);
+        }
+    };
+
+    const handleSave = () => {
+        console.log('components', components)
+        console.log('activities', activities)
+        console.log('responsibles', responsibles)
+        console.log('indicators', indicators)
+        
+        const plan_uuid = uuid.v4();
+        createAnticorruptionPlan({
+            name: 'Plan Anticorrupción y Atención al Ciudadano (PAAC)',
+            date: moment(new Date()).format('DD/MM/YYYY'),
+            status: 1,
+            year: String(getValues('year')),
+            uuid: plan_uuid,
+        }).then((response) => {
+            if (response.operation.code === EResponseCodes.OK) {
+                createAnticorruptionPlanComponents({
+                    components,
+                    plan_uuid,
+                    plan_id: response.data.id
+                }).then((response2) => {
+                    if (response2.operation.code === EResponseCodes.OK) {
+                        createAnticorruptionPlanActivities({
+                            activities,
+                            plan_id: response.data.id
+                        }).then((response3) => {
+                            if (response3.operation.code === EResponseCodes.OK) {
+                                createAnticorruptionPlanIndicators({
+                                    indicators,
+                                    plan_id: response.data.id
+                                }).then((response4) => {
+                                    if (response4.operation.code === EResponseCodes.OK) {
+                                        createAnticorruptionPlanResponsibles({
+                                            responsibles,
+                                            plan_id: response.data.id
+                                        }).then((response5) => {
+                                            console.log(response5)
+                                        })
+                                    }
+                                });
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    
     return (
         <>
             {
@@ -236,10 +300,10 @@ const FormulationPAACEdition = () => {
                                         value={"Guardar y regresar"}
                                         type="button"
                                         disabled={!componentAdded}
-                                        // action={() => {
-                                        //     // onSave();
-                                        //     handleClick();
-                                        // }}
+                                        action={() => {
+                                            handleSave()
+                                            // handleClick();
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -275,7 +339,7 @@ const FormulationPAACEdition = () => {
                         <div style={{ marginRight: 20 }}>
                             <h2>Actividades</h2>
                             {
-                                activities.filter((activity) => activity.component_uuid == selectedComponent ).map((a, index) => {
+                                activities.filter((activity) => activity.cpac_uuid == selectedComponent ).map((a, index) => {
                                     return (
                                         <div key={`${a.uuid}-${index}`} style={{ display: 'flex', alignItems: 'center' }}>
                                             <div

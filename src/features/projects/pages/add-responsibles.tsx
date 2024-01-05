@@ -14,11 +14,12 @@ import useYupValidationResolver from "../../../common/hooks/form-validator.hook"
 import { antiCorruptionPlanIndicatorValidator } from "../../../common/schemas";
 
 interface Props {
+    responsible_uuid: string;
     name: string|'';
 }
 
 function AddResponsibles(props: Props): React.JSX.Element {
-    const { navigate, validateActionAccess } = useAntiCorruptionPlanData();
+    const { navigate, validateActionAccess, responsibles, setResponsibles } = useAntiCorruptionPlanData();
     const resolver = useYupValidationResolver(antiCorruptionPlanIndicatorValidator);
 
     const {
@@ -29,16 +30,11 @@ function AddResponsibles(props: Props): React.JSX.Element {
 		formState: { errors, isValid },
 	} = useForm<any>({ resolver, mode: "all" });
     
-    const { setMessage } = useContext(AppContext);
-    const { name } = props;
+    const { name, responsible_uuid } = props;
 
     useEffect(() => {
         setValue('name', name)
     }, [])
-
-
-
-    console.log('name1..............', name)
 
     return (
         <div className="responsable-section">
@@ -47,7 +43,9 @@ function AddResponsibles(props: Props): React.JSX.Element {
                 style={{ 'color': '#e53935', fontSize: '1rem',
                 cursor: 'pointer', display: 'flex',
                 justifyContent: 'flex-end', alignItems: 'flex-end'}}
-                // onClick={}
+                onClick={() => {
+                    setResponsibles([...responsibles.filter((r) => r.uuid !== responsible_uuid)]);
+                }}
             >
                 Eliminar <PiTrash className="button grid-button button-delete" />
             </div>
@@ -64,7 +62,12 @@ function AddResponsibles(props: Props): React.JSX.Element {
                             classNameLabel="text-black biggest bold text-required"
                             className="text-area-basic"
                             register={register}
-                            onChange={field.onChange}
+                            onChange={(e) => {
+                                field.onChange(e)
+                                const index = responsibles.findIndex((r) => r.uuid == responsible_uuid)
+                                responsibles[index].description = e.target.value;
+                                setResponsibles([...responsibles]);
+                            }}
                             errors={errors}
                         />
                     );

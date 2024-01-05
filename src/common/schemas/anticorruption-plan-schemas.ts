@@ -6,7 +6,7 @@ export const antiCorruptionPlanValidator = yup.object({
 });
 
 export const antiCorruptionPlanActivityValidator = yup.object({
-    description_activity: yup.string().required(),
+    description: yup.string().required(),
 });
 
 

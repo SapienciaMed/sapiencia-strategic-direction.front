@@ -4,12 +4,13 @@ export interface IAntiCorruptionPlan {
   date: string;
   status: number;
   year: string;
+  uuid: string;
 }
 
 export interface IResponsible {
   uuid?: string;
-  name?: string;
-  indicator_uuid: string
+  description: string;
+  ipa_uuid: string
 }
 
 export interface IIndicator {
@@ -21,20 +22,19 @@ export interface IIndicator {
   unit2?: string;
   quarterly_goal3?: number;
   unit3?: string;
-  activity_uuid: string;
+  acpa_uuid: string;
 }
 
 export interface IActivity {
   uuid: string;
   description: string;
-  component_uuid: string
+  cpac_uuid: string
 }
 
 export interface IComponent {
   index: number;
   uuid: string;
   description: string;
-  plan_uuid: string;
 }
 
 export interface ICreate {
@@ -51,6 +51,7 @@ export interface IAntiCorruptionPlanTemp {
   date: string;
   status: number;
   year: string;
+  uuid: string;
 }
 
 export interface IAntiCorruptionPlanFields {

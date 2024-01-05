@@ -26,6 +26,7 @@ import { useAntiCorruptionPlanComponentService } from "./anti-corruption-plan-co
 import EditModal from "./edit-modal";
 import * as uuid from 'uuid';
 import moment from "moment";
+import { AntiCorruptionPlanContext } from "../../anticorruption-plan/contexts/anticorruption-plan.context";
 
 export function useAntiCorruptionPlanData() {
     const { authorization } = useContext(AppContext);
@@ -47,13 +48,24 @@ export function useAntiCorruptionPlanData() {
     const [close, setClose] = useState<IProject | number>(1);
     const { id } = useParams() 
     const [createPlanId, setCreatePlanId] = useState<string>(uuid.v4())
-    const [components, setComponents] = useState<IComponent[]>([]);
-    const [componentCount, setComponentCount] = useState(1);
-    const [deletedComponents, setDeletedComponents] = useState<string[]>([]);
-    const [indicators, setIndicators] = useState<IIndicator[]>([]);
-    const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
-    const [activities, setActivities] = useState<IActivity[]>([]);
-    const [componentAdded, setComponentAdded] = useState(false);
+    // const [components, setComponents] = useState<IComponent[]>([]);
+    
+    // const [indicators, setIndicators] = useState<IIndicator[]>([]);
+    // const [responsibles, setResponsibles] = useState<IResponsible[]>([]);
+    // const [activities, setActivities] = useState<IActivity[]>([]);
+    
+
+
+    const {
+        components,
+        indicators,
+        responsibles,
+        activities,
+        setComponents,
+        setIndicators,
+        setResponsibles,
+        setActivities,
+    } = useContext(AntiCorruptionPlanContext);
     
     const {
         handleSubmit,
@@ -65,36 +77,7 @@ export function useAntiCorruptionPlanData() {
         watch,
     } = useForm<IAntiCorruptionPlanFields>({ resolver });
 
-    const handleAddComponent = () => {
-        const newComponent = {
-            id: componentCount,
-            index: componentCount,
-            uuid: uuid.v4(),
-            plan_uuid: createPlanId,
-            description: getValues('component_desc'),
-        };
-
-        setComponents((prevComponents) => [...prevComponents, newComponent]);
-        setComponentCount((prevCount) => prevCount + 1);
-        setComponentAdded(true);
-    };
-
-    const deleteRow = (idToDelete) => {
-        setComponents((prevComponents) =>
-            prevComponents.filter(
-                (component) => component.uuid !== idToDelete
-            )
-        );
-        if (components.length <= 1) {
-            setComponentAdded(false);
-        }
-    };
-
-    useEffect(() => {
-        if (components.length === 0) {
-            setComponentCount(1);
-        }
-    }, [components]);
+   
 
     const tableColumns: ITableElement<IAntiCorruptionPlan>[] = [
         { fieldName: "name", header: "Nombre del plan" },
@@ -265,11 +248,7 @@ export function useAntiCorruptionPlanData() {
         id,
         createPAAC,
         createPlanId,
-        handleAddComponent,
         components,
-        setDeletedComponents,
-        deletedComponents,
-        deleteRow,
         setComponents,
         component_desc: watch('component_desc'),
         indicators,
@@ -277,9 +256,7 @@ export function useAntiCorruptionPlanData() {
         responsibles,
         setResponsibles,
         activities,
-        setActivities,
-        componentAdded,
-        setComponentAdded,
+        setActivities
     };
 }
 

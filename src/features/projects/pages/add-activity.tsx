@@ -1,18 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ButtonComponent, FormComponent, InputComponent, SelectComponent, TextAreaComponent } from "../../../common/components/Form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { ButtonComponent, TextAreaComponent } from "../../../common/components/Form";
 import { useAntiCorruptionPlanData } from "../../anticorruption-plan/hooks/anti-corruption-plan.hook";
-import TableComponent from "../../../common/components/table.component";
 import useBreadCrumb from "../../../common/hooks/bread-crumb.hook";
 import { Controller, useForm } from "react-hook-form";
 import "../../anticorruption-plan/style/add-activities.scss";
 import { AppContext } from "../../../common/contexts/app.context";
-import { Tooltip } from "primereact/tooltip";
-import { PiTrash } from "react-icons/pi";
 import { useParams } from "react-router-dom";
 import useYupValidationResolver from "../../../common/hooks/form-validator.hook";
 import { antiCorruptionPlanActivityValidator } from "../../../common/schemas";
 import AddIndicators from "./add-indicators";
+import { IActivity } from "../interfaces/AntiCorruptionPlanInterfaces";
 
 interface Props {
     selectedActivity: string;
@@ -26,7 +23,7 @@ interface ActivityCountProps extends Props {
 }
 
 function AddActivity(props: ActivityCountProps): React.JSX.Element {
-    const { navigate, validateActionAccess } = useAntiCorruptionPlanData();
+    const { activities, setActivities } = useAntiCorruptionPlanData();
     const resolver = useYupValidationResolver(antiCorruptionPlanActivityValidator);
     const {activityCount } = props;
     
@@ -34,7 +31,6 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
     const {
         register,
         control,
-        watch,
         setValue,
         formState: { errors, isValid },
     } = useForm<any>({
@@ -42,13 +38,17 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
         mode: "all",
     });
 
+ 
     const { setMessage } = useContext(AppContext);
-    const [responsables, setResponsables] = useState([]);
-    const { selectedActivity, selectedComponent, onSave, onCancel } = props;
+    const { selectedActivity, onSave, onCancel } = props;
 
-    const handleClick = () => {
-        navigate('/direccion-estrategica/planes/plan-anticorrupcion/formular-plan');
-    };
+    useEffect(() => {
+        loadData();
+    }, [selectedActivity])
+
+    const loadData = () => {
+        setValue('description', activities.find((a) => a.uuid == selectedActivity).description)
+    }
 
     const handleCancel = () => {
         setMessage({
@@ -56,17 +56,13 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
             cancelTitle: "Cancelar",
             description: "¿Desea cancelar la acción?, No se guardarán los datos.",
             OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
+            onCancel: () => { setMessage({}); },
+            onClose: () => { setMessage({}); },
             show: true,
             title: "Cancelar acción",
             onOk: () => {
                 setMessage({});
-                onCancel
+                onCancel();
             },
         });
     };
@@ -77,65 +73,65 @@ function AddActivity(props: ActivityCountProps): React.JSX.Element {
             cancelTitle: "Guardar",
             description: "¿Desea guardar los cambios?",
             OkTitle: "Aceptar",
-            onCancel: () => {
-                setMessage({});
-            },
-            onClose: () => {
-                setMessage({});
-            },
+            onCancel: () => { setMessage({}); },
+            onClose: () => { setMessage({}); },
             show: true,
             title: "Guardar acción",
             onOk: () => {
                 setMessage({});
-                onCancel();
+                onSave();
             },
         });
     };
-
-    const getNumberFromId = (id) => {
-        const parts = id.split('-');
-        const lastPart = parts[parts.length - 1];
-        const number = parseInt(lastPart, 16);
-        return isNaN(number) ? id : number;
-    };
-  
 
     return (
         <div className='main-page'>
             <div className="main-page">
                 <div className="card-table">
                     <div className="title-area">
-                    <div className="text-black extra-large bold">Componente No. {activityCount} - Agregar actividad</div>
+                    <div className="text-black extra-large bold">Componente No. {activities.findIndex((a) => a.uuid == selectedActivity) + 1} - Agregar actividad</div>
                     </div>
-                    <div className="card-table">
-                        <Controller
-                            control={control}
-                            name="description_activity"
-                            render={({ field }) => (
-                                <>
-                                    <TextAreaComponent
-                                        id={field.name}
-                                        idInput={field.name}
-                                        value={field.value}
-                                        label="Descripción de actividad"
-                                        classNameLabel="text-black biggest bold text-required"
-                                        className={`text-area-basic ${errors.description_activity ? 'error' : ''}`}
-                                        {...field}
-                                    />
-                                    {errors.description_activity && (
-                                        <span className="alert-textarea error-text">
-                                            La descripción es obligatoria
-                                        </span>
+                    {
+                        selectedActivity !== '' ? (
+                            <div className="card-table">
+                                <Controller
+                                    control={control}
+                                    name="description"
+                                    defaultValue={activities.find((a) => a.uuid == selectedActivity).description}
+                                    render={({ field }) => (
+                                        <>
+                                            <TextAreaComponent
+                                                id={field.name}
+                                                idInput={field.name}
+                                                value={field.value}
+                                                register={register}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    // onChange(e.target.value)
+                                                    const index = activities.findIndex((a) => a.uuid == selectedActivity)
+                                                    activities[index].description = e.target.value;
+                                                    setActivities([...activities])
+                                                }}
+                                                label="Descripción de actividad"
+                                                classNameLabel="text-black biggest bold text-required"
+                                                className={`text-area-basic ${errors.description ? 'error' : ''}`}
+                                            />
+                                            {errors.description && (
+                                                <span className="alert-textarea error-text">
+                                                    La descripción es obligatoria
+                                                </span>
+                                            )}
+                                        </>
                                     )}
-                                </>
-                            )}
-                        />
-                        <span
-                            className="alert-textarea"
-                        >
-                            Max 1000 caracteres
-                        </span>
-                    </div>
+                                />
+                                <span
+                                    className="alert-textarea"
+                                >
+                                    Max 1000 caracteres
+                                </span>
+                            </div>
+                        ) : null
+                    }
 
                     <div className="card-table" style={{ marginTop: 40 }}>
                         <AddIndicators selectedActivity={selectedActivity} />
